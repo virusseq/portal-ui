@@ -34,7 +34,7 @@ const PageLayout = ({ children, subtitle }: { children: ReactNode; subtitle?: st
       <div
         css={(theme) => css`
           display: grid;
-          grid-template-rows: 50px 1fr;
+          grid-template-rows: ${theme.dimensions.navbar.height}px 1fr ${theme.dimensions.footer.height}px;
           min-height: 100vh;
           ${theme.typography.regular}
           color: ${theme.colors.black};

@@ -20,6 +20,7 @@
  */
 
 import React from 'react';
+import urlJoin from 'url-join';
 import NextHead from 'next/head';
 import { getConfig } from '../global/config';
 
@@ -31,7 +32,7 @@ const Head = () => {
         href={'https://fonts.googleapis.com/css?family=Lato:300,400,600&display=swap'}
         rel="stylesheet"
       />
-      <link rel="shortcut icon" href={`${NEXT_PUBLIC_BASE_PATH}/images/favicon.ico`} />
+      <link rel="shortcut icon" href={urlJoin(NEXT_PUBLIC_BASE_PATH, '/images/favicon.ico')} />
     </NextHead>
   );
 };
@@ -39,7 +40,7 @@ const Head = () => {
 export const PageHead = ({ subtitle }: { subtitle?: string }) => {
   return (
     <NextHead>
-      <title>Overture DMS{subtitle ? ` - ${subtitle}` : ''}</title>
+      <title>VirusSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
     </NextHead>
   );
 };

@@ -21,6 +21,7 @@
 
 import React from 'react';
 
+import AboutPage from './about';
 import ExplorerPage from './explorer';
 import { createPage } from '../global/utils/pages';
 
@@ -28,7 +29,9 @@ const HomePage = createPage({
   getInitialProps: async () => {},
   isPublic: true,
 })(() => {
-  return <ExplorerPage />;
+  return (
+      <AboutPage />
+  );
 });
 
 export default HomePage;

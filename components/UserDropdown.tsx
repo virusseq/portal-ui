@@ -167,12 +167,12 @@ const UserDropdown = () => {
       )}
       {open && (
         <ul
-          css={css`
+          css={theme => css`
             width: 100%;
             list-style: none;
             padding: 0;
             position: absolute;
-            top: 51px;
+            top: ${theme.dimensions.navbar.height}px;
             left: 0;
             margin: 0;
           `}

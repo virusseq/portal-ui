@@ -21,18 +21,14 @@
 
 const dimensions = {
   navbar: {
-    height: 50,
+    height: 64,
   },
   footer: {
-    height: 47,
+    height: 72,
   },
   facets: {
     minWidth: 250,
     maxWidth: 270,
-  },
-  labIcon: {
-    height: 35,
-    width: 35,
   },
 };
 

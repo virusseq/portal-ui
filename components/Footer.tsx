@@ -23,10 +23,12 @@ import React from 'react';
 import { css } from '@emotion/core';
 
 import defaultTheme from './theme';
-import { OvertureLogoWithText } from './theme/icons';
+import {
+  GenomeCanadaLogo,
+  OvertureLogoWithText,
+} from './theme/icons';
 
 import StyledLink from './Link';
-import { DMS_HELP_URL, DMS_INSTALLATION_URL } from '../global/utils/constants';
 
 const Footer = () => {
   return (
@@ -36,9 +38,9 @@ const Footer = () => {
         background-color: ${theme.colors.white};
         border-top: 1px solid ${theme.colors.grey_3};
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
-        padding-right: 18px;
+        padding: 0 20px;
         ${theme.shadow.default};
         z-index: 10;
         position: fixed;
@@ -47,45 +49,108 @@ const Footer = () => {
         right: 0px;
       `}
     >
-      <StyledLink
-        css={(theme) => css`
-          ${theme.typography.subheading2};
-          padding-right: 13px;
-        `}
-        href={DMS_HELP_URL}
+      <a
+        href="https://www.genomecanada.ca/"
+        rel="noopener noreferrer"
         target="_blank"
       >
-        Help
-      </StyledLink>
-      |
-      <StyledLink
-        css={(theme) => css`
-          ${theme.typography.subheading2};
-          padding-left: 13px;
-          padding-right: 5px;
-        `}
-        href={DMS_INSTALLATION_URL}
-        target="_blank"
-      >
-        DMS
-      </StyledLink>
-      <span
-        css={(theme) =>
-          css`
-            color: ${theme.colors.accent_dark};
-            ${theme.typography.subheading2}
-            line-height: 24px;
-            font-weight: normal;
-            padding-right: 10px;
-            padding-left: 5px;
-          `
-        }
-      >
-        powered by
-      </span>
-      <a href="https://www.overture.bio/" target="_blank">
-        <OvertureLogoWithText width={100} height={18} />
+        <GenomeCanadaLogo />
       </a>
+      <section
+        css={(theme: typeof defaultTheme) => css`
+          display: flex;
+          flex-direction: column;
+          height: 60%;
+          justify-content: space-between;
+          align-items: center;
+
+          & a, & span {
+            ${theme.typography.subheading2};
+          }
+        `}
+        >
+        <ul
+          css={(theme: typeof defaultTheme) => css`
+            display: flex;
+            margin: 0;
+            padding: 0;
+
+            & li {
+              display: inline;
+              padding: 0 20px;
+              position: relative;
+
+              &:not(:first-of-type)::before {
+                color: ${theme.colors.accent};
+                content: '•';
+                font-size: 10px;
+                left: -3px;
+                position: absolute;
+                top: 5px;
+              }
+            }
+          `}
+          >
+          <li>
+            <StyledLink
+              href="https://www.genomecanada.ca/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              genomecanada.ca
+            </StyledLink>
+          </li>
+          <li>
+            <StyledLink
+              href="https://www.genomecanada.ca/en/cancogen"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              About CanCOGeN
+            </StyledLink>
+          </li>
+          <li>
+            <StyledLink
+              href="https://www.genomecanada.ca/en/about/contact-us"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Contact Us
+            </StyledLink>
+          </li>
+        </ul>
+        <span>
+          &#169;
+          {` ${new Date().toISOString().slice(0,4)} CanCOGeN VirusSeq Data Portal`}
+        </span>
+      </section>
+      <span
+        css={(theme: typeof defaultTheme) => css`
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        `}
+        >
+        <span
+          css={(theme) =>
+            css`
+              color: ${theme.colors.accent_dark};
+              ${theme.typography.subheading2}
+              font-weight: normal;
+              padding-right: 10px;
+            `
+          }
+        >
+        powered by:
+        </span>
+        <a
+          href="https://www.overture.bio/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <OvertureLogoWithText width={100} height={18} />
+        </a>
+      </span>
     </div>
   );
 };

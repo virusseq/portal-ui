@@ -55,10 +55,10 @@ spec:
 			}
 		}
 
-		stage('Build & Publish Develop') {
+		stage('Build & Publish Changes') {
 			when {
 				anyOf {
-					branch 'develop'
+					branch 'cancogen'
 				}
 			}
 			steps {
@@ -67,9 +67,9 @@ spec:
 						sh 'docker login -u $USERNAME -p $PASSWORD'
 					}
 					// DNS error if --network is default
-					sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:${version}-${commit} -t ${dockerHubRepo}:edge"
-					sh "docker push ${dockerHubRepo}:${version}-${commit}"
-					sh "docker push ${dockerHubRepo}:edge"
+					sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:cancogen -t ${dockerHubRepo}:cancogen-${commit}"
+					sh "docker push ${dockerHubRepo}:cancogen-${commit}"
+					sh "docker push ${dockerHubRepo}:cancogen"
 				}
 			}
 		}
@@ -96,7 +96,7 @@ spec:
 				}
 			}
 		}
-		
+
 
 		stage('Deploy to overture-qa') {
 			when {
@@ -139,7 +139,7 @@ spec:
             container("node") {
                 script {
                     if (env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop") {
-                    withCredentials([string(credentialsId: 'JenkinsFailuresSlackChannelURL', variable: 'JenkinsFailuresSlackChannelURL')]) { 
+                    withCredentials([string(credentialsId: 'JenkinsFailuresSlackChannelURL', variable: 'JenkinsFailuresSlackChannelURL')]) {
                             sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"Build Failed: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) \"}' ${JenkinsFailuresSlackChannelURL}"
                         }
                     }
@@ -151,7 +151,7 @@ spec:
             container("node") {
                 script {
                     if (env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop") {
-                    withCredentials([string(credentialsId: 'JenkinsFailuresSlackChannelURL', variable: 'JenkinsFailuresSlackChannelURL')]) { 
+                    withCredentials([string(credentialsId: 'JenkinsFailuresSlackChannelURL', variable: 'JenkinsFailuresSlackChannelURL')]) {
                             sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"Build Fixed: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) \"}' ${JenkinsFailuresSlackChannelURL}"
                         }
                     }

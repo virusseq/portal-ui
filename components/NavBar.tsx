@@ -29,7 +29,7 @@ import { OvertureLogo } from './theme/icons';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { StyledLinkAsButton, InternalLink as Link } from './Link';
 import { useTheme } from 'emotion-theming';
-import { EXPLORER_PATH, LOGIN_PATH, USER_PATH } from '../global/utils/constants';
+import { ABOUT_PATH, EXPLORER_PATH, LOGIN_PATH, USER_PATH } from '../global/utils/constants';
 import { getConfig } from '../global/config';
 
 const NavBar: React.ComponentType = () => {
@@ -40,27 +40,38 @@ const NavBar: React.ComponentType = () => {
   const { NEXT_PUBLIC_LAB_NAME, NEXT_PUBLIC_LOGO_FILENAME, NEXT_PUBLIC_BASE_PATH } = getConfig();
 
   const activeLinkStyle = `
-    background-color: ${theme.colors.grey_2};
-    color: ${theme.colors.accent2_dark};
+    border-bottom-color: ${theme.colors.accent_light};
+    color: ${theme.colors.accent_light};
   `;
 
-  const labIcon = NEXT_PUBLIC_LOGO_FILENAME ? (
-    <img
-      src={`${NEXT_PUBLIC_BASE_PATH}/static/dms_user_assets/${NEXT_PUBLIC_LOGO_FILENAME}`}
-      alt={NEXT_PUBLIC_LAB_NAME}
-      width={theme.dimensions.labIcon.width}
-      height={theme.dimensions.labIcon.height}
-    />
-  ) : (
-    <OvertureLogo width={theme.dimensions.labIcon.width} height={theme.dimensions.labIcon.height} />
-  );
+  const linkStyle = `
+    align-items: center;
+    border-bottom: 5px solid transparent;
+    box-sizing: border-box;
+    color: ${theme.colors.white};
+    cursor: pointer;
+    display: flex;
+    flex: 0;
+    height: 100%;
+    justify-content: center;
+    padding: 0 2rem;
+    text-decoration: none;
+    white-space: nowrap;
+    width: fit-content;
+
+    &:hover {
+      ${activeLinkStyle}
+    }
+  `;
+
   return (
     <div
       css={(theme: typeof defaultTheme) => css`
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         height: ${theme.dimensions.navbar.height}px;
-        background-color: ${theme.colors.white};
+        background: ${theme.colors.primary} url(/images/navbar-bg.png) no-repeat;
+        background-size: 281px;
         ${theme.shadow.default};
         position: sticky;
         top: 0;
@@ -73,28 +84,21 @@ const NavBar: React.ComponentType = () => {
         css={css`
           display: flex;
           align-items: center;
-          margin-left: 16px;
+          margin-left: 40px;
           cursor: pointer;
         `}
       >
-        <Link path={EXPLORER_PATH}>
+        <Link path={ABOUT_PATH}>
           <a
             css={(theme) => css`
               display: flex;
               align-items: center;
               text-decoration: none;
               ${theme.typography.heading};
-              color: ${theme.colors.accent_dark};
+              color: ${theme.colors.white};
             `}
           >
-            {labIcon}
-            <span
-              css={css`
-                padding-left: 10px;
-              `}
-            >
-              {NEXT_PUBLIC_LAB_NAME}
-            </span>
+            <img src="images/navbar-logo.png" alt="logos for CanCOGeN and VirusSeq" width="296" />
           </a>
         </Link>
       </div>
@@ -102,41 +106,40 @@ const NavBar: React.ComponentType = () => {
         css={css`
           display: flex;
           align-items: center;
+          justify-content: space-between;
+          width: 100%;
         `}
       >
         <div
           css={(theme) => css`
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 144px;
-            background-color: ${theme.colors.white};
             height: 100%;
-            &:hover {
-              background-color: ${theme.colors.grey_2};
-            }
-            border-right: 2px solid ${theme.colors.white};
+            width: 100%;
           `}
         >
+          <Link path={ABOUT_PATH}>
+            <a
+              css={(theme) => css`
+                ${linkStyle}
+                ${router.pathname === ABOUT_PATH ? activeLinkStyle : ''}
+              `}
+            >
+              About VirusSeq Portal
+            </a>
+          </Link>
           <Link path={EXPLORER_PATH}>
             <a
               css={(theme) => css`
-                display: flex;
-                flex: 1;
-                height: 100%;
-                justify-content: center;
-                align-items: center;
-                text-decoration: none;
-                color: ${theme.colors.accent_dark};
-                cursor: pointer;
+                ${linkStyle}
                 ${router.pathname === EXPLORER_PATH ? activeLinkStyle : ''}
               `}
             >
-              Data Explorer
+              Explore COVID-19 Data
             </a>
           </Link>
         </div>
-        {token ? (
+        {/* token ? (
           <div
             css={(theme) => css`
               width: 195px;
@@ -171,7 +174,7 @@ const NavBar: React.ComponentType = () => {
               </StyledLinkAsButton>
             </Link>
           </div>
-        )}
+      )*/}
       </div>
     </div>
   );

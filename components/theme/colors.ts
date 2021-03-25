@@ -35,15 +35,14 @@ const grey = {
 };
 
 const primary = {
-  primary: '#00ddbe',
-  primary_dark: '#00c4a7',
+  primary: '#28519d',
+  primary_dark: '#113877',
 };
 
-// dark blues
 const accent = {
-  accent: '#04518c',
-  accent_light: '#4f85ae',
-  accent_dark: '#003055',
+  accent: '#60b3e0',
+  accent_light: '#afd9ef',
+  accent_dark: '#151c3d',
   accent_1: '#e5edf3',
 };
 
@@ -64,7 +63,8 @@ const accent2 = {
 };
 
 const accent3 = {
-  accent3: '#d9de3a',
+  accent3: '#33aabb',
+  accent3_dark: '#1c8292',
 };
 
 const error = {

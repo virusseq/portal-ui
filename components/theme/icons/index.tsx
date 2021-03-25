@@ -34,6 +34,12 @@ import Checkmark from './checkmark';
 import Spinner from './spinner';
 import Error from './error';
 import Warning from './warning';
+export {default as Covid} from './Covid';
+export {default as CrossHairs} from './CrossHairs';
+export {default as File} from './File';
+export {default as GenomeCanadaLogo} from './GenomeCanada_logo';
+export {default as MapleLeaf} from './MapleLeaf';
+export {default as Storage} from './Storage';
 
 export {
   GoogleLogo,
