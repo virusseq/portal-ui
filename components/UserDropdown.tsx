@@ -93,7 +93,7 @@ const StyledListLink = styled('a')`
   `}
 `;
 
-const UserDropdown = () => {
+const UserDropdown = ({ className } : { className?: string }) => {
   const node: any = useRef();
 
   const [open, setOpen] = useState(false);
@@ -119,11 +119,10 @@ const UserDropdown = () => {
   const theme: typeof defaultTheme = useTheme();
   const { logout } = useAuthContext();
   const router = useRouter();
-  const fillColor =
-    router.pathname === USER_PATH ? theme.colors.accent2_dark : theme.colors.accent_dark;
 
   return (
     <div
+      className={className}
       ref={node}
       css={css`
         position: relative;
@@ -137,7 +136,6 @@ const UserDropdown = () => {
       onClick={() => setOpen(!open)}
     >
       <Avatar
-        fill={fillColor}
         width={16}
         height={16}
         style={css`
@@ -148,7 +146,6 @@ const UserDropdown = () => {
       <CurrentUser />
       {open ? (
         <ChevronDown
-          fill={fillColor}
           width={12}
           height={12}
           style={css`
@@ -157,7 +154,6 @@ const UserDropdown = () => {
         />
       ) : (
         <ChevronDown
-          fill={fillColor}
           width={12}
           height={12}
           style={css`

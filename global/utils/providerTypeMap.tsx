@@ -19,7 +19,7 @@
  *
  */
 
-import { GitHubLogo, GoogleLogo, LinkedInLogo, OrcidLogo } from '../../components/theme/icons';
+import { GitHubLogo, GoogleLogo, KeyCloakLogo, LinkedInLogo, OrcidLogo } from '../../components/theme/icons';
 import { ProviderType } from '../types';
 
 export type ProviderDetail = {
@@ -31,6 +31,7 @@ export type ProviderDetail = {
 export type ProviderMap = { [k in ProviderType]: ProviderDetail };
 
 const providerMap: ProviderMap = {
+  [ProviderType.KEYCLOAK]: { displayName: 'KeyCloak', path: 'keycloak', icon: KeyCloakLogo },
   [ProviderType.GOOGLE]: { displayName: 'Google', path: 'google', icon: GoogleLogo },
   [ProviderType.ORCID]: { displayName: 'ORCiD', path: 'orcid', icon: OrcidLogo },
   [ProviderType.GITHUB]: { displayName: 'GitHub', path: 'github', icon: GitHubLogo },

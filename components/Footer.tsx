@@ -28,9 +28,12 @@ import {
   OvertureLogoWithText,
 } from './theme/icons';
 
-import StyledLink from './Link';
+import useAuthContext from '../global/hooks/useAuthContext';
+import StyledLink, { InternalLink } from './Link';
 
 const Footer = () => {
+  const { token } = useAuthContext();
+
   return (
     <div
       css={(theme: typeof defaultTheme) => css`
@@ -100,6 +103,7 @@ const Footer = () => {
               genomecanada.ca
             </StyledLink>
           </li>
+
           <li>
             <StyledLink
               href="https://www.genomecanada.ca/en/cancogen"
@@ -109,6 +113,17 @@ const Footer = () => {
               About CanCOGeN
             </StyledLink>
           </li>
+
+          {!token && <li>
+            <InternalLink
+              path="/login"
+            >
+              <StyledLink>
+                Submitter Login
+              </StyledLink>
+            </InternalLink>
+          </li>}
+
           <li>
             <StyledLink
               href="https://www.genomecanada.ca/en/about/contact-us"

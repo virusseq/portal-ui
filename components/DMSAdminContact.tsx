@@ -30,7 +30,7 @@ const Span = styled('span')`
 const DMSAdminContact = () => {
   const { NEXT_PUBLIC_ADMIN_EMAIL } = getConfig();
   const Component = NEXT_PUBLIC_ADMIN_EMAIL ? StyledLink : Span;
-  return <Component href={`mailto:${NEXT_PUBLIC_ADMIN_EMAIL}`}>DMS administrator</Component>;
+  return <Component href={`mailto:${NEXT_PUBLIC_ADMIN_EMAIL}`}>Portal administrator</Component>;
 };
 
 export const GenericHelpMessage = () => (

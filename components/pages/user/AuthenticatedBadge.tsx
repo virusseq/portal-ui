@@ -29,7 +29,7 @@ import { ProviderType } from '../../../global/types';
 import providerMap from '../../../global/utils/providerTypeMap';
 
 const AuthenticatedBadge = ({ provider }: { provider: ProviderType }) => {
-  const IconComponent = providerMap[provider].icon;
+  const IconComponent = providerMap[provider]?.icon;
   const theme: typeof defaultTheme = useTheme();
   return (
     <div
@@ -64,9 +64,9 @@ const AuthenticatedBadge = ({ provider }: { provider: ProviderType }) => {
           color: ${theme.colors.accent_dark};
         `}
       >
-        Authenticated with {providerMap[provider].displayName}
+        Authenticated with {providerMap[provider]?.displayName}
       </span>
-      <Checkmark height={15} width={15} fill={theme.colors.primary} />
+      <Checkmark height={15} width={15} fill={theme.colors.success} />
     </div>
   );
 };

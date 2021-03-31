@@ -19,43 +19,17 @@
  *
  */
 
-import GoogleLogo from './google';
-import FacebookLogo from './facebook';
-import GitHubLogo from './github';
-export {default as KeyCloakLogo} from './keycloak';
-import LinkedInLogo from './linkedin';
-import OrcidLogo from './orcid';
-import Illustration from './illustration';
-import Avatar from './avatar';
-import ChevronDown from './chevron_down';
-import OvertureLogo from './overture_logo';
-import OvertureLogoWithText from './overture_logo_with_text';
-import OvertureUser from './overture_user';
-import Checkmark from './checkmark';
-import Spinner from './spinner';
-import Error from './error';
-import Warning from './warning';
-export {default as Covid} from './Covid';
-export {default as CrossHairs} from './CrossHairs';
-export {default as File} from './File';
-export {default as GenomeCanadaLogo} from './GenomeCanada_logo';
-export {default as MapleLeaf} from './MapleLeaf';
-export {default as Storage} from './Storage';
+import React from 'react';
+import Submission from '../../components/pages/submission';
+import { createPage } from '../../global/utils/pages';
 
-export {
-  GoogleLogo,
-  FacebookLogo,
-  GitHubLogo,
-  LinkedInLogo,
-  OrcidLogo,
-  Illustration,
-  Avatar,
-  ChevronDown,
-  OvertureLogo,
-  OvertureLogoWithText,
-  OvertureUser,
-  Checkmark,
-  Spinner,
-  Error,
-  Warning,
-};
+const SubmissionPage = createPage({
+  getInitialProps: async ({ query, egoJwt }) => {
+    return { query, egoJwt };
+  },
+  isPublic: false,
+})(() => {
+  return <Submission />;
+});
+
+export default SubmissionPage;

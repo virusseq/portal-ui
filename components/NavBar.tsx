@@ -25,11 +25,10 @@ import { useRouter } from 'next/router';
 
 import UserDropdown from './UserDropdown';
 import defaultTheme from './theme';
-import { OvertureLogo } from './theme/icons';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { StyledLinkAsButton, InternalLink as Link } from './Link';
 import { useTheme } from 'emotion-theming';
-import { ABOUT_PATH, EXPLORER_PATH, LOGIN_PATH, USER_PATH } from '../global/utils/constants';
+import { ABOUT_PATH, EXPLORER_PATH, ROOT_PATH, SUBMISSION_PATH, USER_PATH } from '../global/utils/constants';
 import { getConfig } from '../global/config';
 
 const NavBar: React.ComponentType = () => {
@@ -37,11 +36,13 @@ const NavBar: React.ComponentType = () => {
   const router = useRouter();
   const theme: typeof defaultTheme = useTheme();
 
-  const { NEXT_PUBLIC_LAB_NAME, NEXT_PUBLIC_LOGO_FILENAME, NEXT_PUBLIC_BASE_PATH } = getConfig();
-
   const activeLinkStyle = `
     border-bottom-color: ${theme.colors.accent_light};
     color: ${theme.colors.accent_light};
+
+    svg path {
+      fill: ${theme.colors.accent_light};
+    }
   `;
 
   const linkStyle = `
@@ -58,6 +59,10 @@ const NavBar: React.ComponentType = () => {
     text-decoration: none;
     white-space: nowrap;
     width: fit-content;
+
+    svg path {
+      fill: ${theme.colors.white};
+    }
 
     &:hover {
       ${activeLinkStyle}
@@ -88,7 +93,7 @@ const NavBar: React.ComponentType = () => {
           cursor: pointer;
         `}
       >
-        <Link path={ABOUT_PATH}>
+        <Link path={ROOT_PATH}>
           <a
             css={(theme) => css`
               display: flex;
@@ -139,42 +144,40 @@ const NavBar: React.ComponentType = () => {
             </a>
           </Link>
         </div>
-        {/* token ? (
+        {token && (
           <div
             css={(theme) => css`
-              width: 195px;
-              height: 100%;
-              display: flex;
-              ${router.pathname === USER_PATH ? activeLinkStyle : ''}
-              &:hover {
-                background-color: ${theme.colors.grey_2};
-              }
-            `}
-          >
-            <UserDropdown />
-          </div>
-        ) : (
-          <div
-            css={css`
-              width: 145px;
               display: flex;
               align-items: center;
-              justify-content: center;
+              justify-content: flex-end;
+              height: 100%;
+              width: 100%;
             `}
           >
-            <Link path={LOGIN_PATH}>
-              <StyledLinkAsButton
+            <Link path={SUBMISSION_PATH}>
+              <a
                 css={(theme) => css`
-                  width: 70px;
-                  ${theme.typography.button};
-                  line-height: 20px;
+                  ${linkStyle}
+                  ${router.pathname === SUBMISSION_PATH ? activeLinkStyle : ''}
                 `}
               >
-                Log in
-              </StyledLinkAsButton>
+                Submission Dashboard
+              </a>
             </Link>
+            <UserDropdown
+              css={css`
+                float:none;
+                width: 195px;
+                ${linkStyle}
+                ${router.pathname === USER_PATH ? activeLinkStyle : ''}
+
+                &:hover {
+                  ${activeLinkStyle}
+                }
+              `}
+            />
           </div>
-      )*/}
+        )}
       </div>
     </div>
   );

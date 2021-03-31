@@ -67,6 +67,10 @@ const accent3 = {
   accent3_dark: '#1c8292',
 };
 
+const success = {
+  success: '#00ddbe',
+}
+
 const error = {
   error: '#c86370',
   error_dark: '#ad404e',
@@ -87,6 +91,7 @@ export default {
   ...accent3,
   ...primary,
   ...secondary,
+  ...success,
   ...error,
   ...warning,
 };

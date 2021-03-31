@@ -22,7 +22,6 @@
 import React from 'react';
 
 import AboutPage from './about';
-import ExplorerPage from './explorer';
 import { createPage } from '../global/utils/pages';
 
 const HomePage = createPage({

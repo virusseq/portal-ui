@@ -20,8 +20,6 @@
  */
 
 import { css } from '@emotion/core';
-import React from 'react';
-import { isEmpty } from 'lodash';
 import styled from '@emotion/styled';
 
 import PageLayout from '../../PageLayout';
