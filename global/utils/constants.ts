@@ -40,3 +40,27 @@ const OVERTURE_DMS_DOCS_ROOT = 'https://overture.bio/documentation/dms/';
 export const DMS_HELP_URL = urlJoin(OVERTURE_DMS_DOCS_ROOT, 'user-guide');
 export const DMS_INSTALLATION_URL = urlJoin(OVERTURE_DMS_DOCS_ROOT, 'installation');
 export const DMS_EMAIL_SETTING_URL = urlJoin(DMS_INSTALLATION_URL, 'configuration/prereq/emails');
+
+export const CANADA_PROVINCES = [
+  { name: 'Alberta', abbreviation: 'AB' }, 
+  { name: 'British Columbia', abbreviation: 'BC' }, 
+  { name: 'Manitoba', abbreviation: 'MB' }, 
+  { name: 'New Brunswick', abbreviation: 'NB' }, 
+  { name: 'Newfoundland and Labrador', abbreviation: 'NL' }, 
+  { name: 'Northwest Territories', abbreviation: 'NT' }, 
+  { name: 'Nova Scotia', abbreviation: 'NS' }, 
+  { name: 'Nunavut', abbreviation: 'NU' }, 
+  { name: 'Ontario', abbreviation: 'ON' }, 
+  { name: 'Prince Edward Island', abbreviation: 'PE' }, 
+  { name: 'Quebec', abbreviation: 'QC' }, 
+  { name: 'Saskatchewan', abbreviation: 'SK' }, 
+  { name: 'Yukon Territory', abbreviation: 'YT' },
+];
+
+export const getProvince = (
+  { long, short } : { long?: string, short?: string }
+) : { abbreviation: string, name: string } => 
+  CANADA_PROVINCES.find(({ abbreviation, name }) => 
+    short?.toUpperCase() === abbreviation ||
+    long?.toLowerCase() === name.toLowerCase()
+  ) || {abbreviation: '', name: `${long || short} not found`}

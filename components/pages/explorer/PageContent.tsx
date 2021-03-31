@@ -22,6 +22,7 @@
 import { css } from '@emotion/core';
 import RepoTable from './RepoTable';
 import Facets from './Facets';
+import DataAnalysis from './DataAnalysis';
 import QueryBar from './QueryBar';
 
 import { PageContentProps } from './index';
@@ -76,6 +77,7 @@ const PageContent = (props: PageContentProps) => {
             `}
           >
             <QueryBar {...props} />
+            <DataAnalysis {...props} />
             <RepoTable {...props} />
           </div>
         </div>

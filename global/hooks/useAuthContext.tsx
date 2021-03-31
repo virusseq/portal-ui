@@ -24,7 +24,7 @@ import { useRouter } from 'next/router';
 
 import { EGO_JWT_KEY, ROOT_PATH } from '../utils/constants';
 import { decodeToken, extractUser, isValidJwt } from '../utils/egoTokenUtils';
-import { UserWithId } from '../../global/types';
+import { UserWithId } from '../types';
 import getInternalLink from '../utils/getInternalLink';
 
 type T_AuthContext = {

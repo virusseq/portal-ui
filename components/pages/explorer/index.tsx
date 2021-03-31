@@ -25,7 +25,7 @@ import urlJoin from 'url-join';
 import PageContent from './PageContent';
 import PageLayout from '../../PageLayout';
 
-import { RepoFiltersType } from './sqonTypes';
+import { RepoFiltersType } from '../../../global/types/sqon';
 import { getConfig } from '../../../global/config';
 import createArrangerFetcher from '../../utils/arrangerFetcher';
 import { useEffect, useState } from 'react';
