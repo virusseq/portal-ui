@@ -1,12 +1,12 @@
-def dockerHubRepo = "overture/dms-ui"
-def githubRepo = "overture-stack/dms-ui"
+def dockerHubRepo = "cancogen-virus-seq/portal"
+def githubRepo = "cancogen-virus-seq/portal"
 def commit = "UNKNOWN"
 def version = "UNKNOWN"
 
 pipeline {
     agent {
         kubernetes {
-            label 'dms-ui-executor'
+            label 'portal-executor'
             yaml """
 apiVersion: v1
 kind: Pod
