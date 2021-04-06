@@ -62,7 +62,7 @@ spec:
 		stage('Build & Publish Changes') {
 			when {
 				anyOf {
-					branch 'cancogen'
+					branch 'develop'
 				}
 			}
 			steps {
@@ -81,7 +81,7 @@ spec:
 		stage('Release & Tag') {
 			when {
 				anyOf {
-					branch 'master'
+					branch 'main'
 				}
 			}
 			steps {
@@ -100,67 +100,5 @@ spec:
 				}
 			}
 		}
-
-
-		stage('Deploy to overture-qa') {
-			when {
-				branch "develop"
-			}
-			steps {
-				build(job: "/Overture.bio/provision/helm", parameters: [
-						[$class: 'StringParameterValue', name: 'OVERTURE_ENV', value: 'qa' ],
-						[$class: 'StringParameterValue', name: 'OVERTURE_CHART_NAME', value: 'dms-ui'],
-						[$class: 'StringParameterValue', name: 'OVERTURE_RELEASE_NAME', value: 'dms-ui'],
-						[$class: 'StringParameterValue', name: 'OVERTURE_HELM_CHART_VERSION', value: ''], // use latest
-						[$class: 'StringParameterValue', name: 'OVERTURE_HELM_REPO_URL', value: "https://overture-stack.github.io/charts-server/"],
-						[$class: 'StringParameterValue', name: 'OVERTURE_HELM_REUSE_VALUES', value: "false" ],
-						[$class: 'StringParameterValue', name: 'OVERTURE_ARGS_LINE', value: "--set-string image.tag=${version}-${commit}"]
-				])
-			}
-		}
-
-		stage('Deploy to overture-staging') {
-			when {
-				branch "master"
-			}
-			steps {
-				build(job: "/Overture.bio/provision/helm", parameters: [
-						[$class: 'StringParameterValue', name: 'OVERTURE_ENV', value: 'staging' ],
-						[$class: 'StringParameterValue', name: 'OVERTURE_CHART_NAME', value: 'dms-ui'],
-						[$class: 'StringParameterValue', name: 'OVERTURE_RELEASE_NAME', value: 'dms-ui'],
-						[$class: 'StringParameterValue', name: 'OVERTURE_HELM_CHART_VERSION', value: ''], // use latest
-						[$class: 'StringParameterValue', name: 'OVERTURE_HELM_REPO_URL', value: "https://overture-stack.github.io/charts-server/"],
-						[$class: 'StringParameterValue', name: 'OVERTURE_HELM_REUSE_VALUES', value: "false" ],
-						[$class: 'StringParameterValue', name: 'OVERTURE_ARGS_LINE', value: "--set-string image.tag=${version}"]
-				])
-			}
-		}
-
-    }
-    post {
-        unsuccessful {
-            // i used node container since it has curl already
-            container("node") {
-                script {
-                    if (env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop") {
-                    withCredentials([string(credentialsId: 'JenkinsFailuresSlackChannelURL', variable: 'JenkinsFailuresSlackChannelURL')]) {
-                            sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"Build Failed: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) \"}' ${JenkinsFailuresSlackChannelURL}"
-                        }
-                    }
-                }
-            }
-        }
-        fixed {
-            // i used node container since it has curl already
-            container("node") {
-                script {
-                    if (env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop") {
-                    withCredentials([string(credentialsId: 'JenkinsFailuresSlackChannelURL', variable: 'JenkinsFailuresSlackChannelURL')]) {
-                            sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"Build Fixed: ${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL}) \"}' ${JenkinsFailuresSlackChannelURL}"
-                        }
-                    }
-                }
-            }
-        }
     }
 }
