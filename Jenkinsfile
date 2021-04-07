@@ -1,4 +1,4 @@
-def dockerHubRepo = "cancogen-virus-seq/portal"
+def dockerRepo = "ghcr.io/cancogen-virus-seq/portal"
 def githubRepo = "cancogen-virus-seq/portal"
 def commit = "UNKNOWN"
 def version = "UNKNOWN"
@@ -82,9 +82,9 @@ spec:
 						sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
 					}
 					// DNS error if --network is default
-					sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:cancogen -t ${dockerHubRepo}:cancogen-${commit}"
-					sh "docker push ${dockerHubRepo}:cancogen-${commit}"
-					sh "docker push ${dockerHubRepo}:cancogen"
+					sh "docker build --network=host -f Dockerfile . -t ${dockerRepo}:cancogen -t ${dockerRepo}:cancogen-${commit}"
+					sh "docker push ${dockerRepo}:cancogen-${commit}"
+					sh "docker push ${dockerRepo}:cancogen"
 				}
 			}
 		}
@@ -105,9 +105,9 @@ spec:
 						sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
 					}
 					// DNS error if --network is default
-					sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:${version} -t ${dockerHubRepo}:latest"
-					sh "docker push ${dockerHubRepo}:${version}"
-					sh "docker push ${dockerHubRepo}:latest"
+					sh "docker build --network=host -f Dockerfile . -t ${dockerRepo}:${version} -t ${dockerRepo}:latest"
+					sh "docker push ${dockerRepo}:${version}"
+					sh "docker push ${dockerRepo}:latest"
 				}
 			}
 		}
