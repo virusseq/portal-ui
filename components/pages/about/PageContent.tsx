@@ -11,7 +11,7 @@ const PageContent = () => {
         align-items: center;
         display: flex;
         flex-direction: column;
-        width: 100vw;
+        padding-bottom: ${theme.dimensions.footer.height}px;
       `}
     >
       <HeroBanner />

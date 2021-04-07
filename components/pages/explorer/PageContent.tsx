@@ -32,6 +32,7 @@ const PageContent = (props: PageContentProps) => {
     <div
       css={css`
         flex: 1;
+        width: 100vw;
       `}
     >
       <div
