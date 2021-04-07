@@ -15,7 +15,7 @@ spec:
   - name: node
     image: node:12.13.1
     tty: true
-	securityContext:
+    securityContext:
       runAsUser: 1000
       runAsGroup: 1000
       fsGroup: 1000
