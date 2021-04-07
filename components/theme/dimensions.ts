@@ -27,8 +27,7 @@ const dimensions = {
     height: 72,
   },
   facets: {
-    minWidth: 250,
-    maxWidth: 270,
+    width: 250,
   },
 };
 
