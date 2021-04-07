@@ -67,8 +67,8 @@ spec:
 			}
 			steps {
 				container('docker') {
-					withCredentials([usernamePassword(credentialsId:'OvertureDockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-						sh 'docker login -u $USERNAME -p $PASSWORD'
+					withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+						sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
 					}
 					// DNS error if --network is default
 					sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:cancogen -t ${dockerHubRepo}:cancogen-${commit}"
@@ -86,12 +86,12 @@ spec:
 			}
 			steps {
 				container('docker') {
-					withCredentials([usernamePassword(credentialsId: 'OvertureBioGithub', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+					withCredentials([usernamePassword(credentialsId: 'argoGithub', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 						sh "git tag ${version}"
 						sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${githubRepo} --tags"
 					}
-					withCredentials([usernamePassword(credentialsId:'OvertureDockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-						sh 'docker login -u $USERNAME -p $PASSWORD'
+					withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+						sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
 					}
 					// DNS error if --network is default
 					sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:${version} -t ${dockerHubRepo}:latest"

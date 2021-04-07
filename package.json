@@ -1,6 +1,6 @@
 {
-  "name": "dms-ui",
-  "version": "1.0.1",
+  "name": "virusseq-dataportal-ui",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
