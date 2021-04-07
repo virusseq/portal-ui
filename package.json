@@ -1,6 +1,6 @@
 {
   "name": "virusseq-dataportal-ui",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@arranger/components": "^2.12.3",
+    "@arranger/components": "^2.12.5",
     "@emotion/babel-preset-css-prop": "^10.0.27",
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",

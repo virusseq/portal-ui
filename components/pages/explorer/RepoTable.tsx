@@ -24,6 +24,7 @@ import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
 
 import { PageContentProps } from './index';
+import StyledLink from '../../Link';
 import defaultTheme from '../../theme';
 import { getConfig } from '../../../global/config';
 
@@ -241,6 +242,29 @@ const RepoTable = (props: PageContentProps) => {
   const customExporters = [
     { label: 'File Table', fileName: `data-explorer-table-export.${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
     { label: 'File Manifest', fileName: `score-manifest.${today}.tsv`, columns: manifestColumns }, // exports a TSV with the manifest columns
+    { label: () => (
+      <span
+        css={css`
+          border-top: 1px solid #eee;
+          margin-top: -3px;
+          padding-top: 7px;
+          white-space: pre-line;
+          width: 140px;
+        `}
+      >
+        {`To download files using a file manifest, please follow these `}
+        <StyledLink
+          css={css`
+            line-height: inherit;
+          `}
+          href="https://overture.bio/documentation/score/user-guide/download"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          instructions
+        </StyledLink>
+      </span>
+    ), },
   ];
 
   return (
