@@ -11,14 +11,14 @@ pipeline {
 apiVersion: v1
 kind: Pod
 spec:
-  securityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
   containers:
   - name: node
     image: node:12.13.1
     tty: true
+	securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
   - name: dind-daemon
     image: docker:18.06-dind
     securityContext:
@@ -43,11 +43,6 @@ spec:
       runAsUser: 1000
       runAsGroup: 1000
       fsGroup: 1000
-  - name: helm
-    image: alpine/helm:3.1.0
-    command:
-    - cat
-    tty: true
   volumes:
   - name: dind-storage
     emptyDir: {}
