@@ -19,22 +19,38 @@ spec:
   - name: node
     image: node:12.13.1
     tty: true
+  - name: dind-daemon
+    image: docker:18.06-dind
+    securityContext:
+      privileged: true
+    env:
+    - name: DOCKER_TLS_CERTDIR
+      value: ''
+    volumeMounts:
+      - name: dind-storage
+        mountPath: /var/lib/docker
   - name: docker
     image: docker:18-git
+    command:
+    - cat
     tty: true
-    volumeMounts:
-    - mountPath: /var/run/docker.sock
-      name: docker-sock
+    env:
+    - name: DOCKER_HOST
+      value: tcp://localhost:2375
+    - name: HOME
+      value: /home/jenkins/agent
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
   - name: helm
     image: alpine/helm:3.1.0
     command:
     - cat
     tty: true
   volumes:
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
-      type: File
+  - name: dind-storage
+    emptyDir: {}
 """
         }
     }
