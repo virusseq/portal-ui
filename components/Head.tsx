@@ -28,10 +28,6 @@ const Head = () => {
   const { NEXT_PUBLIC_BASE_PATH } = getConfig();
   return (
     <NextHead>
-      <link
-        href={'https://fonts.googleapis.com/css?family=Lato:300,400,600&display=swap'}
-        rel="stylesheet"
-      />
       <link rel="shortcut icon" href={urlJoin(NEXT_PUBLIC_BASE_PATH, '/images/favicon.ico')} />
     </NextHead>
   );

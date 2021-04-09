@@ -20,14 +20,29 @@
  */
 
 import React from 'react';
+import Router from 'next/router';
+
 import Login from '../../components/pages/login';
+import { ROOT_PATH } from '../../global/utils/constants';
+import getInternalLink from '../../global/utils/getInternalLink';
 import { createPage } from '../../global/utils/pages';
+import useAuthContext from '../../global/hooks/useAuthContext';
 
 const LoginPage = createPage({
   getInitialProps: async () => {},
   isPublic: true,
 })(() => {
-  return <Login />;
+  const { token } = useAuthContext();
+
+  return token
+    ? ( // logged in, so it shouldn't give you a login page
+      Router.push({
+        pathname: getInternalLink({ path: ROOT_PATH }),
+      }),
+      <></> // shows nothing, while passing TypeScript validations
+    ) : ( 
+      <Login />
+    );
 });
 
 export default LoginPage;

@@ -54,28 +54,37 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
       &:first-of-type {
         margin-top: 0;
       }
-      border-left: 3px solid;
-      &:nth-of-type(5n + 1) {
-        border-left-color: ${theme.colors.secondary};
-      }
-      &:nth-of-type(5n + 2) {
-        border-left-color: ${theme.colors.accent2};
-      }
-      &:nth-of-type(5n + 3) {
-        border-left-color: ${theme.colors.warning};
-      }
-      &:nth-of-type(5n + 4) {
-        border-left-color: ${theme.colors.primary};
-      }
-      &:nth-of-type(5n + 5) {
-        border-left-color: ${theme.colors.accent3};
-      }
+
+      border-left: 3px solid transparent;
+
+      // Removing these as per https://github.com/cancogen-virus-seq/portal/issues/3
+      // Leaving commented in case we change our minds later
+      // &:nth-of-type(5n + 1) {
+      //   border-left-color: ${theme.colors.secondary};
+      // }
+      // &:nth-of-type(5n + 2) {
+      //   border-left-color: ${theme.colors.accent2};
+      // }
+      // &:nth-of-type(5n + 3) {
+      //   border-left-color: ${theme.colors.warning};
+      // }
+      // &:nth-of-type(5n + 4) {
+      //   border-left-color: ${theme.colors.primary};
+      // }
+      // &:nth-of-type(5n + 5) {
+      //   border-left-color: ${theme.colors.accent3};
+      // }
+      
       .header {
         padding: 5px 0 6px 6px;
+
         .title-wrapper {
           align-items: flex-start;
           border-bottom: 1px solid ${theme.colors.grey_2};
+          margin-bottom: 15px;
           padding-bottom: 5px;
+          position: relative;
+
           .title-control {
             flex: 1;
             cursor: pointer;
@@ -86,9 +95,18 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
             margin: -5px -8px -6px -7px;
             padding: 5px 8px 6px 6px;
           }
+          &:not(.collapsed)::after {
+            bottom: -20px;
+            color: ${theme.colors.grey_6};
+            content: "# files";
+            font-size: 12px;
+            position: absolute;
+            right: 0;
+          }
           & .title {
             ${theme.typography.subheading}
             color: ${theme.colors.accent_dark};
+            font-size: 14px;
             margin-left: 8px;
             display: inline-block;
             width: 90%;
@@ -102,7 +120,7 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
             &:after {
               display: inline-block;
               transform: translateX(-2px) rotate(270deg);
-              content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%23151c3d' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E ");
+              content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%23D93738' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E ");
             }
           }
           &.collapsed {
@@ -110,7 +128,7 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
               &:after {
                 display: inline-block;
                 transform: translateX(-2px) rotate(-90deg);
-                content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%23151c3d' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E ");
+                content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%23D93738' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E ");
               }
             }
           }
@@ -126,7 +144,7 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
           & .bucket-count {
             ${theme.typography.label2}
             display: inline-block;
-            background-color: ${theme.colors.grey_3};
+            background-color: rgba(${theme.colors.accent_light_rgb}, 0.45);
             padding: 0 3px;
             border-radius: 3px;
             margin: 2px 0;

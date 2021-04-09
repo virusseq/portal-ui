@@ -21,9 +21,10 @@
 
 // /** @jsx jsx */ import { css } from '@emotion/core';
 import { css } from '@emotion/core';
+import './sourcesanspro.css';
 
 const baseFont = css`
-  font-family: Lato, sans-serif;
+  font-family: Source Sans Pro, sans-serif;
 `;
 
 const regular = css`
@@ -107,6 +108,7 @@ const data = css`
 `;
 
 export default {
+  baseFont,
   regular,
   heading,
   subheading,

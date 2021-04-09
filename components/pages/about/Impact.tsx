@@ -1,6 +1,5 @@
 import { css } from '@emotion/core';
 
-// import { PageContentProps } from './index';
 import { StyledLinkAsButton } from '../../Link';
 
 const Impact = () => (
@@ -37,7 +36,7 @@ const Impact = () => (
       css={(theme) => css`
       `}
     >
-      Genomics-based tracking and analysis of the evolving traits of the COVID-19 virus across Canada provides critical information for:
+      Genomic-based tracking and analysis of the evolving traits of the SARS-CoV-2 virus across Canada provides critical information for:
     </p>
 
     <ul

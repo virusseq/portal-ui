@@ -34,13 +34,13 @@ const CurrentSQON = dynamic(
 const getCss = (theme: typeof defaultTheme) => css`
   ${theme.shadow.default};
   & .sqon-view {
+    ${theme.typography.baseFont}
     background-color: transparent;
     display: flex;
     flex: 1;
     align-items: center;
     padding: 12px 0 12px 12px;
     margin: 0;
-    font-family: Lato, sans-serif;
     color: ${theme.colors.accent_dark};
     & .sqon-group {
       flex-wrap: wrap;
@@ -85,7 +85,7 @@ const getCss = (theme: typeof defaultTheme) => css`
       margin-right: 7px;
     }
     & .sqon-value {
-      background-color: ${theme.colors.accent};
+      background-color: ${theme.colors.primary_dark};
       color: ${theme.colors.white};
       padding: 0 7px 0 12px;
       margin-right: 4px;
@@ -97,7 +97,7 @@ const getCss = (theme: typeof defaultTheme) => css`
     }
     & .sqon-less,
     .sqon-more {
-      background-color: ${theme.colors.accent_light};
+      background-color: ${theme.colors.primary_light};
       color: ${theme.colors.white};
       padding: 0 12px;
       text-transform: uppercase;
@@ -123,7 +123,7 @@ const getCss = (theme: typeof defaultTheme) => css`
     & .sqon-value-group {
       font-size: 22px;
       line-height: 22px;
-      color: ${theme.colors.accent};
+      color: ${theme.colors.grey_6};
     }
     & .sqon-value-group-start {
       margin-right: 6px;
@@ -142,6 +142,10 @@ const getCss = (theme: typeof defaultTheme) => css`
     }
     & .sqon-empty-message {
       font-weight: normal;
+
+      span.sqon-empty-message-arrow {
+        color: ${theme.colors.canada};
+      }
     }
   }
 `;
@@ -158,7 +162,7 @@ const QueryBar = (props: PageContentProps) => {
         ${getCss(theme)}
       `}
     >
-      <CurrentSQON {...props} />
+      <CurrentSQON {...props} emptyMessage={'Start by selecting filters'} />
     </Row>
   );
 };

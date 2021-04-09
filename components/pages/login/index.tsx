@@ -22,10 +22,10 @@
 import PageContent from './PageContent';
 import PageLayout from '../../PageLayout';
 
-const SubmissionPage = () => (
+const LoginPage = () => (
   <PageLayout subtitle="Submitter Login">
     <PageContent />
   </PageLayout>
 );
 
-export default SubmissionPage;
+export default LoginPage;

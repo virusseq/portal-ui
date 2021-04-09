@@ -46,6 +46,7 @@ const Footer = () => {
         padding: 0 20px;
         ${theme.shadow.default};
         z-index: 10;
+        overflow: hidden;
         position: fixed;
         bottom: 0px;
         left: 0px;
@@ -57,7 +58,7 @@ const Footer = () => {
         rel="noopener noreferrer"
         target="_blank"
       >
-        <GenomeCanadaLogo />
+        <GenomeCanadaLogo width={85} />
       </a>
       <section
         css={(theme: typeof defaultTheme) => css`
@@ -69,6 +70,7 @@ const Footer = () => {
 
           & a, & span {
             ${theme.typography.subheading2};
+            font-weight: normal;
           }
         `}
         >
@@ -94,16 +96,6 @@ const Footer = () => {
             }
           `}
           >
-          <li>
-            <StyledLink
-              href="https://www.genomecanada.ca/"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              genomecanada.ca
-            </StyledLink>
-          </li>
-
           <li>
             <StyledLink
               href="https://www.genomecanada.ca/en/cancogen"
@@ -136,7 +128,7 @@ const Footer = () => {
         </ul>
         <span>
           &#169;
-          {` ${new Date().toISOString().slice(0,4)} CanCOGeN VirusSeq Data Portal`}
+          {` ${new Date().toISOString().slice(0,4)} Canadian VirusSeq Data Portal`}
         </span>
       </section>
       <span

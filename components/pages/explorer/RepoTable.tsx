@@ -63,8 +63,11 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
           outline: none;
         }
       }
+      & .dropDownButtonContent {
+        color: ${theme.colors.primary};
+      }
       & .buttonWrapper button:before {
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23003055' fill-rule='evenodd' d='M1.32 17.162h17.162c.729 0 1.32.59 1.32 1.32 0 .73-.591 1.32-1.32 1.32H1.32c-.729 0-1.32-.59-1.32-1.32 0-.73.591-1.32 1.32-1.32zm4.93-8.87l2.232 2.227V1.512c0-.774.63-1.402 1.406-1.402.777 0 1.406.628 1.406 1.402v9.032l2.257-2.252c.55-.548 1.44-.548 1.989 0 .549.547.55 1.435 0 1.983l-4.976 4.963c-.366.365-.96.365-1.327 0l-4.975-4.963c-.549-.548-.549-1.435 0-1.983.55-.548 1.439-.548 1.988 0z'/%3E%3C/svg%3E%0A");
+        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23${theme.colors.primary.slice(1)}' fill-rule='evenodd' d='M1.32 17.162h17.162c.729 0 1.32.59 1.32 1.32 0 .73-.591 1.32-1.32 1.32H1.32c-.729 0-1.32-.59-1.32-1.32 0-.73.591-1.32 1.32-1.32zm4.93-8.87l2.232 2.227V1.512c0-.774.63-1.402 1.406-1.402.777 0 1.406.628 1.406 1.402v9.032l2.257-2.252c.55-.548 1.44-.548 1.989 0 .549.547.55 1.435 0 1.983l-4.976 4.963c-.366.365-.96.365-1.327 0l-4.975-4.963c-.549-.548-.549-1.435 0-1.983.55-.548 1.439-.548 1.988 0z'/%3E%3C/svg%3E%0A");
         margin-top: 2px;
         margin-right: 4px;
       }
@@ -72,7 +75,7 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         margin-right: 8px;
       }
       & .dropDownHeader button:after {
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23151c3d' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
+        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.primary.slice(1)}' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
         margin-top: 2px;
         margin-left: -3px;
       }
@@ -242,29 +245,30 @@ const RepoTable = (props: PageContentProps) => {
   const customExporters = [
     { label: 'File Table', fileName: `data-explorer-table-export.${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
     { label: 'File Manifest', fileName: `score-manifest.${today}.tsv`, columns: manifestColumns }, // exports a TSV with the manifest columns
-    { label: () => (
-      <span
-        css={css`
-          border-top: 1px solid #eee;
-          margin-top: -3px;
-          padding-top: 7px;
-          white-space: pre-line;
-          width: 140px;
-        `}
-      >
-        {`To download files using a file manifest, please follow these `}
-        <StyledLink
-          css={css`
-            line-height: inherit;
-          `}
-          href="https://overture.bio/documentation/score/user-guide/download"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          instructions
-        </StyledLink>
-      </span>
-    ), },
+    // { label: () => (
+    //   <span
+    //     css={css`
+    //       border-top: 1px solid #eee;
+    //       margin-top: -3px;
+    //       padding-top: 7px;
+    //       white-space: pre-line;
+    //       width: 140px;
+    //     `}
+    //   >
+    //     {`To download files using a file manifest, please follow these `}
+    //     <StyledLink
+    //       css={css`
+    //         line-height: inherit;
+    //       `}
+    //       href="https://overture.bio/documentation/score/user-guide/download"
+    //       rel="noopener noreferrer"
+    //       target="_blank"
+    //     >
+    //       instructions
+    //     </StyledLink>
+    //     .
+    //   </span>
+    // ), },
   ];
 
   return (

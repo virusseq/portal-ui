@@ -53,6 +53,7 @@ const NavBar: React.ComponentType = () => {
     cursor: pointer;
     display: flex;
     flex: 0;
+    font-weight: bold;
     height: 100%;
     justify-content: center;
     padding: 0 2rem;
@@ -130,7 +131,7 @@ const NavBar: React.ComponentType = () => {
                 ${router.pathname === ABOUT_PATH ? activeLinkStyle : ''}
               `}
             >
-              About VirusSeq Portal
+              About VirusSeq Data Portal
             </a>
           </Link>
           <Link path={EXPLORER_PATH}>
@@ -140,7 +141,7 @@ const NavBar: React.ComponentType = () => {
                 ${router.pathname === EXPLORER_PATH ? activeLinkStyle : ''}
               `}
             >
-              Explore COVID-19 Data
+              Explore VirusSeq Data
             </a>
           </Link>
         </div>

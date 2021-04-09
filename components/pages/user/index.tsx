@@ -23,7 +23,6 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 
 import PageLayout from '../../PageLayout';
-import { OvertureUser } from '../../theme/icons';
 import defaultTheme from '../../theme';
 import useAuthContext from '../../../global/hooks/useAuthContext';
 import AuthenticatedBadge from './AuthenticatedBadge';
@@ -92,18 +91,11 @@ const UserComponent = () => {
             <UserInfoContainer>
               <FlexDiv
                 css={css`
-                  flex-direction: row;
+                  flex-direction: column;
                 `}
               >
-                <OvertureUser width={75} height={84} />
-                <div
-                  css={css`
-                    margin-left: 1rem;
-                  `}
-                >
-                  <UserTitle>{`${user.firstName} ${user.lastName}`}</UserTitle>
-                  <UserEmail>{user.email || ''}</UserEmail>
-                </div>
+                <UserTitle>{`${user.firstName} ${user.lastName}`}</UserTitle>
+                <UserEmail>{user.email || ''}</UserEmail>
               </FlexDiv>
               <AuthenticatedBadge provider={user.providerType} />
             </UserInfoContainer>

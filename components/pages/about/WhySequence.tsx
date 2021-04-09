@@ -1,8 +1,5 @@
 import { css } from '@emotion/core';
 
-// import { PageContentProps } from './index';
-import { StyledLinkAsButton } from '../../Link';
-
 const WhySequence = () => (
   <section
     css={(theme) => css`

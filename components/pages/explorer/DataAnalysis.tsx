@@ -53,6 +53,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
             li {
               align-items: center;
               display: flex;
+              font-weight: bold;
               padding-left: 25px;
               position: relative;
               white-space: nowrap;
@@ -68,7 +69,6 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
             }
 
             span {
-              font-weight: bold;
               margin-right: 5px;
             }
           `}
@@ -152,8 +152,9 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                     margin: 5,
                     style: {
                       fontSize: 13,
+                      fontWeight: 'bold',
                     },
-                    text: 'Samples by Province',
+                    text: 'Viral Genomes by Province',
                   },
                   tooltip: {
                     // enabled: false,
@@ -167,7 +168,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                   yAxis: {
                     min: 0,
                     title: {
-                        text: '# files'
+                        text: '# Viral Genomes'
                     },
                 },
                 }}
@@ -272,7 +273,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                 options={{
                   chart: {
                     height: 100,
-                    width: 100,
+                    width: 130,
                     spacing: [0,0,0,0],
                   },
                   credits: {
@@ -318,9 +319,9 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                     y: 12,
                   },
                   tooltip: {
-                    // enabled: false,
-                    headerFormat: '<b>Age {point.key}:</b> {point.y} ({point.percentage:.1f}%)',
-                    pointFormat: '',
+                    formatter(this: Highcharts.TooltipFormatterContextObject): string {
+                      return `<b>${this.key} Years:</b><br>${this.y} File${this.y > 1 ? 's' : ''} (${this.percentage}%)`;
+                    },
                   },
                 }}
               />
@@ -329,7 +330,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                 options={{
                   chart: {
                     height: 100,
-                    width: 100,
+                    width: 120,
                     spacing: [0,0,0,0],
                   },
                   credits: {
@@ -375,9 +376,9 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                     y: 11,
                   },
                   tooltip: {
-                    // enabled: false,
-                    headerFormat: '<b>{point.key}:</b> {point.y} ({point.percentage:.1f}%)',
-                    pointFormat: '',
+                    formatter(this: Highcharts.TooltipFormatterContextObject): string {
+                      return `<b>${this.key}:</b><br>${this.y} File${this.y > 1 ? 's' : ''} (${this.percentage}%)`;
+                    },
                   },
                 }}
               />

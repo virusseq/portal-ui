@@ -22,6 +22,7 @@
 const base = {
   white: '#fff',
   black: '#282a35',
+  canada: '#D93738'
 };
 
 const grey = {
@@ -37,13 +38,14 @@ const grey = {
 const primary = {
   primary: '#28519d',
   primary_dark: '#113877',
+  primary_light: '#6885ba',
 };
 
 const accent = {
   accent: '#60b3e0',
   accent_light: '#afd9ef',
   accent_dark: '#151c3d',
-  accent_1: '#e5edf3',
+  accent_light_rgb: '175, 217, 239',
 };
 
 // light blues

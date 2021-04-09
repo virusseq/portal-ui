@@ -24,6 +24,7 @@ import { useRouter } from 'next/router';
 
 import { EGO_JWT_KEY, ROOT_PATH } from '../utils/constants';
 import { decodeToken, extractUser, isValidJwt } from '../utils/egoTokenUtils';
+import { getConfig } from '../config';
 import { UserWithId } from '../types';
 import getInternalLink from '../utils/getInternalLink';
 
@@ -48,6 +49,10 @@ export const AuthProvider = ({
   egoJwt?: string;
   children: React.ReactElement;
 }) => {
+  const {
+    NEXT_PUBLIC_KEYCLOAK,
+    NEXT_PUBLIC_EGO_CLIENT_ID,
+  } = getConfig();
   const router = useRouter();
   // TODO: typing this state as `string` causes a compiler error. the same setup exists in argo but does not cause
   // a type issue. using `any` for now
@@ -59,7 +64,9 @@ export const AuthProvider = ({
 
   const logout = () => {
     removeToken();
-    router.push(getInternalLink({ path: ROOT_PATH }));
+    router.push(
+      `${NEXT_PUBLIC_KEYCLOAK}logout?redirect_uri=${window.location.origin}`,
+    );
   };
 
   if (!token) {

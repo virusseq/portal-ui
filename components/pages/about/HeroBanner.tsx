@@ -80,9 +80,10 @@ const HeroBanner = () => (
       <p
         css={(theme) => css`
           ${theme.typography.subheading}
+          font-weight: normal;
         `}
         >
-        The goal of VirusSeq is to perform SARS-CoV-2 genomics surveillance by sequencing up to 150,000 viral genomes from individuals testing positive for COVID-19, and ensuring data access to the research community.
+        The goal of the CanCOGeN VirusSeq project is to sequence up to 150,000 viral samples from Canadians testing positive for COVID-19. The VirusSeq Data Portal is an open-source and open-access data portal for all Canadian SARS-CoV-2 sequences and associated non-sensitive clinical/epidemiological data. It harmonizes, validates and automates submission to international databases.
       </p>
       <ReleaseData />
       <Link path={EXPLORER_PATH}>

@@ -44,8 +44,9 @@ const PageContent = () => {
         css={theme => css`
           background-color: ${theme.colors.white};
           border-radius: 5px;
-          max-width: 600px;
-          padding: 30px;
+          box-sizing: border-box;
+          max-width: 770px;
+          padding: 40px;
           width: 100%;
           ${theme.shadow.default};
         `}
@@ -53,7 +54,7 @@ const PageContent = () => {
         <h1
           css={theme => css`
             color: ${theme.colors.primary};
-            margin: 0 0 20px;
+            margin: 0 0 30px;
           `}
         >
           Data Submission
@@ -61,9 +62,10 @@ const PageContent = () => {
         <p
           css={theme => css`
             font-weight: bold;
+            margin-bottom: 25px;
           `}
         >
-          CoViD-19 Data is submitted to this portal by approved users.
+          Viral genomes are submitted to this portal by approved users.
           </p>
         <ul
           css={theme => css`
@@ -83,18 +85,17 @@ const PageContent = () => {
               padding: 10px 0;
 
               &:first-of-type {
-                padding-right: 30px;
+                padding-right: 40px;
               }
 
               &:not(:first-of-type) {
                 border-left: 1px solid ${theme.colors.grey_4};
-                padding-left: 30px;
+                padding-left: 40px;
               }  
             }
 
             p {
               margin: 0 0 20px;
-              font-size: 0.8em;
             }
           `}
         >
@@ -109,7 +110,7 @@ const PageContent = () => {
                 padding: 8px 20px;
                 width: fit-content;
               `}
-              href="https://www.genomecanada.ca/en/cancogen"
+              href="https://www.genomecanada.ca/en/cancogen/contact-us"
               rel="noopener noreferrer"
               target="_blank"
             >

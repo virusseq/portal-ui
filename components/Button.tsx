@@ -26,14 +26,14 @@ import styled from '@emotion/styled';
 import defaultTheme from './theme';
 import { Spinner } from './theme/icons';
 
-const ButtonElement = styled('button')`
+export const ButtonElement = styled('button')`
   ${({ theme }: { theme: typeof defaultTheme }) => css`
     color: ${theme.colors.white};
-    background-color: ${theme.colors.accent};
+    background-color: ${theme.colors.primary};
     ${theme.typography.subheading2};
     line-height: 24px;
     border-radius: 5px;
-    border: 1px solid ${theme.colors.accent};
+    border: 1px solid ${theme.colors.primary};
     padding: 6px 15px;
     display: flex;
     justify-content: center;
@@ -41,7 +41,7 @@ const ButtonElement = styled('button')`
     cursor: pointer;
     position: relative;
     &:hover {
-      background-color: ${theme.colors.accent_dark};
+      background-color: ${theme.colors.primary_dark};
     }
     &:disabled,
     &:disabled:hover {

@@ -16,7 +16,7 @@ query ($sqon: JSON) {
       include_missing: false,
       aggregations_filter_themselves: true
     ){
-      analysis__host__host_age{
+      analysis__host__host_age_bin{
         buckets {
           doc_count
           key
@@ -63,7 +63,7 @@ const useReleaseData = (sqon?: RepoFiltersType) : [ReleaseDataProps , boolean] =
         variables: { sqon },
       }})
         .then(async ({ data: { file: { aggregations: {
-            analysis__host__host_age: { buckets: hostAges = []},
+            analysis__host__host_age_bin: { buckets: hostAges = []},
             analysis__host__host_gender: { buckets: hostGenders = []},
             analysis__sample__geo_loc_province: { buckets: provinces = []},
             donors__specimens__samples__sample_id: { bucket_count: genomes = 0},

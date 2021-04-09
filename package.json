@@ -1,6 +1,6 @@
 {
   "name": "virusseq-dataportal-ui",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@arranger/components": "^2.12.5",
+    "@arranger/components": "^2.12.6",
     "@emotion/babel-preset-css-prop": "^10.0.27",
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
@@ -26,6 +26,7 @@
     "query-string": "^6.13.8",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-dropzone": "^11.3.2",
     "react-grid-system": "^7.1.1",
     "react-tippy": "^1.4.0",
     "url-join": "^4.0.1"
