@@ -320,7 +320,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                   },
                   tooltip: {
                     formatter(this: Highcharts.TooltipFormatterContextObject): string {
-                      return `<b>${this.key} Years:</b><br>${this.y} File${this.y > 1 ? 's' : ''} (${this.percentage}%)`;
+                      return `<b>${this.key} Years:</b><br>${this.y} File${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
                     },
                   },
                 }}
@@ -377,7 +377,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                   },
                   tooltip: {
                     formatter(this: Highcharts.TooltipFormatterContextObject): string {
-                      return `<b>${this.key}:</b><br>${this.y} File${this.y > 1 ? 's' : ''} (${this.percentage}%)`;
+                      return `<b>${this.key}:</b><br>${this.y} File${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
                     },
                   },
                 }}
