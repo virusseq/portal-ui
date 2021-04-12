@@ -96,10 +96,11 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
             padding: 5px 8px 6px 6px;
           }
           &:not(.collapsed)::after {
+            ${theme.typography.baseFont}
             bottom: -20px;
             color: ${theme.colors.grey_6};
             content: "# files";
-            font-size: 12px;
+            font-size: 11px;
             position: absolute;
             right: 0;
           }
@@ -143,6 +144,7 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
           padding-bottom: 2px;
           & .bucket-count {
             ${theme.typography.label2}
+            font-size: 11px;
             display: inline-block;
             background-color: rgba(${theme.colors.accent_light_rgb}, 0.45);
             padding: 0 3px;
@@ -160,7 +162,7 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
       }
       & .showMore-wrapper {
         ${theme.typography.label2};
-        color: ${theme.colors.accent};
+        color: ${theme.colors.primary};
         text-decoration: underline;
         cursor: pointer;
         display: flex;

@@ -7,6 +7,7 @@ import useReleaseData from '../../../global/hooks/useReleaseData';
 import Loader from '../../Loader';
 import { Covid, CrossHairs, File, Storage } from '../../theme/icons';
 import { PageContentProps } from '.';
+import formatRange from '../../../global/utils/formatRange';
 
 const DataAnalysis = ({ sqon }: PageContentProps) => {
   const [{
@@ -144,7 +145,10 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                     },
                   },
                   series: [{
-                    data: Object.values(filesByVariant)?.map(province => province?.count),
+                    data: Object.values(filesByVariant)?.map(province => ({
+                      name: province?.name,
+                      y: province?.count
+                    })),
                     name: 'CoViD-19',
                   }],
                   title: {
@@ -157,8 +161,9 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                     text: 'Viral Genomes by Province',
                   },
                   tooltip: {
-                    // enabled: false,
-                  //   headerFormat: '<b>{point.x}</b><br/>',
+                    formatter(this: Highcharts.TooltipFormatterContextObject): string {
+                      return `<b>${this.key}:</b><br>${this.y} Genome${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
+                    },
                   //   pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
                   },
                   xAxis: {
@@ -320,7 +325,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                   },
                   tooltip: {
                     formatter(this: Highcharts.TooltipFormatterContextObject): string {
-                      return `<b>${this.key} Years:</b><br>${this.y} File${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
+                      return `<b>${formatRange(this.key)} Years:</b><br>${this.y} Genome${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
                     },
                   },
                 }}
@@ -377,7 +382,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                   },
                   tooltip: {
                     formatter(this: Highcharts.TooltipFormatterContextObject): string {
-                      return `<b>${this.key}:</b><br>${this.y} File${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
+                      return `<b>${this.key}:</b><br>${this.y} Genome${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
                     },
                   },
                 }}

@@ -148,7 +148,7 @@ const Footer = () => {
             `
           }
         >
-        powered by:
+        Powered by:
         </span>
         <a
           href="https://www.overture.bio/"
