@@ -15,6 +15,11 @@ const PageContent = () => {
         display: flex;
         padding-top: 40px;
         position: relative;
+        
+        > * {
+          flex-basis: 50%;
+          padding: 0 30px;
+        }
       `}
     >
       <NewSubmissions />

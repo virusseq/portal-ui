@@ -69,6 +69,10 @@ const NewSubmissions = () => {
       css={theme => css`
         flex-direction: column;
 
+        &:focus {
+          outline: none;
+        }
+
         ${isDragActive && `
           &::before {
             align-items: center;

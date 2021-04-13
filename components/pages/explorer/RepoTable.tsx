@@ -243,8 +243,8 @@ const RepoTable = (props: PageContentProps) => {
 
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const customExporters = [
-    { label: 'File Table', fileName: `data-explorer-table-export.${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
-    { label: 'File Manifest', fileName: `score-manifest.${today}.tsv`, columns: manifestColumns }, // exports a TSV with the manifest columns
+    { label: 'File Table', fileName: `virusseq-table-export-${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
+    { label: 'File Manifest', fileName: `virusseq-file-manifest-${today}.tsv`, columns: manifestColumns }, // exports a TSV with the manifest columns
     // { label: () => (
     //   <span
     //     css={css`

@@ -42,6 +42,8 @@ const getCss = (theme: typeof defaultTheme) => css`
     padding: 12px 0 12px 12px;
     margin: 0;
     color: ${theme.colors.accent_dark};
+    min-height: 30px;
+
     & .sqon-group {
       flex-wrap: wrap;
       margin-top: 3px;
