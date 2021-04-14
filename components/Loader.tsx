@@ -19,20 +19,27 @@
  *
  */
 
-import { css } from '@emotion/core';
+import { ReactNode, ReactNodeArray } from 'react';
+import { css, SerializedStyles } from '@emotion/core';
 
-// TODO: this is a placeholder Loader
-const Loader = ({ stroke = '14px', height = '120px', width = '120px'}) => {
+const Loader = ({ 
+  size = '120px',
+  margin = 'auto',
+  overlay = false,
+  stroke = '14px',
+}) => {
   return (
     <div
       css={(theme) => css`
         border: ${stroke} solid ${theme.colors.grey_3};
         border-top: ${stroke} solid ${theme.colors.secondary_dark};
         border-radius: 50%;
-        height: ${height};
-        width: ${width};
-        margin: auto;
+        // height: min(100%, ${size});
+        height: ${size};
+        width: ${size};
+        margin: ${margin};
         animation: spin 2s linear infinite;
+        
 
         @keyframes spin {
           0% {
@@ -42,9 +49,92 @@ const Loader = ({ stroke = '14px', height = '120px', width = '120px'}) => {
             transform: rotate(360deg);
           }
         }
+        ${overlay && `
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin: calc(-${size} / 2) 0 0 calc(-${size} / 2);
+        `}
       `}
     />
   );
 };
+
+export const LoaderWrapper = ({
+  children,
+  loaderSize,
+  loading = false,
+  message = '',
+  style,
+}: {
+  children?: ReactNode | ReactNodeArray,
+  loaderSize?: string,
+  loading?: boolean,
+  message?: ReactNode | ReactNodeArray,
+  style?: SerializedStyles;
+}) => (
+  <div
+    css={theme => css`
+      position: relative;
+      ${style}
+
+      &::after {
+        background: ${theme.colors.white};
+        ${loading && 'content: "";'}
+        height: 100%;
+        opacity: 80%;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
+    `}
+  >
+    {children}
+
+    {loading && (
+      message
+        ? (
+          <figure
+            css={theme => css`
+              background: ${theme.colors.white};
+              border: 1px solid ${theme.colors.grey_3};
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              left: 50%;
+              margin: 0;
+              max-height: 100%;
+              max-width: 400px;
+              padding: 20px;
+              position: absolute;
+              top: 50%;
+              transform: translate(-50%, -50%);
+              width: 100%;
+              z-index: 1;
+              
+              figcaption {
+                box-sizing: border-box;
+                color: ${theme.colors.primary};
+                font-size: 14px;
+                margin: 20px 0 0;
+                overflow: auto;
+                text-align: center;
+                width: 100%;
+              }
+            `}
+          >
+            <Loader size="30px" />
+            <figcaption>{message}</figcaption>
+          </figure>
+        )
+        : (
+          <Loader 
+            overlay 
+            size={loaderSize}
+          />
+        )
+    )}
+  </div>
+);
 
 export default Loader;

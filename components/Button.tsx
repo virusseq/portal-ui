@@ -26,7 +26,19 @@ import styled from '@emotion/styled';
 import defaultTheme from './theme';
 import { Spinner } from './theme/icons';
 
-export const ButtonElement = styled('button')`
+export const UnStyledButton = styled('button')`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  position: relative;
+  width: fit-content;
+`;
+
+export const ButtonElement = styled(UnStyledButton)`
   ${({ theme }: { theme: typeof defaultTheme }) => css`
     color: ${theme.colors.white};
     background-color: ${theme.colors.primary};
@@ -35,11 +47,6 @@ export const ButtonElement = styled('button')`
     border-radius: 5px;
     border: 1px solid ${theme.colors.primary};
     padding: 6px 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
     &:hover {
       background-color: ${theme.colors.primary_dark};
     }
@@ -52,6 +59,8 @@ export const ButtonElement = styled('button')`
     }
   `}
 `;
+
+
 
 const Button = React.forwardRef<
   HTMLButtonElement,

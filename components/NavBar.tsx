@@ -104,7 +104,7 @@ const NavBar: React.ComponentType = () => {
               color: ${theme.colors.white};
             `}
           >
-            <img src="images/navbar-logo.png" alt="logos for CanCOGeN and VirusSeq" width="296" />
+            <img src="/images/navbar-logo.png" alt="logos for CanCOGeN and VirusSeq" width="296" />
           </a>
         </Link>
       </div>

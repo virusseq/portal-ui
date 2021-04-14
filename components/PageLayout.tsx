@@ -62,11 +62,6 @@ export const ErrorPageLayout = ({
       <ErrorNotification
         size="lg"
         title={errorTitle}
-        styles={`
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        `}
       >
         {children}
       </ErrorNotification>

@@ -90,7 +90,7 @@ const LoginLoaderPage = createPage({
           `
         }
       >
-        <Loader />
+        <Loader margin="0 auto"/>
         <div
           css={(theme) =>
             css`

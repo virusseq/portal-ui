@@ -3,7 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 import defaultTheme from '../../theme';
-import { Covid, CrossHairs, File, Storage } from '../../theme/icons';
+import { CoronaVirus, CrossHairs, File, Storage } from '../../theme/icons';
 import useReleaseData from '../../../global/hooks/useReleaseData';
 
 const getChartStyles = (theme: typeof defaultTheme) => css`
@@ -100,7 +100,7 @@ const ReleaseData = () => {
           `}
         >
           <li><File /><span>{fileCount}</span>Files</li>
-          <li><Covid /><span>{genomes}</span>Viral Genomes</li>
+          <li><CoronaVirus /><span>{genomes}</span>Viral Genomes</li>
           <li><CrossHairs style={css`margin-left: -1px;`} /><span>{studyCount}</span>Studies</li>
           <li><Storage /><span>{fileSize.value}</span>{fileSize.unit}</li>
         </ul>

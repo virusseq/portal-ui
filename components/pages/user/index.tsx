@@ -76,8 +76,9 @@ const UserComponent = () => {
   return (
     <StyledPageLayout subtitle="User Profile & Token">
       <FlexDiv
-        css={css`
+        css={theme => css`
           justify-content: center;
+          padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
         `}
       >
         {user && (

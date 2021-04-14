@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 import createArrangerFetcher from '../../../components/utils/arrangerFetcher';
-import { getProvince } from '../../../global/utils/constants';
-import formatFileSize from '../../../global/utils/formatFileSize';
+import { getProvince } from '../../utils/constants';
+import formatFileSize from '../../utils/formatFileSize';
 import { RepoFiltersType } from '../../types/sqon';
 import { ReleaseDataProps } from './types';
 

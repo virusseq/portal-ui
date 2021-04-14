@@ -83,11 +83,11 @@ export const AuthProvider = ({
     }
   }
 
-  const fetchWithAuth: T_AuthContext['fetchWithAuth'] = (url, options) => {
+  const fetchWithAuth: T_AuthContext['fetchWithAuth'] = (url, options = { method: 'GET' }) => {
     return fetch(url, {
       ...options,
       headers: { ...options?.headers, accept: '*/*', Authorization: `Bearer ${token || ''}` },
-      body: null,
+      ...options.method === 'GET' && { body: null },
     });
   };
 

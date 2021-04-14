@@ -149,11 +149,6 @@ const RepositoryPage = () => {
         <ErrorNotification
           title={'DMS Configuration Error'}
           size="lg"
-          styles={`
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          `}
         >
           {ConfigError}
         </ErrorNotification>

@@ -27,13 +27,21 @@ import defaultTheme from './theme';
 import getInternalLink from '../global/utils/getInternalLink';
 
 const StyledLink = styled('a')`
-  ${({ theme }: { theme: typeof defaultTheme }) => css`
-    color: ${theme.colors.secondary_accessible};
-    ${theme.typography.regular};
+  ${({ theme, disabled }: { theme: typeof defaultTheme, disabled?: boolean }) => css`
     line-height: 24px;
-    &:hover {
-      color: ${theme.colors.accent};
-    }
+    ${theme.typography.regular};
+
+    ${disabled ? `
+      cursor: not-allowed;
+      color: ${theme.colors.grey_5};
+    ` : `
+      color: ${theme.colors.primary};
+      cursor: pointer;
+
+      &:hover {
+        color: ${theme.colors.primary_light};
+      }
+    `}
   `}
 `;
 

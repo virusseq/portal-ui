@@ -90,7 +90,7 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
       & .dropDownContent {
         max-width: 200px;
         max-height: 285px;
-        overflow-y: scroll;
+        overflow-y: auto;
         top: 82%;
 
         ${theme.typography.label};

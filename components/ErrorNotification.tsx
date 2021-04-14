@@ -128,10 +128,17 @@ const ErrorNotification = ({
     css={css`
       display: flex;
       flex: 1;
-      ${styles}
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     `}
   >
-    <ErrorContentContainer size={size}>
+    <ErrorContentContainer 
+      css={css`
+        ${styles}
+      `}
+      size={size}
+      >
       {title ? (
         <div>
           <ErrorTitle size={size}>

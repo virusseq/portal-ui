@@ -1,28 +1,45 @@
 import { css } from '@emotion/core';
+import { useRouter } from 'next/router';
 
-import { getConfig } from '../../../global/config';
 import NewSubmissions from './NewSubmissions';
+import PreviousSubmissions from './PreviousSubmissions';
+import SubmissionDetails from './SubmissionDetails';
 
+type QueryType = {
+  query: {
+    ID?: string[],
+  }
+}
 const PageContent = () => {
-  const {
-    NEXT_PUBLIC_EGO_API_ROOT,
-    NEXT_PUBLIC_EGO_CLIENT_ID,
-  } = getConfig();
+  const { query: { ID: [ submissionID ] = [] } }: QueryType = useRouter();
 
   return (
     <main
       css={(theme) => css`
         display: flex;
-        padding-top: 40px;
+        padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
         position: relative;
         
         > * {
-          flex-basis: 50%;
+          ${!submissionID && 'flex-basis: 50%;'}
           padding: 0 30px;
+        }
+
+        .view-title {
+          color: ${theme.colors.primary};
+          font-weight: normal;
+          margin: 0 0 40px;
         }
       `}
     >
-      <NewSubmissions />
+      {submissionID
+        ? <SubmissionDetails ID={submissionID} />
+        : (
+          <>
+            <PreviousSubmissions />
+            <NewSubmissions />
+          </>
+        )}
     </main>
   );
 };

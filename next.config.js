@@ -34,5 +34,9 @@ module.exports = withCSS({
       source: '/about',
       destination: '/',
     },
+    {
+      source: '/muse/:path*',
+      destination: `${process.env.NEXT_PUBLIC_MUSE_API_URL || '/'}:path*`,
+    }
   ],
 });

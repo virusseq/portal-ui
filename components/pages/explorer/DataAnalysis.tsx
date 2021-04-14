@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 import useReleaseData from '../../../global/hooks/useReleaseData';
 import Loader from '../../Loader';
-import { Covid, CrossHairs, File, Storage } from '../../theme/icons';
+import { CoronaVirus, CrossHairs, File, Storage } from '../../theme/icons';
 import { PageContentProps } from '.';
 import formatRange from '../../../global/utils/formatRange';
 
@@ -36,8 +36,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
         {isFetchingData
         ? <Loader
             stroke="8px"
-            height="20px"
-            width="20px"
+            size="20px"
           />
         : (
           <ul
@@ -75,7 +74,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
           `}
         >
           <li><File /><span>{fileCount}</span>Files</li>
-          <li><Covid /><span>{genomes}</span>Viral Genomes</li>
+          <li><CoronaVirus /><span>{genomes}</span>Viral Genomes</li>
           <li><CrossHairs style={css`margin-left: -1px;`} /><span>{studyCount}</span>Studies</li>
           <li><Storage /><span>{fileSize.value}</span>{fileSize.unit}</li>
         </ul>
@@ -108,8 +107,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
             {isFetchingData
             ? <Loader
                 stroke="8px"
-                height="20px"
-                width="20px"
+                size="20px"
               />
             : (
               <HighchartsReact
@@ -191,8 +189,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
             {isFetchingData
             ? <Loader
                 stroke="8px"
-                height="20px"
-                width="20px"
+                size="20px"
               />
             : (
               <HighchartsReact
@@ -269,8 +266,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
             {isFetchingData
             ? <Loader
                 stroke="8px"
-                height="20px"
-                width="20px"
+                size="20px"
               />
             : (<>
               <HighchartsReact
