@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
+import { getConfig } from '../../config';
 import processStream from '../../utils/processStream';
 import useAuthContext from '../useAuthContext';
 
 const useMuseData = (origin: string) => {
+  const { NEXT_PUBLIC_MUSE_API } = getConfig();
   const { fetchWithAuth, token } = useAuthContext();
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   
@@ -12,7 +14,7 @@ const useMuseData = (origin: string) => {
   
     // For reference: https://muse.virusseq-dataportal.ca/swagger-ui/
     return fetchWithAuth(
-      `/muse/${endpoint}`,
+      `${NEXT_PUBLIC_MUSE_API}${endpoint}`,
       {
         method, 
         body,
@@ -47,7 +49,7 @@ const useMuseData = (origin: string) => {
 
   const fetchEventStream = (endpoint: string, submissionId: string, onMessage?: Function): EventSource => {
     const eventSource = new EventSource(
-      `/muse/${endpoint}?${
+      `${NEXT_PUBLIC_MUSE_API}${endpoint}?${
         submissionId ? `submissionId=${submissionId}` : ''
       }&access_token=${token}`, {
       withCredentials: true,
