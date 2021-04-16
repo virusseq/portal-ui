@@ -212,6 +212,7 @@ const NewSubmissions = () => {
           <br/>
           <Button
             css={css`
+              height: 34px;
               margin: 20px 0;
             `}
             disabled={isDragActive} 
@@ -227,9 +228,11 @@ const NewSubmissions = () => {
           size="md"
           title={uploadError.status}
           styles={`
+            align-items: center;
+            box-sizing: border-box;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            width: 100%;
           `}
         >
           {uploadError.message}
@@ -348,7 +351,8 @@ const NewSubmissions = () => {
               <td colSpan={2}>
                 <Button
                   css={css`
-                    padding: 2px 15px;
+                    height: 34px;
+                    padding: 0 15px;
                   `}
                   disabled={!(readyToUpload && !uploadError.message)}
                   onClick={handleSubmit}

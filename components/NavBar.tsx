@@ -37,7 +37,7 @@ const NavBar: React.ComponentType = () => {
   const theme: typeof defaultTheme = useTheme();
 
   const activeLinkStyle = `
-    border-bottom-color: ${theme.colors.accent_light};
+    border-bottom-color: ${theme.colors.accent};
     color: ${theme.colors.accent_light};
 
     svg path {

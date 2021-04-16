@@ -3,16 +3,23 @@ import { css } from "@emotion/core";
 import { useTheme } from "emotion-theming";
 import { Column } from "react-table";
 
+import useAuthContext from "../../../global/hooks/useAuthContext";
 import useMuseData from "../../../global/hooks/useMuseData";
+import getInternalLink from "../../../global/utils/getInternalLink";
 import GenericTable from '../../GenericTable';
+import StyledLink from '../../Link';
 import { LoaderWrapper } from '../../Loader';
 import { CoronaVirus } from "../../theme/icons";
 import defaultTheme from '../../theme';
-import useAuthContext from "../../../global/hooks/useAuthContext";
 
 const columnData = [
   {
     accessor: 'submissionId',
+    Cell: ({ value }: { value: string }) => (
+      <StyledLink href={getInternalLink({ path: `/submission/${value}`})}>
+        {value}
+      </StyledLink>
+    ),
     Header: 'Submission ID',
   },
   {
@@ -21,9 +28,9 @@ const columnData = [
   },
   {
     accessor: 'createdAt',
-    Cell: ({ value = '' }) => (
+    Cell: ({ value }: { value: number}) => (
       value && new Date(
-        new Date(value).toUTCString()
+        new Date(value * 1000).toUTCString()
       ).toISOString().slice(0, 10)
     ),
     Header: 'Submission Date',
