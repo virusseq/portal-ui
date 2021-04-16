@@ -9,14 +9,14 @@ const useMuseData = (origin: string) => {
   const { fetchWithAuth, token } = useAuthContext();
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   
+  // For reference: https://muse.virusseq-dataportal.ca/swagger-ui/
   const fetchMuseData = (endpoint: string, { body = '', method = 'GET' }: { body?: any, method?: string } = {}) => {
     setAwaitingResponse(true);
   
-    // For reference: https://muse.virusseq-dataportal.ca/swagger-ui/
     return fetchWithAuth(
       `${NEXT_PUBLIC_MUSE_API}${endpoint}`,
       {
-        method, 
+        method,
         body,
       }, 
     )

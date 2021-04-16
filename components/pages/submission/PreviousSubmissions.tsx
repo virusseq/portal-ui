@@ -8,6 +8,7 @@ import GenericTable from '../../GenericTable';
 import { LoaderWrapper } from '../../Loader';
 import { CoronaVirus } from "../../theme/icons";
 import defaultTheme from '../../theme';
+import useAuthContext from "../../../global/hooks/useAuthContext";
 
 const columnData = [
   {
@@ -34,6 +35,7 @@ const columnData = [
 ];
 
 const PreviousSubmissions = () => {
+  const { token } = useAuthContext();
   const columns = useMemo((): Column<{}>[] => columnData, []);
   const [previousSubmissions, setPreviousSubmissions] = useState([]);
 
@@ -44,12 +46,12 @@ const PreviousSubmissions = () => {
   } = useMuseData('PreviousSubmissions');
   
   useEffect(() => {
-    fetchMuseData('submissions')
+    token && fetchMuseData('submissions')
       .then((response) => {
         console.log(response);
         response.data && setPreviousSubmissions(response.data);
       });
-  }, []);
+  }, [token]);
 
   return (
     <article>

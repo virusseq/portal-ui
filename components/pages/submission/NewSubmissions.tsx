@@ -4,6 +4,7 @@ import { useTheme } from 'emotion-theming';
 import Router from 'next/router';
 import { useDropzone } from 'react-dropzone';
 
+import useAuthContext from '../../../global/hooks/useAuthContext';
 import useMuseData from '../../../global/hooks/useMuseData';
 import getInternalLink from '../../../global/utils/getInternalLink';
 import { ButtonElement as Button, UnStyledButton } from '../../Button';
@@ -63,6 +64,7 @@ const noUploadError = {} as {
 };
 
 const NewSubmissions = () => {
+  const { token } = useAuthContext();
   const [thereAreFiles, setThereAreFiles] = useState(false);
   const [uploadError, setUploadError] = useState(noUploadError);
   const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
@@ -91,7 +93,7 @@ const NewSubmissions = () => {
   const { onClick: fileUploadClick, ...rootProps } = getRootProps();
 
   const handleSubmit = () => {
-    if (thereAreFiles) {
+    if (thereAreFiles && token) {
       const formData = new FormData();
 
       // if many TSV are available, submit only the first one along with all fastas
@@ -132,7 +134,7 @@ const NewSubmissions = () => {
         });
     }
     
-    console.error('no files to submit');
+    console.error(`no ${token? 'token' : 'files'} to submit`);
   }
 
   useEffect(() => {

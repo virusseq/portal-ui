@@ -37,6 +37,7 @@ const PageContent = () => {
         display: flex;
         flex-direction: column;
         justify-content: center;
+        padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
         width: 100vw;
       `}
     >
