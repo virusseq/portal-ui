@@ -1,5 +1,17 @@
-export type NoUploadErrorType = { 
-  errorInfo?: {},
+export type ErrorTypes = 
+  | 'sampleIdInFileMissingInTsv'
+  | 'sampleIdInRecordMissingInFile'
+  | 'missingHeaders'
+  | 'unknownHeaders'
+  | string; // in case new error types are added, the app won't just crash
+
+export type NoUploadErrorType = {
+  errorInfo?: {
+    sampleIdInFileMissingInTsv?: string[],
+    sampleIdInRecordMissingInFile?: string[],
+    missingHeaders?: string[],
+    unknownHeaders?: string[],
+  },
   message?: string,
   status?: string,
 };

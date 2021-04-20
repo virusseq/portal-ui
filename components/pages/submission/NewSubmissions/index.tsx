@@ -13,7 +13,8 @@ import { LoaderWrapper } from '../../../Loader';
 import ErrorNotification from '../../../ErrorNotification';
 import FileRow from './FileRow';
 import {
-  isTSV,
+  getExtension,
+  makeErrorTypeReadable,
   validationParameters,
   validationReducer, 
   validator,
@@ -110,7 +111,7 @@ const NewSubmissions = () => {
   const handleRemoveThis = ({ type, name }: File) => () => {
     setUploadError(noUploadError);
     validationDispatch({
-      type: `remove ${isTSV(type) ? 'tsv' : 'fasta'}`,
+      type: `remove ${getExtension({ name })}`,
       file: name,
     } as ValidationActionType);
   }
@@ -197,6 +198,19 @@ const NewSubmissions = () => {
           `}
         >
           {uploadError.message}
+          {uploadError?.errorInfo && (
+            <ul
+              css={css`
+                padding-left: 20px;
+              `}
+            >
+              {Object.entries(uploadError?.errorInfo).map(([type = '', values = []]) => (
+                values.length > 0 && (
+                  <li key={type}>{makeErrorTypeReadable(type)}:<br />{values.join(', ')}.</li>
+                )
+              ))}
+            </ul>
+          )}
         </ErrorNotification>
       )}
 
@@ -238,10 +252,10 @@ const NewSubmissions = () => {
               background: ${theme.colors.grey_2};
             }
 
-            tr[data-type="tsv"]:not([data-upload="true"]) {
-              color: ${theme.colors.grey_5};
-              text-decoration: line-through;
-            }
+            // tr[data-type="tsv"]:not([data-upload="true"]) {
+            //   color: ${theme.colors.grey_5};
+            //   text-decoration: line-through;
+            // }
 
             td {
               border-top: 1px solid ${theme.colors.grey_4};

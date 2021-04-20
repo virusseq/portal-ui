@@ -114,13 +114,17 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps) => {
             }
 
             td:last-of-type {
-              width: 300px;
               svg {
                 margin-top: 2px;
                 position: absolute;
               }
             }
 
+            td:not(:last-of-type) {
+              max-width: 250px;
+              white-space: normal;
+              width: 250px;
+            }
           `}
         />
       </LoaderWrapper>
