@@ -61,55 +61,51 @@ spec:
             }
         }
 
-		stage('Test') {
-			steps {
-				container('node') {
-					sh "npm ci"
-					sh "npm run test"
-				}
-			}
-		}
-
-		stage('Build & Publish Changes') {
-			when {
-				anyOf {
-					branch 'develop'
-				}
-			}
-			steps {
-				container('docker') {
-					withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-						sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
-					}
-					// DNS error if --network is default
-					sh "docker build --network=host -f Dockerfile . -t ${dockerRepo}:cancogen -t ${dockerRepo}:cancogen-${commit}"
-					sh "docker push ${dockerRepo}:cancogen-${commit}"
-					sh "docker push ${dockerRepo}:cancogen"
-				}
-			}
-		}
-
-		stage('Release & Tag') {
-			when {
-				anyOf {
-					branch 'main'
-				}
-			}
-			steps {
-				container('docker') {
-					withCredentials([usernamePassword(credentialsId: 'argoGithub', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-						sh "git tag ${version}"
-						sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${githubRepo} --tags"
-					}
-					withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-						sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
-					}
-					// DNS error if --network is default
-					sh "docker build --network=host -f Dockerfile . -t ${dockerRepo}:${version} -t ${dockerRepo}:latest"
-					sh "docker push ${dockerRepo}:${version}"
-					sh "docker push ${dockerRepo}:latest"
-				}
-			}
-		}
+    stage('Test') {
+      steps {
+        container('node') {
+          sh "npm ci"
+          sh "npm run test"
+        }
+      }
     }
+
+    stage('Build & Publish Development Changes') {
+      when {
+      branch 'develop'
+      }
+      steps {
+        container('docker') {
+          withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
+          }
+          sh "docker build --network=host -f Dockerfile . -t ${dockerRepo}:${commit} -t ${dockerRepo}:edge"
+          sh "docker push ${dockerRepo}:${commit}"
+          sh "docker push ${dockerRepo}:edge"
+        }
+      }
+    }
+
+    stage('Release & Tag') {
+      when {
+        anyOf {
+          branch 'main'
+        }
+      }
+      steps {
+        container('docker') {
+          withCredentials([usernamePassword(credentialsId: 'argoGithub', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            sh "git tag ${version}"
+            sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${githubRepo} --tags"
+          }
+          withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
+          }
+          sh "docker build --network=host -f Dockerfile . -t ${dockerRepo}:${version} -t ${dockerRepo}:latest"
+          sh "docker push ${dockerRepo}:${version}"
+          sh "docker push ${dockerRepo}:latest"
+        }
+      }
+    }
+  }
 }
