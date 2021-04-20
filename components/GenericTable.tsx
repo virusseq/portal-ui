@@ -76,7 +76,7 @@ const GenericTable = ({
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>
+              <th {...column.getHeaderProps()} className={`tableColumnHeader-${column.id}`}>
                 {column.render('Header')}
               </th>
             ))}
@@ -91,7 +91,7 @@ const GenericTable = ({
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map(cell => (
-                <td {...cell.getCellProps()} className={cell.column.id}>
+                <td {...cell.getCellProps()} className={`tableBodyCell-${cell.column.id}`}>
                   {cell.render('Cell')}
                 </td>
               ))}
