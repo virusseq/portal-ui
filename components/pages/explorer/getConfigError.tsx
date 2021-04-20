@@ -60,7 +60,7 @@ const ListItem = ({
       `
     }
   >
-    {Icon || <Checkmark height={16} width={16} fill={theme.colors.primary} />}
+    {Icon || <Checkmark size={16} fill={theme.colors.primary} />}
     <span
       css={css`
         padding-left: 6px;
@@ -79,7 +79,7 @@ const ListItem = ({
 );
 
 const WarningListItem = ({ fieldName }: { fieldName: string }) => (
-  <ListItem Icon={<Warning height={16} width={16} />} fieldName={fieldName} value={'Missing'} />
+  <ListItem Icon={<Warning size={16} />} fieldName={fieldName} value={'Missing'} />
 );
 
 const getConfigError = ({

@@ -100,8 +100,6 @@ const NavBar: React.ComponentType = () => {
               display: flex;
               align-items: center;
               text-decoration: none;
-              ${theme.typography.heading};
-              color: ${theme.colors.white};
             `}
           >
             <img src="/images/navbar-logo.png" alt="logos for CanCOGeN and VirusSeq" width="296" />

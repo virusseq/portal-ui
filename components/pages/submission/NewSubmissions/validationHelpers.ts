@@ -1,9 +1,12 @@
 import { Dispatch } from "react";
+
 import { 
   ReaderCallbackType,
   ValidationActionType,
   ValidationParametersType,
-} from './validationTypes';
+} from './types';
+
+export const isTSV = (type: string) => type === "text/tab-separated-values";
 
 export const validationParameters = {
   oneTSV: [], // will use only the first one, but display any added
@@ -77,7 +80,7 @@ export const getFileExtension = (file?: File | string): string | void => file &&
 export const minFiles = ({ oneTSV, oneOrMoreFasta }: ValidationParametersType) => !!oneTSV && oneOrMoreFasta.length > 0
 
 export const validator = (state: ValidationParametersType, dispatch: Dispatch<ValidationActionType>) => (file: File) : void => {
-  // TODO: add dev mode
+  // TODO: create dev mode
   // console.log('validating file', file)
   // readFile(file, data => console.log(data));
 
@@ -101,4 +104,4 @@ export const validator = (state: ValidationParametersType, dispatch: Dispatch<Va
   }
 };
 
-export * as validationTypes from './validationTypes';
+export * as validationTypes from './types';

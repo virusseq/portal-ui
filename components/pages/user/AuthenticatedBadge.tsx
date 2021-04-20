@@ -66,7 +66,7 @@ const AuthenticatedBadge = ({ provider }: { provider: ProviderType }) => {
       >
         Authenticated with {providerMap[provider]?.displayName}
       </span>
-      <Checkmark height={15} width={15} fill={theme.colors.success} />
+      <Checkmark size={15} fill={theme.colors.success} />
     </div>
   );
 };

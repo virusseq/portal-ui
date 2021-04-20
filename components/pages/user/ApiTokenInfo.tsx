@@ -510,7 +510,7 @@ const ApiTokenInfo = () => {
                   visibility: ${copySuccess ? 'visible' : 'hidden'};
                 `}
               >
-                <Checkmark width={20} height={20} fill={theme.colors.white} />
+                <Checkmark size={20} fill={theme.colors.white} />
               </span>
               <span
                 css={css`

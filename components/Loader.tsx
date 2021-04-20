@@ -22,24 +22,29 @@
 import { ReactNode, ReactNodeArray } from 'react';
 import { css, SerializedStyles } from '@emotion/core';
 
-const Loader = ({ 
-  size = '120px',
+const Loader = ({
+  inline = false,
   margin = 'auto',
+  message = '',
   overlay = false,
-  stroke = '14px',
+  size = '120px',
 }) => {
+  const unit = size.replace(/\d+/, '')
+  const stroke = `${Number(size.match(/\d+/)?.pop()) * 0.35}${unit}`;
+
   return (
     <div
       css={(theme) => css`
         border: ${stroke} solid ${theme.colors.grey_3};
         border-top: ${stroke} solid ${theme.colors.secondary_dark};
         border-radius: 50%;
+        display: ${inline ? 'inline-' : ""}block;
         // height: min(100%, ${size});
         height: ${size};
         width: ${size};
         margin: ${margin};
         animation: spin 2s linear infinite;
-        
+        z-index: 1;
 
         @keyframes spin {
           0% {
@@ -60,17 +65,48 @@ const Loader = ({
   );
 };
 
+export const LoaderMessage = ({
+  inline = false,
+  margin = '0',
+  message = 'Loading...',
+  size= "20px",
+}: {
+  inline?: boolean,
+  margin?: string,
+  message?: string,
+  size?: string,
+}) => (
+  <div
+    css={(theme) => css`
+      align-items: center;
+      display: flex;
+      flex-direction: ${inline ? 'row' : 'column'}
+      justify-content: center;
+      width: fit-content;
+    `}
+  >
+    <Loader 
+      inline
+      margin={inline ? '0 10px 0 0' : '0 0 10px'}
+      size={size}
+    />
+    <span>{message}</span>
+  </div>
+)
+
 export const LoaderWrapper = ({
   children,
   loaderSize,
   loading = false,
   message = '',
+  size = '30px',
   style,
 }: {
   children?: ReactNode | ReactNodeArray,
   loaderSize?: string,
   loading?: boolean,
   message?: ReactNode | ReactNodeArray,
+  size?: string,
   style?: SerializedStyles;
 }) => (
   <div
@@ -123,14 +159,16 @@ export const LoaderWrapper = ({
               }
             `}
           >
-            <Loader size="30px" />
+            <Loader 
+              size={size}
+              />
             <figcaption>{message}</figcaption>
           </figure>
         )
         : (
           <Loader 
-            overlay 
-            size={loaderSize}
+            overlay
+            size={size}
           />
         )
     )}

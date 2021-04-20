@@ -35,7 +35,6 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
       >
         {isFetchingData
         ? <Loader
-            stroke="8px"
             size="20px"
           />
         : (
@@ -106,7 +105,6 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
           <figure>
             {isFetchingData
             ? <Loader
-                stroke="8px"
                 size="20px"
               />
             : (
@@ -188,7 +186,6 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
           <figure>
             {isFetchingData
             ? <Loader
-                stroke="8px"
                 size="20px"
               />
             : (
@@ -265,7 +262,6 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
           >
             {isFetchingData
             ? <Loader
-                stroke="8px"
                 size="20px"
               />
             : (<>

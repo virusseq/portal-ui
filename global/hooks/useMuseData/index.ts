@@ -23,7 +23,7 @@ const useMuseData = (origin: string) => {
     .then(response => {
       // TODO: create dev mode
       // console.log('initial response', response);
-      return response?.body
+      return response?.body;
     })
     .then(stream => {
       return stream?.constructor?.name === 'ReadableStream'
@@ -47,18 +47,21 @@ const useMuseData = (origin: string) => {
     });
   };
 
-  const fetchEventStream = (endpoint: string, submissionId: string, onMessage?: Function): EventSource => {
+  const fetchEventStream = (endpoint: string, submissionId?: string, onMessage?: Function): EventSource => {
     const eventSource = new EventSource(
-      `${NEXT_PUBLIC_MUSE_API}${endpoint}?${
-        submissionId ? `submissionId=${submissionId}` : ''
-      }&access_token=${token}`, {
+      `${NEXT_PUBLIC_MUSE_API}${endpoint}?access_token=${token}${
+        submissionId ? `&submissionId=${submissionId}` : ''
+      }`, {
       withCredentials: true,
     });
 
-    eventSource.onmessage = function (event) {
+    eventSource.onmessage = function (event: MessageEvent) {
       console.log("New message", event);
-      onMessage?.(event.data);
+      onMessage?.(JSON.parse(event.data));
     };
+
+    eventSource.onopen = event => {console.log('Connection to Muse EventSource Established: Awaiting further details')};
+    eventSource.onerror = cause => {console.error(cause)};
 
     return eventSource;
   }
@@ -72,3 +75,5 @@ const useMuseData = (origin: string) => {
 }
 
 export default useMuseData;
+
+export * from './types';

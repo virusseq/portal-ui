@@ -1,49 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { css } from "@emotion/core";
 import { useTheme } from "emotion-theming";
-import { Column } from "react-table";
 
-import useAuthContext from "../../../global/hooks/useAuthContext";
-import useMuseData from "../../../global/hooks/useMuseData";
-import getInternalLink from "../../../global/utils/getInternalLink";
-import GenericTable from '../../GenericTable';
-import StyledLink from '../../Link';
-import { LoaderWrapper } from '../../Loader';
-import { CoronaVirus } from "../../theme/icons";
-import defaultTheme from '../../theme';
+import useAuthContext from "../../../../global/hooks/useAuthContext";
+import useMuseData from "../../../../global/hooks/useMuseData";
+import GenericTable from '../../../GenericTable';
+import { LoaderWrapper } from '../../../Loader';
+import { CoronaVirus } from "../../../theme/icons";
+import defaultTheme from '../../../theme';
 
-const columnData = [
-  {
-    accessor: 'submissionId',
-    Cell: ({ value }: { value: string }) => (
-      <StyledLink href={getInternalLink({ path: `/submission/${value}`})}>
-        {value}
-      </StyledLink>
-    ),
-    Header: 'Submission ID',
-  },
-  {
-    accessor: 'studyId',
-    Header: 'Study ID',
-  },
-  {
-    accessor: 'createdAt',
-    Cell: ({ value }: { value: number}) => (
-      value && new Date(
-        new Date(value * 1000).toUTCString()
-      ).toISOString().slice(0, 10)
-    ),
-    Header: 'Submission Date',
-  },
-  {
-    accessor: 'genomes',
-    Header: '# Viral Genomes',
-  },
-];
+import columnData from './columns';
 
 const PreviousSubmissions = () => {
   const { token } = useAuthContext();
-  const columns = useMemo((): Column<{}>[] => columnData, []);
+  const columns = useMemo(() => columnData, []);
   const [previousSubmissions, setPreviousSubmissions] = useState([]);
 
   const theme: typeof defaultTheme = useTheme();
@@ -53,9 +23,15 @@ const PreviousSubmissions = () => {
   } = useMuseData('PreviousSubmissions');
   
   useEffect(() => {
-    token && fetchMuseData('submissions')
+    token && fetchMuseData(`submissions?${
+      new URLSearchParams({
+        page: '0',
+        size: '100000',
+        sortDirection: 'DESC',
+        sortField: 'createdAt',
+      })
+    }`)
       .then((response) => {
-        console.log(response);
         response.data && setPreviousSubmissions(response.data);
       });
   }, [token]);
@@ -76,6 +52,10 @@ const PreviousSubmissions = () => {
               caption="Submissions made by you in the past"
               columns={columns}
               data={previousSubmissions}
+              style={css`
+                margin-top: 35px;
+                max-height: 315px;
+              `}
             />
           )
           : (
@@ -101,7 +81,6 @@ const PreviousSubmissions = () => {
             </figure>
           )}
       </LoaderWrapper>
-
     </article>
   );
 };

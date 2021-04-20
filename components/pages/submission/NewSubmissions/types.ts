@@ -1,3 +1,11 @@
+export type NoUploadErrorType = { 
+  errorInfo?: {},
+  message?: string,
+  status?: string,
+};
+
+export type ReaderCallbackType = (result: string | ArrayBuffer | null) => void;
+
 export type ValidationActionType =
   | {
     type: 'add fasta' | 'add tsv', 
@@ -15,6 +23,4 @@ export type ValidationParametersType = {
   oneTSV: File[],
   oneOrMoreFasta: File[],
   readyToUpload: boolean,
-}
-
-export type ReaderCallbackType = (result: string | ArrayBuffer | null) => void;
+};

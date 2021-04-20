@@ -1,16 +1,18 @@
 import { useTable, Column } from "react-table";
-import { css } from "@emotion/core";
+import { css, SerializedStyles } from '@emotion/core';
 
 type GenericTableProps = {
   caption?: string,
   columns: Column<{}>[],
   data?: any,
+  style?: SerializedStyles,
 }
 
 const GenericTable = ({
   caption,
   columns,
   data,
+  style,
 }: GenericTableProps) => {
   const {
     getTableProps,
@@ -27,8 +29,6 @@ const GenericTable = ({
         border: 1px solid ${theme.colors.grey_4};
         border-collapse: collapse;
         border-spacing: 0;
-        margin-top: 35px;
-        max-height: 315px;
         width: 100%;
 
         caption {
@@ -66,6 +66,8 @@ const GenericTable = ({
         .col-genomes {
           width: 115px;
         }
+
+        ${style}
       `}
     >
       {caption && <caption>{caption}</caption>}
@@ -85,12 +87,11 @@ const GenericTable = ({
       <tbody {...getTableBodyProps()}>
         {rows.map(row => {
           prepareRow(row);
-          // console.log('render');
           
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map(cell => (
-                <td {...cell.getCellProps()}>
+                <td {...cell.getCellProps()} className={cell.column.id}>
                   {cell.render('Cell')}
                 </td>
               ))}

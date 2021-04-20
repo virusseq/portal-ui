@@ -23,27 +23,23 @@ import { css } from '@emotion/core';
 
 import { IconProps } from './types';
 
-const Checkmark = ({ fill = "#1c8292", size = 20, style }: IconProps) => {
-  return (
-    <svg
-      css={css`
-        ${style};
-        height: ${size};
-        width: ${size};
-      `}
-      width={size}
-      height={size}
-      viewBox={'0 0 20 20'}
-    >
-      <g fill="none" fillRule="evenodd">
-        <path fill="fff" d="M0 0h20v20H0z" />
-        <path
-          fill={fill}
-          d="M.561 12.193c-1.716-1.717.894-4.327 2.61-2.61L6.49 12.9 16.83 2.56c1.716-1.716 4.326.894 2.61 2.61L7.794 16.816c-.72.72-1.89.72-2.61 0L.561 12.193z"
-        />
+const Ellipsis = ({ fill = "#FE7B46", size = 12, style }: IconProps) => (
+  <svg 
+    css={css`
+      ${style};
+      height: ${size};
+      width: ${size};
+    `}
+    width={size}
+    height={size}
+    viewBox={'0 0 12 12'}
+  >
+    <g fill="none" fillRule="evenodd">
+      <g fill={fill}>
+        <path d="M10.667 7.699c-.737 0-1.334-.65-1.334-1.45 0-.8.597-1.449 1.334-1.449.736 0 1.333.649 1.333 1.45 0 .8-.597 1.449-1.333 1.449M6 7.699c-.736 0-1.333-.65-1.333-1.45 0-.8.597-1.449 1.333-1.449s1.333.649 1.333 1.45c0 .8-.597 1.449-1.333 1.449m-4.667 0C.597 7.699 0 7.049 0 6.249 0 5.45.597 4.8 1.333 4.8c.737 0 1.334.649 1.334 1.45 0 .8-.597 1.449-1.334 1.449" transform="translate(-1014 -337) translate(59 78) translate(0 23.811) translate(0 100.109) translate(15 10.75) translate(938 69.362) translate(2 55)"/>
       </g>
-    </svg>
-  );
-};
+    </g>
+  </svg>
+);
 
-export default Checkmark;
+export default Ellipsis;

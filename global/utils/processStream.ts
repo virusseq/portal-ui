@@ -8,7 +8,7 @@ const processStream = (
   streamProcessor?: Function,
   receivedChunks = '',
 ): StreamProcessorType => ({ done, value } = {} as ReadableStreamDefaultReadResult<Uint8Array>) => {
-  // TODO: setup dev mode 
+  // TODO: create dev mode 
   // if (IS_DEV) { // Stream benchmarking
   //   value
   //   ? timer(streamName, 'Log')

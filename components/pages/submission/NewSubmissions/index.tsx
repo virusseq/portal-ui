@@ -1,67 +1,29 @@
-import { MouseEventHandler, useCallback, useEffect, useReducer, useState } from 'react';
+import { useCallback, useEffect, useReducer, useState } from 'react';
 import { css } from '@emotion/core';
-import { useTheme } from 'emotion-theming';
+
 import Router from 'next/router';
 import { useDropzone } from 'react-dropzone';
 
-import useAuthContext from '../../../global/hooks/useAuthContext';
-import useMuseData from '../../../global/hooks/useMuseData';
-import getInternalLink from '../../../global/utils/getInternalLink';
-import { ButtonElement as Button, UnStyledButton } from '../../Button';
-import StyledLink from '../../Link';
-import { LoaderWrapper } from '../../Loader';
-import defaultTheme from '../../theme';
-import { Bin, File } from '../../theme/icons';
-import ErrorNotification from '../../ErrorNotification';
+import useAuthContext from '../../../../global/hooks/useAuthContext';
+import useMuseData from '../../../../global/hooks/useMuseData';
+import getInternalLink from '../../../../global/utils/getInternalLink';
+import { ButtonElement as Button } from '../../../Button';
+import StyledLink from '../../../Link';
+import { LoaderWrapper } from '../../../Loader';
+import ErrorNotification from '../../../ErrorNotification';
+import FileRow from './FileRow';
 import {
-  getFileExtension,
+  isTSV,
   validationParameters,
   validationReducer, 
-  validationTypes,
   validator,
-} from './validation';
+} from './validationHelpers';
+import {
+  NoUploadErrorType,
+  ValidationActionType,
+} from './types';
 
-const isTSV = (type: string) => type === "text/tab-separated-values";
-
-const FileRow = ({
-  active = false,
-  file: { name = '', type = '' }, 
-  handleRemove = () => {console.log('clicked')},
-} : {
-  active: boolean,
-  file: File,
-  handleRemove?: MouseEventHandler<HTMLButtonElement>,
-}) => {
-  const theme: typeof defaultTheme = useTheme();
-
-  return (
-    <tr data-type={getFileExtension(name)} data-upload={active}>
-      <td>
-        <File
-          fill={isTSV(type) 
-            ? theme.colors.secondary_dark
-            : theme.colors.accent3_dark
-          } 
-        />
-        {` ${name}`}
-      </td>
-      <td>
-        <UnStyledButton
-          css={css``}
-          onClick={handleRemove}
-        >
-          <Bin />
-        </UnStyledButton>
-      </td>
-    </tr>
-  );
-};
-
-const noUploadError = {} as { 
-  errorInfo?: {},
-  message?: string,
-  status?: string,
-};
+const noUploadError = {} as NoUploadErrorType;
 
 const NewSubmissions = () => {
   const { token } = useAuthContext();
@@ -84,8 +46,6 @@ const NewSubmissions = () => {
     getInputProps, 
     isDragActive,
     isDragReject,
-    isDragAccept,
-    // isFileTooLarge,
   } = useDropzone({ 
     accept: '.fasta,.tsv,text/tab-separated-values', 
     onDrop: useCallback(acceptedFiles => acceptedFiles.forEach(validator(validationState, validationDispatch)), []),
@@ -119,7 +79,7 @@ const NewSubmissions = () => {
               console.error(response);
               setUploadError({
                 status: 'Internal server error',
-                message: 'You upload request has failed. Please try again later.'
+                message: 'Your upload request has failed. Please try again later.'
               })
               return Promise.resolve();
             }
@@ -152,7 +112,7 @@ const NewSubmissions = () => {
     validationDispatch({
       type: `remove ${isTSV(type) ? 'tsv' : 'fasta'}`,
       file: name,
-    } as validationTypes.ValidationActionType);
+    } as ValidationActionType);
   }
 
   return (
@@ -232,6 +192,7 @@ const NewSubmissions = () => {
             box-sizing: border-box;
             flex-direction: column;
             justify-content: center;
+            max-width: 100%;
             width: 100%;
           `}
         >
