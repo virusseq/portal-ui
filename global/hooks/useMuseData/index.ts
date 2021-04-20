@@ -25,8 +25,8 @@ const useMuseData = (origin: string) => {
       // console.log('initial response', response);
       return response?.body;
     })
-    .then(stream => {
-      return stream?.constructor?.name === 'ReadableStream'
+    .then(stream => (
+      stream?.constructor?.name === 'ReadableStream'
         ? processStream(origin, stream.getReader())()
           .then((parsedStream: string) => {
             setAwaitingResponse(false);
@@ -39,8 +39,11 @@ const useMuseData = (origin: string) => {
             console.error(error);
             return error;
           })
-        : new Error(`Unspecified error at ${origin}`);
-    })
+        : (
+          console.error(stream),
+          new Error(`Unspecified error at ${origin}`)
+        )
+    ))
     .catch((err: { response: any }) => {
       console.error('error', err)
       return Promise.reject(err);

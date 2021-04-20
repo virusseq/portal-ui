@@ -5,7 +5,7 @@ import { css } from '@emotion/core';
 import { UnStyledButton } from '../../../Button';
 import defaultTheme from '../../../theme';
 import { Bin, File } from '../../../theme/icons';
-import { getFileExtension, isTSV } from "./validationHelpers";
+import { getFileExtension, getExtension } from "./validationHelpers";
 
 const FileRow = ({
   active = false,
@@ -18,7 +18,7 @@ const FileRow = ({
 }) => {
   const theme: typeof defaultTheme = useTheme();
 
-  const iconFill = isTSV(type)
+  const iconFill = getExtension({ name }) === 'tsv'
     ? theme.colors.secondary_dark
     : theme.colors.accent3_dark;
 
