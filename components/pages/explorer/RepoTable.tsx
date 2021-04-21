@@ -243,10 +243,10 @@ const RepoTable = (props: PageContentProps) => {
     .filter((field) => field.trim()) // break it into arrays, and ensure there's no empty field names
     .map((fieldName) => fieldName.replace(/['"]+/g, '').trim());
 
-  // const objectIdsStr = props.selectedTableRows.join(",");
-  const objectIdsStr = "0bce6082-8bbd-5f75-8727-564a18099b72,b6f43691-f166-53f3-9e0c-c8604662680e"
+  const objectIdsStr = props.selectedTableRows.join(",");
 
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+
   const customExporters = [
     { label: 'Metadata Table', fileName: `virusseq-table-export-${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
     // { label: 'File Manifest', fileName: `virusseq-file-manifest-${today}.tsv`, columns: manifestColumns }, // exports a TSV with the manifest columns
