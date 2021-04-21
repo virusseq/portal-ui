@@ -41,7 +41,7 @@ export const getConfig = () => {
     NEXT_PUBLIC_ADMIN_EMAIL: publicConfig.NEXT_PUBLIC_ADMIN_EMAIL,
     NEXT_PUBLIC_LAB_NAME: publicConfig.NEXT_PUBLIC_LAB_NAME || 'Data Management System',
     NEXT_PUBLIC_LOGO_FILENAME: publicConfig.NEXT_PUBLIC_LOGO_FILENAME,
-    NEXT_PUBLIC_MUSE_API: publicConfig.NEXT_PUBLIC_MUSE_API || '',
+    NEXT_PUBLIC_MUSE_API: publicConfig.NEXT_PUBLIC_MUSE_API || 'http://localhost:8080',
     NEXT_PUBLIC_SSO_PROVIDERS: publicConfig.NEXT_PUBLIC_SSO_PROVIDERS || '',
   } as {
     NEXT_PUBLIC_EGO_API_ROOT: string;
