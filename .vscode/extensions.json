@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "jock.svg",
+    "naumovs.color-highlight",
+    "formulahendry.auto-rename-tag",
+    "dbaeumer.vscode-eslint",
+    "redhat.vscode-yaml",
+    "irongeek.vscode-env",
+    "anthonycjw.vscode-styled-components-cre-edition"
+  ]
+}

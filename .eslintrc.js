@@ -2,18 +2,18 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
     'prettier',
-    'react-app',
-    'plugin:jsx-a11y/strict',
+    // 'plugin:jsx-a11y/strict',
   ],
   parser: '@typescript-eslint/parser',
   plugins: [
-    '@typescript-eslint', 
-    '@emotion',
-    'prettier', 
-    'jsx-a11y'
+    '@typescript-eslint',
+    // '@emotion',
+    'prettier',
+    'jsx-a11y',
   ],
+  root: true,
   rules: {
-    'prettier/prettier': [1, { trailingComma: 'all', singleQuote: true }],
+    'prettier/prettier': ['warn', { singleQuote: true, trailingComma: 'all' }],
     'jsx-a11y/href-no-hash': 'off',
   },
 };

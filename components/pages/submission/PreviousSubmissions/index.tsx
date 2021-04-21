@@ -55,6 +55,10 @@ const PreviousSubmissions = () => {
               style={css`
                 margin-top: 35px;
                 max-height: 315px;
+
+                td:last-of-type {
+                  width: 60px;
+                }
               `}
             />
           )

@@ -342,7 +342,7 @@ const NewSubmissions = () => {
                       margin-left: 10px;
                     `}
                   >
-                    You must submit one metadata TSV file and at least one FASTA file.
+                    You must submit only one metadata TSV file and at least one FASTA file.
                   </p>
                 )}
               </td>

@@ -106,16 +106,6 @@ const Footer = () => {
             </StyledLink>
           </li>
 
-          {!token && <li>
-            <InternalLink
-              path="/login"
-            >
-              <StyledLink>
-                Submitter Login
-              </StyledLink>
-            </InternalLink>
-          </li>}
-
           <li>
             <StyledLink
               href="https://www.genomecanada.ca/en/about/contact-us"
@@ -125,6 +115,16 @@ const Footer = () => {
               Contact Us
             </StyledLink>
           </li>
+
+          {!token && <li>
+            <InternalLink
+              path="/login"
+            >
+              <StyledLink>
+                Submitter Login
+              </StyledLink>
+            </InternalLink>
+          </li>}
         </ul>
         <span>
           &#169;
