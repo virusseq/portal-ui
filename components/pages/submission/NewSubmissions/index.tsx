@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useReducer, useState } from 'react';
+import { useTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
 
 import Router from 'next/router';
@@ -8,48 +9,45 @@ import useAuthContext from '../../../../global/hooks/useAuthContext';
 import useMuseData from '../../../../global/hooks/useMuseData';
 import getInternalLink from '../../../../global/utils/getInternalLink';
 import { ButtonElement as Button } from '../../../Button';
+import ErrorNotification from '../../../ErrorNotification';
 import StyledLink from '../../../Link';
 import { LoaderWrapper } from '../../../Loader';
-import ErrorNotification from '../../../ErrorNotification';
+import defaultTheme from '../../../theme';
 import FileRow from './FileRow';
 import {
   getExtension,
   makeErrorTypeReadable,
   validationParameters,
-  validationReducer, 
+  validationReducer,
   validator,
 } from './validationHelpers';
-import {
-  NoUploadErrorType,
-  ValidationActionType,
-} from './types';
+import { NoUploadErrorType, ValidationActionType } from './types';
 
 const noUploadError = {} as NoUploadErrorType;
 
-const NewSubmissions = () => {
+const NewSubmissions = (): ReactElement => {
   const { token } = useAuthContext();
+  const theme: typeof defaultTheme = useTheme();
   const [thereAreFiles, setThereAreFiles] = useState(false);
   const [uploadError, setUploadError] = useState(noUploadError);
   const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
-  const {
-    oneTSV,
-    oneOrMoreFasta,
-    readyToUpload,
-  } = validationState;
+  const { oneTSV, oneOrMoreFasta, readyToUpload } = validationState;
 
-  const {
-    awaitingResponse,
-    fetchMuseData,
-  } = useMuseData('NewSubmissions');
+  const { awaitingResponse, fetchMuseData } = useMuseData('NewSubmissions');
 
   const {
     getRootProps,
-    getInputProps, 
+    getInputProps,
+    // isDragAccept,
     isDragActive,
-    isDragReject,
-  } = useDropzone({ 
-    accept: '.fasta,.tsv,text/tab-separated-values', 
-    onDrop: useCallback(acceptedFiles => acceptedFiles.forEach(validator(validationState, validationDispatch)), []),
+    // isFileTooLarge,
+  } = useDropzone({
+    accept: '.fasta,.tsv,text/tab-separated-values',
+    // accept: '.fa,.fasta,.tsv,text/tab-separated-values',
+    onDrop: useCallback(
+      (acceptedFiles) => acceptedFiles.forEach(validator(validationState, validationDispatch)),
+      [],
+    ),
   });
   const { onClick: fileUploadClick, ...rootProps } = getRootProps();
 
@@ -60,78 +58,75 @@ const NewSubmissions = () => {
       // if many TSV are available, submit only the first one along with all fastas
       const selectedTSV = oneTSV.slice(-1)[0];
       formData.append('files', selectedTSV, selectedTSV.name);
-      oneOrMoreFasta.forEach(fasta => formData.append('files', fasta, fasta.name));
+      oneOrMoreFasta.forEach((fasta) => formData.append('files', fasta, fasta.name));
 
-      return fetchMuseData(
-        'submissions', 
-        { body: formData, method: 'POST' }
-      )
-        .then((response) => {
-          switch (response.status) {
-            case 'BAD_REQUEST': {
-              setUploadError({
-                ...response,
-                status: 'Your submission has errors and cannot be processed.',
-              });
-              return Promise.resolve();
-            }
-
-            case 'INTERNAL_SERVER_ERROR': {
-              console.error(response);
-              setUploadError({
-                status: 'Internal server error',
-                message: 'Your upload request has failed. Please try again later.'
-              })
-              return Promise.resolve();
-            }
-
-            default: {
-              response.submissionId 
-                ? Router.push(getInternalLink({ path: `submission/${response.submissionId}` }))
-                : console.log('Unhandled response:', response);
-              return Promise.resolve();
-            }
+      return fetchMuseData('submissions', { body: formData, method: 'POST' }).then((response) => {
+        switch (response.status) {
+          case 'BAD_REQUEST': {
+            setUploadError({
+              ...response,
+              status: 'Your submission has errors and cannot be processed.',
+            });
+            return Promise.resolve();
           }
-        });
+
+          case 'INTERNAL_SERVER_ERROR': {
+            console.error(response);
+            setUploadError({
+              status: 'Internal server error',
+              message: 'Your upload request has failed. Please try again later.',
+            });
+            return Promise.resolve();
+          }
+
+          default: {
+            response.submissionId
+              ? Router.push(getInternalLink({ path: `submission/${response.submissionId}` }))
+              : console.log('Unhandled response:', response);
+            return Promise.resolve();
+          }
+        }
+      });
     }
-    
-    console.error(`no ${token? 'token' : 'files'} to submit`);
-  }
+
+    console.error(`no ${token ? 'token' : 'files'} to submit`);
+  };
 
   useEffect(() => {
     setUploadError(noUploadError);
-    setThereAreFiles(validationState.oneTSV.length > 0 || validationState.oneOrMoreFasta.length > 0);
+    setThereAreFiles(
+      validationState.oneTSV.length > 0 || validationState.oneOrMoreFasta.length > 0,
+    );
   }, [validationState]);
 
   const handleClearAll = () => {
     setUploadError(noUploadError);
     validationDispatch({ type: 'clear all' });
-  }
+  };
 
-  const handleRemoveThis = ({ type, name }: File) => () => {
+  const handleRemoveThis = ({ name }: File) => () => {
     setUploadError(noUploadError);
     validationDispatch({
       type: `remove ${getExtension({ name })}`,
       file: name,
     } as ValidationActionType);
-  }
+  };
 
   return (
     <article
-      css={theme => css`
+      css={css`
         flex-direction: column;
 
         &:focus {
           outline: none;
         }
 
-        ${isDragActive && `
+        ${isDragActive &&
+        `
           &::before {
             align-items: center;
-            // background: ${isDragReject ? theme.colors.error : theme.colors.accent};
             background: ${theme.colors.accent};
             color: ${theme.colors.white};
-            // content: "${isDragReject ? 'File type not accepted' : 'You may drop your files now'}";
             content: "You may drop your files now";
             display: flex;
             font-size: 20px;
@@ -148,9 +143,7 @@ const NewSubmissions = () => {
       `}
       {...rootProps}
     >
-      <h1 className="view-title">
-        Start a New Submission
-      </h1>
+      <h1 className="view-title">Start a New Submission</h1>
 
       <ol
         css={css`
@@ -170,17 +163,17 @@ const NewSubmissions = () => {
         <li>
           Upload one formatted metadata TSV file and the accompanying FASTA sequencing files.
           <input {...getInputProps()} />
-          <br/>
+          <br />
           <Button
             css={css`
               height: 34px;
               margin: 20px 0;
             `}
-            disabled={isDragActive} 
+            disabled={isDragActive}
             onClick={fileUploadClick}
-          >           
+          >
             Upload Files
-          </Button>   
+          </Button>
         </li>
       </ol>
 
@@ -204,11 +197,15 @@ const NewSubmissions = () => {
                 padding-left: 20px;
               `}
             >
-              {Object.entries(uploadError?.errorInfo).map(([type = '', values = []]) => (
-                values.length > 0 && (
-                  <li key={type}>{makeErrorTypeReadable(type)}:<br />{values.join(', ')}.</li>
-                )
-              ))}
+              {Object.entries(uploadError?.errorInfo).map(
+                ([type = '', values = []]) =>
+                  values.length > 0 && (
+                    <li key={type}>
+                      {makeErrorTypeReadable(type)}:<br />
+                      {values.join(', ')}.
+                    </li>
+                  ),
+              )}
             </ul>
           )}
         </ErrorNotification>
@@ -216,10 +213,16 @@ const NewSubmissions = () => {
 
       <LoaderWrapper
         loading={awaitingResponse}
-        message={(<>Currently validating metadata and sequencing files.<br/>Do not navigate away from this browser window.</>)}
+        message={
+          <>
+            Currently validating metadata and sequencing files.
+            <br />
+            Do not navigate away from this browser window.
+          </>
+        }
       >
         <table
-          css={theme => css`
+          css={css`
             border: 1px solid ${theme.colors.grey_4};
             border-collapse: collapse;
             border-spacing: 0;
@@ -251,11 +254,6 @@ const NewSubmissions = () => {
             tfoot {
               background: ${theme.colors.grey_2};
             }
-
-            // tr[data-type="tsv"]:not([data-upload="true"]) {
-            //   color: ${theme.colors.grey_5};
-            //   text-decoration: line-through;
-            // }
 
             td {
               border-top: 1px solid ${theme.colors.grey_4};
@@ -292,29 +290,27 @@ const NewSubmissions = () => {
           </thead>
 
           <tbody>
-          {thereAreFiles 
-            ? (
+            {thereAreFiles ? (
               <>
                 {oneTSV.map((tsv, index) => (
                   // when more than one, all but the last one will get crossed out on render
                   <FileRow
-                    active={index === (oneTSV.length -1)}
+                    active={index === oneTSV.length - 1}
                     file={tsv}
                     key={tsv.name}
                     handleRemove={handleRemoveThis(tsv)}
                   />
                 ))}
-                {oneOrMoreFasta.map((fasta: File) =>
-                  <FileRow 
+                {oneOrMoreFasta.map((fasta: File) => (
+                  <FileRow
                     active={true}
                     file={fasta}
                     key={fasta.name}
                     handleRemove={handleRemoveThis(fasta)}
                   />
-                )}
+                ))}
               </>
-            )
-            : (
+            ) : (
               <tr className="emptyRow">
                 <td colSpan={2}>You have no files uploaded.</td>
               </tr>
@@ -331,12 +327,12 @@ const NewSubmissions = () => {
                   `}
                   disabled={!(readyToUpload && !uploadError.message)}
                   onClick={handleSubmit}
-                >           
+                >
                   Submit Data
                 </Button>
                 {thereAreFiles && !readyToUpload && (
                   <p
-                    css={theme => css`
+                    css={css`
                       color: ${theme.colors.error_dark};
                       display: inline;
                       margin-left: 10px;

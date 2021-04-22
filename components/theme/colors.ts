@@ -22,7 +22,7 @@
 const base = {
   white: '#fff',
   black: '#282a35',
-  canada: '#D93738'
+  canada: '#D93738',
 };
 
 const grey = {
@@ -72,7 +72,7 @@ const accent3 = {
 
 const success = {
   success: '#00ddbe',
-}
+};
 
 const error = {
   error: '#c86370',

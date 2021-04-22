@@ -26,10 +26,15 @@ import { useRouter } from 'next/router';
 import UserDropdown from './UserDropdown';
 import defaultTheme from './theme';
 import useAuthContext from '../global/hooks/useAuthContext';
-import { StyledLinkAsButton, InternalLink as Link } from './Link';
+import { InternalLink as Link } from './Link';
 import { useTheme } from 'emotion-theming';
-import { ABOUT_PATH, EXPLORER_PATH, ROOT_PATH, SUBMISSION_PATH, USER_PATH } from '../global/utils/constants';
-import { getConfig } from '../global/config';
+import {
+  ABOUT_PATH,
+  EXPLORER_PATH,
+  ROOT_PATH,
+  SUBMISSION_PATH,
+  USER_PATH,
+} from '../global/utils/constants';
 
 const NavBar: React.ComponentType = () => {
   const { token } = useAuthContext();
@@ -72,7 +77,7 @@ const NavBar: React.ComponentType = () => {
 
   return (
     <div
-      css={(theme: typeof defaultTheme) => css`
+      css={css`
         display: flex;
         justify-content: flex-start;
         height: ${theme.dimensions.navbar.height}px;
@@ -96,7 +101,7 @@ const NavBar: React.ComponentType = () => {
       >
         <Link path={ROOT_PATH}>
           <a
-            css={(theme) => css`
+            css={css`
               display: flex;
               align-items: center;
               text-decoration: none;
@@ -115,7 +120,7 @@ const NavBar: React.ComponentType = () => {
         `}
       >
         <div
-          css={(theme) => css`
+          css={css`
             display: flex;
             align-items: center;
             height: 100%;
@@ -124,7 +129,7 @@ const NavBar: React.ComponentType = () => {
         >
           <Link path={ABOUT_PATH}>
             <a
-              css={(theme) => css`
+              css={css`
                 ${linkStyle}
                 ${router.pathname === ABOUT_PATH ? activeLinkStyle : ''}
               `}
@@ -134,7 +139,7 @@ const NavBar: React.ComponentType = () => {
           </Link>
           <Link path={EXPLORER_PATH}>
             <a
-              css={(theme) => css`
+              css={css`
                 ${linkStyle}
                 ${router.pathname === EXPLORER_PATH ? activeLinkStyle : ''}
               `}
@@ -145,7 +150,7 @@ const NavBar: React.ComponentType = () => {
         </div>
         {token && (
           <div
-            css={(theme) => css`
+            css={css`
               display: flex;
               align-items: center;
               justify-content: flex-end;
@@ -155,7 +160,7 @@ const NavBar: React.ComponentType = () => {
           >
             <Link path={SUBMISSION_PATH}>
               <a
-                css={(theme) => css`
+                css={css`
                   ${linkStyle}
                   ${router.pathname === SUBMISSION_PATH ? activeLinkStyle : ''}
                 `}
@@ -165,7 +170,7 @@ const NavBar: React.ComponentType = () => {
             </Link>
             <UserDropdown
               css={css`
-                float:none;
+                float: none;
                 width: 195px;
                 ${linkStyle}
                 ${router.pathname === USER_PATH ? activeLinkStyle : ''}

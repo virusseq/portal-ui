@@ -5,12 +5,7 @@ module.exports = {
     // 'plugin:jsx-a11y/strict',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: [
-    '@typescript-eslint',
-    // '@emotion',
-    'prettier',
-    'jsx-a11y',
-  ],
+  plugins: ['@typescript-eslint', '@emotion', 'prettier', 'jsx-a11y'],
   root: true,
   rules: {
     'prettier/prettier': ['warn', { singleQuote: true, trailingComma: 'all' }],

@@ -1,4 +1,4 @@
-export type ErrorTypes = 
+export type ErrorTypes =
   | 'sampleIdInFileMissingInTsv'
   | 'sampleIdInRecordMissingInFile'
   | 'missingHeaders'
@@ -7,32 +7,32 @@ export type ErrorTypes =
 
 export type NoUploadErrorType = {
   errorInfo?: {
-    sampleIdInFileMissingInTsv?: string[],
-    sampleIdInRecordMissingInFile?: string[],
-    missingHeaders?: string[],
-    unknownHeaders?: string[],
-  },
-  message?: string,
-  status?: string,
+    sampleIdInFileMissingInTsv?: string[];
+    sampleIdInRecordMissingInFile?: string[];
+    missingHeaders?: string[];
+    unknownHeaders?: string[];
+  };
+  message?: string;
+  status?: string;
 };
 
 export type ReaderCallbackType = (result: string | ArrayBuffer | null) => void;
 
 export type ValidationActionType =
   | {
-    type: 'add fasta' | 'add tsv', 
-    file: File,
-  }
+      type: 'add fasta' | 'add tsv';
+      file: File;
+    }
   | {
-    type: 'remove fasta' | 'remove tsv', 
-    file: string
-  }
+      type: 'remove fasta' | 'remove tsv';
+      file: string;
+    }
   | {
-    type: 'clear all' | 'is ready' | 'not ready'
-  };
+      type: 'clear all' | 'is ready' | 'not ready';
+    };
 
 export type ValidationParametersType = {
-  oneTSV: File[],
-  oneOrMoreFasta: File[],
-  readyToUpload: boolean,
+  oneTSV: File[];
+  oneOrMoreFasta: File[];
+  readyToUpload: boolean;
 };

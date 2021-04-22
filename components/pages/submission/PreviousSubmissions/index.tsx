@@ -1,89 +1,99 @@
-import { useEffect, useMemo, useState } from "react";
-import { css } from "@emotion/core";
-import { useTheme } from "emotion-theming";
+import { ReactElement, useEffect, useState } from 'react';
+import { css } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 
-import useAuthContext from "../../../../global/hooks/useAuthContext";
-import useMuseData from "../../../../global/hooks/useMuseData";
+import useAuthContext from '../../../../global/hooks/useAuthContext';
+import useMuseData from '../../../../global/hooks/useMuseData';
 import GenericTable from '../../../GenericTable';
 import { LoaderWrapper } from '../../../Loader';
-import { CoronaVirus } from "../../../theme/icons";
+import { CoronaVirus } from '../../../theme/icons';
 import defaultTheme from '../../../theme';
 
-import columnData from './columns';
+import columns from './columns';
 
-const PreviousSubmissions = () => {
+const PreviousSubmissions = (): ReactElement => {
+  const theme: typeof defaultTheme = useTheme();
   const { token } = useAuthContext();
-  const columns = useMemo(() => columnData, []);
   const [previousSubmissions, setPreviousSubmissions] = useState([]);
 
-  const theme: typeof defaultTheme = useTheme();
-  const {
-    awaitingResponse,
-    fetchMuseData,
-  } = useMuseData('PreviousSubmissions');
-  
+  const { awaitingResponse, fetchMuseData } = useMuseData('PreviousSubmissions');
+
   useEffect(() => {
-    token && fetchMuseData(`submissions?${
-      new URLSearchParams({
-        page: '0',
-        size: '100000',
-        sortDirection: 'DESC',
-        sortField: 'createdAt',
-      })
-    }`)
-      .then((response) => {
+    token &&
+      fetchMuseData(
+        `submissions?${new URLSearchParams({
+          page: '0',
+          size: '100000',
+        })}`,
+      ).then((response) => {
         response.data && setPreviousSubmissions(response.data);
       });
   }, [token]);
 
   return (
     <article>
-      <h1 className="view-title">
-        Your Data Submissions
-      </h1>
+      <h1 className="view-title">Your Data Submissions</h1>
 
-      <LoaderWrapper
-        loading={awaitingResponse}
-        message="Retrieving your submissions."
-      >
-        {previousSubmissions.length > 0
-          ? (
-            <GenericTable
-              caption="Submissions made by you in the past"
-              columns={columns}
-              data={previousSubmissions}
-              style={css`
-                margin-top: 35px;
-                max-height: 315px;
+      <LoaderWrapper loading={awaitingResponse} message="Retrieving your submissions.">
+        {previousSubmissions.length > 0 ? (
+          <GenericTable
+            caption="Submissions made by you in the past"
+            columns={columns}
+            data={previousSubmissions}
+            sortable={{
+              defaultSortBy: [
+                {
+                  id: 'createdAt',
+                },
+              ],
+            }}
+            style={css`
+              margin-top: 35px;
+              max-height: 315px;
 
-                td:last-of-type {
-                  width: 60px;
+              &.sortable {
+                th.asc {
+                  border-top-color: ${theme.colors.accent};
                 }
+
+                th.desc {
+                  border-bottom-color: ${theme.colors.accent};
+                }
+              }
+
+              td:last-of-type {
+                width: 60px;
+              }
+            `}
+          />
+        ) : (
+          <figure
+            css={css`
+              align-items: center;
+              border: 1px solid ${theme.colors.grey_4};
+              display: flex;
+              flex-direction: column;
+              font-size: 14px;
+              height: 315px;
+              justify-content: center;
+              margin: 40px 0 0;
+              text-align: center;
+            `}
+          >
+            <CoronaVirus
+              fill={theme.colors.grey_6}
+              size={25}
+              style={css`
+                margin-bottom: 10px;
               `}
             />
-          )
-          : (
-            <figure
-              css={theme => css`
-                align-items: center;
-                border: 1px solid ${theme.colors.grey_4};
-                display: flex;
-                flex-direction: column;
-                font-size: 14px;
-                height: 315px;
-                justify-content: center;
-                margin: 40px 0 0;
-                text-align: center;
-              `}
-            >
-              <CoronaVirus fill={theme.colors.grey_6} size={25} style={css`margin-bottom: 10px;`} />
-              <figcaption>
-                You have not submitted any data yet. 
-                <br/>
-                Get started by starting a new submission.
-              </figcaption>
-            </figure>
-          )}
+            <figcaption>
+              You have not submitted any data yet.
+              <br />
+              Get started by starting a new submission.
+            </figcaption>
+          </figure>
+        )}
       </LoaderWrapper>
     </article>
   );
