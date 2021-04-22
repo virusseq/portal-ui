@@ -77,8 +77,7 @@ const success = {
 const error = {
   error: '#c86370',
   error_dark: '#ad404e',
-  error_1: '#f9eff0',
-  error_2: '#e9c1c6',
+  error_1: '#f7d7d7',
 };
 
 const warning = {

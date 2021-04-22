@@ -194,7 +194,8 @@ const NewSubmissions = (): ReactElement => {
           {uploadError?.errorInfo && (
             <ul
               css={css`
-                padding-left: 20px;
+                margin: 10px 0 0;
+                padding-left: 0;
               `}
             >
               {Object.entries(uploadError?.errorInfo).map(
