@@ -251,11 +251,11 @@ const RepoTable = (props: PageContentProps) => {
     { label: 'Metadata Table', fileName: `virusseq-table-export-${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
     { label: 'File Manifest', fileName: `virusseq-file-manifest-${today}.tsv`, columns: manifestColumns }, // exports a TSV with the manifest columns
     { label: 'Consensus Seq', function: () => {
-        window.location.assign(urlJoin(NEXT_PUBLIC_MUSE_API, '/download?objectIds=', objectIdsStr));  
+        window.location.assign(urlJoin(NEXT_PUBLIC_MUSE_API, `/download?objectIds=${objectIdsStr}`));  
       } 
     },
     { label: 'Consensus Seq (Gzip)', function: () => {
-        window.location.assign(urlJoin(NEXT_PUBLIC_MUSE_API, '/download/gzip?objectIds=', objectIdsStr));       
+        window.location.assign(urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`));       
       } 
     },
     // { label: () => (
