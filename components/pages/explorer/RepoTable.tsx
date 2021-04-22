@@ -236,15 +236,28 @@ const RepoTable = (props: PageContentProps) => {
     NEXT_PUBLIC_ARRANGER_API,
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
     NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS,
+    NEXT_PUBLIC_MUSE_API
   } = getConfig();
+
   const manifestColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',')
     .filter((field) => field.trim()) // break it into arrays, and ensure there's no empty field names
     .map((fieldName) => fieldName.replace(/['"]+/g, '').trim());
 
+  const objectIdsStr = props.selectedTableRows.join(',');
+
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+
   const customExporters = [
-    { label: 'File Table', fileName: `virusseq-table-export-${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
+    { label: 'Metadata Table', fileName: `virusseq-table-export-${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
     { label: 'File Manifest', fileName: `virusseq-file-manifest-${today}.tsv`, columns: manifestColumns }, // exports a TSV with the manifest columns
+    { label: 'Consensus Seq', function: () => {
+        window.location.assign(`${NEXT_PUBLIC_MUSE_API}/download?objectIds=${objectIdsStr}`);  
+      } 
+    },
+    { label: 'Consensus Seq (Gzip)', function: () => {
+        window.location.assign(`${NEXT_PUBLIC_MUSE_API}/download/gzip?objectIds=${objectIdsStr}`);       
+      } 
+    },
     // { label: () => (
     //   <span
     //     css={css`
