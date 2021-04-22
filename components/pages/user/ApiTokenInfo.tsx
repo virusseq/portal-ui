@@ -19,28 +19,22 @@
  *
  */
 
+import { ReactElement, useEffect, useState } from 'react';
 import { css, Global } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useTheme } from 'emotion-theming';
-import { has, isEmpty, orderBy } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { isEmpty } from 'lodash';
 import { Tooltip } from 'react-tippy';
 
-import { parseExpiry, getDayValue } from '../../../global/utils/apiToken';
-import { getConfig } from '../../../global/config';
 import useAuthContext from '../../../global/hooks/useAuthContext';
-import { EGO_API_KEY_ENDPOINT } from '../../../global/utils/constants';
-
+import { AccessLevel, parseScope, ScopeObj } from '../../../global/utils/egoTokenUtils';
 import Button from '../../Button';
-import StyledLink from '../../Link';
-
+import DMSAdminContact, { GenericHelpMessage } from '../../DMSAdminContact';
+import ErrorNotification from '../../ErrorNotification';
+import NoScopes from '../NoScopes';
 import defaultTheme from '../../theme';
 import { Checkmark } from '../../theme/icons';
-import { AccessLevel, parseScope, ScopeObj } from '../../../global/utils/egoTokenUtils';
-import ErrorNotification from '../../ErrorNotification';
-
 import sleep from '../../utils/sleep';
-import DMSAdminContact, { GenericHelpMessage } from '../../DMSAdminContact';
 
 interface ApiToken {
   expiryDate: string;
@@ -77,7 +71,7 @@ const TooltipContainer = styled('div')`
   `}
 `;
 
-enum ApiTokenErrorType {
+enum TokenErrorType {
   SCOPES_ERROR = 'scopes_error',
   GENERATE_TOKEN_ERROR = 'generate_token_error',
   REVOKE_TOKEN_ERROR = 'revoke_token_error',
@@ -86,7 +80,7 @@ enum ApiTokenErrorType {
 }
 
 type ErrorResponse = {
-  type: ApiTokenErrorType;
+  type: TokenErrorType;
   statusCode?: number;
 };
 
@@ -101,34 +95,34 @@ const WithGenericHelpMessage = ({ requestError }: { requestError: string }) => {
 
 const getErrorMessage = ({ type, statusCode }: ErrorResponse) => {
   switch (type) {
-    case ApiTokenErrorType.SCOPES_ERROR:
+    case TokenErrorType.SCOPES_ERROR:
       return (
         <WithGenericHelpMessage
-          requestError={`HTTP error ${statusCode}: Error fetching current permissions. Your API token could not be generated. `}
+          requestError={`HTTP error ${statusCode}: Error fetching current permissions. Your Access token could not be generated. `}
         />
       );
-    case ApiTokenErrorType.GENERATE_TOKEN_ERROR:
+    case TokenErrorType.GENERATE_TOKEN_ERROR:
       return (
         <WithGenericHelpMessage
-          requestError={`HTTP error ${statusCode}: Your API token could not be generated. `}
+          requestError={`HTTP error ${statusCode}: Your Access token could not be generated. `}
         />
       );
-    case ApiTokenErrorType.REVOKE_TOKEN_ERROR:
+    case TokenErrorType.REVOKE_TOKEN_ERROR:
       return (
         <WithGenericHelpMessage
-          requestError={`HTTP error ${statusCode}: Your API token could not be revoked. `}
+          requestError={`HTTP error ${statusCode}: Your Access token could not be revoked. `}
         />
       );
-    case ApiTokenErrorType.FETCH_TOKENS_ERROR:
+    case TokenErrorType.FETCH_TOKENS_ERROR:
       return (
         <WithGenericHelpMessage
-          requestError={`HTTP error ${statusCode}: Your existing API tokens could not be fetched. `}
+          requestError={`HTTP error ${statusCode}: Your existing Access tokens could not be fetched. `}
         />
       );
-    case ApiTokenErrorType.NO_VALID_PERMISSIONS_ERROR:
+    case TokenErrorType.NO_VALID_PERMISSIONS_ERROR:
       return (
         <span>
-          You do not have permissions to generate an API token. Your permissions may have changed
+          You do not have permissions to generate an Access token. Your permissions may have changed
           recently. Please contact the <DMSAdminContact /> to gain the correct permissions.
         </span>
       );
@@ -137,99 +131,16 @@ const getErrorMessage = ({ type, statusCode }: ErrorResponse) => {
   }
 };
 
-const ApiTokenInfo = () => {
-  const { user, token, fetchWithAuth } = useAuthContext();
-  const [existingApiToken, setExistingApiToken] = useState<ApiToken | null>(null);
-  const [isCopyingToken, setIsCopyingToken] = React.useState(false);
-  const [copySuccess, setCopySuccess] = React.useState(false);
-  const [requestError, setRequestError] = React.useState<ErrorResponse | null>(null);
+const ApiTokenInfo = (): ReactElement => {
+  const { user, token } = useAuthContext();
+  const [existingToken, setExistingToken] = useState<string | null>(null);
+  const [isCopyingToken, setIsCopyingToken] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [requestError, setRequestError] = useState<ErrorResponse | null>(null);
   const theme: typeof defaultTheme = useTheme();
 
   // still need to display any errors for the generate request, as permissions may have changed in between
   // the time a user signed in and when they attempted to generate a token
-  const generateApiToken = async () => {
-    const { NEXT_PUBLIC_EGO_API_ROOT } = getConfig();
-    if (user) {
-      const scopesResult = await fetchWithAuth(
-        `${NEXT_PUBLIC_EGO_API_ROOT}/o/scopes?userId=${user.id}`,
-        { method: 'GET' },
-      )
-        .then((res) => {
-          if (res.status !== 200) {
-            setRequestError({ type: ApiTokenErrorType.SCOPES_ERROR, statusCode: res.status });
-            throw new Error(`${res.status}: ${ApiTokenErrorType.SCOPES_ERROR}`);
-          }
-          return res.json();
-        })
-        .then((json) => json.scopes)
-        .catch((err: Error) => {
-          console.warn(err);
-          return err;
-        });
-
-      // prevent api token request if scopes request fails
-      if (!Array.isArray(scopesResult)) {
-        return;
-      }
-
-      const filteredScopes = scopesResult
-        .map((s: string) => parseScope(s))
-        .filter((s: ScopeObj) => s.accessLevel !== AccessLevel.DENY);
-
-      if (filteredScopes.length) {
-        const scopeParams = filteredScopes.map((f: ScopeObj) => `${f.policy}.${f.accessLevel}`);
-
-        const apiKeyUrl = new URL(EGO_API_KEY_ENDPOINT);
-        scopeParams.map((param) =>
-          apiKeyUrl.searchParams.append('scopes', encodeURIComponent(param)),
-        );
-        apiKeyUrl.searchParams.append('user_id', user.id);
-
-        return fetchWithAuth(apiKeyUrl.href, { method: 'POST' })
-          .then((res) => {
-            if (res.status !== 200) {
-              setRequestError({
-                type: ApiTokenErrorType.GENERATE_TOKEN_ERROR,
-                statusCode: res.status,
-              });
-              throw new Error(`${res.status}: ${ApiTokenErrorType.GENERATE_TOKEN_ERROR}`);
-            }
-            return res.json();
-          })
-          .then((newApiToken: ApiToken) => {
-            setExistingApiToken(newApiToken);
-            setRequestError(null);
-          })
-          .catch((err: Error) => {
-            console.warn(err.message);
-            return err;
-          });
-      } else {
-        // request for apiToken is skipped if filteredScopes is empty
-        setRequestError({ type: ApiTokenErrorType.NO_VALID_PERMISSIONS_ERROR });
-      }
-    }
-  };
-
-  const revokeApiToken = async () => {
-    return (
-      existingApiToken &&
-      fetchWithAuth(`${EGO_API_KEY_ENDPOINT}?apiKey=${existingApiToken.name}`, {
-        method: 'DELETE',
-      })
-        .then((res) => {
-          if (res.status !== 200) {
-            setRequestError({ type: ApiTokenErrorType.REVOKE_TOKEN_ERROR, statusCode: res.status });
-            throw new Error(`${res.status}: ${ApiTokenErrorType.REVOKE_TOKEN_ERROR}`);
-          }
-          setExistingApiToken(null);
-          setRequestError(null);
-        })
-        .catch((err: Error) => {
-          console.warn(err);
-        })
-    );
-  };
 
   const copyApiToken = (text: string) => {
     setIsCopyingToken(true);
@@ -247,48 +158,9 @@ const ApiTokenInfo = () => {
       });
   };
 
-  const parsedExpiry: number = existingApiToken ? parseExpiry(existingApiToken?.expiryDate) : 0;
-  const tokenIsExpired: boolean = has(existingApiToken, 'expiryDate') && parsedExpiry <= 0;
-
   useEffect(() => {
-    if (user) {
-      const fetchApiKeysUrl = new URL(EGO_API_KEY_ENDPOINT);
-      fetchApiKeysUrl.searchParams.append('sort', 'isRevoked');
-      // sort by asc will get isRevoked=false first
-      fetchApiKeysUrl.searchParams.append('sortOrder', 'ASC');
-      fetchApiKeysUrl.searchParams.append('user_id', user.id);
-      fetchApiKeysUrl.searchParams.append('limit', '1000');
-
-      fetchWithAuth(fetchApiKeysUrl.href, { method: 'GET' })
-        .then((res) => {
-          if (res.status !== 200) {
-            setRequestError({ type: ApiTokenErrorType.FETCH_TOKENS_ERROR, statusCode: res.status });
-            throw new Error(`${res.status}: ${ApiTokenErrorType.FETCH_TOKENS_ERROR}`);
-          }
-          return res.json();
-        })
-        .then((json) => {
-          setRequestError(null);
-          // first find all non-revoked tokens
-          const unrevokedTokens = json.resultSet.filter((r: ApiToken) => !r.isRevoked);
-          // then sort by expiry date
-          const unrevokedTokensSortedByExpiry = orderBy(unrevokedTokens, 'expiryDate', ['desc']);
-          // find most recent token that is not revoked and not expired, if it exists
-          const activeToken = unrevokedTokensSortedByExpiry.find((r: ApiToken) => {
-            const expiry = parseExpiry(r.expiryDate) || 0;
-            return expiry > 0;
-          });
-          // display either this activeToken, or the most recently expired non-revoked token
-          const tokenToDisplay = activeToken || unrevokedTokensSortedByExpiry[0];
-          if (tokenToDisplay) {
-            setExistingApiToken(tokenToDisplay);
-          } else {
-            setExistingApiToken(null);
-          }
-        })
-        .catch((err: Error) => {
-          console.warn(err.message);
-        });
+    if (token) {
+      return setExistingToken(token);
     }
   }, [token]);
 
@@ -303,48 +175,41 @@ const ApiTokenInfo = () => {
   return (
     <div>
       <h2
-        css={(theme) =>
-          css`
-            ${theme.typography.regular};
-            font-size: 24px;
-            line-height: 40px;
-            color: ${theme.colors.accent_dark};
-          `
-        }
+        css={css`
+          ${theme.typography.regular};
+          font-size: 24px;
+          line-height: 40px;
+          color: ${theme.colors.accent_dark};
+        `}
       >
-        API Token
+        Access Token
       </h2>
-      <ol
-        css={(theme) =>
-          css`
-            ${theme.typography.subheading};
-            font-weight: normal;
-            color: ${theme.colors.accent_dark};
-            margin-bottom: 1rem;
-          `
-        }
-      >
-        <li>Your API token is used to download controlled access data.</li>
-        <li>
-          Your API token is associated with your user credentials and should <strong>NEVER</strong>{' '}
-          be shared with anyone.
-        </li>
-        <li>When you generate a new token, all previous tokens become invalid.</li>
-        <li>Expired and revoked tokens also become invalid.</li>
-      </ol>
+
       <div
         css={css`
           margin-bottom: 1rem;
           margin-top: 0.5rem;
         `}
       >
-        {!userHasScopes && (
-          <ErrorNotification title="Invalid Permissions" size="md">
-            You do not have permissions to generate an API token. Please contact the{' '}
-            <DMSAdminContact /> to gain the correct permissions.
-          </ErrorNotification>
-        )}
+        {!userHasScopes && <NoScopes />}
       </div>
+
+      <ol
+        css={css`
+          ${theme.typography.subheading};
+          font-weight: normal;
+          color: ${theme.colors.accent_dark};
+          margin-bottom: 1rem;
+        `}
+      >
+        <li>Your access token is used to submit data through a command line client.</li>
+        <li>
+          Your access token is associated with your user credentials and should NEVER be shared with
+          anyone.
+        </li>
+        <li>Your access token lasts only for 24 hours.</li>
+      </ol>
+
       {requestError?.type && (
         <div
           css={css`
@@ -353,7 +218,7 @@ const ApiTokenInfo = () => {
         >
           <ErrorNotification
             size="sm"
-            css={(theme) => css`
+            css={css`
               background-color: ${theme.colors.error_1};
               color: ${theme.colors.accent_dark};
             `}
@@ -371,41 +236,7 @@ const ApiTokenInfo = () => {
           </ErrorNotification>
         </div>
       )}
-      <div
-        css={css`
-          display: flex;
-          flex-direction: row;
-          margin-bottom: 10px;
-        `}
-      >
-        <Button
-          css={css`
-            margin-right: 10px;
-          `}
-          onClick={() => generateApiToken()}
-          isAsync
-          disabled={!userHasScopes}
-        >
-          Generate New Token
-        </Button>
-        <Button
-          disabled={isEmpty(existingApiToken) || tokenIsExpired}
-          isAsync
-          css={(theme) =>
-            css`
-              background-color: ${theme.colors.white};
-              color: ${theme.colors.accent_dark};
-              border: 1px solid ${theme.colors.grey_5};
-              &:hover {
-                background-color: ${theme.colors.accent_1};
-              }
-            `
-          }
-          onClick={() => revokeApiToken()}
-        >
-          Revoke Token
-        </Button>
-      </div>
+
       <div
         css={css`
           position: relative;
@@ -418,42 +249,19 @@ const ApiTokenInfo = () => {
         `}
       >
         <div
-          css={(theme) =>
-            css`
-              border: 1px solid ${theme.colors.grey_5};
-              border-radius: 5px 0px 0px 5px;
-              border-right: 0px;
-              color: ${isEmpty(existingApiToken) ? theme.colors.grey_6 : theme.colors.black};
-              width: 100%;
-              display: flex;
-              align-items: center;
-              padding-left: 5px;
-            `
-          }
+          css={css`
+            border: 1px solid ${theme.colors.grey_5};
+            border-radius: 5px 0px 0px 5px;
+            border-right: 0px;
+            color: ${isEmpty(existingToken) ? theme.colors.grey_6 : theme.colors.black};
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: 5px;
+          `}
         >
-          {existingApiToken && (
-            <div
-              css={(theme) =>
-                css`
-                  color: ${theme.colors.white};
-                  border-radius: 6px;
-                  padding: 3px 8px;
-                  margin-right: 5px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  ${theme.typography.label}
-                  ${tokenIsExpired
-                    ? `background-color: ${theme.colors.error_dark}`
-                    : `background-color: ${theme.colors.grey_6};`}
-                `
-              }
-            >
-              {tokenIsExpired ? 'Expired' : getDayValue(parsedExpiry)}
-            </div>
-          )}
           <span
-            css={(theme) => css`
+            css={css`
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -461,10 +269,9 @@ const ApiTokenInfo = () => {
               font-weight: normal;
               padding-right: 5px;
               padding-left: 5px;
-              ${tokenIsExpired ? 'opacity: 0.3' : ''}
             `}
           >
-            {existingApiToken?.name || 'You have no API token...'}
+            {existingToken || 'You have no Access token...'}
           </span>
         </div>
         <>
@@ -487,7 +294,7 @@ const ApiTokenInfo = () => {
             position="top"
           >
             <Button
-              disabled={isEmpty(existingApiToken) || isCopyingToken || tokenIsExpired}
+              disabled={isEmpty(existingToken) || isCopyingToken}
               css={() =>
                 css`
                   border-radius: 0px 5px 5px 0px;
@@ -496,11 +303,7 @@ const ApiTokenInfo = () => {
                   position: relative;
                 `
               }
-              onClick={() =>
-                existingApiToken?.name && !tokenIsExpired
-                  ? copyApiToken(existingApiToken.name)
-                  : null
-              }
+              onClick={() => token && copyApiToken(token)}
             >
               <span
                 css={css`
@@ -522,24 +325,6 @@ const ApiTokenInfo = () => {
             </Button>
           </Tooltip>
         </>
-      </div>
-      <div
-        css={css`
-          margin-top: 2rem;
-        `}
-      >
-        <span
-          css={(theme) =>
-            css`
-              ${theme.typography.subheading};
-              font-weight: normal;
-              color: ${theme.colors.accent_dark};
-            `
-          }
-        >
-          For more information, please read the{' '}
-          <StyledLink href={``}>instructions on how to download data</StyledLink>.
-        </span>
       </div>
     </div>
   );

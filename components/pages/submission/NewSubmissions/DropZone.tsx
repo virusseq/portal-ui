@@ -10,9 +10,11 @@ import { validator } from './validationHelpers';
 import { ValidationActionType, ValidationParametersType } from './types';
 
 const DropZone = ({
+  disabled,
   validationState,
   validationDispatch,
 }: {
+  disabled: boolean;
   validationState: ValidationParametersType;
   validationDispatch: Dispatch<ValidationActionType>;
 }): ReactElement => {
@@ -27,6 +29,7 @@ const DropZone = ({
   } = useDropzone({
     accept: '.fasta,.tsv,text/tab-separated-values',
     // accept: '.fa,.fasta,.tsv,text/tab-separated-values',
+    disabled,
     onDrop: useCallback(
       (acceptedFiles) => acceptedFiles.forEach(validator(validationState, validationDispatch)),
       [],
@@ -55,6 +58,17 @@ const DropZone = ({
           }
         `}
 
+        ${disabled &&
+        css`
+          /* background: ${theme.colors.grey_1}; */
+          border-color: ${theme.colors.grey_4};
+          color: ${theme.colors.grey_3};
+
+          svg {
+            opacity: 0.3;
+          }
+        `}
+
         &:focus {
           outline: none;
         }
@@ -76,7 +90,7 @@ const DropZone = ({
           height: 34px;
           margin: 20px 0;
         `}
-        disabled={isDragActive}
+        disabled={disabled || isDragActive}
         onClick={fileUploadClick}
       >
         Upload Files

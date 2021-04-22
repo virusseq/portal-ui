@@ -25,7 +25,7 @@ import { NoUploadErrorType, ValidationActionType } from './types';
 const noUploadError = {} as NoUploadErrorType;
 
 const NewSubmissions = (): ReactElement => {
-  const { token } = useAuthContext();
+  const { token, userHasWriteScopes } = useAuthContext();
   const theme: typeof defaultTheme = useTheme();
   const [thereAreFiles, setThereAreFiles] = useState(false);
   const [uploadError, setUploadError] = useState(noUploadError);
@@ -35,7 +35,7 @@ const NewSubmissions = (): ReactElement => {
   const { awaitingResponse, fetchMuseData } = useMuseData('NewSubmissions');
 
   const handleSubmit = () => {
-    if (thereAreFiles && token) {
+    if (thereAreFiles && token && userHasWriteScopes) {
       const formData = new FormData();
 
       // if many TSV are available, submit only the first one along with all fastas
@@ -72,7 +72,7 @@ const NewSubmissions = (): ReactElement => {
       });
     }
 
-    console.error(`no ${token ? 'token' : 'files'} to submit`);
+    console.error(`no ${token ? 'token' : userHasWriteScopes ? 'scopes' : 'files'} to submit`);
   };
 
   useEffect(() => {
@@ -121,7 +121,11 @@ const NewSubmissions = (): ReactElement => {
         <li>Upload one formatted metadata TSV file and the accompanying FASTA sequencing files.</li>
       </ol>
 
-      <DropZone validationState={validationState} validationDispatch={validationDispatch} />
+      <DropZone
+        disabled={!userHasWriteScopes}
+        validationState={validationState}
+        validationDispatch={validationDispatch}
+      />
 
       {uploadError.message && (
         <ErrorNotification
