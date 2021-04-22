@@ -1,9 +1,8 @@
-import { ReactElement, useCallback, useEffect, useReducer, useState } from 'react';
+import { ReactElement, useEffect, useReducer, useState } from 'react';
 import { useTheme } from 'emotion-theming';
 import { css } from '@emotion/core';
 
 import Router from 'next/router';
-import { useDropzone } from 'react-dropzone';
 
 import useAuthContext from '../../../../global/hooks/useAuthContext';
 import useMuseData from '../../../../global/hooks/useMuseData';
@@ -13,13 +12,13 @@ import ErrorNotification from '../../../ErrorNotification';
 import StyledLink from '../../../Link';
 import { LoaderWrapper } from '../../../Loader';
 import defaultTheme from '../../../theme';
+import DropZone from './DropZone';
 import FileRow from './FileRow';
 import {
   getExtension,
   makeErrorTypeReadable,
   validationParameters,
   validationReducer,
-  validator,
 } from './validationHelpers';
 import { NoUploadErrorType, ValidationActionType } from './types';
 
@@ -34,22 +33,6 @@ const NewSubmissions = (): ReactElement => {
   const { oneTSV, oneOrMoreFasta, readyToUpload } = validationState;
 
   const { awaitingResponse, fetchMuseData } = useMuseData('NewSubmissions');
-
-  const {
-    getRootProps,
-    getInputProps,
-    // isDragAccept,
-    isDragActive,
-    // isFileTooLarge,
-  } = useDropzone({
-    accept: '.fasta,.tsv,text/tab-separated-values',
-    // accept: '.fa,.fasta,.tsv,text/tab-separated-values',
-    onDrop: useCallback(
-      (acceptedFiles) => acceptedFiles.forEach(validator(validationState, validationDispatch)),
-      [],
-    ),
-  });
-  const { onClick: fileUploadClick, ...rootProps } = getRootProps();
 
   const handleSubmit = () => {
     if (thereAreFiles && token) {
@@ -116,32 +99,7 @@ const NewSubmissions = (): ReactElement => {
     <article
       css={css`
         flex-direction: column;
-
-        &:focus {
-          outline: none;
-        }
-
-        ${isDragActive &&
-        `
-          &::before {
-            align-items: center;
-            background: ${theme.colors.accent};
-            color: ${theme.colors.white};
-            content: "You may drop your files now";
-            display: flex;
-            font-size: 20px;
-            height: 100%;
-            justify-content: center;
-            opacity: 0.7;
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-          }
-        `}
       `}
-      {...rootProps}
     >
       <h1 className="view-title">Start a New Submission</h1>
 
@@ -160,22 +118,10 @@ const NewSubmissions = (): ReactElement => {
           <StyledLink href={``}>Download the metadata template TSV</StyledLink>
           {' and fill in all of the fields for your samples.'}
         </li>
-        <li>
-          Upload one formatted metadata TSV file and the accompanying FASTA sequencing files.
-          <input {...getInputProps()} />
-          <br />
-          <Button
-            css={css`
-              height: 34px;
-              margin: 20px 0;
-            `}
-            disabled={isDragActive}
-            onClick={fileUploadClick}
-          >
-            Upload Files
-          </Button>
-        </li>
+        <li>Upload one formatted metadata TSV file and the accompanying FASTA sequencing files.</li>
       </ol>
+
+      <DropZone validationState={validationState} validationDispatch={validationDispatch} />
 
       {uploadError.message && (
         <ErrorNotification
@@ -186,6 +132,7 @@ const NewSubmissions = (): ReactElement => {
             box-sizing: border-box;
             flex-direction: column;
             justify-content: center;
+            margin-top: 20px;
             max-width: 100%;
             width: 100%;
           `}
@@ -227,7 +174,7 @@ const NewSubmissions = (): ReactElement => {
             border: 1px solid ${theme.colors.grey_4};
             border-collapse: collapse;
             border-spacing: 0;
-            margin-top: 40px;
+            margin-top: 20px;
             width: 100%;
 
             caption {
