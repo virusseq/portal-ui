@@ -271,11 +271,6 @@ const RepoTable = (props: PageContentProps): ReactElement => {
   const customExporters = [
     { label: 'Metadata Table', fileName: `virusseq-table-export-${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
     {
-      label: 'File Manifest',
-      fileName: `virusseq-file-manifest-${today}.tsv`,
-      columns: manifestColumns,
-    }, // exports a TSV with the manifest columns
-    {
       label: 'Consensus Seq',
       function: () => {
         window.location.assign(
