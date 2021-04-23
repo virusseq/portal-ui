@@ -1,83 +1,90 @@
+import { ReactElement } from 'react';
 import { css } from '@emotion/core';
-import OvertureLogoWithText from '../../theme/icons/overture_logo_with_text'
 
-const Cloud = () => (
-    <section
-        css={(theme) => css`
-        margin: 50px 50px;
+import StyledLink from '../../Link';
 
-
-        @media (min-width: 900px) {
-        max-width: calc(100% - 75px);
-        margin-right: 25px;
-        }
-
-        @media (min-width: 960px) {
-        max-width: calc(100% - 75px);
-        }
-    `}>
-        <div css={(theme) => css`
+const Cloud = (): ReactElement => (
+  <section>
+    <div
+      css={css`
+        align-items: center;
         display: flex;
-    `}>
-            <span
-                css={(theme) => css`
-            flex-grow: 3
+      `}
+    >
+      <p>
+        <span
+          css={css`
+            font-weight: bold;
+          `}
+        >
+          Cloud Based Platform:{' '}
+        </span>
+        Genome Canada has partnered with{' '}
+        <StyledLink href="www.dnastack.com" rel="noopener noreferrer" target="_blank">
+          DNAstack
+        </StyledLink>{' '}
+        to integrate COVID Cloud with the Canadian VirusSeq Data Portal. COVID Cloud is a
+        cloud-based platform that helps researchers find, visualize, and analyze genomics and other
+        datasets related to COVID-19. COVID Cloud is sharing Canadian and international data over
+        APIs developed by the{' '}
+        <StyledLink href="www.ga4gh.org" rel="noopener noreferrer" target="_blank">
+          Global Alliance for Genomics & Health
+        </StyledLink>{' '}
+        and provides tools for researchers to search, visualize, and analyze data in the cloud.
+        COVID Cloud is developed by a{' '}
+        <StyledLink
+          href="https://www.digitalsupercluster.ca/covid-19-program-page/beacon-realtime-global-data-sharing-network/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          consortium of Canadian partners
+        </StyledLink>{' '}
+        and funded by Canada’s{' '}
+        <StyledLink
+          href="https://www.digitalsupercluster.ca/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Digital Technology Supercluster.
+        </StyledLink>
+      </p>
+
+      <span
+        css={css`
+          border: solid 1px #dfdfe1;
+          border-radius: 10px;
+          box-sizing: border-box;
+          margin: 15px 0 0 35px;
+          padding: 20px;
+          width: 190px;
         `}
-            >
-                <span css={css`
-                    font-weight: bold;
-                `}>Cloud Based Platform: </span>
-                 Genome Canada has partnered with <a href="www.dnastack.com">DNAstack</a> to integrate COVID Cloud with the
-                 Canadian VirusSeq Data Portal. COVID Cloud is a cloud-based platform that
-                 helps researchers find, visualize, and analyze genomics and other datasets
-                 related to COVID-19. COVID  Cloud is sharing Canadian and international
-                 data over APIs developed by the <a href="www.ga4gh.org">Global Alliance for Genomics & Health</a> and
-                 provides tools for researchers to search, visualize, and analyze data in the cloud.
-                 COVID Cloud is developed by
-                 a <a href="https://www.digitalsupercluster.ca/covid-19-program-page/beacon-realtime-global-data-sharing-network/">consortium of Canadian partners</a> and
-                 funded by Canada’s <a href="https://www.digitalsupercluster.ca/">Digital Technology Supercluster.</a>
-            </span>
-
-            <span css={(theme) => css`
-            width: 187px;
-            height: 151px;
-            margin: -25px 0 25px 29px;
-            padding: 17px 27px 0px 28px;
-            border-radius: 10px;
-            border: solid 1px #dfdfe1;
-            background-color: var(--white);
-        `}>
-                <a
-                    href="https://virusseq.covidcloud.ca/"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                >
-                    <img src="images/covid-cloud-black.png"
-                        alt="Covid Cloud Logo"
-                        css={css`
-                        width: 136px;
-                        height: 16px;
-                        margin: 16px -4px 28px;
-                        object-fit: contain;
-                     `} />
-                </a>
-                <a
-                    href="www.dnastack.com"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                >
-                    <img src="images/dnastack-logo-typeface.png"
-                        alt="Dnastack company logo"
-                        css={css`
-                        height: 35px;
-                        margin: 28px -4px 0;
-                        object-fit: contain;
-                     `} />
-                </a>
-            </span>
-        </div>
-
-    </section>
+      >
+        <StyledLink
+          href="https://virusseq.covidcloud.ca/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <img
+            src="images/covid-cloud.png"
+            alt="Covid Cloud Logo"
+            css={css`
+              margin: 10px 0 20px;
+              width: 128px;
+            `}
+          />
+        </StyledLink>
+        <StyledLink href="www.dnastack.com" rel="noopener noreferrer" target="_blank">
+          <img
+            src="images/dnastack-logo-typeface.png"
+            alt="Dnastack company logo"
+            css={css`
+              height: 35px;
+            `}
+          />
+        </StyledLink>
+      </span>
+    </div>
+  </section>
 );
 
 export default Cloud;

@@ -155,7 +155,7 @@ const NavBar: React.ComponentType = () => {
                 ${router.pathname === TEAM_PATH ? activeLinkStyle : ''}
               `}
             >
-              About the Team
+              Meet the Team
             </a>
           </Link>
         </div>
