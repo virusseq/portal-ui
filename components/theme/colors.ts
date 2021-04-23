@@ -22,7 +22,7 @@
 const base = {
   white: '#fff',
   black: '#282a35',
-  canada: '#D93738'
+  canada: '#D93738',
 };
 
 const grey = {
@@ -67,17 +67,17 @@ const accent2 = {
 const accent3 = {
   accent3: '#33aabb',
   accent3_dark: '#1c8292',
+  accent3_alternate: '#4da3ab',
 };
 
 const success = {
   success: '#00ddbe',
-}
+};
 
 const error = {
   error: '#c86370',
   error_dark: '#ad404e',
-  error_1: '#f9eff0',
-  error_2: '#e9c1c6',
+  error_1: '#f7d7d7',
 };
 
 const warning = {

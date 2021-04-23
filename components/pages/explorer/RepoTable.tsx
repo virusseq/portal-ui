@@ -19,12 +19,13 @@
  *
  */
 
+import { ReactElement } from 'react';
 import { css } from '@emotion/core';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
+import { useTheme } from 'emotion-theming';
 
 import { PageContentProps } from './index';
-import StyledLink from '../../Link';
 import defaultTheme from '../../theme';
 import { getConfig } from '../../../global/config';
 
@@ -39,12 +40,26 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
   padding: 8px;
   margin-bottom: 12px;
   ${theme.shadow.default};
+
   & .tableToolbar {
     background-color: ${theme.colors.white};
     padding: 10px 8px;
     ${theme.typography.label};
     font-weight: normal;
     height: 32px;
+
+    > div:first-of-type {
+      position: relative;
+
+      &::after {
+        background: white;
+        content: ' ';
+        height: 100%;
+        margin: -20px;
+        width: 30px;
+      }
+    }
+
     & .group {
       height: 32px;
       & .buttonWrapper button,
@@ -67,7 +82,9 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         color: ${theme.colors.primary};
       }
       & .buttonWrapper button:before {
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23${theme.colors.primary.slice(1)}' fill-rule='evenodd' d='M1.32 17.162h17.162c.729 0 1.32.59 1.32 1.32 0 .73-.591 1.32-1.32 1.32H1.32c-.729 0-1.32-.59-1.32-1.32 0-.73.591-1.32 1.32-1.32zm4.93-8.87l2.232 2.227V1.512c0-.774.63-1.402 1.406-1.402.777 0 1.406.628 1.406 1.402v9.032l2.257-2.252c.55-.548 1.44-.548 1.989 0 .549.547.55 1.435 0 1.983l-4.976 4.963c-.366.365-.96.365-1.327 0l-4.975-4.963c-.549-.548-.549-1.435 0-1.983.55-.548 1.439-.548 1.988 0z'/%3E%3C/svg%3E%0A");
+        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23${theme.colors.primary.slice(
+          1,
+        )}' fill-rule='evenodd' d='M1.32 17.162h17.162c.729 0 1.32.59 1.32 1.32 0 .73-.591 1.32-1.32 1.32H1.32c-.729 0-1.32-.59-1.32-1.32 0-.73.591-1.32 1.32-1.32zm4.93-8.87l2.232 2.227V1.512c0-.774.63-1.402 1.406-1.402.777 0 1.406.628 1.406 1.402v9.032l2.257-2.252c.55-.548 1.44-.548 1.989 0 .549.547.55 1.435 0 1.983l-4.976 4.963c-.366.365-.96.365-1.327 0l-4.975-4.963c-.549-.548-.549-1.435 0-1.983.55-.548 1.439-.548 1.988 0z'/%3E%3C/svg%3E%0A");
         margin-top: 2px;
         margin-right: 4px;
       }
@@ -75,7 +92,9 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         margin-right: 8px;
       }
       & .dropDownHeader button:after {
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.primary.slice(1)}' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
+        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.primary.slice(
+          1,
+        )}' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
         margin-top: 2px;
         margin-left: -3px;
       }
@@ -112,6 +131,7 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
       }
     }
   }
+
   & .ReactTable {
     background-color: ${theme.colors.white};
     border: none;
@@ -231,20 +251,46 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
   }
 `;
 
-const RepoTable = (props: PageContentProps) => {
+const RepoTable = (props: PageContentProps): ReactElement => {
+  const theme: typeof defaultTheme = useTheme();
   const {
     NEXT_PUBLIC_ARRANGER_API,
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
     NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS,
+    NEXT_PUBLIC_MUSE_API,
   } = getConfig();
+
   const manifestColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',')
     .filter((field) => field.trim()) // break it into arrays, and ensure there's no empty field names
     .map((fieldName) => fieldName.replace(/['"]+/g, '').trim());
 
+  const objectIdsStr = props.selectedTableRows.join(',');
+
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+
   const customExporters = [
-    { label: 'File Table', fileName: `virusseq-table-export-${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
-    { label: 'File Manifest', fileName: `virusseq-file-manifest-${today}.tsv`, columns: manifestColumns }, // exports a TSV with the manifest columns
+    { label: 'Metadata Table', fileName: `virusseq-table-export-${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
+    {
+      label: 'File Manifest',
+      fileName: `virusseq-file-manifest-${today}.tsv`,
+      columns: manifestColumns,
+    }, // exports a TSV with the manifest columns
+    {
+      label: 'Consensus Seq',
+      function: () => {
+        window.location.assign(
+          urlJoin(NEXT_PUBLIC_MUSE_API, `/download?objectIds=${objectIdsStr}`),
+        );
+      },
+    },
+    {
+      label: 'Consensus Seq (Gzip)',
+      function: () => {
+        window.location.assign(
+          urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`),
+        );
+      },
+    },
     // { label: () => (
     //   <span
     //     css={css`
@@ -272,7 +318,7 @@ const RepoTable = (props: PageContentProps) => {
   ];
 
   return (
-    <div css={(theme) => getTableStyle(theme)}>
+    <div css={getTableStyle(theme)}>
       <Table
         {...props}
         showFilterInput={false}

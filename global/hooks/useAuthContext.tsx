@@ -19,26 +19,27 @@
  *
  */
 
-import React, { createContext, useState } from 'react';
+import { createContext, ReactElement, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { EGO_JWT_KEY, ROOT_PATH } from '../utils/constants';
+import { EGO_JWT_KEY } from '../utils/constants';
 import { decodeToken, extractUser, isValidJwt } from '../utils/egoTokenUtils';
 import { getConfig } from '../config';
 import { UserWithId } from '../types';
-import getInternalLink from '../utils/getInternalLink';
 
 type T_AuthContext = {
   token?: string;
   logout: () => void;
   user?: UserWithId;
+  userHasWriteScopes?: boolean;
   fetchWithAuth: typeof fetch;
 };
 
 const AuthContext = createContext<T_AuthContext>({
   token: undefined,
-  logout: () => {},
+  logout: () => null,
   user: undefined,
+  userHasWriteScopes: false,
   fetchWithAuth: fetch,
 });
 
@@ -47,26 +48,21 @@ export const AuthProvider = ({
   children,
 }: {
   egoJwt?: string;
-  children: React.ReactElement;
-}) => {
-  const {
-    NEXT_PUBLIC_KEYCLOAK,
-    NEXT_PUBLIC_EGO_CLIENT_ID,
-  } = getConfig();
+  children: ReactElement;
+}): ReactElement => {
+  const { NEXT_PUBLIC_KEYCLOAK } = getConfig();
   const router = useRouter();
   // TODO: typing this state as `string` causes a compiler error. the same setup exists in argo but does not cause
   // a type issue. using `any` for now
-  const [token, setTokenState] = useState<any>(egoJwt);
+  const [token, setTokenState] = useState(egoJwt);
   const removeToken = () => {
     localStorage.removeItem(EGO_JWT_KEY);
-    setTokenState(null);
+    setTokenState('');
   };
 
   const logout = () => {
     removeToken();
-    router.push(
-      `${NEXT_PUBLIC_KEYCLOAK}logout?redirect_uri=${window.location.origin}`,
-    );
+    router.push(`${NEXT_PUBLIC_KEYCLOAK}logout?redirect_uri=${window.location.origin}`);
   };
 
   if (!token) {
@@ -79,7 +75,7 @@ export const AuthProvider = ({
         removeToken();
       }
     } else if (!egoJwt) {
-      setTokenState(null);
+      setTokenState('');
     }
   }
 
@@ -87,22 +83,25 @@ export const AuthProvider = ({
     return fetch(url, {
       ...options,
       headers: { ...options?.headers, accept: '*/*', Authorization: `Bearer ${token || ''}` },
-      ...options.method === 'GET' && { body: null },
+      ...(options.method === 'GET' && { body: null }),
     });
   };
 
   const userInfo = token ? decodeToken(token) : null;
   const user = userInfo ? extractUser(userInfo) : undefined;
+
+  const userHasWriteScopes = user?.scope.some((scope) => scope.toLowerCase().includes('write'));
+
   const authData = {
     token,
     logout,
     user,
+    userHasWriteScopes,
     fetchWithAuth,
   };
 
   return <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>;
 };
 
-export default function useAuthContext() {
-  return React.useContext(AuthContext);
-}
+const useAuthContext = (): T_AuthContext => useContext(AuthContext);
+export default useAuthContext;

@@ -19,7 +19,7 @@
  *
  */
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, ReactElement } from 'react';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useTheme } from 'emotion-theming';
@@ -93,7 +93,7 @@ const StyledListLink = styled('a')`
   `}
 `;
 
-const UserDropdown = ({ className } : { className?: string }) => {
+const UserDropdown = ({ className }: { className?: string }): ReactElement => {
   const node: any = useRef();
 
   const [open, setOpen] = useState(false);
@@ -163,7 +163,7 @@ const UserDropdown = ({ className } : { className?: string }) => {
       )}
       {open && (
         <ul
-          css={theme => css`
+          css={css`
             width: 100%;
             list-style: none;
             padding: 0;
@@ -171,6 +171,10 @@ const UserDropdown = ({ className } : { className?: string }) => {
             top: ${theme.dimensions.navbar.height}px;
             left: 0;
             margin: 0;
+
+            li {
+              display: flex;
+            }
           `}
         >
           <li>
