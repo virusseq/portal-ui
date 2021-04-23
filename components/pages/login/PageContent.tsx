@@ -19,20 +19,26 @@
  *
  */
 
+import { ReactElement, useEffect, useState } from 'react';
 import { css } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 
 import { getConfig } from '../../../global/config';
 import { StyledLinkAsButton } from '../../Link';
+import defaultTheme from '../../theme';
 
-const PageContent = () => {
-  const {
-    NEXT_PUBLIC_EGO_API_ROOT,
-    NEXT_PUBLIC_EGO_CLIENT_ID,
-  } = getConfig();
+const PageContent = (): ReactElement => {
+  const [origin, setOrigin] = useState('');
+  const theme: typeof defaultTheme = useTheme();
+  const { NEXT_PUBLIC_EGO_API_ROOT, NEXT_PUBLIC_EGO_CLIENT_ID, NEXT_PUBLIC_KEYCLOAK } = getConfig();
+
+  useEffect(() => {
+    window && setOrigin(window.location.origin);
+  }, []);
 
   return (
     <main
-      css={(theme) => css`
+      css={css`
         align-items: center;
         display: flex;
         flex-direction: column;
@@ -42,7 +48,7 @@ const PageContent = () => {
       `}
     >
       <article
-        css={theme => css`
+        css={css`
           background-color: ${theme.colors.white};
           border-radius: 5px;
           box-sizing: border-box;
@@ -53,7 +59,7 @@ const PageContent = () => {
         `}
       >
         <h1
-          css={theme => css`
+          css={css`
             color: ${theme.colors.primary};
             margin: 0 0 30px;
           `}
@@ -61,15 +67,15 @@ const PageContent = () => {
           Data Submission
         </h1>
         <p
-          css={theme => css`
+          css={css`
             font-weight: bold;
             margin-bottom: 25px;
           `}
         >
           Viral genomes are submitted to this portal by approved users.
-          </p>
+        </p>
         <ul
-          css={theme => css`
+          css={css`
             display: flex;
             flex-wrap: wrap;
             list-style: none;
@@ -92,7 +98,7 @@ const PageContent = () => {
               &:not(:first-of-type) {
                 border-left: 1px solid ${theme.colors.grey_4};
                 padding-left: 40px;
-              }  
+              }
             }
 
             p {
@@ -101,9 +107,12 @@ const PageContent = () => {
           `}
         >
           <li>
-            <p>To be granted a data submission account for your organization, please contact Genome Canada with an account request.</p>
+            <p>
+              To be granted a data submission account for your organization, please contact Genome
+              Canada with an account request.
+            </p>
             <StyledLinkAsButton
-              css={(theme) => css`
+              css={css`
                 ${theme.typography.button};
                 background-color: ${theme.colors.primary_dark};
                 border-color: ${theme.colors.primary_dark};
@@ -111,7 +120,7 @@ const PageContent = () => {
                 padding: 8px 20px;
                 width: fit-content;
               `}
-              href="https://www.genomecanada.ca/en/cancogen/contact-us"
+              href={`${NEXT_PUBLIC_KEYCLOAK}registrations?client_id=ego&response_type=code&redirect_uri=${origin}`}
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -121,7 +130,7 @@ const PageContent = () => {
           <li>
             <p>If you already have an authorized account, please log in to submit your data.</p>
             <StyledLinkAsButton
-              css={(theme) => css`
+              css={css`
                 ${theme.typography.button};
                 background-color: ${theme.colors.primary_dark};
                 border-color: ${theme.colors.primary_dark};
