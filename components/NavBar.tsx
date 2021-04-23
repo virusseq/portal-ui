@@ -34,6 +34,7 @@ import {
   ROOT_PATH,
   SUBMISSION_PATH,
   USER_PATH,
+  TEAM_PATH,
 } from '../global/utils/constants';
 
 const NavBar: React.ComponentType = () => {
@@ -145,6 +146,16 @@ const NavBar: React.ComponentType = () => {
               `}
             >
               Explore VirusSeq Data
+            </a>
+          </Link>
+          <Link path={TEAM_PATH}>
+            <a
+              css={(theme) => css`
+                ${linkStyle}
+                ${router.pathname === TEAM_PATH ? activeLinkStyle : ''}
+              `}
+            >
+              About the Team
             </a>
           </Link>
         </div>

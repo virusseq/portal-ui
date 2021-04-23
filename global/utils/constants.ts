@@ -34,6 +34,7 @@ export const EXPLORER_PATH = '/explorer';
 export const USER_PATH = '/user';
 export const LOGIN_PATH = '/login';
 export const SUBMISSION_PATH = '/submission';
+export const TEAM_PATH = "/team";
 
 // external docs links
 const OVERTURE_DMS_DOCS_ROOT = 'https://overture.bio/documentation/dms/';

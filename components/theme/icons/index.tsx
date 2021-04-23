@@ -31,6 +31,7 @@ export { default as ChevronDown } from './chevron_down';
 export { default as OvertureLogo } from './overture_logo';
 export { default as OvertureLogoWithText } from './overture_logo_with_text';
 export { default as OvertureUser } from './overture_user';
+export { default as OicrLogo } from './oicr';
 export { default as Checkmark } from './checkmark';
 export { default as Spinner } from './spinner';
 export { default as Error } from './error';
