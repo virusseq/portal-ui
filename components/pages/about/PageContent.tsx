@@ -1,10 +1,12 @@
 import { css } from '@emotion/core';
+import { ReactElement } from 'react';
 
+import CovidCloudPane from './CovidCloudPane';
 import HeroBanner from './HeroBanner';
 import Impact from './Impact';
 import WhySequence from './WhySequence';
 
-const PageContent = () => {
+const PageContent = (): ReactElement => {
   return (
     <main
       css={(theme) => css`
@@ -15,6 +17,7 @@ const PageContent = () => {
       `}
     >
       <HeroBanner />
+
       <article
         css={css`
           display: flex;
@@ -24,13 +27,14 @@ const PageContent = () => {
           width: 100%;
 
           @media (min-width: 900px) {
-
           }
         `}
       >
         <Impact />
         <WhySequence />
       </article>
+
+      <CovidCloudPane />
     </main>
   );
 };
