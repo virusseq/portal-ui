@@ -103,6 +103,12 @@ const Footer = (): ReactElement => {
           </li>
 
           <li>
+            <InternalLink path="/policies">
+              <StyledLink>Policies</StyledLink>
+            </InternalLink>
+          </li>
+
+          <li>
             <StyledLink
               href="https://www.genomecanada.ca/en/about/contact-us"
               rel="noopener noreferrer"
