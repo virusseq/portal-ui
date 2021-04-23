@@ -28,7 +28,7 @@ import defaultTheme from './theme';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { StyledLinkAsButton, InternalLink as Link } from './Link';
 import { useTheme } from 'emotion-theming';
-import { ABOUT_PATH, EXPLORER_PATH, ROOT_PATH, SUBMISSION_PATH, USER_PATH } from '../global/utils/constants';
+import { ABOUT_PATH, EXPLORER_PATH, ROOT_PATH, SUBMISSION_PATH, USER_PATH, TEAM_PATH } from '../global/utils/constants';
 import { getConfig } from '../global/config';
 
 const NavBar: React.ComponentType = () => {
@@ -140,6 +140,16 @@ const NavBar: React.ComponentType = () => {
               `}
             >
               Explore VirusSeq Data
+            </a>
+          </Link>
+          <Link path={TEAM_PATH}>
+            <a
+              css={(theme) => css`
+                ${linkStyle}
+                ${router.pathname === TEAM_PATH ? activeLinkStyle : ''}
+              `}
+            >
+              About the Team
             </a>
           </Link>
         </div>
