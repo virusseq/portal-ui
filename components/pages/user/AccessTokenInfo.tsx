@@ -27,7 +27,6 @@ import { isEmpty } from 'lodash';
 import { Tooltip } from 'react-tippy';
 
 import useAuthContext from '../../../global/hooks/useAuthContext';
-import { AccessLevel, parseScope, ScopeObj } from '../../../global/utils/egoTokenUtils';
 import Button from '../../Button';
 import DMSAdminContact, { GenericHelpMessage } from '../../DMSAdminContact';
 import ErrorNotification from '../../ErrorNotification';
@@ -35,14 +34,6 @@ import NoScopes from '../NoScopes';
 import defaultTheme from '../../theme';
 import { Checkmark } from '../../theme/icons';
 import sleep from '../../utils/sleep';
-
-interface ApiToken {
-  expiryDate: string;
-  isRevoked: boolean;
-  issueDate: string;
-  name: string;
-  scope: string[];
-}
 
 const TooltipContainer = styled('div')`
   ${({ theme }: { theme: typeof defaultTheme }) => css`
@@ -132,7 +123,7 @@ const getErrorMessage = ({ type, statusCode }: ErrorResponse) => {
 };
 
 const ApiTokenInfo = (): ReactElement => {
-  const { user, token } = useAuthContext();
+  const { token, userHasWriteScopes } = useAuthContext();
   const [existingToken, setExistingToken] = useState<string | null>(null);
   const [isCopyingToken, setIsCopyingToken] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -160,17 +151,9 @@ const ApiTokenInfo = (): ReactElement => {
 
   useEffect(() => {
     if (token) {
-      return setExistingToken(token);
+      setExistingToken(token);
     }
   }, [token]);
-
-  const userEffectiveScopes = (user?.scope || [])
-    .map((s) => parseScope(s))
-    .filter((s: ScopeObj) => {
-      return s.accessLevel !== AccessLevel.DENY;
-    });
-
-  const userHasScopes = userEffectiveScopes.length > 0;
 
   return (
     <div>
@@ -179,7 +162,7 @@ const ApiTokenInfo = (): ReactElement => {
           ${theme.typography.regular};
           font-size: 24px;
           line-height: 40px;
-          color: ${theme.colors.accent_dark};
+          color: ${theme.colors.primary};
         `}
       >
         Access Token
@@ -191,7 +174,7 @@ const ApiTokenInfo = (): ReactElement => {
           margin-top: 0.5rem;
         `}
       >
-        {!userHasScopes && <NoScopes />}
+        {!userHasWriteScopes && <NoScopes />}
       </div>
 
       <ol
