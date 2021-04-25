@@ -19,7 +19,7 @@
  *
  */
 
-import { ReactElement } from 'react';
+import { FunctionComponent, ReactElement } from 'react';
 import { css } from '@emotion/core';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
@@ -32,7 +32,7 @@ import { getConfig } from '../../../global/config';
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
   { ssr: false },
-) as any;
+) as FunctionComponent<Record<string, unknown>>;
 
 const getTableStyle = (theme: typeof defaultTheme) => css`
   border-radius: 5px;
@@ -48,16 +48,8 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
     font-weight: normal;
     height: 32px;
 
-    > div:first-of-type {
-      position: relative;
-
-      &::after {
-        background: white;
-        content: ' ';
-        height: 100%;
-        margin: -20px;
-        width: 30px;
-      }
+    .type {
+      display: none;
     }
 
     & .group {
@@ -71,16 +63,21 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         background-color: ${theme.colors.white};
         color: ${theme.colors.accent_dark};
         ${theme.typography.subheading2};
-        &:hover {
-          background-color: ${theme.colors.secondary_light};
-        }
+
         &:focus {
           outline: none;
         }
+
+        &:disabled {
+          background-color: ${theme.colors.grey_3};
+          color: ${theme.colors.grey_6};
+        }
+
+        &:not(:disabled):hover {
+          background-color: ${theme.colors.secondary_light};
+        }
       }
-      & .dropDownButtonContent {
-        color: ${theme.colors.primary};
-      }
+
       & .buttonWrapper button:before {
         content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23${theme.colors.primary.slice(
           1,
@@ -90,14 +87,28 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
       }
       & .dropDownHeader button {
         margin-right: 8px;
+
+        &:after {
+          content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.grey_6.slice(
+            1,
+          )}' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
+          margin-top: 2px;
+          margin-left: -3px;
+        }
+
+        &:not(:disabled) {
+          &:after {
+            content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.primary.slice(
+              1,
+            )}' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
+          }
+
+          .dropDownButtonContent {
+            color: ${theme.colors.primary};
+          }
+        }
       }
-      & .dropDownHeader button:after {
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.primary.slice(
-          1,
-        )}' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
-        margin-top: 2px;
-        margin-left: -3px;
-      }
+
       & .dropDownButton svg {
         display: none;
       }
@@ -256,20 +267,19 @@ const RepoTable = (props: PageContentProps): ReactElement => {
   const {
     NEXT_PUBLIC_ARRANGER_API,
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
-    NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS,
     NEXT_PUBLIC_MUSE_API,
   } = getConfig();
-
-  const manifestColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',')
-    .filter((field) => field.trim()) // break it into arrays, and ensure there's no empty field names
-    .map((fieldName) => fieldName.replace(/['"]+/g, '').trim());
 
   const objectIdsStr = props.selectedTableRows.join(',');
 
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 
   const customExporters = [
-    { label: 'Metadata Table', fileName: `virusseq-table-export-${today}.tsv` }, // exports a TSV with what is displayed on the table (columns selected, etc.)
+    {
+      label: 'Metadata Table',
+      fileName: `virusseq-table-export-${today}.tsv`,
+      requiresRowSelection: true,
+    }, // exports a TSV with what is displayed on the table (columns selected, etc.)
     {
       label: 'Consensus Seq',
       function: () => {
@@ -277,6 +287,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
           urlJoin(NEXT_PUBLIC_MUSE_API, `/download?objectIds=${objectIdsStr}`),
         );
       },
+      requiresRowSelection: true,
     },
     {
       label: 'Consensus Seq (Gzip)',
@@ -284,6 +295,16 @@ const RepoTable = (props: PageContentProps): ReactElement => {
         window.location.assign(
           urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`),
         );
+      },
+      requiresRowSelection: true,
+    },
+    {
+      label: 'Download All',
+      function: () => {
+        console.log('this will download all files');
+        // window.location.assign(
+        //   urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`),
+        // );
       },
     },
     // { label: () => (
