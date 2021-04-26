@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@arranger/components": "^2.12.7",
+    "@arranger/components": "^2.12.8",
     "@emotion/babel-preset-css-prop": "^10.0.27",
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",

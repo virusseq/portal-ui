@@ -19,62 +19,53 @@
  *
  */
 
-import { css } from '@emotion/core';
+import { FunctionComponent, ReactElement } from 'react';
 import dynamic from 'next/dynamic';
+import { css } from '@emotion/core';
 
-import { PageContentProps } from '.';
 import defaultTheme from '../../theme';
+import { PageContentProps } from '.';
 
 const Aggregations = dynamic(
   import('@arranger/components/dist/Arranger').then((comp) => comp.Aggregations),
   { ssr: false },
-) as any;
+) as FunctionComponent<Record<string, unknown>>;
 
 const getFacetStyles = (theme: typeof defaultTheme) => css`
   padding-bottom: 2rem;
+
   .input-range-wrapper div {
     ${theme.typography.label2}
     font-weight: bold;
     background-color: ${theme.colors.grey_3};
     border-radius: 3px;
     padding: 0 4px;
+
     &:last-of-type,
     &:nth-of-type(4) {
       background-color: ${theme.colors.white};
       color: ${theme.colors.grey_6};
     }
+
     &:nth-of-type(3) {
       background-color: ${theme.colors.white};
     }
   }
+
   .aggregations {
     .aggregation-card {
       border-bottom: 1px solid ${theme.colors.grey_3};
+      border-left: 3px solid transparent;
       padding-right: 8px;
+
       &:first-of-type {
         margin-top: 0;
       }
 
-      border-left: 3px solid transparent;
+      &[data-field='analysis.host.host_age'] .unit-wrapper {
+        display: none;
+      }
 
-      // Removing these as per https://github.com/cancogen-virus-seq/portal/issues/3
-      // Leaving commented in case we change our minds later
-      // &:nth-of-type(5n + 1) {
-      //   border-left-color: ${theme.colors.secondary};
-      // }
-      // &:nth-of-type(5n + 2) {
-      //   border-left-color: ${theme.colors.accent2};
-      // }
-      // &:nth-of-type(5n + 3) {
-      //   border-left-color: ${theme.colors.warning};
-      // }
-      // &:nth-of-type(5n + 4) {
-      //   border-left-color: ${theme.colors.primary};
-      // }
-      // &:nth-of-type(5n + 5) {
-      //   border-left-color: ${theme.colors.accent3};
-      // }
-      
       .header {
         padding: 5px 0 6px 6px;
 
@@ -89,12 +80,14 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
             cursor: pointer;
             padding-top: 2px;
           }
+
           &.collapsed {
             background-color: ${theme.colors.grey_2};
             margin: -5px -8px -6px -7px;
             padding: 5px 8px 6px 6px;
           }
-          & .title {
+
+          .title {
             ${theme.typography.subheading}
             color: ${theme.colors.accent_dark};
             font-size: 14px;
@@ -103,19 +96,22 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
             width: 90%;
             line-height: 20px;
           }
-          & .arrow {
+
+          .arrow {
             display: inline-block;
             height: 100%;
             vertical-align: top;
             transition: all 0s !important;
+
             &:after {
               display: inline-block;
               transform: translateX(-2px) rotate(270deg);
               content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%23D93738' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E ");
             }
           }
+
           &.collapsed {
-            & .arrow {
+            .arrow {
               &:after {
                 display: inline-block;
                 transform: translateX(-2px) rotate(-90deg);
@@ -125,14 +121,16 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
           }
         }
       }
-      & .bucket {
-        & .bucket-item {
+
+      .bucket {
+        .bucket-item {
           display: flex;
           justify-content: space-between;
           ${theme.typography.data}
           align-items: center;
           padding-bottom: 2px;
-          & .bucket-count {
+
+          .bucket-count {
             ${theme.typography.label2}
             font-size: 12px;
             display: inline-block;
@@ -141,16 +139,19 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
             border-radius: 3px;
             margin: 2px 0;
           }
-          & .bucket-link {
+
+          .bucket-link {
             display: flex;
             align-items: center;
           }
         }
+
         &:last-of-type {
           padding-bottom: 4px;
         }
       }
-      & .showMore-wrapper {
+
+      .showMore-wrapper {
         ${theme.typography.label2};
         color: ${theme.colors.primary};
         text-decoration: underline;
@@ -158,26 +159,29 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
         display: flex;
         align-items: center;
       }
-      & .showMore-wrapper.more {
+
+      .showMore-wrapper.more {
         &:before {
           padding-top: 3px;
           margin-right: 3px;
           content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 11 11'%3E%3Cpath fill='%2304518C' fill-rule='evenodd' d='M7.637 6.029H6.034v1.613c0 .291-.24.53-.534.53-.294 0-.534-.239-.534-.53V6.03H3.363c-.294 0-.534-.238-.534-.529 0-.29.24-.529.534-.529h1.603V3.358c0-.291.24-.53.534-.53.294 0 .534.239.534.53V4.97h1.603c.294 0 .534.238.534.529 0 .29-.24.529-.534.529M5.5 0C2.462 0 0 2.462 0 5.5S2.462 11 5.5 11 11 8.538 11 5.5 8.538 0 5.5 0'/%3E%3C/svg%3E%0A");
         }
       }
-      & .showMore-wrapper.less {
+
+      .showMore-wrapper.less {
         &:before {
           padding-top: 3px;
           margin-right: 3px;
           content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 20 20'%3E%3Cpath fill='%2304518c' fill-rule='evenodd' d='M13.81 10.952H6.19c-.523 0-.952-.428-.952-.952s.429-.952.952-.952h7.62c.523 0 .952.428.952.952s-.429.952-.952.952M10 0C4.476 0 0 4.476 0 10s4.476 10 10 10 10-4.476 10-10S15.524 0 10 0'/%3E%3C/svg%3E%0A");
         }
       }
-      & .filter .inputWrapper {
+
+      .filter .inputWrapper {
         border-radius: 5px;
         box-shadow: 0 0 4px 1px rgba(155, 199, 237, 0.8);
         border: 1px solid ${theme.colors.secondary};
         margin: 6px 5px 7px 0;
-        & input {
+        input {
           ${theme.typography.data}
           &::placeholder {
             color: ${theme.colors.black};
@@ -190,13 +194,14 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
         }
       }
 
-      & .bucket .range-wrapper {
+      .bucket .range-wrapper {
         .input-range {
           margin-bottom: 30px;
         }
 
         .input-range__track.input-range__track--background {
           background-color: ${theme.colors.grey_4};
+
           .input-range__track--active {
             background-color: ${theme.colors.secondary};
           }
@@ -211,17 +216,21 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
           }
         }
       }
+
       .toggle-button {
         ${theme.typography.data};
         padding: 2px 5px 8px 5px;
         margin-left: 5px;
+
         .toggle-button-option {
           border: 1px solid ${theme.colors.grey_5};
+
           &:nth-of-type(2) {
             border-left: 0px;
             border-right: 0px;
           }
         }
+
         .toggle-button-option .bucket-count {
           ${theme.typography.label2}
           display: inline-block;
@@ -229,21 +238,24 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
           padding: 0 3px;
           border-radius: 3px;
         }
+
         .toggle-button-option.active {
           background-color: ${theme.colors.secondary_light};
           .bucket-count {
             background-color: ${theme.colors.secondary_2};
           }
         }
+
         .toggle-button-option.disabled {
           background-color: ${theme.colors.grey_2};
           color: ${theme.colors.grey_6};
         }
       }
 
-      & .action-icon {
+      .action-icon {
         margin-left: 5px;
         margin-top: 2px;
+
         svg {
           fill: ${theme.colors.secondary};
           width: 14px;
@@ -255,7 +267,7 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
   }
 `;
 
-const Facets = (props: PageContentProps) => {
+const Facets = (props: PageContentProps): ReactElement => {
   return (
     <div css={(theme) => getFacetStyles(theme)}>
       <h2

@@ -6,6 +6,8 @@ ENV ASSET_PREFIX $ASSET_PREFIX
 ENV APP_UID=9999
 ENV APP_GID=9999
 
+ENV NEXT_TELEMETRY_DISABLED=1
+
 RUN apk --no-cache add shadow
 RUN groupmod -g $APP_GID node
 RUN usermod -u $APP_UID -g $APP_GID node
