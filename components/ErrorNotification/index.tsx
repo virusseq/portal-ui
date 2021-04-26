@@ -19,53 +19,20 @@
  *
  */
 
+import { MouseEvent, ReactElement } from 'react';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import React from 'react';
-import IconButton from './IconButton';
+import IconButton from '../IconButton';
 
-import defaultTheme from './theme';
-import { Error as ErrorIcon } from './theme/icons';
-import DismissIcon from './theme/icons/dismiss';
+import defaultTheme from '../theme';
+import { Error as ErrorIcon } from '../theme/icons';
+import DismissIcon from '../theme/icons/dismiss';
 
-type ErrorSize = 'lg' | 'md' | 'sm';
-
-const ERROR_SIZES = {
-  LG: 'lg' as ErrorSize,
-  MD: 'md' as ErrorSize,
-  SM: 'sm' as ErrorSize,
-};
-
-const getIconDimensions = (size: ErrorSize) =>
-  ({
-    [ERROR_SIZES.LG]: { width: 26, height: 27 },
-    [ERROR_SIZES.MD]: { width: 21, height: 22 },
-    [ERROR_SIZES.SM]: { width: 18, height: 18 },
-  }[size]);
-
-const getContainerStyles = (size: ErrorSize) =>
-  ({
-    [ERROR_SIZES.LG]: `
-      padding: 1rem 2rem;
-      line-height: 26px;
-    `,
-    [ERROR_SIZES.MD]: `
-      padding: 1rem;
-      line-height: 24px;
-    `,
-    [ERROR_SIZES.SM]: `
-      padding: 0.5rem;
-      line-height: 20px;
-      display: flex;
-      align-items: center;
-    `,
-  }[size]);
+import { ErrorSize, getContainerStyles, getIconSize, getIconStyle, getTitleStyle } from './helpers';
 
 const ErrorContentContainer = styled('div')`
   ${({ theme, size }: { theme: typeof defaultTheme; size: ErrorSize }) => css`
-    border: 1px solid ${theme.colors.error_2};
     border-radius: 5px;
-    ${theme.shadow.default};
     ${theme.typography.subheading};
     font-weight: normal;
     background-color: ${theme.colors.error_1};
@@ -74,32 +41,6 @@ const ErrorContentContainer = styled('div')`
     max-width: 600px;
   `}
 `;
-
-const getIconStyle = (size: ErrorSize) =>
-  ({
-    [ERROR_SIZES.LG]: 'padding-right: 15px',
-    [ERROR_SIZES.MD]: 'padding-right: 15px',
-    [ERROR_SIZES.SM]: '',
-  }[size]);
-
-const getTitleStyle = (size: ErrorSize) =>
-  ({
-    [ERROR_SIZES.LG]: `
-      margin: 0.5rem 0 1rem;
-      font-size: 24px;
-      line-height: 38px;
-    `,
-    [ERROR_SIZES.MD]: `
-      margin: 0rem;
-      padding-bottom: 0.4rem;
-      font-size: 18px;
-      line-height: 20px;
-    `,
-    [ERROR_SIZES.SM]: `
-      margin: 0rem,
-      line-height: 16px;
-    `,
-  }[size]);
 
 const ErrorTitle = styled('h1')`
   ${({ size }: { size: ErrorSize }) => css`
@@ -114,16 +55,16 @@ const ErrorNotification = ({
   title,
   size,
   styles = '',
-  onDismiss,
+  onDismiss = () => null,
   dismissible = false,
 }: {
   children: React.ReactNode;
   title?: string;
   size: ErrorSize;
   styles?: string;
-  onDismiss?: Function;
+  onDismiss?: (event: MouseEvent) => void;
   dismissible?: boolean;
-}) => (
+}): ReactElement => (
   <div
     css={css`
       display: flex;
@@ -133,17 +74,17 @@ const ErrorNotification = ({
       align-items: center;
     `}
   >
-    <ErrorContentContainer 
+    <ErrorContentContainer
       css={css`
         ${styles}
       `}
       size={size}
-      >
+    >
       {title ? (
         <div>
           <ErrorTitle size={size}>
             <ErrorIcon
-              {...getIconDimensions(size)}
+              {...getIconSize(size)}
               style={css`
                 ${getIconStyle(size)}
               `}
@@ -153,7 +94,14 @@ const ErrorNotification = ({
               <DismissIcon height={15} width={15} fill={defaultTheme.colors.error_dark} />
             )}
           </ErrorTitle>
-          {children}
+
+          <section
+            css={css`
+              padding-left: 40px;
+            `}
+          >
+            {children}
+          </section>
         </div>
       ) : (
         <div
@@ -164,7 +112,7 @@ const ErrorNotification = ({
         >
           <span>
             <ErrorIcon
-              {...getIconDimensions(size)}
+              {...getIconSize(size)}
               style={css`
                 ${getIconStyle(size)}
               `}
@@ -183,7 +131,7 @@ const ErrorNotification = ({
           </div>
           {dismissible && (
             <IconButton
-              onClick={(e: React.MouseEvent) => (onDismiss ? onDismiss() : () => null)}
+              onClick={onDismiss}
               Icon={DismissIcon}
               height={12}
               width={12}

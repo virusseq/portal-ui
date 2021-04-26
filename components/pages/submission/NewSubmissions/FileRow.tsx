@@ -9,9 +9,9 @@ import { getFileExtension, getExtension } from "./validationHelpers";
 
 const FileRow = ({
   active = false,
-  file: { name = '', type = '' }, 
-  handleRemove = () => {console.log('clicked')},
-} : {
+  file: { name = '', type = '' },
+  handleRemove = () => { console.log('clicked') },
+}: {
   active: boolean,
   file: File,
   handleRemove?: MouseEventHandler<HTMLButtonElement>,
@@ -26,7 +26,7 @@ const FileRow = ({
     <tr data-type={getFileExtension(name)} data-upload={active}>
       <td>
         <File
-          fill={iconFill} 
+          fill={iconFill}
         />
         {` ${name}`}
       </td>

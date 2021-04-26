@@ -86,6 +86,19 @@ spec:
       }
     }
 
+    stage('deploy to cancogen-virus-seq-dev') {
+      when {
+        branch "develop"
+      }
+      steps {
+        build(job: "virusseq/update-app-version", parameters: [
+          [$class: 'StringParameterValue', name: 'CANCOGEN_ENV', value: 'dev' ],
+          [$class: 'StringParameterValue', name: 'TARGET_RELEASE', value: 'portal'],
+          [$class: 'StringParameterValue', name: 'NEW_APP_VERSION', value: "${commit}" ]
+        ])
+      }
+    }
+
     stage('Release & Tag') {
       when {
         anyOf {

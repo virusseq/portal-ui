@@ -19,24 +19,23 @@
  *
  */
 
-import React from 'react';
+import { ReactElement } from 'react';
 import { css } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 
 import defaultTheme from './theme';
-import {
-  GenomeCanadaLogo,
-  OvertureLogoWithText,
-} from './theme/icons';
+import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
 
 import useAuthContext from '../global/hooks/useAuthContext';
 import StyledLink, { InternalLink } from './Link';
 
-const Footer = () => {
+const Footer = (): ReactElement => {
+  const theme: typeof defaultTheme = useTheme();
   const { token } = useAuthContext();
 
   return (
     <div
-      css={(theme: typeof defaultTheme) => css`
+      css={css`
         height: ${theme.dimensions.footer.height}px;
         background-color: ${theme.colors.white};
         border-top: 1px solid ${theme.colors.grey_3};
@@ -53,29 +52,26 @@ const Footer = () => {
         right: 0px;
       `}
     >
-      <a
-        href="https://www.genomecanada.ca/"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
+      <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
         <GenomeCanadaLogo width={85} />
       </a>
       <section
-        css={(theme: typeof defaultTheme) => css`
+        css={css`
           display: flex;
           flex-direction: column;
           height: 60%;
           justify-content: space-between;
           align-items: center;
 
-          & a, & span {
+          & a,
+          & span {
             ${theme.typography.subheading2};
             font-weight: normal;
           }
         `}
-        >
+      >
         <ul
-          css={(theme: typeof defaultTheme) => css`
+          css={css`
             display: flex;
             margin: 0;
             padding: 0;
@@ -95,7 +91,7 @@ const Footer = () => {
               }
             }
           `}
-          >
+        >
           <li>
             <StyledLink
               href="https://www.genomecanada.ca/en/cancogen"
@@ -106,15 +102,11 @@ const Footer = () => {
             </StyledLink>
           </li>
 
-          {!token && <li>
-            <InternalLink
-              path="/login"
-            >
-              <StyledLink>
-                Submitter Login
-              </StyledLink>
+          <li>
+            <InternalLink path="/policies">
+              <StyledLink>Policies</StyledLink>
             </InternalLink>
-          </li>}
+          </li>
 
           <li>
             <StyledLink
@@ -125,39 +117,81 @@ const Footer = () => {
               Contact Us
             </StyledLink>
           </li>
+
+          {!token && (
+            <li>
+              <InternalLink path="/login">
+                <StyledLink>Submitter Login</StyledLink>
+              </InternalLink>
+            </li>
+          )}
         </ul>
         <span>
           &#169;
-          {` ${new Date().toISOString().slice(0,4)} Canadian VirusSeq Data Portal`}
+          {` ${new Date().toISOString().slice(0, 4)} Canadian VirusSeq Data Portal`}
         </span>
       </section>
-      <span
-        css={(theme: typeof defaultTheme) => css`
+
+      <section
+        css={css`
           display: flex;
-          justify-content: center;
-          align-items: center;
         `}
-        >
+      >
         <span
-          css={(theme) =>
-            css`
-              color: ${theme.colors.accent_dark};
-              ${theme.typography.subheading2}
-              font-weight: normal;
-              padding-right: 10px;
-            `
-          }
+          css={css`
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `}
         >
-        Powered by:
+          <span
+            css={(theme) =>
+              css`
+                color: ${theme.colors.accent_dark};
+                ${theme.typography.subheading2}
+                font-weight: normal;
+                padding-right: 10px;
+              `
+            }
+          >
+            Powered by:
+          </span>
+          <a
+            css={css`
+              margin-top: 5px;
+            `}
+            href="https://www.overture.bio/"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <OvertureLogoWithText width={100} height={18} />
+          </a>
         </span>
+
         <a
-          href="https://www.overture.bio/"
+          css={css`
+            align-items: center;
+            color: ${theme.colors.primary};
+            display: flex;
+            font-weight: bold;
+            justify-content: center;
+            margin-left: 20px;
+            text-decoration: none;
+          `}
+          href="https://github.com/cancogen-virus-seq"
           rel="noopener noreferrer"
           target="_blank"
         >
-          <OvertureLogoWithText width={100} height={18} />
+          <GitHubLogo height={20} width={20} />
+          <span
+            css={css`
+              margin-left: 5px;
+            `}
+          >
+            VirusSeq Github
+          </span>
         </a>
-      </span>
+      </section>
     </div>
   );
 };

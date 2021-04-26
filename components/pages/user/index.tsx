@@ -19,14 +19,16 @@
  *
  */
 
+import { ReactElement } from 'react';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 
+import useAuthContext from '../../../global/hooks/useAuthContext';
 import PageLayout from '../../PageLayout';
 import defaultTheme from '../../theme';
-import useAuthContext from '../../../global/hooks/useAuthContext';
+import AccessTokenInfo from './AccessTokenInfo';
 import AuthenticatedBadge from './AuthenticatedBadge';
-import ApiTokenInfo from './ApiTokenInfo';
+import StudyAccess from './StudyAccess';
 
 const StyledPageLayout = styled(PageLayout)`
   ${({ theme }: { theme: typeof defaultTheme }) =>
@@ -56,7 +58,7 @@ const UserTitle = styled('h1')`
     ${theme.typography.regular};
     font-size: 30px;
     line-height: 36px;
-    color: ${theme.colors.accent_dark};
+    color: ${theme.colors.primary};
     margin-bottom: 0.5rem;
     margin-top: 0.1rem;
   `}
@@ -71,12 +73,12 @@ const UserEmail = styled('div')`
   `}
 `;
 
-const UserComponent = () => {
+const UserComponent = (): ReactElement => {
   const { user } = useAuthContext();
   return (
     <StyledPageLayout subtitle="User Profile & Token">
       <FlexDiv
-        css={theme => css`
+        css={(theme) => css`
           justify-content: center;
           padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
         `}
@@ -100,7 +102,10 @@ const UserComponent = () => {
               </FlexDiv>
               <AuthenticatedBadge provider={user.providerType} />
             </UserInfoContainer>
-            <ApiTokenInfo />
+
+            <AccessTokenInfo />
+
+            <StudyAccess />
           </FlexDiv>
         )}
       </FlexDiv>

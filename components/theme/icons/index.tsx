@@ -19,46 +19,30 @@
  *
  */
 
-import GoogleLogo from './google';
-import FacebookLogo from './facebook';
-import GitHubLogo from './github';
-export {default as KeyCloakLogo} from './keycloak';
-import LinkedInLogo from './linkedin';
-import OrcidLogo from './orcid';
-import Illustration from './illustration';
-import Avatar from './avatar';
-import ChevronDown from './chevron_down';
-import OvertureLogo from './overture_logo';
-import OvertureLogoWithText from './overture_logo_with_text';
-import OvertureUser from './overture_user';
-import Checkmark from './checkmark';
-import Spinner from './spinner';
-import Error from './error';
-import Warning from './warning';
-export {default as Bin} from './Bin';
-export {default as Calendar} from './Calendar';
-export {default as CoronaVirus} from './CoronaVirus';
-export {default as CrossHairs} from './CrossHairs';
-export {default as Ellipsis} from './Ellipsis';
-export {default as File} from './File';
-export {default as GenomeCanadaLogo} from './GenomeCanada_logo';
-export {default as MapleLeaf} from './MapleLeaf';
-export {default as Storage} from './Storage';
-
-export {
-  GoogleLogo,
-  FacebookLogo,
-  GitHubLogo,
-  LinkedInLogo,
-  OrcidLogo,
-  Illustration,
-  Avatar,
-  ChevronDown,
-  OvertureLogo,
-  OvertureLogoWithText,
-  OvertureUser,
-  Checkmark,
-  Spinner,
-  Error,
-  Warning,
-};
+export { default as Avatar } from './avatar';
+export { default as GoogleLogo } from './google';
+export { default as FacebookLogo } from './facebook';
+export { default as GitHubLogo } from './github';
+export { default as KeyCloakLogo } from './keycloak';
+export { default as LinkedInLogo } from './linkedin';
+export { default as OrcidLogo } from './orcid';
+export { default as Illustration } from './illustration';
+export { default as ChevronDown } from './chevron_down';
+export { default as OvertureLogo } from './overture_logo';
+export { default as OvertureLogoWithText } from './overture_logo_with_text';
+export { default as OvertureUser } from './overture_user';
+export { default as OicrLogo } from './oicr';
+export { default as Checkmark } from './checkmark';
+export { default as Spinner } from './spinner';
+export { default as Error } from './error';
+export { default as Warning } from './warning';
+export { default as Bin } from './Bin';
+export { default as Calendar } from './Calendar';
+export { default as CoronaVirus } from './CoronaVirus';
+export { default as CrossHairs } from './CrossHairs';
+export { default as DragAndDrop } from './CrossHairs';
+export { default as Ellipsis } from './Ellipsis';
+export { default as File } from './File';
+export { default as GenomeCanadaLogo } from './GenomeCanada_logo';
+export { default as MapleLeaf } from './MapleLeaf';
+export { default as Storage } from './Storage';

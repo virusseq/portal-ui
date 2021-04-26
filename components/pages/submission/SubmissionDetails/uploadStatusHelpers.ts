@@ -8,39 +8,48 @@ export const uploadsStatusDictionary = {
   QUEUED: [],
 };
 
-export const sortUploadsByStatus = (uploads: UploadDataType[]): UploadsStatusDictionaryType => (
-  uploads.reduce( // start with a dictionary, end with an array
-    (sortedUploads: UploadsStatusDictionaryType, upload: UploadDataType, index: number) => ({
+export const groupUploadsByStatus = (uploads: UploadDataType[]): UploadsStatusDictionaryType =>
+  uploads.reduce(
+    // start with a dictionary, end with an array
+    (sortedUploads: UploadsStatusDictionaryType, upload: UploadDataType) => ({
       ...sortedUploads,
-      [upload.status]: sortedUploads[upload.status].concat(upload).sort()
+      [upload.status]: sortedUploads[upload.status].concat(upload).sort(),
     }),
-    uploadsStatusDictionary
-  )
-);
+    uploadsStatusDictionary,
+  );
 
-export const uploadsStatusReducer = (state: UploadsStatusDictionaryType, action: UploadStatusActionType) => {
+export const uploadsStatusReducer = (
+  state: UploadsStatusDictionaryType,
+  action: UploadStatusActionType,
+): UploadsStatusDictionaryType => {
   switch (action.type) {
     case 'initial details': {
-      return sortUploadsByStatus(action.uploads);
+      return groupUploadsByStatus(action.uploads);
     }
 
     case 'new details': {
       // remove the upload from its previous status group
-      const newSubmissionDetails = Object.entries(state)
-        .reduce((acc, [status, uploads]): UploadsStatusDictionaryType => ({
+      const newSubmissionDetails = Object.entries(state).reduce(
+        (acc, [status, uploads]): UploadsStatusDictionaryType => ({
           ...acc,
-          [status]: uploads.filter(upload => action.upload.submitterSampleId !== upload.submitterSampleId)
-        }), state);
+          [status]: uploads.filter(
+            (upload) => action.upload.submitterSampleId !== upload.submitterSampleId,
+          ),
+        }),
+        state,
+      );
 
       // replace it in its new status group
-      return ({
+      return {
         ...newSubmissionDetails,
-        [action.upload.status]: newSubmissionDetails[action.upload.status].concat(action.upload).sort()
-      });
+        [action.upload.status]: newSubmissionDetails[action.upload.status]
+          .concat(action.upload)
+          .sort(),
+      };
     }
 
     default: {
       return state;
     }
   }
-}
+};
