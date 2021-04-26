@@ -99,12 +99,12 @@ const NewSubmissions = (): ReactElement => {
     <article
       css={css`
         flex-direction: column;
-      `}
-    >
-      <h1 className="view-title">Start a New Submission</h1>
 
-      <ol
-        css={css`
+        h2 {
+          ${theme.typography.subheading};
+        }
+
+        ol {
           box-sizing: border-box;
           margin: 0 0 20px;
           padding-left: 15px;
@@ -112,13 +112,63 @@ const NewSubmissions = (): ReactElement => {
           li {
             margin-bottom: 20px;
           }
-        `}
-      >
+        }
+      `}
+    >
+      <h1 className="view-title">Start a New Submission</h1>
+
+      <p>
+        Virus metadata is submitted as a .tsv file. Viral genome data must be submitted as a{' '}
+        <span className="code">.fasta</span> file. Up to 5000 samples can be submitted in a single
+        submission, but note that the larger the file the longer the submission will take. Fasta
+        files are accepted individually, or as a single concatenated fasta containing all samples in
+        one file.
+      </p>
+
+      <h2>To format your viral sequence metadata:</h2>
+
+      <ol>
         <li>
-          <StyledLink href={``}>Download the metadata template TSV</StyledLink>
-          {' and fill in all of the fields for your samples.'}
+          Sequence metadata must be provided in TSV format according to the accepted values for each
+          field. A reference of the accepted values can be found{' '}
+          <StyledLink
+            href="https://github.com/Public-Health-Bioinformatics/DataHarmonizer/blob/master/template/canada_covid19/SOP.pdf"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            in this resource
+          </StyledLink>
+          .
         </li>
-        <li>Upload one formatted metadata TSV file and the accompanying FASTA sequencing files.</li>
+        <li>
+          <StyledLink
+            href="https://github.com/Public-Health-Bioinformatics/DataHarmonizer"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            DataHarmonizer
+          </StyledLink>{' '}
+          is a tool that can be used to help validate your metadata TSV locally before submitting.
+          Download the tool and follow the instructions on the Github repository to pre-validate
+          your metadata before submission.
+        </li>
+        <li>
+          If you are using Excel or Google sheets, make sure all characters are UTF-8 encoded.
+        </li>
+      </ol>
+
+      <h2>To format your viral sequence files:</h2>
+
+      <ol>
+        <li>
+          Make sure they have the file extension <span className="code">.fasta</span>.
+        </li>
+        <li>
+          Each sequence must be preceded be a description line, beginning with a &gt;. The
+          description line should include &gt;hCoV-19/<span className="code">country</span>/
+          <span className="code">identifier</span>/<span className="code">year</span> sequenced.
+          This identifier must match exactly the "Isolate" column in the TSV file.
+        </li>
       </ol>
 
       <DropZone
