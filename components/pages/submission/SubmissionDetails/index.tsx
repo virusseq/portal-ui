@@ -35,7 +35,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
         })}`,
       ).then(({ data: uploadsData, ...response }) => {
         if (Array.isArray(uploadsData) && uploadsData.length > 0) {
-          setTotalUploads(uploadsData.length);
           submissionDetailsDispatch({
             type: 'initial details',
             uploads: uploadsData,
@@ -78,7 +77,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
         width: 100%;
       `}
     >
-      <Overview ID={ID} />
+      <Overview ID={ID} setTotalUploads={setTotalUploads} />
 
       <LoaderWrapper loading={awaitingResponse} size="10px">
         {totalUploads > 0 && (

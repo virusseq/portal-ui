@@ -10,7 +10,7 @@ import { Calendar, ChevronDown, CoronaVirus, File } from '../../../theme/icons';
 import defaultTheme from '../../../theme';
 import { SubmissionDetailsProps } from './types';
 
-const Overview = ({ ID }: SubmissionDetailsProps): ReactElement => {
+const Overview = ({ ID, setTotalUploads }: SubmissionDetailsProps): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
   const { token } = useAuthContext();
   const [
@@ -23,16 +23,9 @@ const Overview = ({ ID }: SubmissionDetailsProps): ReactElement => {
   useEffect(() => {
     if (token) {
       !submissionData?.submissionId &&
-        fetchMuseData(
-          `submissions/${ID}?${new URLSearchParams({
-            page: '0',
-            size: '100000',
-            sortDirection: 'DESC',
-            sortField: 'createdAt',
-          })}`,
-        ).then((thisSubmission) => {
+        fetchMuseData(`submissions/${ID}`).then((thisSubmission) => {
           thisSubmission?.submissionId === ID
-            ? setSubmissionData({
+            ? (setSubmissionData({
                 ...thisSubmission,
                 originalFileNames: [...thisSubmission.originalFileNames].sort((A, B) =>
                   A.slice(-3).toLowerCase() === 'tsv'
@@ -41,7 +34,8 @@ const Overview = ({ ID }: SubmissionDetailsProps): ReactElement => {
                     ? 1
                     : 0,
                 ),
-              })
+              }),
+              setTotalUploads?.(thisSubmission.totalRecords))
             : console.error('Unhandled error fetching submission overview', thisSubmission);
         });
     }
