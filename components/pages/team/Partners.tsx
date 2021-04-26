@@ -35,7 +35,7 @@ const Partners = (): ReactElement => {
         University), William Hsiao (Simon Fraser University), Lincoln Stein and Christina Yung
         (Ontario Institute for Cancer Research) and Yann Joly (McGill University), oversees the
         technical interactions with the National Microbiology Laboratory and provincial public
-        health labs across the country.
+        health laboratories across the country.
       </p>
     </section>
   );

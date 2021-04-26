@@ -20,14 +20,14 @@ const Cloud = (): ReactElement => (
           Cloud Based Platform:{' '}
         </span>
         Genome Canada has partnered with{' '}
-        <StyledLink href="www.dnastack.com" rel="noopener noreferrer" target="_blank">
+        <StyledLink href="https://www.dnastack.com" rel="noopener noreferrer" target="_blank">
           DNAstack
         </StyledLink>{' '}
         to integrate COVID Cloud with the Canadian VirusSeq Data Portal. COVID Cloud is a
         cloud-based platform that helps researchers find, visualize, and analyze genomics and other
         datasets related to COVID-19. COVID Cloud is sharing Canadian and international data over
         APIs developed by the{' '}
-        <StyledLink href="www.ga4gh.org" rel="noopener noreferrer" target="_blank">
+        <StyledLink href="https://www.ga4gh.org" rel="noopener noreferrer" target="_blank">
           Global Alliance for Genomics & Health
         </StyledLink>{' '}
         and provides tools for researchers to search, visualize, and analyze data in the cloud.
@@ -73,7 +73,7 @@ const Cloud = (): ReactElement => (
             `}
           />
         </StyledLink>
-        <StyledLink href="www.dnastack.com" rel="noopener noreferrer" target="_blank">
+        <StyledLink href="https://www.dnastack.com" rel="noopener noreferrer" target="_blank">
           <img
             src="images/dnastack-logo-typeface.png"
             alt="Dnastack company logo"

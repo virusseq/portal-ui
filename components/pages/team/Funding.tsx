@@ -39,8 +39,8 @@ const Funding = (): ReactElement => {
             </StyledLink>
             , leads the development of the Canadian VirusSeq Data Portal that manages and
             facilitates data sharing of SARS-CoV-2 genome sequences among Canadian public health
-            labs, researchers and other groups interested in accessing the data for research and
-            innovation purposes.
+            laboratories, researchers and other groups interested in accessing the data for research
+            and innovation purposes.
           </p>
         </span>
 
