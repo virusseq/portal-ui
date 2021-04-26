@@ -110,7 +110,7 @@ const Footer = (): ReactElement => {
 
           <li>
             <StyledLink
-              href="https://www.genomecanada.ca/en/about/contact-us"
+              href="mailto:info@virusseq-dataportal.ca"
               rel="noopener noreferrer"
               target="_blank"
             >

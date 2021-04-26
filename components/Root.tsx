@@ -19,43 +19,51 @@
  *
  */
 
-import React from 'react';
+import { ReactElement } from 'react';
 import { ThemeProvider } from 'emotion-theming';
-import defaultTheme from './theme';
-import Head from './Head';
+
 import { AuthProvider } from '../global/hooks/useAuthContext';
 import { PageContext } from '../global/hooks/usePageContext';
 import { ClientSideGetInitialPropsContext } from '../global/utils/pages/types';
+import Head from './Head';
+import defaultTheme from './theme';
 
 const Root = ({
   children,
   egoJwt,
   pageContext,
 }: {
-  children: React.ReactElement;
+  children: ReactElement;
   egoJwt?: string;
   pageContext: ClientSideGetInitialPropsContext;
-}) => {
+}): ReactElement => {
   return (
     <>
       <style>
         {`
-        body {
-          margin: 0;
-          position: absolute;
-          top: 0px;
-          bottom: 0px;
-          left: 0px;
-          right: 0px;
-        } /* custom! */
-        #__next {
-          position: absolute;
-          top: 0px;
-          bottom: 0px;
-          left: 0px;
-          right: 0px;
-        }
-      `}
+          body {
+            margin: 0;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+          } /* custom! */
+
+          #__next {
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+          }
+
+          .code {
+            background: #eee;
+            margin: 0 2px;
+            padding: 0 3px;
+          }
+        `}
       </style>
       <Head />
       <AuthProvider egoJwt={egoJwt}>

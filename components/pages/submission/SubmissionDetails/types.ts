@@ -1,7 +1,9 @@
+import { Dispatch, SetStateAction } from 'react';
 import { UploadDataType } from '../../../../global/hooks/useMuseData';
 
 export type SubmissionDetailsProps = {
   ID: string;
+  setTotalUploads?: Dispatch<SetStateAction<number>>;
 };
 
 export type UploadStatusType = 'COMPLETE' | 'ERROR' | 'PROCESSING' | 'QUEUED';

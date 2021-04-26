@@ -24,7 +24,7 @@ import { css } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 
 import { getConfig } from '../../../global/config';
-import { StyledLinkAsButton } from '../../Link';
+import StyledLink, { StyledLinkAsButton } from '../../Link';
 import defaultTheme from '../../theme';
 
 const PageContent = (): ReactElement => {
@@ -108,8 +108,15 @@ const PageContent = (): ReactElement => {
         >
           <li>
             <p>
-              To be granted a data submission account for your organization, please contact Genome
-              Canada with an account request.
+              To be granted a data submission account for your organization, please contact{' '}
+              <StyledLink
+                href="mailto:info@virusseq-dataportal.ca"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                info@virusseq-dataportal.ca
+              </StyledLink>{' '}
+              with an account request.
             </p>
             <StyledLinkAsButton
               css={css`
