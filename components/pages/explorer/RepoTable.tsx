@@ -301,10 +301,9 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     {
       label: 'Download All',
       function: () => {
-        console.log('this will download all files');
-        // window.location.assign(
-        //   urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`),
-        // );
+        window.location.assign(
+          'https://object.cancercollaboratory.org:9080/swift/v1/Download/data/virusseq_metadata_consensus_all_20210427.tgz',
+        );
       },
     },
     // { label: () => (
