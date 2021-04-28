@@ -131,7 +131,7 @@ const NavBar: React.ComponentType = () => {
             <a
               css={css`
                 ${linkStyle}
-                ${router.pathname === ABOUT_PATH ? activeLinkStyle : ''}
+                ${router.asPath === ABOUT_PATH ? activeLinkStyle : ''}
               `}
             >
               About VirusSeq Data Portal
@@ -141,7 +141,7 @@ const NavBar: React.ComponentType = () => {
             <a
               css={css`
                 ${linkStyle}
-                ${router.pathname === EXPLORER_PATH ? activeLinkStyle : ''}
+                ${router.asPath.startsWith(EXPLORER_PATH) ? activeLinkStyle : ''}
               `}
             >
               Explore VirusSeq Data
@@ -149,9 +149,9 @@ const NavBar: React.ComponentType = () => {
           </Link>
           <Link path={TEAM_PATH}>
             <a
-              css={(theme) => css`
+              css={css`
                 ${linkStyle}
-                ${router.pathname === TEAM_PATH ? activeLinkStyle : ''}
+                ${router.asPath.startsWith(TEAM_PATH) ? activeLinkStyle : ''}
               `}
             >
               Meet the Team
@@ -172,7 +172,7 @@ const NavBar: React.ComponentType = () => {
               <a
                 css={css`
                   ${linkStyle}
-                  ${router.pathname === SUBMISSION_PATH ? activeLinkStyle : ''}
+                  ${router.asPath.startsWith(SUBMISSION_PATH) ? activeLinkStyle : ''}
                 `}
               >
                 Submission Dashboard
@@ -183,7 +183,7 @@ const NavBar: React.ComponentType = () => {
                 float: none;
                 width: 195px;
                 ${linkStyle}
-                ${router.pathname === USER_PATH ? activeLinkStyle : ''}
+                ${router.asPath.startsWith(USER_PATH) ? activeLinkStyle : ''}
 
                 &:hover {
                   ${activeLinkStyle}
