@@ -28,8 +28,8 @@ import { Avatar, ChevronDown } from './theme/icons';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { UserWithId } from '../global/types';
 import { InternalLink as Link } from './Link';
-import { useRouter } from 'next/router';
 import { USER_PATH } from '../global/utils/constants';
+import useTrackingContext from '../global/hooks/useTrackingContext';
 
 const getDisplayName = (user?: UserWithId) => {
   const greeting = 'Hello';
@@ -92,9 +92,9 @@ const StyledListLink = styled('a')`
 `;
 
 const UserDropdown = ({ className }: { className?: string }): ReactElement => {
-  const node: any = useRef();
-
   const [open, setOpen] = useState(false);
+  const { logEvent } = useTrackingContext();
+  const node: any = useRef();
 
   const handleClickOutside = (e: any) => {
     if (node.current.contains(e.target)) {
@@ -116,7 +116,8 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
   }, [open]);
   const theme: typeof defaultTheme = useTheme();
   const { logout } = useAuthContext();
-  const router = useRouter();
+
+  const handleLogout = () => logout(logEvent);
 
   return (
     <div
@@ -181,7 +182,7 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
             </Link>
           </li>
           <li>
-            <StyledListLink onClick={() => logout()}>Logout</StyledListLink>
+            <StyledListLink onClick={handleLogout}>Logout</StyledListLink>
           </li>
         </ul>
       )}

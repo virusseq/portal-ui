@@ -26,10 +26,11 @@ import { EGO_JWT_KEY } from '../utils/constants';
 import { decodeToken, extractUser, isValidJwt } from '../utils/egoTokenUtils';
 import { getConfig } from '../config';
 import { UserWithId } from '../types';
+import { LogEventFunctionType } from './useTrackingContext';
 
 type T_AuthContext = {
   token?: string;
-  logout: () => void;
+  logout: (logEvent: LogEventFunctionType) => void;
   user?: UserWithId;
   userHasWriteScopes?: boolean;
   fetchWithAuth: typeof fetch;
@@ -51,18 +52,24 @@ export const AuthProvider = ({
   children: ReactElement;
 }): ReactElement => {
   const { NEXT_PUBLIC_KEYCLOAK } = getConfig();
-  const router = useRouter();
-  // TODO: typing this state as `string` causes a compiler error. the same setup exists in argo but does not cause
-  // a type issue. using `any` for now
   const [token, setTokenState] = useState(egoJwt);
+  const router = useRouter();
+
   const removeToken = () => {
     localStorage.removeItem(EGO_JWT_KEY);
     setTokenState('');
   };
 
-  const logout = () => {
+  const logout = (logEvent: LogEventFunctionType) => {
     removeToken();
-    router.push(`${NEXT_PUBLIC_KEYCLOAK}logout?redirect_uri=${window.location.origin}`);
+    logEvent({
+      category: 'User',
+      action: 'Logged out using dropdown',
+    });
+    setTimeout(
+      () => router.push(`${NEXT_PUBLIC_KEYCLOAK}logout?redirect_uri=${window.location.origin}`),
+      2000,
+    );
   };
 
   if (!token) {

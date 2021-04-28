@@ -24,6 +24,7 @@ import { ThemeProvider } from '@emotion/react';
 
 import { AuthProvider } from '../global/hooks/useAuthContext';
 import { PageContext } from '../global/hooks/usePageContext';
+import { TrackingProvider } from '../global/hooks/useTrackingContext';
 import { ClientSideGetInitialPropsContext } from '../global/utils/pages/types';
 import Head from './Head';
 import defaultTheme from './theme';
@@ -68,7 +69,9 @@ const Root = ({
       <Head />
       <AuthProvider egoJwt={egoJwt}>
         <PageContext.Provider value={pageContext}>
-          <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>
+          <TrackingProvider>
+            <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>
+          </TrackingProvider>
         </PageContext.Provider>
       </AuthProvider>
     </>

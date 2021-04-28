@@ -21,7 +21,7 @@
 
 import getNextConfig from 'next/config';
 
-export const getConfig = () => {
+export const getConfig = (): Record<string, string> => {
   const publicConfig: { [k: string]: string } = getNextConfig()?.publicRuntimeConfig || {};
 
   return {
@@ -36,13 +36,14 @@ export const getConfig = () => {
     NEXT_PUBLIC_ARRANGER_INDEX: publicConfig.NEXT_PUBLIC_ARRANGER_INDEX || '',
     NEXT_PUBLIC_ARRANGER_API: publicConfig.NEXT_PUBLIC_ARRANGER_API || 'http://localhost:5050',
     NEXT_PUBLIC_ARRANGER_ADMIN_UI: publicConfig.NEXT_PUBLIC_ARRANGER_ADMIN_UI,
-    NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS: (publicConfig.NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS || ''),
+    NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS: publicConfig.NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS || '',
     NEXT_PUBLIC_BASE_PATH: publicConfig.NEXT_PUBLIC_BASE_PATH || '',
     NEXT_PUBLIC_ADMIN_EMAIL: publicConfig.NEXT_PUBLIC_ADMIN_EMAIL,
     NEXT_PUBLIC_LAB_NAME: publicConfig.NEXT_PUBLIC_LAB_NAME || 'Data Management System',
     NEXT_PUBLIC_LOGO_FILENAME: publicConfig.NEXT_PUBLIC_LOGO_FILENAME,
     NEXT_PUBLIC_MUSE_API: publicConfig.NEXT_PUBLIC_MUSE_API || '',
     NEXT_PUBLIC_SSO_PROVIDERS: publicConfig.NEXT_PUBLIC_SSO_PROVIDERS || '',
+    NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: publicConfig.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || '',
   } as {
     NEXT_PUBLIC_EGO_API_ROOT: string;
     NEXT_PUBLIC_EGO_CLIENT_ID: string;
@@ -60,5 +61,6 @@ export const getConfig = () => {
     NEXT_PUBLIC_LOGO_FILENAME: string;
     NEXT_PUBLIC_MUSE_API: string;
     NEXT_PUBLIC_SSO_PROVIDERS: string;
+    NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: string;
   };
 };

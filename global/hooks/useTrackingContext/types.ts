@@ -19,16 +19,18 @@
  *
  */
 
-import React from 'react';
+import { event } from 'react-ga';
 
-import AboutPage from './about';
-import { createPage } from '../global/utils/pages';
+export type LogEventFunctionType = typeof event;
 
-const HomePage = createPage({
-  getInitialProps: async () => null,
-  isPublic: true,
-})(() => {
-  return <AboutPage />;
-});
+export type TrackingContextType = {
+  addTracker: (trackerId: string, trackerName: string) => void;
+  logEvent: LogEventFunctionType;
+  removeTracker: (trackerName: string) => void;
+};
 
-export default HomePage;
+export type TrackingStateType = {
+  isInitialized: boolean;
+  hasUser: boolean;
+  trackers: string[];
+};

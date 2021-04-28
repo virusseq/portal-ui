@@ -20,6 +20,7 @@ module.exports = withCSS({
     NEXT_PUBLIC_LOGO_FILENAME: process.env.NEXT_PUBLIC_LOGO_FILENAME,
     NEXT_PUBLIC_MUSE_API: process.env.NEXT_PUBLIC_MUSE_API_URL,
     NEXT_PUBLIC_SSO_PROVIDERS: process.env.NEXT_PUBLIC_SSO_PROVIDERS,
+    NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID,
   },
   assetPrefix: process.env.ASSET_PREFIX || '',
   redirects: async () => [
