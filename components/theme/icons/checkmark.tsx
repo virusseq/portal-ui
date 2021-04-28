@@ -19,11 +19,11 @@
  *
  */
 
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 import { IconProps } from './types';
 
-const Checkmark = ({ fill = "#1c8292", size = 20, style }: IconProps) => {
+const Checkmark = ({ fill = '#1c8292', size = 20, style }: IconProps) => {
   return (
     <svg
       css={css`

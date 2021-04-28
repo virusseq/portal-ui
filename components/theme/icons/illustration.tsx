@@ -19,7 +19,7 @@
  *
  */
 
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 const Illustration = ({ width, height, style }: any) => {
   return (

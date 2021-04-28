@@ -21,7 +21,7 @@
 
 import { FunctionComponent, ReactElement } from 'react';
 import dynamic from 'next/dynamic';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 import defaultTheme from '../../theme';
 import { PageContentProps } from '.';

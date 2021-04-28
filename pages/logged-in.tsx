@@ -21,7 +21,7 @@
 
 import React, { useEffect } from 'react';
 import urlJoin from 'url-join';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 import { getConfig } from '../global/config';
 import { createPage } from '../global/utils/pages';
@@ -90,7 +90,7 @@ const LoginLoaderPage = createPage({
           `
         }
       >
-        <Loader margin="0 auto"/>
+        <Loader margin="0 auto" />
 
         <div
           css={(theme) =>

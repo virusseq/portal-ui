@@ -1,6 +1,6 @@
 import { Dispatch, ReactElement, useCallback } from 'react';
-import { useTheme } from 'emotion-theming';
-import { css } from '@emotion/core';
+import { useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 import { useDropzone } from 'react-dropzone';
 
 import { ButtonElement as Button } from '../../../Button';

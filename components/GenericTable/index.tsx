@@ -1,7 +1,7 @@
 import { ReactElement, useMemo } from 'react';
 import { Column, useSortBy, usePagination, useTable } from 'react-table';
-import { css, SerializedStyles } from '@emotion/core';
-import { useTheme } from 'emotion-theming';
+import { css, SerializedStyles } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import cx from 'classnames';
 
 import defaultTheme from '../theme';

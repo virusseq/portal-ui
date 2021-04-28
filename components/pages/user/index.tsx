@@ -20,7 +20,7 @@
  */
 
 import { ReactElement } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import useAuthContext from '../../../global/hooks/useAuthContext';
@@ -31,9 +31,9 @@ import AuthenticatedBadge from './AuthenticatedBadge';
 import StudyAccess from './StudyAccess';
 
 const StyledPageLayout = styled(PageLayout)`
-  ${({ theme }: { theme: typeof defaultTheme }) =>
+  ${({ theme }: { theme?: typeof defaultTheme }) =>
     css`
-      background-color: ${theme.colors.white};
+      background-color: ${theme?.colors.white};
     `}
 `;
 
@@ -42,32 +42,32 @@ const FlexDiv = styled('div')`
 `;
 
 const UserInfoContainer = styled(FlexDiv)`
-  ${({ theme }: { theme: typeof defaultTheme }) => css`
+  ${({ theme }: { theme?: typeof defaultTheme }) => css`
     flex-direction: row;
     justify-content: space-between;
     width: 800px;
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
     padding-bottom: 2.5rem;
-    border-bottom: 1px solid ${theme.colors.grey_3};
+    border-bottom: 1px solid ${theme?.colors.grey_3};
   `}
 `;
 
 const UserTitle = styled('h1')`
-  ${({ theme }: { theme: typeof defaultTheme }) => css`
-    ${theme.typography.regular};
+  ${({ theme }: { theme?: typeof defaultTheme }) => css`
+    ${theme?.typography.regular};
     font-size: 30px;
     line-height: 36px;
-    color: ${theme.colors.primary};
+    color: ${theme?.colors.primary};
     margin-bottom: 0.5rem;
     margin-top: 0.1rem;
   `}
 `;
 
 const UserEmail = styled('div')`
-  ${({ theme }: { theme: typeof defaultTheme }) => css`
-    ${theme.typography.subheading};
-    color: ${theme.colors.accent_dark};
+  ${({ theme }: { theme?: typeof defaultTheme }) => css`
+    ${theme?.typography.subheading};
+    color: ${theme?.colors.accent_dark};
     font-weight: normal;
     padding-left: 0.2rem;
   `}

@@ -1,40 +1,35 @@
-import { MouseEventHandler } from 'react';
-import { useTheme } from 'emotion-theming';
-import { css } from '@emotion/core';
+import { MouseEventHandler, ReactElement } from 'react';
+import { useTheme } from '@emotion/react';
 
 import { UnStyledButton } from '../../../Button';
 import defaultTheme from '../../../theme';
 import { Bin, File } from '../../../theme/icons';
-import { getFileExtension, getExtension } from "./validationHelpers";
+import { getFileExtension, getExtension } from './validationHelpers';
 
 const FileRow = ({
   active = false,
   file: { name = '', type = '' },
-  handleRemove = () => { console.log('clicked') },
+  handleRemove = () => {
+    console.log('clicked');
+  },
 }: {
-  active: boolean,
-  file: File,
-  handleRemove?: MouseEventHandler<HTMLButtonElement>,
-}) => {
+  active: boolean;
+  file: File;
+  handleRemove?: MouseEventHandler<HTMLButtonElement>;
+}): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
 
-  const iconFill = getExtension({ name }) === 'tsv'
-    ? theme.colors.secondary_dark
-    : theme.colors.accent3_dark;
+  const iconFill =
+    getExtension({ name }) === 'tsv' ? theme.colors.secondary_dark : theme.colors.accent3_dark;
 
   return (
     <tr data-type={getFileExtension(name)} data-upload={active}>
       <td>
-        <File
-          fill={iconFill}
-        />
+        <File fill={iconFill} />
         {` ${name}`}
       </td>
       <td>
-        <UnStyledButton
-          css={css``}
-          onClick={handleRemove}
-        >
+        <UnStyledButton onClick={handleRemove}>
           <Bin />
         </UnStyledButton>
       </td>

@@ -20,9 +20,8 @@
  */
 
 import React, { useEffect, useState, useRef, ReactElement } from 'react';
-import { css } from '@emotion/core';
+import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useTheme } from 'emotion-theming';
 
 import defaultTheme from './theme';
 import { Avatar, ChevronDown } from './theme/icons';
@@ -73,22 +72,21 @@ const CurrentUser = () => {
 };
 
 const StyledListLink = styled('a')`
-  ${({ theme }: { theme: typeof defaultTheme }) => css`
+  ${({ theme }: { theme?: typeof defaultTheme }) => css`
     text-decoration: none;
     height: 40px;
     display: flex;
     align-items: center;
-    background: (theme.colors.white)};
     padding: 6px 12px;
-    color: ${theme.colors.black};
-    background-color: ${theme.colors.white};
-    border: 1px solid ${theme.colors.grey_3};
+    color: ${theme?.colors.black};
+    background-color: ${theme?.colors.white};
+    border: 1px solid ${theme?.colors.grey_3};
     outline: none;
     font-size: 16px;
     cursor: pointer;
     width: 100%;
     &:hover {
-      background-color: ${theme.colors.grey_1};
+      background-color: ${theme?.colors.grey_1};
     }
   `}
 `;

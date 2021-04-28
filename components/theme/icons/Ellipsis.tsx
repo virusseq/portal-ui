@@ -19,12 +19,12 @@
  *
  */
 
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 import { IconProps } from './types';
 
-const Ellipsis = ({ fill = "#FE7B46", size = 12, style }: IconProps) => (
-  <svg 
+const Ellipsis = ({ fill = '#FE7B46', size = 12, style }: IconProps) => (
+  <svg
     css={css`
       ${style};
       height: ${size};
@@ -36,7 +36,10 @@ const Ellipsis = ({ fill = "#FE7B46", size = 12, style }: IconProps) => (
   >
     <g fill="none" fillRule="evenodd">
       <g fill={fill}>
-        <path d="M10.667 7.699c-.737 0-1.334-.65-1.334-1.45 0-.8.597-1.449 1.334-1.449.736 0 1.333.649 1.333 1.45 0 .8-.597 1.449-1.333 1.449M6 7.699c-.736 0-1.333-.65-1.333-1.45 0-.8.597-1.449 1.333-1.449s1.333.649 1.333 1.45c0 .8-.597 1.449-1.333 1.449m-4.667 0C.597 7.699 0 7.049 0 6.249 0 5.45.597 4.8 1.333 4.8c.737 0 1.334.649 1.334 1.45 0 .8-.597 1.449-1.334 1.449" transform="translate(-1014 -337) translate(59 78) translate(0 23.811) translate(0 100.109) translate(15 10.75) translate(938 69.362) translate(2 55)"/>
+        <path
+          d="M10.667 7.699c-.737 0-1.334-.65-1.334-1.45 0-.8.597-1.449 1.334-1.449.736 0 1.333.649 1.333 1.45 0 .8-.597 1.449-1.333 1.449M6 7.699c-.736 0-1.333-.65-1.333-1.45 0-.8.597-1.449 1.333-1.449s1.333.649 1.333 1.45c0 .8-.597 1.449-1.333 1.449m-4.667 0C.597 7.699 0 7.049 0 6.249 0 5.45.597 4.8 1.333 4.8c.737 0 1.334.649 1.334 1.45 0 .8-.597 1.449-1.334 1.449"
+          transform="translate(-1014 -337) translate(59 78) translate(0 23.811) translate(0 100.109) translate(15 10.75) translate(938 69.362) translate(2 55)"
+        />
       </g>
     </g>
   </svg>

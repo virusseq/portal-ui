@@ -1,6 +1,5 @@
 import { ReactElement } from 'react';
-import { css } from '@emotion/core';
-import { useTheme } from 'emotion-theming';
+import { css, useTheme } from '@emotion/react';
 
 import StyledLink from '../../Link';
 import defaultTheme from '../../theme';

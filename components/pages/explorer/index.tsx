@@ -32,7 +32,7 @@ import { useEffect, useState } from 'react';
 import ErrorNotification from '../../ErrorNotification';
 import getConfigError from './getConfigError';
 import Loader from '../../Loader';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import sleep from '../../utils/sleep';
 
 const Arranger = dynamic(
@@ -146,10 +146,7 @@ const RepositoryPage = () => {
           <Loader />
         </div>
       ) : ConfigError ? (
-        <ErrorNotification
-          title={'DMS Configuration Error'}
-          size="lg"
-        >
+        <ErrorNotification title={'DMS Configuration Error'} size="lg">
           {ConfigError}
         </ErrorNotification>
       ) : (

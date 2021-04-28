@@ -20,7 +20,7 @@
  */
 
 import React, { ReactNode } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 import NavBar from './NavBar';
 import Footer from './Footer';
@@ -59,10 +59,7 @@ export const ErrorPageLayout = ({
 }) => {
   return (
     <PageLayout subtitle={subtitle}>
-      <ErrorNotification
-        size="lg"
-        title={errorTitle}
-      >
+      <ErrorNotification size="lg" title={errorTitle}>
         {children}
       </ErrorNotification>
     </PageLayout>

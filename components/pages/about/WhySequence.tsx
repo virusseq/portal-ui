@@ -1,4 +1,4 @@
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 const WhySequence = () => (
   <section
@@ -44,26 +44,18 @@ const WhySequence = () => (
         }
       `}
     >
-      <img src="images/about-why_sequence.png" alt="image representing the three steps of DNA sequencing" width="100%" style={{ maxHeight: "200px"}} />
-      <figcaption
-        css={(theme) => css`
-        `}
-      >
-        Identify and track transmission trends at the regional, provincial, national and international scales.
-      </figcaption
-      >
-      <figcaption
-        css={(theme) => css`
-        `}
-      >
-        Aid detection of new clusters of cases/outbreaks.
+      <img
+        src="images/about-why_sequence.png"
+        alt="image representing the three steps of DNA sequencing"
+        width="100%"
+        style={{ maxHeight: '200px' }}
+      />
+      <figcaption>
+        Identify and track transmission trends at the regional, provincial, national and
+        international scales.
       </figcaption>
-      <figcaption
-        css={(theme) => css`
-        `}
-      >
-        Discover evolving viral characteristics that might impact.
-      </figcaption>
+      <figcaption>Aid detection of new clusters of cases/outbreaks.</figcaption>
+      <figcaption>Discover evolving viral characteristics that might impact.</figcaption>
     </figure>
   </section>
 );

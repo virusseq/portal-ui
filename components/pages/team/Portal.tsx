@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 import StyledLink from '../../Link';
 import OvertureLogoWithText from '../../theme/icons/overture_logo_with_text';

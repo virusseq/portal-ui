@@ -20,7 +20,7 @@
  */
 
 import { ReactElement } from 'react';
-import { ThemeProvider } from 'emotion-theming';
+import { ThemeProvider } from '@emotion/react';
 
 import { AuthProvider } from '../global/hooks/useAuthContext';
 import { PageContext } from '../global/hooks/usePageContext';

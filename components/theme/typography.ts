@@ -19,8 +19,7 @@
  *
  */
 
-// /** @jsx jsx */ import { css } from '@emotion/core';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import './sourcesanspro.css';
 
 const baseFont = css`

@@ -20,8 +20,7 @@
  */
 
 import React from 'react';
-import { css } from '@emotion/core';
-import { useTheme } from 'emotion-theming';
+import { css, useTheme } from '@emotion/react';
 
 import defaultTheme from '../../theme';
 import { Checkmark } from '../../theme/icons';

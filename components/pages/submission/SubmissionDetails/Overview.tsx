@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { useTheme } from 'emotion-theming';
-import { css } from '@emotion/core';
+import { useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 
 import useAuthContext from '../../../../global/hooks/useAuthContext';
 import useMuseData, { SubmissionDataType } from '../../../../global/hooks/useMuseData';

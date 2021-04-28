@@ -1,6 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { css } from '@emotion/core';
-import { useTheme } from 'emotion-theming';
+import { css, useTheme } from '@emotion/react';
 
 import useAuthContext from '../../../../global/hooks/useAuthContext';
 import useMuseData from '../../../../global/hooks/useMuseData';

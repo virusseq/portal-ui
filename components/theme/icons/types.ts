@@ -19,7 +19,7 @@
  *
  */
 
-import { SerializedStyles } from '@emotion/core';
+import { SerializedStyles } from '@emotion/react';
 
 export type IconProps = {
   fill?: string;

@@ -20,7 +20,7 @@
  */
 
 import { ReactNode } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 import { Checkmark, Warning } from '../../theme/icons';
 import theme from '../../theme';

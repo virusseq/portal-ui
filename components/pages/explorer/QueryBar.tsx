@@ -19,7 +19,7 @@
  *
  */
 
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import dynamic from 'next/dynamic';
 import { Row } from 'react-grid-system';
 

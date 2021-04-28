@@ -20,10 +20,10 @@
  */
 
 import { FunctionComponent, ReactElement } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from '@emotion/react';
 
 import { PageContentProps } from './index';
 import defaultTheme from '../../theme';

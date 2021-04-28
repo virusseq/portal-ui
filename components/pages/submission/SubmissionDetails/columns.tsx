@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import theme from '../../../theme';
 import { Column, Row } from 'react-table';
 

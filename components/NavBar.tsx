@@ -20,14 +20,13 @@
  */
 
 import React from 'react';
-import { css } from '@emotion/core';
+import { css, useTheme } from '@emotion/react';
 import { useRouter } from 'next/router';
 
 import UserDropdown from './UserDropdown';
 import defaultTheme from './theme';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { InternalLink as Link } from './Link';
-import { useTheme } from 'emotion-theming';
 import {
   ABOUT_PATH,
   EXPLORER_PATH,

@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { useRouter } from 'next/router';
-import { useTheme } from 'emotion-theming';
+import { useTheme } from '@emotion/react';
 
 import defaultTheme from '../../theme';
 import NewSubmissions from './NewSubmissions';
