@@ -4,7 +4,7 @@ import PageContent from './PageContent';
 import PageLayout from '../../PageLayout';
 
 const AboutPage = (): ReactElement => (
-  <PageLayout subtitle="About">
+  <PageLayout>
     <PageContent />
   </PageLayout>
 );
