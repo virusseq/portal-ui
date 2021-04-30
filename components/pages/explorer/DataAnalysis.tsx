@@ -265,7 +265,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                 size="20px"
               />
             : (<>
-              <HighchartsReact
+                {/*<HighchartsReact
                 highcharts={Highcharts}
                 options={{
                   chart: {
@@ -321,7 +321,7 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                     },
                   },
                 }}
-              />
+              />*/}
               <HighchartsReact
                 highcharts={Highcharts}
                 options={{
