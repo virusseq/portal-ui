@@ -2,6 +2,7 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
     'prettier',
+    'plugin:react-hooks/recommended',
     // 'plugin:jsx-a11y/strict',
   ],
   parser: '@typescript-eslint/parser',

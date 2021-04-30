@@ -164,7 +164,7 @@ const QueryBar = (props: PageContentProps) => {
         ${getCss(theme)}
       `}
     >
-      <CurrentSQON {...props} emptyMessage={'Start by selecting filters'} />
+      <CurrentSQON {...props} />
     </Row>
   );
 };

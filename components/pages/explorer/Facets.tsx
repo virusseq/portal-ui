@@ -34,7 +34,7 @@ const Aggregations = dynamic(
 const getFacetStyles = (theme: typeof defaultTheme) => css`
   padding-bottom: 2rem;
 
-  .input-range-wrapper div {
+  .input-range-wrapper div:not(.input-range) {
     ${theme.typography.label2}
     font-weight: bold;
     background-color: ${theme.colors.grey_3};
@@ -45,10 +45,6 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
     &:nth-of-type(4) {
       background-color: ${theme.colors.white};
       color: ${theme.colors.grey_6};
-    }
-
-    &:nth-of-type(3) {
-      background-color: ${theme.colors.white};
     }
   }
 
@@ -197,6 +193,16 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
       .bucket .range-wrapper {
         .input-range {
           margin-bottom: 30px;
+
+          &--disabled {
+            .input-range__track--active {
+              background-color: ${theme.colors.grey_4} !important;
+            }
+
+            .input-range__slider {
+              background-color: ${theme.colors.grey_3} !important;
+            }
+          }
         }
 
         .input-range__track.input-range__track--background {
@@ -205,14 +211,13 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
           .input-range__track--active {
             background-color: ${theme.colors.secondary};
           }
-          .input-range__slider-container {
-            .input-range__slider {
-              background-color: ${theme.colors.white};
-              border-color: ${theme.colors.grey_5};
-              ${theme.shadow.default}
-              padding: 0;
-              border-radius: 100%;
-            }
+
+          .input-range__slider {
+            background-color: ${theme.colors.white};
+            border-color: ${theme.colors.grey_5};
+            ${theme.shadow.default}
+            padding: 0;
+            border-radius: 100%;
           }
         }
       }
