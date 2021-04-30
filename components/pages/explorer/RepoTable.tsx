@@ -352,9 +352,10 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     <div css={getTableStyle(theme)}>
       <Table
         {...props}
+        allowTSVExport={false}
         showFilterInput={false}
         columnDropdownText={'Columns'}
-        exporter={customExporters}
+        // exporter={customExporters}
         downloadUrl={urlJoin(NEXT_PUBLIC_ARRANGER_API, NEXT_PUBLIC_ARRANGER_PROJECT_ID, 'download')}
       />
     </div>
