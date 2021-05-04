@@ -61,7 +61,16 @@ const PreviousSubmissions = (): ReactElement => {
                   }
                 }
 
-                td:last-of-type {
+                td {
+                  vertical-align: top;
+                }
+
+                .tableColumnHeader-submissionId {
+                  width: 242px;
+                }
+
+                .tableColumnHeader-createdAt,
+                .tableColumnHeader-totalRecords {
                   width: 60px;
                 }
               `}

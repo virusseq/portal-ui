@@ -1,5 +1,6 @@
 import { Column } from 'react-table';
 import { format } from 'date-fns';
+import { css } from '@emotion/react';
 
 import getInternalLink from '../../../../global/utils/getInternalLink';
 import { numberSort, uuidSort } from '../../../GenericTable/helpers';
@@ -15,8 +16,21 @@ const columnData: Column<Record<string, unknown>>[] = [
     sortType: uuidSort,
   },
   {
-    accessor: 'studyId',
-    Header: 'Study ID',
+    accessor: 'studyIds',
+    Cell: ({ value }: { value: string[] }) =>
+      value ? (
+        <ul
+          css={css`
+            margin: 0;
+            padding-left: 15px;
+          `}
+        >
+          {value.map((id) => (
+            <li>{id}</li>
+          ))}
+        </ul>
+      ) : null,
+    Header: 'Study IDs',
   },
   {
     accessor: 'createdAt',
