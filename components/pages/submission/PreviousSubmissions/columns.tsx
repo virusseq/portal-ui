@@ -1,4 +1,5 @@
 import { Column } from 'react-table';
+import { format } from 'date-fns';
 
 import getInternalLink from '../../../../global/utils/getInternalLink';
 import { numberSort, uuidSort } from '../../../GenericTable/helpers';
@@ -19,8 +20,7 @@ const columnData: Column<Record<string, unknown>>[] = [
   },
   {
     accessor: 'createdAt',
-    Cell: ({ value }: { value: number }) =>
-      value && new Date(new Date(value * 1000).toUTCString()).toISOString().slice(0, 10),
+    Cell: ({ value }: { value: number }) => format(new Date(value), 'yyyy-MM-dd'),
     Header: 'Submission Date',
     sortType: numberSort,
   },

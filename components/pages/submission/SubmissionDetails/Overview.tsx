@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { useTheme } from '@emotion/react';
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { format } from 'date-fns';
 
 import useAuthContext from '../../../../global/hooks/useAuthContext';
 import useMuseData, { SubmissionDataType } from '../../../../global/hooks/useMuseData';
@@ -109,9 +109,7 @@ const Overview = ({ ID, setTotalUploads }: SubmissionDetailsProps): ReactElement
             {createdAt && (
               <p>
                 <Calendar size={16} />
-                {`Submitted on: ${new Date(new Date(createdAt * 1000).toUTCString())
-                  .toISOString()
-                  .slice(0, 10)}`}
+                {`Submitted on: ${format(new Date(createdAt), 'yyyy-MM-dd')}`}
               </p>
             )}
             {totalRecords && (
