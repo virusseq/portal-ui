@@ -87,7 +87,7 @@ const NavBar = (): ReactElement => {
         position: sticky;
         top: 0;
         left: 0;
-        z-index: 5;
+        z-index: 1;
         width: 100%;
       `}
     >
