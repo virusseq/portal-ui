@@ -15,7 +15,7 @@ import defaultTheme from '../../../theme';
 import DropZone from './DropZone';
 import FileRow from './FileRow';
 import {
-  getExtension,
+  getFileExtension,
   makeErrorTypeReadable,
   validationParameters,
   validationReducer,
@@ -90,7 +90,7 @@ const NewSubmissions = (): ReactElement => {
   const handleRemoveThis = ({ name }: File) => () => {
     setUploadError(noUploadError);
     validationDispatch({
-      type: `remove ${getExtension({ name })}`,
+      type: `remove ${getFileExtension(name)}`,
       file: name,
     } as ValidationActionType);
   };
@@ -161,7 +161,9 @@ const NewSubmissions = (): ReactElement => {
 
       <ol>
         <li>
-          Make sure they have the file extension <span className="code">.fasta</span>.
+          Make sure they have the file extension <span className="code">.fasta</span>,{' '}
+          <span className="code">.fa</span>, or zipped fastas in <span className="code">.gz</span>{' '}
+          format.
         </li>
         <li>
           Each sequence must be preceded be a description line, beginning with a &gt;. The

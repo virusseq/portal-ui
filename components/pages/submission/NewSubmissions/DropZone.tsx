@@ -1,6 +1,5 @@
 import { Dispatch, ReactElement, useCallback } from 'react';
-import { useTheme } from '@emotion/react';
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import { useDropzone } from 'react-dropzone';
 
 import { ButtonElement as Button } from '../../../Button';
@@ -27,12 +26,11 @@ const DropZone = ({
     isDragActive,
     // isFileTooLarge,
   } = useDropzone({
-    accept: '.fasta,.tsv,text/tab-separated-values',
-    // accept: '.fa,.fasta,.tsv,text/tab-separated-values',
+    accept: '.fa,.gz,.fasta,.tsv,text/tab-separated-values',
     disabled,
     onDrop: useCallback(
       (acceptedFiles) => acceptedFiles.forEach(validator(validationState, validationDispatch)),
-      [],
+      [validationDispatch, validationState],
     ),
   });
 
