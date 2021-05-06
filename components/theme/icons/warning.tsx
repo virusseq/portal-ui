@@ -19,11 +19,13 @@
  *
  */
 
-import { css } from '@emotion/core';
-import { IconProps } from './types';
-import theme from '../';
+import { ReactElement } from 'react';
+import { css } from '@emotion/react';
 
-const Warning = ({ fill = theme.colors.error_dark, size = 16, style }: IconProps) => {
+import theme from '../';
+import { IconProps } from './types';
+
+const Warning = ({ fill = theme.colors.error_dark, size = 16, style }: IconProps): ReactElement => {
   return (
     <svg
       css={css`

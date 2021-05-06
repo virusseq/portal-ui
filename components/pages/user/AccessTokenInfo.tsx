@@ -20,9 +20,8 @@
  */
 
 import { ReactElement, useEffect, useState } from 'react';
-import { css, Global } from '@emotion/core';
+import { css, Global, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useTheme } from 'emotion-theming';
 import { isEmpty } from 'lodash';
 import { Tooltip } from 'react-tippy';
 
@@ -30,15 +29,15 @@ import useAuthContext from '../../../global/hooks/useAuthContext';
 import Button from '../../Button';
 import DMSAdminContact, { GenericHelpMessage } from '../../DMSAdminContact';
 import ErrorNotification from '../../ErrorNotification';
-import NoScopes from '../NoScopes';
+import NoScopes from '../../NoScopes';
 import defaultTheme from '../../theme';
 import { Checkmark } from '../../theme/icons';
 import sleep from '../../utils/sleep';
 
 const TooltipContainer = styled('div')`
-  ${({ theme }: { theme: typeof defaultTheme }) => css`
-    ${theme.typography.label};
-    background: ${theme.colors.grey_6};
+  ${({ theme }: { theme?: typeof defaultTheme }) => css`
+    ${theme?.typography.label};
+    background: ${theme?.colors.grey_6};
     border-radius: 2px;
     padding: 2px 4px;
     color: white;
@@ -54,7 +53,7 @@ const TooltipContainer = styled('div')`
       pointer-events: none;
       right: 50%;
       top: 79%;
-      border-top-color: ${theme.colors.grey_6};
+      border-top-color: ${theme?.colors.grey_6};
       border-right: 5px solid transparent;
       border-left: 5px solid transparent;
       margin-right: -5px;

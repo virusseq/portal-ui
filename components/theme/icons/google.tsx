@@ -19,7 +19,8 @@
  *
  */
 
-import { css, SerializedStyles } from '@emotion/core';
+import { ReactElement } from 'react';
+import { css, SerializedStyles } from '@emotion/react';
 
 const GoogleLogo = ({
   width,
@@ -29,7 +30,7 @@ const GoogleLogo = ({
   width: number;
   height: number;
   style?: SerializedStyles;
-}) => {
+}): ReactElement => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

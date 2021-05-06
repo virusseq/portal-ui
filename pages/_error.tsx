@@ -21,8 +21,8 @@
 
 import { get } from 'lodash';
 import React from 'react';
-import ClientError from '../components/ClientError';
 
+import ClientError from '../components/ClientError';
 import Error403 from '../components/pages/403';
 import Error404 from '../components/pages/404';
 import Error500 from '../components/pages/500';

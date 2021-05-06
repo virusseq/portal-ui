@@ -1,6 +1,26 @@
+/*
+ *
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ *
+ *  This program and the accompanying materials are made available under the terms of
+ *  the GNU Affero General Public License v3.0. You should have received a copy of the
+ *  GNU Affero General Public License along with this program.
+ *   If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ *  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ *  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ *  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ *  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
 import { ReactElement, useEffect, useReducer, useState } from 'react';
-import { useTheme } from 'emotion-theming';
-import { css } from '@emotion/core';
+import { css, useTheme } from '@emotion/react';
 
 import Router from 'next/router';
 
@@ -13,13 +33,9 @@ import StyledLink from '../../../Link';
 import { LoaderWrapper } from '../../../Loader';
 import defaultTheme from '../../../theme';
 import DropZone from './DropZone';
+import ErrorMessage from './ErrorMessage';
 import FileRow from './FileRow';
-import {
-  getExtension,
-  makeErrorTypeReadable,
-  validationParameters,
-  validationReducer,
-} from './validationHelpers';
+import { getFileExtension, validationParameters, validationReducer } from './validationHelpers';
 import { NoUploadErrorType, ValidationActionType } from './types';
 
 const noUploadError = {} as NoUploadErrorType;
@@ -90,7 +106,7 @@ const NewSubmissions = (): ReactElement => {
   const handleRemoveThis = ({ name }: File) => () => {
     setUploadError(noUploadError);
     validationDispatch({
-      type: `remove ${getExtension({ name })}`,
+      type: `remove ${getFileExtension(name)}`,
       file: name,
     } as ValidationActionType);
   };
@@ -129,8 +145,16 @@ const NewSubmissions = (): ReactElement => {
 
       <ol>
         <li>
-          Sequence metadata must be provided in TSV format according to the accepted values for each
-          field. A reference of the accepted values can be found{' '}
+          Download the{' '}
+          <StyledLink
+            href="https://github.com/cancogen-virus-seq/metadata-schemas/blob/main/virusseq_metadata_template.tsv"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            metadata TSV Template
+          </StyledLink>{' '}
+          for the viral sequence metadata and populate it with accepted values for each field. A
+          reference of the accepted values can be found{' '}
           <StyledLink
             href="https://github.com/Public-Health-Bioinformatics/DataHarmonizer/blob/master/template/canada_covid19/SOP.pdf"
             rel="noopener noreferrer"
@@ -148,9 +172,9 @@ const NewSubmissions = (): ReactElement => {
           >
             DataHarmonizer
           </StyledLink>{' '}
-          is a tool that can be used to help validate your metadata TSV locally before submitting.
-          Download the tool and follow the instructions on the Github repository to pre-validate
-          your metadata before submission.
+          is a tool that can be used to help validate the accepted values for each field in your
+          metadata TSV locally before submitting. Download the tool and follow the instructions on
+          the Github repository to pre-validate each field in your metadata before submission.
         </li>
         <li>
           If you are using Excel or Google sheets, make sure all characters are UTF-8 encoded.
@@ -161,7 +185,9 @@ const NewSubmissions = (): ReactElement => {
 
       <ol>
         <li>
-          Make sure they have the file extension <span className="code">.fasta</span>.
+          Make sure they have the file extension <span className="code">.fasta</span>,{' '}
+          <span className="code">.fa</span>, or zipped fastas in <span className="code">.gz</span>{' '}
+          format.
         </li>
         <li>
           Each sequence must be preceded be a description line, beginning with a &gt;. The
@@ -191,22 +217,31 @@ const NewSubmissions = (): ReactElement => {
             width: 100%;
           `}
         >
-          {uploadError.message}
+          {uploadError.message !== 'Found records with invalid fields' && uploadError.message}
+
           {uploadError?.errorInfo && (
             <ul
               css={css`
                 margin: 10px 0 0;
                 padding-left: 0;
+
+                p {
+                  margin-bottom: 0.5rem;
+                }
+
+                li:first-of-type p {
+                  margin-top: 0;
+                }
+
+                span {
+                  display: block;
+                  font-size: 13px;
+                }
               `}
             >
               {Object.entries(uploadError?.errorInfo).map(
                 ([type = '', values = []]) =>
-                  values.length > 0 && (
-                    <li key={type}>
-                      {makeErrorTypeReadable(type)}:<br />
-                      {values.join(', ')}.
-                    </li>
-                  ),
+                  values.length > 0 && <ErrorMessage type={type} values={values} />,
               )}
             </ul>
           )}

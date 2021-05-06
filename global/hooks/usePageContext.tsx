@@ -33,7 +33,7 @@ export default function usePageContext(): ClientSideGetInitialPropsContext {
   return pageContext;
 }
 
-export const usePageQuery = <T extends { [k: string]: string }>() => {
+export const usePageQuery = <T extends { [k: string]: string }>(): T => {
   const { query } = usePageContext();
   return query as T;
 };

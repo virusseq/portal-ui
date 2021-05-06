@@ -25,12 +25,10 @@ import AboutPage from './about';
 import { createPage } from '../global/utils/pages';
 
 const HomePage = createPage({
-  getInitialProps: async () => {},
+  getInitialProps: async () => null,
   isPublic: true,
 })(() => {
-  return (
-      <AboutPage />
-  );
+  return <AboutPage />;
 });
 
 export default HomePage;

@@ -19,27 +19,28 @@
  *
  */
 
-import React, { useEffect } from 'react';
-import urlJoin from 'url-join';
-import { css } from '@emotion/core';
-
-import { getConfig } from '../global/config';
-import { createPage } from '../global/utils/pages';
-import { EGO_JWT_KEY, SUBMISSION_PATH, LOGIN_PATH } from '../global/utils/constants';
+import { useEffect } from 'react';
+import { css } from '@emotion/react';
 import Router from 'next/router';
-import { isValidJwt } from '../global/utils/egoTokenUtils';
-import PageLayout from '../components/PageLayout';
-import getInternalLink from '../global/utils/getInternalLink';
-import Loader from '../components/Loader';
+import urlJoin from 'url-join';
 
-const fetchEgoToken = () => {
+import Loader from '../components/Loader';
+import PageLayout from '../components/PageLayout';
+import { getConfig } from '../global/config';
+import useTrackingContext from '../global/hooks/useTrackingContext';
+import { EGO_JWT_KEY, SUBMISSION_PATH, LOGIN_PATH } from '../global/utils/constants';
+import getInternalLink from '../global/utils/getInternalLink';
+import { isValidJwt } from '../global/utils/egoTokenUtils';
+import { createPage } from '../global/utils/pages';
+
+const fetchEgoToken = (logEvent: (action: string) => void) => {
   const { NEXT_PUBLIC_EGO_API_ROOT, NEXT_PUBLIC_EGO_CLIENT_ID } = getConfig();
   const egoLoginUrl = urlJoin(
     NEXT_PUBLIC_EGO_API_ROOT,
     `/oauth/ego-token?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`,
   );
 
-  fetch(egoLoginUrl, {
+  return fetch(egoLoginUrl, {
     credentials: 'include',
     headers: { accept: '*/*' },
     body: null,
@@ -54,14 +55,17 @@ const fetchEgoToken = () => {
     .then((jwt) => {
       if (isValidJwt(jwt)) {
         localStorage.setItem(EGO_JWT_KEY, jwt);
+        logEvent('Logged in');
         setTimeout(() => Router.push(getInternalLink({ path: SUBMISSION_PATH })), 2000);
       } else {
+        logEvent('Invalid JWT provided by Ego/Keycloak');
         throw new Error('Invalid jwt, cannot login.');
       }
     })
     .catch((err) => {
       console.warn(err);
       localStorage.removeItem(EGO_JWT_KEY);
+      logEvent('Failed to login');
       Router.push(getInternalLink({ path: LOGIN_PATH }));
     });
 };
@@ -73,8 +77,15 @@ const LoginLoaderPage = createPage({
   },
   isPublic: true,
 })(() => {
+  const { logEvent } = useTrackingContext();
+
   useEffect(() => {
-    fetchEgoToken();
+    fetchEgoToken((action) => {
+      logEvent({
+        category: 'User',
+        action,
+      });
+    });
   });
 
   return (
@@ -90,7 +101,7 @@ const LoginLoaderPage = createPage({
           `
         }
       >
-        <Loader margin="0 auto"/>
+        <Loader margin="0 auto" />
 
         <div
           css={(theme) =>

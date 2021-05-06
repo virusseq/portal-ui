@@ -19,11 +19,11 @@
  *
  */
 
-import React from 'react';
+import { ReactElement } from 'react';
 import DMSAdminContact from '../DMSAdminContact';
 import { ErrorPageLayout } from '../PageLayout';
 
-const Error500 = () => {
+const Error500 = (): ReactElement => {
   return (
     <ErrorPageLayout errorTitle="500: Server Error" subtitle="Error 500 - Server Error">
       The page you requested could not be accessed due to a server error. If the problem persists,

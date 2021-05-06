@@ -1,4 +1,26 @@
-import { css } from '@emotion/core';
+/*
+ *
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ *
+ *  This program and the accompanying materials are made available under the terms of
+ *  the GNU Affero General Public License v3.0. You should have received a copy of the
+ *  GNU Affero General Public License along with this program.
+ *   If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ *  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ *  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ *  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ *  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+import { ReactElement } from 'react';
+import { css } from '@emotion/react';
 import { Col, Row } from 'react-grid-system';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -9,16 +31,19 @@ import { CoronaVirus, CrossHairs, File, Storage } from '../../theme/icons';
 import { PageContentProps } from '.';
 import formatRange from '../../../global/utils/formatRange';
 
-const DataAnalysis = ({ sqon }: PageContentProps) => {
-  const [{
-    fileCount = 0,
-    filesByVariant = [],
-    fileSize = { unit: 'B', value: '0' },
-    hostAges = [],
-    hostGenders = [],
-    genomes = 0,
-    studyCount = 0,
-  }, isFetchingData] = useReleaseData(sqon);
+const DataAnalysis = ({ sqon }: PageContentProps): ReactElement => {
+  const [
+    {
+      fileCount = 0,
+      filesByVariant = [],
+      fileSize = { unit: 'B', value: '0' },
+      hostAges = [],
+      hostGenders = [],
+      genomes = 0,
+      studyCount = 0,
+    },
+    isFetchingData,
+  ] = useReleaseData(sqon);
 
   return (
     <>
@@ -33,50 +58,65 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
           ${theme.shadow.default};
         `}
       >
-        {isFetchingData
-        ? <Loader
-            size="20px"
-          />
-        : (
+        {isFetchingData ? (
+          <Loader size="20px" />
+        ) : (
           <ul
-          css={(theme) => css`
-            align-items: center;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            list-style: none;
-            margin: 0;
-            padding: 0 15px;
-            width: 100%;
-
-            li {
+            css={(theme) => css`
               align-items: center;
               display: flex;
-              font-weight: bold;
-              padding-left: 25px;
-              position: relative;
-              white-space: nowrap;
+              flex-wrap: wrap;
+              justify-content: space-around;
+              list-style: none;
+              margin: 0;
+              padding: 0 15px;
+              width: 100%;
 
-              &:not(:first-of-type) {
-                margin-left: 10px;
+              li {
+                align-items: center;
+                display: flex;
+                font-weight: bold;
+                padding-left: 25px;
+                position: relative;
+                white-space: nowrap;
+
+                &:not(:first-of-type) {
+                  margin-left: 10px;
+                }
               }
-            }
 
-            svg {
-              left: 0;
-              position:absolute;
-            }
+              svg {
+                left: 0;
+                position: absolute;
+              }
 
-            span {
-              margin-right: 5px;
-            }
-          `}
-        >
-          <li><File /><span>{fileCount}</span>Files</li>
-          <li><CoronaVirus /><span>{genomes}</span>Viral Genomes</li>
-          <li><CrossHairs style={css`margin-left: -1px;`} /><span>{studyCount}</span>Studies</li>
-          <li><Storage /><span>{fileSize.value}</span>{fileSize.unit}</li>
-        </ul>
+              span {
+                margin-right: 5px;
+              }
+            `}
+          >
+            <li>
+              <File />
+              <span>{fileCount}</span>Files
+            </li>
+            <li>
+              <CoronaVirus />
+              <span>{genomes}</span>Viral Genomes
+            </li>
+            <li>
+              <CrossHairs
+                style={css`
+                  margin-left: -1px;
+                `}
+              />
+              <span>{studyCount}</span>Studies
+            </li>
+            <li>
+              <Storage />
+              <span>{fileSize.value}</span>
+              {fileSize.unit}
+            </li>
+          </ul>
         )}
       </Row>
       <Row
@@ -97,17 +137,11 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
           }
         `}
       >
-        <Col
-          component="li"
-          md={7}
-          lg={8}
-          >
+        <Col component="li" md={7} lg={8}>
           <figure>
-            {isFetchingData
-            ? <Loader
-                size="20px"
-              />
-            : (
+            {isFetchingData ? (
+              <Loader size="20px" />
+            ) : (
               <HighchartsReact
                 highcharts={Highcharts}
                 options={{
@@ -122,31 +156,33 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                   },
                   legend: {
                     enabled: false,
-                  //   align: 'right',
-                  //   x: -30,
-                  //   verticalAlign: 'top',
-                  //   y: 25,
-                  //   floating: true,
-                  //   shadow: false
+                    //   align: 'right',
+                    //   x: -30,
+                    //   verticalAlign: 'top',
+                    //   y: 25,
+                    //   floating: true,
+                    //   shadow: false
                   },
                   plotOptions: {
                     column: {
                       stacking: 'normal',
                       dataSorting: {
                         enabled: true,
-                      }
+                      },
                       // dataLabels: {
                       //   enabled: true,
                       // },
                     },
                   },
-                  series: [{
-                    data: Object.values(filesByVariant)?.map(province => ({
-                      name: province?.name,
-                      y: province?.count
-                    })),
-                    name: 'CoViD-19',
-                  }],
+                  series: [
+                    {
+                      data: Object.values(filesByVariant)?.map((province) => ({
+                        name: province?.name,
+                        y: province?.count,
+                      })),
+                      name: 'CoViD-19',
+                    },
+                  ],
                   title: {
                     align: 'right',
                     margin: 5,
@@ -158,20 +194,26 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
                   },
                   tooltip: {
                     formatter(this: Highcharts.TooltipFormatterContextObject): string {
-                      return `<b>${this.key}:</b><br>${this.y} Genome${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
+                      return `<b>${this.key}:</b><br>${this.y} Genome${
+                        this.y > 1 ? 's' : ''
+                      } (${this.percentage?.toLocaleString('en-CA', {
+                        maximumFractionDigits: 2,
+                      })}%)`;
                     },
-                  //   pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                    //   pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
                   },
                   xAxis: {
-                    categories: Object.keys(filesByVariant)?.map(abbreviation => abbreviation?.toUpperCase()),
+                    categories: Object.keys(filesByVariant)?.map((abbreviation) =>
+                      abbreviation?.toUpperCase(),
+                    ),
                     reversed: true,
                   },
                   yAxis: {
                     min: 0,
                     title: {
-                        text: '# Viral Genomes'
+                      text: '# Viral Genomes',
                     },
-                },
+                  },
                 }}
               />
             )}
@@ -249,137 +291,145 @@ const DataAnalysis = ({ sqon }: PageContentProps) => {
           </figure>
         </Col>*/}
 
-        <Col
-          component="li"
-          md={5}
-          lg={4}
-          >
+        <Col component="li" md={5} lg={4}>
           <figure
             css={(theme) => css`
               display: flex;
               justify-content: space-around;
             `}
           >
-            {isFetchingData
-            ? <Loader
-                size="20px"
-              />
-            : (<>
-                {/*<HighchartsReact
-                highcharts={Highcharts}
-                options={{
-                  chart: {
-                    height: 100,
-                    width: 130,
-                    spacing: [0,0,0,0],
-                  },
-                  credits: {
-                    enabled: false,
-                  },
-                  legend: {
-                    enabled: false,
-                  //   align: 'right',
-                  //   x: -30,
-                  //   verticalAlign: 'top',
-                  //   y: 25,
-                  //   floating: true,
-                  //   shadow: false
-                  },
-                  plotOptions: {
-                    pie: {
-                      dataLabels: {
-                        enabled: false,
-                        // distance: 0,
-                        style: {
-                          fontWeight: 'bold',
-                          color: 'white'
-                        }
+            {isFetchingData ? (
+              <Loader size="20px" />
+            ) : (
+              <>
+                {/* <HighchartsReact
+                  highcharts={Highcharts}
+                  options={{
+                    chart: {
+                      height: 100,
+                      width: 130,
+                      spacing: [0, 0, 0, 0],
+                    },
+                    credits: {
+                      enabled: false,
+                    },
+                    legend: {
+                      enabled: false,
+                      //   align: 'right',
+                      //   x: -30,
+                      //   verticalAlign: 'top',
+                      //   y: 25,
+                      //   floating: true,
+                      //   shadow: false
+                    },
+                    plotOptions: {
+                      pie: {
+                        dataLabels: {
+                          enabled: false,
+                          // distance: 0,
+                          style: {
+                            fontWeight: 'bold',
+                            color: 'white',
+                          },
+                        },
+                        // center: ['50%', '50%'],
+                        // size: '100%'
                       },
-                      // center: ['50%', '50%'],
-                      // size: '100%'
-                    }
-                  },
-                  series: [{
-                    data: hostAges?.map(({key, doc_count}) => [key, doc_count]),
-                    innerSize: '65%',
-                    name: 'CoViD-19',
-                    type: 'pie',
-                  }],
-                  title: {
-                    align: 'center',
-                    floating: true,
-                    style: {
-                      fontSize: 12,
                     },
-                    text: 'Host<br/>Age',
-                    verticalAlign: 'middle',
-                    y: 12,
-                  },
-                  tooltip: {
-                    formatter(this: Highcharts.TooltipFormatterContextObject): string {
-                      return `<b>${formatRange(this.key)} Years:</b><br>${this.y} Genome${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
-                    },
-                  },
-                }}
-              />*/}
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={{
-                  chart: {
-                    height: 100,
-                    width: 120,
-                    spacing: [0,0,0,0],
-                  },
-                  credits: {
-                    enabled: false,
-                  },
-                  legend: {
-                    enabled: false,
-                  //   align: 'right',
-                  //   x: -30,
-                  //   verticalAlign: 'top',
-                  //   y: 25,
-                  //   floating: true,
-                  //   shadow: false
-                  },
-                  plotOptions: {
-                    pie: {
-                      dataLabels: {
-                        enabled: false,
-                        // distance: -50,
-                        // style: {
-                        //   fontWeight: 'bold',
-                        //   color: 'white'
-                        // }
+                    series: [
+                      {
+                        data: hostAges?.map(({ key, doc_count }) => [key, doc_count]),
+                        innerSize: '65%',
+                        name: 'CoViD-19',
+                        type: 'pie',
                       },
-                      center: ['50%', '50%'],
-                      size: '110%'
-                    }
-                  },
-                  series: [{
-                    data: hostGenders?.map(({key, doc_count}) => [key, doc_count]),
-                    innerSize: '65%',
-                    name: 'CoViD-19',
-                    type: 'pie',
-                  }],
-                  title: {
-                    align: 'center',
-                    floating: true,
-                    style: {
-                      fontSize: 12,
+                    ],
+                    title: {
+                      align: 'center',
+                      floating: true,
+                      style: {
+                        fontSize: 12,
+                      },
+                      text: 'Host<br/>Age',
+                      verticalAlign: 'middle',
+                      y: 12,
                     },
-                    text: 'Host<br/>Gender',
-                    verticalAlign: 'middle',
-                    y: 11,
-                  },
-                  tooltip: {
-                    formatter(this: Highcharts.TooltipFormatterContextObject): string {
-                      return `<b>${this.key}:</b><br>${this.y} Genome${this.y > 1 ? 's' : ''} (${this.percentage?.toLocaleString('en-CA', {maximumFractionDigits: 2})}%)`;
+                    tooltip: {
+                      formatter(this: Highcharts.TooltipFormatterContextObject): string {
+                        return `<b>${formatRange(this.key)} Years:</b><br>${this.y} Genome${
+                          this.y > 1 ? 's' : ''
+                        } (${this.percentage?.toLocaleString('en-CA', {
+                          maximumFractionDigits: 2,
+                        })}%)`;
+                      },
                     },
-                  },
-                }}
-              />
-            </>)}
+                  }}
+                /> */}
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={{
+                    chart: {
+                      height: 100,
+                      width: 120,
+                      spacing: [0, 0, 0, 0],
+                    },
+                    credits: {
+                      enabled: false,
+                    },
+                    legend: {
+                      enabled: false,
+                      //   align: 'right',
+                      //   x: -30,
+                      //   verticalAlign: 'top',
+                      //   y: 25,
+                      //   floating: true,
+                      //   shadow: false
+                    },
+                    plotOptions: {
+                      pie: {
+                        dataLabels: {
+                          enabled: false,
+                          // distance: -50,
+                          // style: {
+                          //   fontWeight: 'bold',
+                          //   color: 'white'
+                          // }
+                        },
+                        center: ['50%', '50%'],
+                        size: '110%',
+                      },
+                    },
+                    series: [
+                      {
+                        data: hostGenders?.map(({ key, doc_count }) => [key, doc_count]),
+                        innerSize: '65%',
+                        name: 'CoViD-19',
+                        type: 'pie',
+                      },
+                    ],
+                    title: {
+                      align: 'center',
+                      floating: true,
+                      style: {
+                        fontSize: 12,
+                      },
+                      text: 'Host<br/>Gender',
+                      verticalAlign: 'middle',
+                      y: 11,
+                    },
+                    tooltip: {
+                      formatter(this: Highcharts.TooltipFormatterContextObject): string {
+                        return `<b>${this.key}:</b><br>${this.y} Genome${
+                          this.y > 1 ? 's' : ''
+                        } (${this.percentage?.toLocaleString('en-CA', {
+                          maximumFractionDigits: 2,
+                        })}%)`;
+                      },
+                    },
+                  }}
+                />
+              </>
+            )}
           </figure>
         </Col>
       </Row>

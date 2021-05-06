@@ -20,8 +20,7 @@
  */
 
 import { ReactElement } from 'react';
-import { css } from '@emotion/core';
-import { useTheme } from 'emotion-theming';
+import { css, useTheme } from '@emotion/react';
 
 import defaultTheme from './theme';
 import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
@@ -145,14 +144,12 @@ const Footer = (): ReactElement => {
           `}
         >
           <span
-            css={(theme) =>
-              css`
-                color: ${theme.colors.accent_dark};
-                ${theme.typography.subheading2}
-                font-weight: normal;
-                padding-right: 10px;
-              `
-            }
+            css={css`
+              color: ${theme.colors.accent_dark};
+              ${theme.typography.subheading2}
+              font-weight: normal;
+              padding-right: 10px;
+            `}
           >
             Powered by:
           </span>

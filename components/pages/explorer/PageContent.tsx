@@ -19,15 +19,19 @@
  *
  */
 
-import { css } from '@emotion/core';
-import RepoTable from './RepoTable';
-import Facets from './Facets';
+import { ReactElement } from 'react';
+import { css, useTheme } from '@emotion/react';
+
+import defaultTheme from '../../theme';
 import DataAnalysis from './DataAnalysis';
-import QueryBar from './QueryBar';
-
+import Facets from './Facets';
 import { PageContentProps } from './index';
+import QueryBar from './QueryBar';
+import RepoTable from './RepoTable';
 
-const PageContent = (props: PageContentProps) => {
+const PageContent = (props: PageContentProps): ReactElement => {
+  const theme: typeof defaultTheme = useTheme();
+
   return (
     <div
       css={css`
@@ -43,7 +47,7 @@ const PageContent = (props: PageContentProps) => {
         `}
       >
         <div
-          css={(theme) => css`
+          css={css`
             flex: 0 0 ${theme.dimensions.facets.width}px;
             flex-direction: column;
             background-color: ${theme.colors.white};
@@ -58,7 +62,7 @@ const PageContent = (props: PageContentProps) => {
           <Facets {...props} />
         </div>
         <div
-          css={(theme) => css`
+          css={css`
             display: flex;
             flex-direction: column;
             width: 100%;
@@ -69,10 +73,10 @@ const PageContent = (props: PageContentProps) => {
           `}
         >
           <div
-            css={(theme) => css`
+            css={css`
               flex: 8.5;
               margin: 0 15px 0 15px;
-              max-width: calc(100vw - ${theme.dimensions.facets.maxWidth + 10}px);
+              max-width: calc(100vw - ${theme.dimensions.facets.width + 10}px);
             `}
           >
             <QueryBar {...props} />

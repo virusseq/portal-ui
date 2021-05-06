@@ -20,14 +20,14 @@
  */
 
 import { FunctionComponent, ReactElement } from 'react';
-import { css } from '@emotion/core';
+import { css, useTheme } from '@emotion/react';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
-import { useTheme } from 'emotion-theming';
 
-import { PageContentProps } from './index';
-import defaultTheme from '../../theme';
 import { getConfig } from '../../../global/config';
+import useTrackingContext from '../../../global/hooks/useTrackingContext';
+import defaultTheme from '../../theme';
+import { PageContentProps } from './index';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -264,6 +264,7 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
 
 const RepoTable = (props: PageContentProps): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
+  const { logEvent } = useTrackingContext();
   const {
     NEXT_PUBLIC_ARRANGER_API,
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
@@ -283,6 +284,11 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     {
       label: 'Consensus Seq',
       function: () => {
+        logEvent({
+          category: 'Downloads',
+          action: 'Consensus Seq',
+        });
+
         window.location.assign(
           urlJoin(NEXT_PUBLIC_MUSE_API, `/download?objectIds=${objectIdsStr}`),
         );
@@ -292,6 +298,11 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     {
       label: 'Consensus Seq (Gzip)',
       function: () => {
+        logEvent({
+          category: 'Downloads',
+          action: 'Consensus Seq Gzip',
+        });
+
         window.location.assign(
           urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`),
         );
@@ -301,6 +312,11 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     {
       label: 'Download All',
       function: () => {
+        logEvent({
+          category: 'Downloads',
+          action: 'Downloading All',
+        });
+
         window.location.assign(
           'https://object.cancercollaboratory.org:9080/swift/v1/Download/data/virusseq_metadata_consensus_all_20210427.tgz',
         );

@@ -19,7 +19,13 @@
  *
  */
 
-import { GitHubLogo, GoogleLogo, KeyCloakLogo, LinkedInLogo, OrcidLogo } from '../../components/theme/icons';
+import {
+  GitHubLogo,
+  GoogleLogo,
+  KeyCloakLogo,
+  LinkedInLogo,
+  OrcidLogo,
+} from '../../components/theme/icons';
 import { ProviderType } from '../types';
 
 export type ProviderDetail = {

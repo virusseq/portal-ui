@@ -19,12 +19,13 @@
  *
  */
 
-import React from 'react';
+import { ReactElement } from 'react';
 import urlJoin from 'url-join';
 import NextHead from 'next/head';
+
 import { getConfig } from '../global/config';
 
-const Head = () => {
+const Head = (): ReactElement => {
   const { NEXT_PUBLIC_BASE_PATH } = getConfig();
   return (
     <NextHead>

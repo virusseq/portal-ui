@@ -19,15 +19,14 @@
  *
  */
 
-import React from 'react';
-import { css } from '@emotion/core';
+import { ReactElement } from 'react';
+import { css, useTheme } from '@emotion/react';
 import { useRouter } from 'next/router';
 
 import UserDropdown from './UserDropdown';
 import defaultTheme from './theme';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { InternalLink as Link } from './Link';
-import { useTheme } from 'emotion-theming';
 import {
   ABOUT_PATH,
   EXPLORER_PATH,
@@ -37,7 +36,7 @@ import {
   TEAM_PATH,
 } from '../global/utils/constants';
 
-const NavBar: React.ComponentType = () => {
+const NavBar = (): ReactElement => {
   const { token } = useAuthContext();
   const router = useRouter();
   const theme: typeof defaultTheme = useTheme();
@@ -88,7 +87,7 @@ const NavBar: React.ComponentType = () => {
         position: sticky;
         top: 0;
         left: 0;
-        z-index: 5;
+        z-index: 1;
         width: 100%;
       `}
     >
@@ -132,7 +131,7 @@ const NavBar: React.ComponentType = () => {
             <a
               css={css`
                 ${linkStyle}
-                ${router.pathname === ABOUT_PATH ? activeLinkStyle : ''}
+                ${router.asPath === ABOUT_PATH ? activeLinkStyle : ''}
               `}
             >
               About VirusSeq Data Portal
@@ -142,7 +141,7 @@ const NavBar: React.ComponentType = () => {
             <a
               css={css`
                 ${linkStyle}
-                ${router.pathname === EXPLORER_PATH ? activeLinkStyle : ''}
+                ${router.asPath.startsWith(EXPLORER_PATH) ? activeLinkStyle : ''}
               `}
             >
               Explore VirusSeq Data
@@ -150,9 +149,9 @@ const NavBar: React.ComponentType = () => {
           </Link>
           <Link path={TEAM_PATH}>
             <a
-              css={(theme) => css`
+              css={css`
                 ${linkStyle}
-                ${router.pathname === TEAM_PATH ? activeLinkStyle : ''}
+                ${router.asPath.startsWith(TEAM_PATH) ? activeLinkStyle : ''}
               `}
             >
               Meet the Team
@@ -173,7 +172,7 @@ const NavBar: React.ComponentType = () => {
               <a
                 css={css`
                   ${linkStyle}
-                  ${router.pathname === SUBMISSION_PATH ? activeLinkStyle : ''}
+                  ${router.asPath.startsWith(SUBMISSION_PATH) ? activeLinkStyle : ''}
                 `}
               >
                 Submission Dashboard
@@ -184,7 +183,7 @@ const NavBar: React.ComponentType = () => {
                 float: none;
                 width: 195px;
                 ${linkStyle}
-                ${router.pathname === USER_PATH ? activeLinkStyle : ''}
+                ${router.asPath.startsWith(USER_PATH) ? activeLinkStyle : ''}
 
                 &:hover {
                   ${activeLinkStyle}

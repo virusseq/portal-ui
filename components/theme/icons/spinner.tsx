@@ -19,7 +19,9 @@
  *
  */
 
-import { css, keyframes } from '@emotion/core';
+import { ReactElement } from 'react';
+import { css, keyframes } from '@emotion/react';
+
 import { IconProps } from './types';
 
 // Animation
@@ -29,7 +31,7 @@ const spin = keyframes`
   }
 `;
 
-const Spinner = ({ fill, height, width }: IconProps) => {
+const Spinner = ({ fill, height, width }: IconProps): ReactElement => {
   return (
     <svg
       viewBox={'0 0 20 20'}

@@ -19,7 +19,7 @@
  *
  */
 
-import React from 'react';
+import { ReactElement } from 'react';
 
 import { DMS_EMAIL_SETTING_URL } from '../../global/utils/constants';
 import providerMap from '../../global/utils/providerTypeMap';
@@ -41,7 +41,11 @@ const errorSubtitles: { [k in EgoLoginError]: string } = {
 const isValidProviderType = (providerType: ProviderType) =>
   Object.values(ProviderType).includes(providerType);
 
-const Error403 = ({ query }: { query: { error_type: EgoLoginError; provider_type?: string } }) => {
+const Error403 = ({
+  query,
+}: {
+  query: { error_type: EgoLoginError; provider_type?: string };
+}): ReactElement => {
   const { error_type: errorType, provider_type: providerType } = query;
   const providerTypeDisplayName = isValidProviderType(providerType as ProviderType)
     ? providerMap[providerType as ProviderType].displayName

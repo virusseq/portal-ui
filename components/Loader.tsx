@@ -19,8 +19,8 @@
  *
  */
 
-import { ReactNode, ReactNodeArray } from 'react';
-import { css, SerializedStyles } from '@emotion/core';
+import { ReactElement, ReactNode, ReactNodeArray } from 'react';
+import { css, SerializedStyles } from '@emotion/react';
 
 const Loader = ({
   inline = false,
@@ -28,8 +28,8 @@ const Loader = ({
   message = '',
   overlay = false,
   size = '120px',
-}) => {
-  const unit = size.replace(/\d+/, '')
+}): ReactElement => {
+  const unit = size.replace(/\d+/, '');
   const stroke = `${Number(size.match(/\d+/)?.pop()) * 0.35}${unit}`;
 
   return (
@@ -38,7 +38,7 @@ const Loader = ({
         border: ${stroke} solid ${theme.colors.grey_3};
         border-top: ${stroke} solid ${theme.colors.secondary_dark};
         border-radius: 50%;
-        display: ${inline ? 'inline-' : ""}block;
+        display: ${inline ? 'inline-' : ''}block;
         // height: min(100%, ${size});
         height: ${size};
         width: ${size};
@@ -54,7 +54,8 @@ const Loader = ({
             transform: rotate(360deg);
           }
         }
-        ${overlay && `
+        ${overlay &&
+        `
           position: absolute;
           top: 50%;
           left: 50%;
@@ -69,13 +70,13 @@ export const LoaderMessage = ({
   inline = false,
   margin = '0',
   message = 'Loading...',
-  size= "20px",
+  size = '20px',
 }: {
-  inline?: boolean,
-  margin?: string,
-  message?: string,
-  size?: string,
-}) => (
+  inline?: boolean;
+  margin?: string;
+  message?: string;
+  size?: string;
+}): ReactElement => (
   <div
     css={(theme) => css`
       align-items: center;
@@ -85,14 +86,10 @@ export const LoaderMessage = ({
       width: fit-content;
     `}
   >
-    <Loader 
-      inline
-      margin={inline ? '0 10px 0 0' : '0 0 10px'}
-      size={size}
-    />
+    <Loader inline margin={inline ? '0 10px 0 0' : '0 0 10px'} size={size} />
     <span>{message}</span>
   </div>
-)
+);
 
 export const LoaderWrapper = ({
   children,
@@ -102,15 +99,15 @@ export const LoaderWrapper = ({
   size = '30px',
   style,
 }: {
-  children?: ReactNode | ReactNodeArray,
-  loaderSize?: string,
-  loading?: boolean,
-  message?: ReactNode | ReactNodeArray,
-  size?: string,
+  children?: ReactNode | ReactNodeArray;
+  loaderSize?: string;
+  loading?: boolean;
+  message?: ReactNode | ReactNodeArray;
+  size?: string;
   style?: SerializedStyles;
-}) => (
+}): ReactElement => (
   <div
-    css={theme => css`
+    css={(theme) => css`
       position: relative;
       ${style}
 
@@ -127,51 +124,43 @@ export const LoaderWrapper = ({
   >
     {children}
 
-    {loading && (
-      message
-        ? (
-          <figure
-            css={theme => css`
-              background: ${theme.colors.white};
-              border: 1px solid ${theme.colors.grey_3};
+    {loading &&
+      (message ? (
+        <figure
+          css={(theme) => css`
+            background: ${theme.colors.white};
+            border: 1px solid ${theme.colors.grey_3};
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            left: 50%;
+            margin: 0;
+            max-height: 100%;
+            max-width: 400px;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            z-index: 1;
+
+            figcaption {
               box-sizing: border-box;
-              display: flex;
-              flex-direction: column;
-              left: 50%;
-              margin: 0;
-              max-height: 100%;
-              max-width: 400px;
-              padding: 20px;
-              position: absolute;
-              top: 50%;
-              transform: translate(-50%, -50%);
+              color: ${theme.colors.primary};
+              font-size: 14px;
+              margin: 20px 0 0;
+              overflow: auto;
+              text-align: center;
               width: 100%;
-              z-index: 1;
-              
-              figcaption {
-                box-sizing: border-box;
-                color: ${theme.colors.primary};
-                font-size: 14px;
-                margin: 20px 0 0;
-                overflow: auto;
-                text-align: center;
-                width: 100%;
-              }
-            `}
-          >
-            <Loader 
-              size={size}
-              />
-            <figcaption>{message}</figcaption>
-          </figure>
-        )
-        : (
-          <Loader 
-            overlay
-            size={size}
-          />
-        )
-    )}
+            }
+          `}
+        >
+          <Loader size={size} />
+          <figcaption>{message}</figcaption>
+        </figure>
+      ) : (
+        <Loader overlay size={size} />
+      ))}
   </div>
 );
 

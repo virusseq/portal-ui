@@ -19,11 +19,12 @@
  *
  */
 
-import { css } from '@emotion/core';
+import { ReactElement } from 'react';
+import { css } from '@emotion/react';
 
 import { IconProps } from './types';
 
-const GitHubLogo = ({ width, height, style }: IconProps) => (
+const GitHubLogo = ({ width, height, style }: IconProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     css={css`

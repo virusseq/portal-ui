@@ -19,11 +19,12 @@
  *
  */
 
-import { css } from '@emotion/core';
+import { ReactElement } from 'react';
+import { css } from '@emotion/react';
 
 import { IconProps } from './types';
 
-const OvertureLogoWithText = ({ width, height, style }: IconProps) => {
+const OvertureLogoWithText = ({ width, height, style }: IconProps): ReactElement => {
   return (
     <svg
       css={css`

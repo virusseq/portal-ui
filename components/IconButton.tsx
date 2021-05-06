@@ -19,7 +19,9 @@
  *
  */
 
-import { css } from '@emotion/core';
+import { ReactElement } from 'react';
+import { css } from '@emotion/react';
+
 import { IconProps } from './theme/icons/types';
 
 const IconButton = ({
@@ -34,7 +36,7 @@ const IconButton = ({
   height: number;
   width: number;
   onClick: React.MouseEventHandler;
-}) => {
+}): ReactElement => {
   return (
     <span
       onClick={onClick}

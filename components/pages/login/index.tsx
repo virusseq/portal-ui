@@ -19,10 +19,12 @@
  *
  */
 
+import { ReactElement } from 'react';
+
 import PageContent from './PageContent';
 import PageLayout from '../../PageLayout';
 
-const LoginPage = () => (
+const LoginPage = (): ReactElement => (
   <PageLayout subtitle="Submitter Login">
     <PageContent />
   </PageLayout>

@@ -20,7 +20,7 @@
  */
 
 import React, { ReactNode, ReactNodeArray } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import defaultTheme from './theme';
@@ -39,28 +39,26 @@ export const UnStyledButton = styled('button')`
 `;
 
 export const ButtonElement = styled(UnStyledButton)`
-  ${({ theme }: { theme: typeof defaultTheme }) => css`
-    color: ${theme.colors.white};
-    background-color: ${theme.colors.primary};
-    ${theme.typography.subheading2};
+  ${({ theme }: { theme?: typeof defaultTheme }) => css`
+    color: ${theme?.colors.white};
+    background-color: ${theme?.colors.primary};
+    ${theme?.typography.subheading2};
     line-height: 24px;
     border-radius: 5px;
-    border: 1px solid ${theme.colors.primary};
+    border: 1px solid ${theme?.colors.primary};
     padding: 6px 15px;
     &:hover {
-      background-color: ${theme.colors.primary_dark};
+      background-color: ${theme?.colors.primary_dark};
     }
     &:disabled,
     &:disabled:hover {
-      background-color: ${theme.colors.grey_4};
+      background-color: ${theme?.colors.grey_4};
       cursor: not-allowed;
-      color: ${theme.colors.white};
-      border: 1px solid ${theme.colors.grey_4};
+      color: ${theme?.colors.white};
+      border: 1px solid ${theme?.colors.grey_4};
     }
   `}
 `;
-
-
 
 const Button = React.forwardRef<
   HTMLButtonElement,
@@ -114,7 +112,7 @@ const Button = React.forwardRef<
           {children}
         </span>
         <span
-          css={(theme) => css`
+          css={css`
             position: absolute;
             visibility: ${shouldShowLoading ? 'visible' : 'hidden'};
             bottom: 1px;

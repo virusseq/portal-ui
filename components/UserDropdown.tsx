@@ -19,18 +19,17 @@
  *
  */
 
-import React, { useEffect, useState, useRef, ReactElement } from 'react';
-import { css } from '@emotion/core';
+import { useEffect, useState, useRef, ReactElement } from 'react';
+import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useTheme } from 'emotion-theming';
 
 import defaultTheme from './theme';
 import { Avatar, ChevronDown } from './theme/icons';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { UserWithId } from '../global/types';
 import { InternalLink as Link } from './Link';
-import { useRouter } from 'next/router';
 import { USER_PATH } from '../global/utils/constants';
+import useTrackingContext from '../global/hooks/useTrackingContext';
 
 const getDisplayName = (user?: UserWithId) => {
   const greeting = 'Hello';
@@ -73,30 +72,29 @@ const CurrentUser = () => {
 };
 
 const StyledListLink = styled('a')`
-  ${({ theme }: { theme: typeof defaultTheme }) => css`
+  ${({ theme }: { theme?: typeof defaultTheme }) => css`
     text-decoration: none;
     height: 40px;
     display: flex;
     align-items: center;
-    background: (theme.colors.white)};
     padding: 6px 12px;
-    color: ${theme.colors.black};
-    background-color: ${theme.colors.white};
-    border: 1px solid ${theme.colors.grey_3};
+    color: ${theme?.colors.black};
+    background-color: ${theme?.colors.white};
+    border: 1px solid ${theme?.colors.grey_3};
     outline: none;
     font-size: 16px;
     cursor: pointer;
     width: 100%;
     &:hover {
-      background-color: ${theme.colors.grey_1};
+      background-color: ${theme?.colors.grey_1};
     }
   `}
 `;
 
 const UserDropdown = ({ className }: { className?: string }): ReactElement => {
-  const node: any = useRef();
-
   const [open, setOpen] = useState(false);
+  const { logEvent } = useTrackingContext();
+  const node: any = useRef();
 
   const handleClickOutside = (e: any) => {
     if (node.current.contains(e.target)) {
@@ -118,7 +116,8 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
   }, [open]);
   const theme: typeof defaultTheme = useTheme();
   const { logout } = useAuthContext();
-  const router = useRouter();
+
+  const handleLogout = () => logout(logEvent);
 
   return (
     <div
@@ -183,7 +182,7 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
             </Link>
           </li>
           <li>
-            <StyledListLink onClick={() => logout()}>Logout</StyledListLink>
+            <StyledListLink onClick={handleLogout}>Logout</StyledListLink>
           </li>
         </ul>
       )}

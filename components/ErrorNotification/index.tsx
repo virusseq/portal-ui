@@ -20,7 +20,7 @@
  */
 
 import { MouseEvent, ReactElement } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import IconButton from '../IconButton';
 
@@ -31,12 +31,12 @@ import DismissIcon from '../theme/icons/dismiss';
 import { ErrorSize, getContainerStyles, getIconSize, getIconStyle, getTitleStyle } from './helpers';
 
 const ErrorContentContainer = styled('div')`
-  ${({ theme, size }: { theme: typeof defaultTheme; size: ErrorSize }) => css`
+  ${({ theme, size }: { theme?: typeof defaultTheme; size: ErrorSize }) => css`
     border-radius: 5px;
-    ${theme.typography.subheading};
+    ${theme?.typography.subheading};
     font-weight: normal;
-    background-color: ${theme.colors.error_1};
-    color: ${theme.colors.accent_dark};
+    background-color: ${theme?.colors.error_1};
+    color: ${theme?.colors.accent_dark};
     ${getContainerStyles(size)};
     max-width: 600px;
   `}

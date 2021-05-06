@@ -1,13 +1,27 @@
-import { Dispatch } from "react";
+/*
+ *
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ *
+ *  This program and the accompanying materials are made available under the terms of
+ *  the GNU Affero General Public License v3.0. You should have received a copy of the
+ *  GNU Affero General Public License along with this program.
+ *   If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ *  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ *  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ *  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ *  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
 
-import {
-  ErrorTypes,
-  ReaderCallbackType,
-  ValidationActionType,
-  ValidationParametersType,
-} from './types';
+import { Dispatch } from 'react';
 
-export const getExtension = ({ name = '' }) => name.toLowerCase().split('.').pop();
+import { ReaderCallbackType, ValidationActionType, ValidationParametersType } from './types';
 
 export const validationParameters = {
   oneTSV: [], // will use only the first one, but display any added
@@ -15,31 +29,13 @@ export const validationParameters = {
   readyToUpload: false, // there's at least one TSV and one fasta
 };
 
-export const makeErrorTypeReadable = (type: ErrorTypes) => {
-  switch (type) {
-    case 'sampleIdInFileMissingInTsv':
-      return 'Missing samples in the TSV';
+const overwiteIfExists = (existingFiles: File[], file: File) =>
+  existingFiles.filter((old) => old.name !== file.name).concat(file);
 
-    case 'sampleIdInRecordMissingInFile':
-      return 'Missing samples in the Fasta';
-
-    case 'missingHeaders':
-      return 'Missing headers in the TSV';
-
-    case 'unknownHeaders':
-      return 'Unrecognized headers in the TSV';
-
-    default: {
-      console.log('Unhandled type:', type);
-      return 'Error';
-    }
-  }
-}
-
-const overwiteIfExists = (existingFiles: File[], file: File) => 
-  existingFiles.filter(old => old.name !== file.name).concat(file);
-
-export const validationReducer = (state: ValidationParametersType, action: ValidationActionType) => {
+export const validationReducer = (
+  state: ValidationParametersType,
+  action: ValidationActionType,
+): ValidationParametersType => {
   switch (action.type) {
     case 'add tsv': {
       const oneTSV = overwiteIfExists(state.oneTSV, action.file);
@@ -60,7 +56,7 @@ export const validationReducer = (state: ValidationParametersType, action: Valid
     }
 
     case 'add fasta': {
-      const oneOrMoreFasta = overwiteIfExists(state.oneOrMoreFasta, action.file)
+      const oneOrMoreFasta = overwiteIfExists(state.oneOrMoreFasta, action.file);
       return {
         ...state,
         oneOrMoreFasta,
@@ -69,7 +65,9 @@ export const validationReducer = (state: ValidationParametersType, action: Valid
     }
 
     case 'remove fasta': {
-      const oneOrMoreFasta = state.oneOrMoreFasta.filter((fasta: File) => fasta.name !== action.file);
+      const oneOrMoreFasta = state.oneOrMoreFasta.filter(
+        (fasta: File) => fasta.name !== action.file,
+      );
       return {
         ...state,
         oneOrMoreFasta,
@@ -84,7 +82,7 @@ export const validationReducer = (state: ValidationParametersType, action: Valid
       console.log('dispatched nothing', action);
       return state;
   }
-}
+};
 
 const readFile = (file: File, callback: ReaderCallbackType) => {
   const reader = new FileReader();
@@ -92,16 +90,27 @@ const readFile = (file: File, callback: ReaderCallbackType) => {
   reader.onerror = () => console.log('file reading has failed');
   reader.onload = () => {
     callback(reader.result);
-  }
+  };
   reader.readAsText(file);
-}
+};
 
-export const getFileExtension = (file?: File | string): string | void => file && (
-  typeof file === 'string' ? file : file.name
-  )?.split('.').pop()?.toLowerCase();
-export const minFiles = ({ oneTSV, oneOrMoreFasta }: ValidationParametersType) => !!oneTSV && oneOrMoreFasta.length > 0
+export const getFileExtension = (file: File | string = ''): string => {
+  const parsedFileName = (typeof file === 'string' ? file : file.name).toLowerCase().split('.');
 
-export const validator = (state: ValidationParametersType, dispatch: Dispatch<ValidationActionType>) => (file: File) : void => {
+  const extension = parsedFileName
+    .slice(-(parsedFileName?.[parsedFileName.length - 1] === 'gz' ? 2 : 1))
+    .join('.');
+
+  return extension.includes('fa') || extension.includes('fasta') ? 'fasta' : extension;
+};
+
+export const minFiles = ({ oneTSV, oneOrMoreFasta }: ValidationParametersType): boolean =>
+  !!oneTSV && oneOrMoreFasta.length > 0;
+
+export const validator = (
+  state: ValidationParametersType,
+  dispatch: Dispatch<ValidationActionType>,
+) => (file: File): void => {
   // TODO: create dev mode
   // console.log('validating file', file)
   // readFile(file, data => console.log(data));
@@ -118,10 +127,11 @@ export const validator = (state: ValidationParametersType, dispatch: Dispatch<Va
       return dispatch({
         type: 'add fasta',
         file: file,
-      })
+      });
     }
+
     default: {
-      return console.log(`unable to validate file: ${file.name}`);
+      return console.log(`We do not accept this type of file: ${file.name}`);
     }
   }
 };
