@@ -19,7 +19,7 @@
  *
  */
 
-import React from 'react';
+import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 
 import defaultTheme from '../../theme';
@@ -27,7 +27,7 @@ import { Checkmark } from '../../theme/icons';
 import { ProviderType } from '../../../global/types';
 import providerMap from '../../../global/utils/providerTypeMap';
 
-const AuthenticatedBadge = ({ provider }: { provider: ProviderType }) => {
+const AuthenticatedBadge = ({ provider }: { provider: ProviderType }): ReactElement => {
   const IconComponent = providerMap[provider]?.icon;
   const theme: typeof defaultTheme = useTheme();
   return (

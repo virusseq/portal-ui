@@ -34,15 +34,14 @@ const LoginPage = createPage({
 })(() => {
   const { token } = useAuthContext();
 
-  return token
-    ? ( // logged in, so it shouldn't give you a login page
-      Router.push({
-        pathname: getInternalLink({ path: ROOT_PATH }),
-      }),
-      <></> // shows nothing, while passing TypeScript validations
-    ) : ( 
-      <Login />
-    );
+  return token ? ( // logged in, so it shouldn't give you a login page
+    (Router.push({
+      pathname: getInternalLink({ path: ROOT_PATH }),
+    }),
+    (<></>)) // shows nothing, while passing TypeScript validations
+  ) : (
+    <Login />
+  );
 });
 
 export default LoginPage;

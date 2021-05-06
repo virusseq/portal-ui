@@ -19,7 +19,7 @@
  *
  */
 
-import { ReactNode, ReactNodeArray } from 'react';
+import { ReactElement, ReactNode, ReactNodeArray } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 
 const Loader = ({
@@ -28,7 +28,7 @@ const Loader = ({
   message = '',
   overlay = false,
   size = '120px',
-}) => {
+}): ReactElement => {
   const unit = size.replace(/\d+/, '');
   const stroke = `${Number(size.match(/\d+/)?.pop()) * 0.35}${unit}`;
 
@@ -76,7 +76,7 @@ export const LoaderMessage = ({
   margin?: string;
   message?: string;
   size?: string;
-}) => (
+}): ReactElement => (
   <div
     css={(theme) => css`
       align-items: center;
@@ -105,7 +105,7 @@ export const LoaderWrapper = ({
   message?: ReactNode | ReactNodeArray;
   size?: string;
   style?: SerializedStyles;
-}) => (
+}): ReactElement => (
   <div
     css={(theme) => css`
       position: relative;

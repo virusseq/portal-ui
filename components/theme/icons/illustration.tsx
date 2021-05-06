@@ -19,9 +19,10 @@
  *
  */
 
+import { ReactElement } from 'react';
 import { css } from '@emotion/react';
 
-const Illustration = ({ width, height, style }: any) => {
+const Illustration = ({ width, height, style }: any): ReactElement => {
   return (
     <svg
       css={css`

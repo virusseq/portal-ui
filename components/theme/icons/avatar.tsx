@@ -19,11 +19,12 @@
  *
  */
 
+import { ReactElement } from 'react';
 import { css } from '@emotion/react';
 
 import { IconProps } from './types';
 
-const Avatar = ({ fill, height, width, style }: IconProps) => {
+const Avatar = ({ fill, height, width, style }: IconProps): ReactElement => {
   return (
     <svg
       css={css`

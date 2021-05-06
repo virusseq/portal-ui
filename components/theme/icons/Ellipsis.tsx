@@ -19,11 +19,12 @@
  *
  */
 
+import { ReactElement } from 'react';
 import { css } from '@emotion/react';
 
 import { IconProps } from './types';
 
-const Ellipsis = ({ fill = '#FE7B46', size = 12, style }: IconProps) => (
+const Ellipsis = ({ fill = '#FE7B46', size = 12, style }: IconProps): ReactElement => (
   <svg
     css={css`
       ${style};

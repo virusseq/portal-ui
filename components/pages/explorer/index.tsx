@@ -19,6 +19,8 @@
  *
  */
 
+import { ReactElement, useEffect, useState } from 'react';
+import { css } from '@emotion/react';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
 
@@ -28,11 +30,9 @@ import PageLayout from '../../PageLayout';
 import { RepoFiltersType } from '../../../global/types/sqon';
 import { getConfig } from '../../../global/config';
 import createArrangerFetcher from '../../utils/arrangerFetcher';
-import { useEffect, useState } from 'react';
 import ErrorNotification from '../../ErrorNotification';
 import getConfigError from './getConfigError';
 import Loader from '../../Loader';
-import { css } from '@emotion/react';
 import sleep from '../../utils/sleep';
 
 const Arranger = dynamic(
@@ -83,7 +83,7 @@ const projectsQuery = `
   }
 `;
 
-const RepositoryPage = () => {
+const RepositoryPage = (): ReactElement => {
   const {
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
     NEXT_PUBLIC_ARRANGER_GRAPHQL_FIELD,

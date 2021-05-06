@@ -19,11 +19,12 @@
  *
  */
 
+import { ReactElement } from 'react';
 import { css } from '@emotion/react';
 
 import { IconProps } from './types';
 
-const ChevronDown = ({ fill, width, height, style }: IconProps) => {
+const ChevronDown = ({ fill, width, height, style }: IconProps): ReactElement => {
   return (
     <svg
       css={css`

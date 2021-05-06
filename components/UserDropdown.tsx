@@ -19,7 +19,7 @@
  *
  */
 
-import React, { useEffect, useState, useRef, ReactElement } from 'react';
+import { useEffect, useState, useRef, ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 

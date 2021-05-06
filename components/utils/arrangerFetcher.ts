@@ -26,7 +26,7 @@ import ajax from './ajax';
 const createArrangerFetcher = ({
   onError = (err: any) => Promise.reject(err),
   defaultHeaders = {},
-} = {}) => ({ method = 'post', body = {}, headers = {} } = {}) => {
+} = {}) => ({ method = 'post', body = {}, headers = {} } = {}): Promise<any> => {
   const { NEXT_PUBLIC_ARRANGER_API, NEXT_PUBLIC_ARRANGER_PROJECT_ID } = getConfig();
   const uri = urlJoin(NEXT_PUBLIC_ARRANGER_API, NEXT_PUBLIC_ARRANGER_PROJECT_ID, '/graphql');
 

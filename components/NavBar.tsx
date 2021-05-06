@@ -19,7 +19,7 @@
  *
  */
 
-import React from 'react';
+import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 import { useRouter } from 'next/router';
 
@@ -36,7 +36,7 @@ import {
   TEAM_PATH,
 } from '../global/utils/constants';
 
-const NavBar: React.ComponentType = () => {
+const NavBar = (): ReactElement => {
   const { token } = useAuthContext();
   const router = useRouter();
   const theme: typeof defaultTheme = useTheme();

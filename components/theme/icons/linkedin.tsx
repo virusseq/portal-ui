@@ -19,11 +19,12 @@
  *
  */
 
+import { ReactElement } from 'react';
 import { css } from '@emotion/react';
 
 import { IconProps } from './types';
 
-const LinkedInLogo = ({ width, height, style }: IconProps) => (
+const LinkedInLogo = ({ width, height, style }: IconProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     css={css`

@@ -19,7 +19,7 @@
  *
  */
 
-import React, { ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import NavBar from './NavBar';
@@ -27,14 +27,21 @@ import Footer from './Footer';
 import { PageHead } from './Head';
 import ErrorNotification from './ErrorNotification';
 
-const PageLayout = ({ children, subtitle }: { children: ReactNode; subtitle?: string }) => {
+const PageLayout = ({
+  children,
+  subtitle,
+}: {
+  children: ReactNode;
+  subtitle?: string;
+}): ReactElement => {
   return (
     <>
       <PageHead subtitle={subtitle}></PageHead>
       <div
         css={(theme) => css`
           display: grid;
-          grid-template-rows: ${theme.dimensions.navbar.height}px 1fr ${theme.dimensions.footer.height}px;
+          grid-template-rows: ${theme.dimensions.navbar.height}px 1fr ${theme.dimensions.footer
+              .height}px;
           height: 100%;
           ${theme.typography.regular}
           color: ${theme.colors.black};
@@ -56,7 +63,7 @@ export const ErrorPageLayout = ({
   children: ReactNode;
   subtitle: string;
   errorTitle: string;
-}) => {
+}): ReactElement => {
   return (
     <PageLayout subtitle={subtitle}>
       <ErrorNotification size="lg" title={errorTitle}>

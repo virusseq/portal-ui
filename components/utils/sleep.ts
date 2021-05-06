@@ -19,7 +19,7 @@
  *
  */
 
-const sleep = (time: number = 2000) =>
+const sleep = (time = 2000): Promise<string> =>
   new Promise((resolve) => {
     setTimeout(() => {
       resolve('');

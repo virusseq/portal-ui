@@ -19,11 +19,13 @@
  *
  */
 
+import { ReactElement } from 'react';
 import { css } from '@emotion/react';
+
 import theme from '..';
 import { IconProps } from './types';
 
-const Dismiss = ({ height, width, style, fill }: IconProps) => {
+const Dismiss = ({ height, width, style, fill }: IconProps): ReactElement => {
   return (
     <svg
       css={css`

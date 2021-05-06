@@ -29,7 +29,7 @@ import useAuthContext from '../../../global/hooks/useAuthContext';
 import Button from '../../Button';
 import DMSAdminContact, { GenericHelpMessage } from '../../DMSAdminContact';
 import ErrorNotification from '../../ErrorNotification';
-import NoScopes from '../NoScopes';
+import NoScopes from '../../NoScopes';
 import defaultTheme from '../../theme';
 import { Checkmark } from '../../theme/icons';
 import sleep from '../../utils/sleep';
