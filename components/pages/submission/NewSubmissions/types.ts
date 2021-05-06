@@ -1,15 +1,24 @@
 export type ErrorTypes =
+  | 'invalidFields'
+  | 'missingHeaders'
   | 'sampleIdInFileMissingInTsv'
   | 'sampleIdInRecordMissingInFile'
-  | 'missingHeaders'
   | 'unknownHeaders'
   | string; // in case new error types are added, the app won't just crash
 
+export type InvalidFieldsType = {
+  fieldName: string;
+  index: number;
+  reason: 'EXPECTING_NUMBER_TYPE' | 'NOT_ALLOWED_TO_BE_EMPTY' | 'UNAUTHORIZED_FOR_STUDY_UPLOAD';
+  value: string;
+};
+
 export type NoUploadErrorType = {
   errorInfo?: {
+    invalidFields?: InvalidFieldsType[];
+    missingHeaders?: string[];
     sampleIdInFileMissingInTsv?: string[];
     sampleIdInRecordMissingInFile?: string[];
-    missingHeaders?: string[];
     unknownHeaders?: string[];
   };
   message?: string;

@@ -26,7 +26,7 @@ const columnData: Column<Record<string, unknown>>[] = [
           `}
         >
           {value.map((id) => (
-            <li>{id}</li>
+            <li key={id}>{id}</li>
           ))}
         </ul>
       ) : null,

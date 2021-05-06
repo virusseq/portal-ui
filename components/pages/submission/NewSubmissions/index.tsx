@@ -1,6 +1,5 @@
 import { ReactElement, useEffect, useReducer, useState } from 'react';
-import { useTheme } from '@emotion/react';
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 
 import Router from 'next/router';
 
@@ -13,13 +12,9 @@ import StyledLink from '../../../Link';
 import { LoaderWrapper } from '../../../Loader';
 import defaultTheme from '../../../theme';
 import DropZone from './DropZone';
+import ErrorMessage from './ErrorMessage';
 import FileRow from './FileRow';
-import {
-  getFileExtension,
-  makeErrorTypeReadable,
-  validationParameters,
-  validationReducer,
-} from './validationHelpers';
+import { getFileExtension, validationParameters, validationReducer } from './validationHelpers';
 import { NoUploadErrorType, ValidationActionType } from './types';
 
 const noUploadError = {} as NoUploadErrorType;
@@ -193,22 +188,31 @@ const NewSubmissions = (): ReactElement => {
             width: 100%;
           `}
         >
-          {uploadError.message}
+          {uploadError.message !== 'Found records with invalid fields' && uploadError.message}
+
           {uploadError?.errorInfo && (
             <ul
               css={css`
                 margin: 10px 0 0;
                 padding-left: 0;
+
+                p {
+                  margin-bottom: 0.5rem;
+                }
+
+                li:first-of-type p {
+                  margin-top: 0;
+                }
+
+                span {
+                  display: block;
+                  font-size: 13px;
+                }
               `}
             >
               {Object.entries(uploadError?.errorInfo).map(
                 ([type = '', values = []]) =>
-                  values.length > 0 && (
-                    <li key={type}>
-                      {makeErrorTypeReadable(type)}:<br />
-                      {values.join(', ')}.
-                    </li>
-                  ),
+                  values.length > 0 && <ErrorMessage type={type} values={values} />,
               )}
             </ul>
           )}

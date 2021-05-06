@@ -1,38 +1,11 @@
 import { Dispatch } from 'react';
 
-import {
-  ErrorTypes,
-  ReaderCallbackType,
-  ValidationActionType,
-  ValidationParametersType,
-} from './types';
-
+import { ReaderCallbackType, ValidationActionType, ValidationParametersType } from './types';
 
 export const validationParameters = {
   oneTSV: [], // will use only the first one, but display any added
   oneOrMoreFasta: [],
   readyToUpload: false, // there's at least one TSV and one fasta
-};
-
-export const makeErrorTypeReadable = (type: ErrorTypes) => {
-  switch (type) {
-    case 'sampleIdInFileMissingInTsv':
-      return 'Missing samples in the TSV';
-
-    case 'sampleIdInRecordMissingInFile':
-      return 'Missing samples in the Fasta';
-
-    case 'missingHeaders':
-      return 'Missing headers in the TSV';
-
-    case 'unknownHeaders':
-      return 'Unrecognized headers in the TSV';
-
-    default: {
-      console.log('Unhandled type:', type);
-      return 'Error';
-    }
-  }
 };
 
 const overwiteIfExists = (existingFiles: File[], file: File) =>
