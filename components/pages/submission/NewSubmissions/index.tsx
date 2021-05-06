@@ -145,8 +145,16 @@ const NewSubmissions = (): ReactElement => {
 
       <ol>
         <li>
-          Sequence metadata must be provided in TSV format according to the accepted values for each
-          field. A reference of the accepted values can be found{' '}
+          Download the{' '}
+          <StyledLink
+            href="https://github.com/cancogen-virus-seq/metadata-schemas/blob/main/virusseq_metadata_template.tsv"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            metadata TSV Template
+          </StyledLink>{' '}
+          for the viral sequence metadata and populate it with accepted values for each field. A
+          reference of the accepted values can be found{' '}
           <StyledLink
             href="https://github.com/Public-Health-Bioinformatics/DataHarmonizer/blob/master/template/canada_covid19/SOP.pdf"
             rel="noopener noreferrer"
@@ -164,9 +172,9 @@ const NewSubmissions = (): ReactElement => {
           >
             DataHarmonizer
           </StyledLink>{' '}
-          is a tool that can be used to help validate your metadata TSV locally before submitting.
-          Download the tool and follow the instructions on the Github repository to pre-validate
-          your metadata before submission.
+          is a tool that can be used to help validate the accepted values for each field in your
+          metadata TSV locally before submitting. Download the tool and follow the instructions on
+          the Github repository to pre-validate each field in your metadata before submission.
         </li>
         <li>
           If you are using Excel or Google sheets, make sure all characters are UTF-8 encoded.
