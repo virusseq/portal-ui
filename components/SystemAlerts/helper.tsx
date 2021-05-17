@@ -21,34 +21,19 @@ import { css } from '@emotion/react';
 import React, { ReactElement } from 'react';
 import DismissIcon from '../theme/icons/dismiss';
 import defaultTheme from '../theme';
-import { Error, Warning } from '../theme/icons';
-import { IconProps } from '../theme/icons/types';
+import { Info, Error } from '../theme/icons';
 
 export type AlertLevel = 'error' | 'warning' | 'info';
 
 type AlertVariant = {
-    color: string;
-    icon: (props: IconProps) => ReactElement;
-    fill: string;
-  };
+  backgroundColor: string;
+  icon: ReactElement;
+  textColor: string;
+};
 
-
-const ALERT_VARIANTS: Record<AlertLevel, AlertVariant> = {
-  error: {
-    color: defaultTheme.colors.error_1,
-    icon: Error,
-    fill: 'white',
-  },
-  warning: {
-    color: defaultTheme.colors.warning,
-    icon: Warning,
-    fill: 'primary_dark',
-  },
-  info: {
-    color: 'white',
-    icon: Warning,
-    fill: 'white',
-  },
+type AlertProps = {
+  alert: Alert;
+  onClose: () => void;
 };
 
 export type Alert = {
@@ -59,13 +44,26 @@ export type Alert = {
   id: string;
 };
 
-type AlertProps = {
-  alert: Alert;
-  onClose: () => void;
+const ALERT_VARIANTS: Record<AlertLevel, AlertVariant> = {
+  error: {
+    backgroundColor: defaultTheme.colors.error_1,
+    icon: <Error size={40} />,
+    textColor: defaultTheme.colors.black,
+  },
+  warning: {
+    backgroundColor: defaultTheme.colors.warning_1,
+    icon: <Error size={40} fill={defaultTheme.colors.warning_dark} />,
+    textColor: defaultTheme.colors.black,
+  },
+  info: {
+    backgroundColor: defaultTheme.colors.secondary_2,
+    icon: <Info size={40} fill={defaultTheme.colors.secondary_dark} />,
+    textColor: defaultTheme.colors.black,
+  },
 };
 
-
 const SystemAlert: React.ComponentType<AlertProps> = ({ alert, onClose }) => {
+  const { backgroundColor, textColor, icon } = ALERT_VARIANTS[alert.level];
   return (
     <div
       css={css`
@@ -73,32 +71,56 @@ const SystemAlert: React.ComponentType<AlertProps> = ({ alert, onClose }) => {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        background-color: ${ALERT_VARIANTS[alert.level].color}
+        background-color: ${backgroundColor};
       `}
     >
-      <div css={css`display: flex;`} >
-        <div css={css`margin: auto 15px auto auto;`}> 
-           {alert.level === 'error' && <Error size={40} />}
-           {alert.level === 'warning' && <Warning size={40} />}
-           {alert.level === 'info' && <Warning size={40} />}
+      <div
+        css={css`
+          display: flex;
+        `}
+      >
+        <div
+          css={css`
+            margin: auto 15px auto auto;
+          `}
+        >
+          {icon}
         </div>
-        <div css={css`margin-bottom: 8px;`}>
-          <div css={css`${defaultTheme.typography.heading} `}>
+        <div
+          css={css`
+            margin-bottom: 8px;
+          `}
+        >
+          <div
+            css={css`
+              color: ${textColor};
+              ${defaultTheme.typography.heading}
+            `}
+          >
             {alert.title}
           </div>
-          <div css={css`${defaultTheme.typography.regular}`}>
+          <div
+            css={css`
+              color: ${textColor};
+              ${defaultTheme.typography.regular}
+            `}
+          >
             {alert.message}
           </div>
         </div>
       </div>
 
-      <div css={css`cursor: pointer;`} onClick={onClose}>
+      <div
+        css={css`
+          cursor: pointer;
+        `}
+        onClick={onClose}
+      >
         {alert.dismissable && (
           <DismissIcon height={15} width={15} fill={defaultTheme.colors.black} />
         )}
-      </div>        
+      </div>
     </div>
-      
   );
 };
 

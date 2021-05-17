@@ -21,28 +21,30 @@ import React, { useEffect, useState } from 'react';
 import SystemAlert, { Alert } from './helper';
 import { getConfig } from '../../global/config';
 
+const SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY = 'SYSTEM_ALERTS_DISMISSED_IDS';
 
-type SystemAlert = {
-  dismissable: boolean;
-  id: string;
-  level: 'error' | 'info' | 'warning';
-  message?: string;
-  title: string;
-}
-
-// TODO - error hanlding for JSON.parse
- 
-const getLocalStorage = () => JSON.parse(localStorage.getItem('SYSTEM_ALERTS_DISMISSED_IDS') || "[]");
-const setLocalStorage = (ids: string[]) => {
-  localStorage.setItem('SYSTEM_ALERTS_DISMISSED_IDS', JSON.stringify(ids));
-}
-const { NEXT_PUBLIC_SYSTEM_ALERT } = getConfig();
-const alerts = JSON.parse(NEXT_PUBLIC_SYSTEM_ALERT) as Alert[];
-const alertIds = alerts.map(alert => alert.id);
-
-const SystemAlerts = () => {  
+const SystemAlerts = () => {
+  const getParsedSystemAlerts = () => {
+    try {
+      const { NEXT_PUBLIC_SYSTEM_ALERTS } = getConfig();
+      console.log('Loaded system_alers:', NEXT_PUBLIC_SYSTEM_ALERTS);
+      return JSON.parse(NEXT_PUBLIC_SYSTEM_ALERTS) as Alert[];
+    } catch (e) {
+      console.error('Failed to parse systems alerts! Using empty array!');
+      return [];
+    }
+  };
+  const alerts = getParsedSystemAlerts();
+  const alertIds = alerts.map((alert) => alert.id);
 
   const [dismissedAlerts, setDismissedAlerts] = useState<Array<string>>([]);
+
+  const getLocalStorage = () => {
+    return JSON.parse(localStorage.getItem(SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY) || '[]');
+  };
+  const setLocalStorage = (ids: string[]) => {
+    localStorage.setItem(SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY, JSON.stringify(ids));
+  };
 
   useEffect(() => {
     const ids = getLocalStorage();
@@ -50,23 +52,21 @@ const SystemAlerts = () => {
   }, []);
 
   const handleClose = (id: string) => {
-    console.log(id)
     // add id to dismissed ones and filter out stale ids
-    const ids = dismissedAlerts.concat(id).filter(id => alertIds.includes(id));
+    const ids = dismissedAlerts.concat(id).filter((id) => alertIds.includes(id));
     setDismissedAlerts(ids);
     setLocalStorage(ids);
   };
 
-  // const alertsDisplay = alerts.filter(({ id }) => !dismissedAlerts.includes(id));
+  const alertsDisplay = alerts.filter((alert) => !dismissedAlerts.includes(alert.id));
 
-  return (<> {alerts.filter(alert => !dismissedAlerts.includes(alert.id)).map((alert) => (
-          <SystemAlert
-            alert={alert}
-            key={alert.id}
-            onClose={() => handleClose(alert.id)}
-          />
-        ))}
-        </>);
-}
+  return (
+    <>
+      {alertsDisplay.map((alert) => (
+        <SystemAlert alert={alert} key={alert.id} onClose={() => handleClose(alert.id)} />
+      ))}
+    </>
+  );
+};
 
 export default SystemAlerts;

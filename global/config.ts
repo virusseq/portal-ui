@@ -23,6 +23,7 @@ import getNextConfig from 'next/config';
 
 export const getConfig = (): Record<string, string> => {
   const publicConfig: { [k: string]: string } = getNextConfig()?.publicRuntimeConfig || {};
+  const serverConfig: { [k: string]: string } = getNextConfig()?.serverRuntimeConfig || {};
 
   return {
     NEXT_PUBLIC_EGO_API_ROOT: publicConfig.NEXT_PUBLIC_EGO_API_ROOT || 'http://localhost:8088',
@@ -44,7 +45,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_MUSE_API: publicConfig.NEXT_PUBLIC_MUSE_API || '',
     NEXT_PUBLIC_SSO_PROVIDERS: publicConfig.NEXT_PUBLIC_SSO_PROVIDERS || '',
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: publicConfig.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || '',
-    NEXT_PUBLIC_SYSTEM_ALERT: publicConfig.NEXT_PUBLIC_SYSTEM_ALERT || '[]'    
+    NEXT_PUBLIC_SYSTEM_ALERTS: publicConfig.NEXT_PUBLIC_SYSTEM_ALERTS || '[]',
   } as {
     NEXT_PUBLIC_EGO_API_ROOT: string;
     NEXT_PUBLIC_EGO_CLIENT_ID: string;
@@ -63,6 +64,6 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_MUSE_API: string;
     NEXT_PUBLIC_SSO_PROVIDERS: string;
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: string;
-    NEXT_PUBLIC_SYSTEM_ALERT: string
+    NEXT_PUBLIC_SYSTEM_ALERTS: string;
   };
 };
