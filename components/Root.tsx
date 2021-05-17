@@ -28,7 +28,7 @@ import { TrackingProvider } from '../global/hooks/useTrackingContext';
 import { ClientSideGetInitialPropsContext } from '../global/utils/pages/types';
 import Head from './Head';
 import defaultTheme from './theme';
-import SystemAlerts from './SystemAlert';
+import SystemAlerts from './SystemAlerts';
 
 const Root = ({
   children,
