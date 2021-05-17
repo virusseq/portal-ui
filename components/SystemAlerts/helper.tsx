@@ -122,16 +122,16 @@ export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onCl
         </div>
       </div>
 
-      <div
-        css={css`
-          cursor: pointer;
-        `}
-        onClick={onClose}
-      >
-        {alert.dismissable && (
+      {alert.dismissable && (
+        <div
+          css={css`
+            cursor: pointer;
+          `}
+          onClick={onClose}
+        >
           <DismissIcon height={15} width={15} fill={defaultTheme.colors.black} />
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

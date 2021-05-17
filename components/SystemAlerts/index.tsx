@@ -38,8 +38,8 @@ const SystemAlerts = () => {
       return [];
     }
   };
-  const alerts = getParsedSystemAlerts();
-  const alertIds = alerts.map((alert) => alert.id);
+  const systemAlerts = getParsedSystemAlerts();
+  const systemAlertIds = systemAlerts.map((sa) => sa.id);
 
   const [dismissedAlerts, setDismissedAlerts] = useState<Array<string>>([]);
 
@@ -57,17 +57,17 @@ const SystemAlerts = () => {
 
   const handleClose = (id: string) => {
     // add id to dismissed ones and filter out stale ids
-    const ids = dismissedAlerts.concat(id).filter((id) => alertIds.includes(id));
+    const ids = dismissedAlerts.concat(id).filter((id) => systemAlertIds.includes(id));
     setDismissedAlerts(ids);
     setLocalStorage(ids);
   };
 
-  const alertsDisplay = alerts.filter((alert) => !dismissedAlerts.includes(alert.id));
+  const systemAlertsToDisplay = systemAlerts.filter((alert) => !dismissedAlerts.includes(alert.id));
 
   return (
     <>
-      {alertsDisplay.map((alert) => (
-        <SystemAlert alert={alert} key={alert.id} onClose={() => handleClose(alert.id)} />
+      {systemAlertsToDisplay.map((sa) => (
+        <SystemAlert alert={sa} key={sa.id} onClose={() => handleClose(sa.id)} />
       ))}
     </>
   );
