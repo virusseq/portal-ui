@@ -23,7 +23,6 @@ import getNextConfig from 'next/config';
 
 export const getConfig = (): Record<string, string> => {
   const publicConfig: { [k: string]: string } = getNextConfig()?.publicRuntimeConfig || {};
-  const serverConfig: { [k: string]: string } = getNextConfig()?.serverRuntimeConfig || {};
 
   return {
     NEXT_PUBLIC_EGO_API_ROOT: publicConfig.NEXT_PUBLIC_EGO_API_ROOT || 'http://localhost:8088',
