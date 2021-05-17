@@ -23,7 +23,27 @@ import DismissIcon from '../theme/icons/dismiss';
 import defaultTheme from '../theme';
 import { Info, Error } from '../theme/icons';
 
-export type AlertLevel = 'error' | 'warning' | 'info';
+type AlertLevel = 'error' | 'warning' | 'info';
+
+export type AlertDef = {
+  level: AlertLevel;
+  title: string;
+  message?: string;
+  dismissable: boolean;
+  id: string;
+};
+
+const isAlertLevel = (level: any): level is AlertLevel => {
+  return level === 'error' || level === 'warning' || level === 'info';
+};
+
+export const isAlertDef = (obj: any): obj is AlertDef => {
+  return obj.id && obj.title && obj.dismissable !== undefined && isAlertLevel(obj.level);
+};
+
+export const isAlertDefs = (obj: any): obj is AlertDef[] => {
+  return Array.isArray(obj) && obj.every(isAlertDef);
+};
 
 type AlertVariant = {
   backgroundColor: string;
@@ -31,17 +51,9 @@ type AlertVariant = {
   textColor: string;
 };
 
-type AlertProps = {
-  alert: Alert;
+type SystemAlertProps = {
+  alert: AlertDef;
   onClose: () => void;
-};
-
-export type Alert = {
-  level: AlertLevel;
-  title: string;
-  message?: string;
-  dismissable: boolean;
-  id: string;
 };
 
 const ALERT_VARIANTS: Record<AlertLevel, AlertVariant> = {
@@ -62,7 +74,7 @@ const ALERT_VARIANTS: Record<AlertLevel, AlertVariant> = {
   },
 };
 
-const SystemAlert: React.ComponentType<AlertProps> = ({ alert, onClose }) => {
+export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onClose }) => {
   const { backgroundColor, textColor, icon } = ALERT_VARIANTS[alert.level];
   return (
     <div
@@ -86,27 +98,27 @@ const SystemAlert: React.ComponentType<AlertProps> = ({ alert, onClose }) => {
         >
           {icon}
         </div>
-        <div
-          css={css`
-            margin-bottom: 8px;
-          `}
-        >
+        <div>
           <div
             css={css`
               color: ${textColor};
+              margin-top: ${alert.message ? '0px' : '6px'};
               ${defaultTheme.typography.heading}
             `}
           >
             {alert.title}
           </div>
-          <div
-            css={css`
-              color: ${textColor};
-              ${defaultTheme.typography.regular}
-            `}
-          >
-            {alert.message}
-          </div>
+          {alert.message && (
+            <div
+              css={css`
+                color: ${textColor};
+                margin-bottom: 8px;
+                ${defaultTheme.typography.regular};
+              `}
+            >
+              {alert.message}
+            </div>
+          )}
         </div>
       </div>
 
@@ -123,5 +135,3 @@ const SystemAlert: React.ComponentType<AlertProps> = ({ alert, onClose }) => {
     </div>
   );
 };
-
-export default SystemAlert;

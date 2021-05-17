@@ -18,7 +18,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import SystemAlert, { Alert } from './helper';
+import { SystemAlert, isAlertDefs } from './helper';
 import { getConfig } from '../../global/config';
 
 const SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY = 'SYSTEM_ALERTS_DISMISSED_IDS';
@@ -27,10 +27,14 @@ const SystemAlerts = () => {
   const getParsedSystemAlerts = () => {
     try {
       const { NEXT_PUBLIC_SYSTEM_ALERTS } = getConfig();
-      console.log('Loaded system_alers:', NEXT_PUBLIC_SYSTEM_ALERTS);
-      return JSON.parse(NEXT_PUBLIC_SYSTEM_ALERTS) as Alert[];
+      const systemAlerts = JSON.parse(NEXT_PUBLIC_SYSTEM_ALERTS);
+      if (!isAlertDefs(systemAlerts)) {
+        throw new Error('System Alert types are invalid!');
+      }
+      console.debug('Loaded system_alers:', systemAlerts);
+      return systemAlerts;
     } catch (e) {
-      console.error('Failed to parse systems alerts! Using empty array!');
+      console.error('Failed to parse systems alerts! Using empty array!', e);
       return [];
     }
   };
