@@ -58,6 +58,7 @@ declare module '@emotion/react' {
       success: string;
       warning: string;
       warning_dark: string;
+      warning_1: string;
       white: string;
     };
 
