@@ -36,6 +36,7 @@ export { default as Checkmark } from './checkmark';
 export { default as Spinner } from './spinner';
 export { default as Error } from './error';
 export { default as Warning } from './warning';
+export { default as Info } from './info';
 export { default as Bin } from './Bin';
 export { default as Calendar } from './Calendar';
 export { default as CoronaVirus } from './CoronaVirus';

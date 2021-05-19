@@ -83,6 +83,7 @@ const error = {
 const warning = {
   warning: '#f2d021',
   warning_dark: '#e6c104',
+  warning_1: '#ffff758c',
 };
 
 export default {
