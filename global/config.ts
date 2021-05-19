@@ -37,6 +37,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_ARRANGER_API: publicConfig.NEXT_PUBLIC_ARRANGER_API || 'http://localhost:5050',
     NEXT_PUBLIC_ARRANGER_ADMIN_UI: publicConfig.NEXT_PUBLIC_ARRANGER_ADMIN_UI,
     NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS: publicConfig.NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS || '',
+    NEXT_PUBLIC_DOWNLOAD_ALL_URL: publicConfig.NEXT_PUBLIC_DOWNLOAD_ALL_URL || '',
     NEXT_PUBLIC_BASE_PATH: publicConfig.NEXT_PUBLIC_BASE_PATH || '',
     NEXT_PUBLIC_ADMIN_EMAIL: publicConfig.NEXT_PUBLIC_ADMIN_EMAIL,
     NEXT_PUBLIC_LAB_NAME: publicConfig.NEXT_PUBLIC_LAB_NAME || 'Data Management System',
@@ -56,6 +57,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_ARRANGER_API: string;
     NEXT_PUBLIC_ARRANGER_ADMIN_UI: string;
     NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS: string;
+    NEXT_PUBLIC_DOWNLOAD_ALL_URL: string;
     NEXT_PUBLIC_BASE_PATH: string;
     NEXT_PUBLIC_ADMIN_EMAIL: string;
     NEXT_PUBLIC_LAB_NAME: string;

@@ -268,6 +268,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
   const {
     NEXT_PUBLIC_ARRANGER_API,
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
+    NEXT_PUBLIC_DOWNLOAD_ALL_URL,
     NEXT_PUBLIC_MUSE_API,
   } = getConfig();
 
@@ -309,44 +310,26 @@ const RepoTable = (props: PageContentProps): ReactElement => {
       },
       requiresRowSelection: true,
     },
-    {
-      label: 'Download All',
-      function: () => {
-        logEvent({
-          category: 'Downloads',
-          action: 'Downloading All',
-        });
+  ].concat(
+    NEXT_PUBLIC_DOWNLOAD_ALL_URL
+      ? {
+          label: 'Download All',
+          function: () => {
+            logEvent({
+              category: 'Downloads',
+              action: `Downloading All${
+                NEXT_PUBLIC_DOWNLOAD_ALL_URL ? '' : ', bucket url unavailable'
+              }`,
+            });
 
-        window.location.assign(
-          'https://object.cancercollaboratory.org:9080/swift/v1/Download/data/virusseq_metadata_consensus_all_20210427.tgz',
-        );
-      },
-    },
-    // { label: () => (
-    //   <span
-    //     css={css`
-    //       border-top: 1px solid #eee;
-    //       margin-top: -3px;
-    //       padding-top: 7px;
-    //       white-space: pre-line;
-    //       width: 140px;
-    //     `}
-    //   >
-    //     {`To download files using a file manifest, please follow these `}
-    //     <StyledLink
-    //       css={css`
-    //         line-height: inherit;
-    //       `}
-    //       href="https://overture.bio/documentation/score/user-guide/download"
-    //       rel="noopener noreferrer"
-    //       target="_blank"
-    //     >
-    //       instructions
-    //     </StyledLink>
-    //     .
-    //   </span>
-    // ), },
-  ];
+            NEXT_PUBLIC_DOWNLOAD_ALL_URL && window.location.assign(NEXT_PUBLIC_DOWNLOAD_ALL_URL);
+          },
+          requiresRowSelection: false,
+        }
+      : [],
+  );
+
+  console.log('exporters', customExporters);
 
   return (
     <div css={getTableStyle(theme)}>
@@ -355,7 +338,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
         allowTSVExport={false}
         showFilterInput={false}
         columnDropdownText={'Columns'}
-        // exporter={customExporters}
+        exporter={customExporters}
         downloadUrl={urlJoin(NEXT_PUBLIC_ARRANGER_API, NEXT_PUBLIC_ARRANGER_PROJECT_ID, 'download')}
       />
     </div>
