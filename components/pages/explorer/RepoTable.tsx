@@ -269,10 +269,11 @@ const RepoTable = (props: PageContentProps): ReactElement => {
   const {
     NEXT_PUBLIC_ARRANGER_API,
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
+    NEXT_PUBLIC_DOWNLOAD_ALL_URL,
     NEXT_PUBLIC_MUSE_API,
   } = getConfig();
 
-  const [showContributorsModal, setShowContributorsModal] = useState(true);
+  const [showContributorsModal, setShowContributorsModal] = useState(false);
   const closeModal = () => {
     setShowContributorsModal(false);
   };
@@ -319,51 +320,36 @@ const RepoTable = (props: PageContentProps): ReactElement => {
       },
       requiresRowSelection: true,
     },
-    {
-      label: 'Download All',
-      function: () => {
-        logEvent({
-          category: 'Downloads',
-          action: 'Downloading All',
-        });
+  ].concat(
+    NEXT_PUBLIC_DOWNLOAD_ALL_URL
+      ? {
+          label: 'Download All',
+          function: () => {
+            logEvent({
+              category: 'Downloads',
+              action: `Downloading All${
+                NEXT_PUBLIC_DOWNLOAD_ALL_URL ? '' : ', bucket url unavailable'
+              }`,
+            });
 
-        window.location.assign(
-          'https://object.cancercollaboratory.org:9080/swift/v1/Download/data/virusseq_metadata_consensus_all_20210427.tgz',
-        );
+            NEXT_PUBLIC_DOWNLOAD_ALL_URL && window.location.assign(NEXT_PUBLIC_DOWNLOAD_ALL_URL);
 
-        setShowContributorsModal(true);
-      },
-    },
-    // { label: () => (
-    //   <span
-    //     css={css`
-    //       border-top: 1px solid #eee;
-    //       margin-top: -3px;
-    //       padding-top: 7px;
-    //       white-space: pre-line;
-    //       width: 140px;
-    //     `}
-    //   >
-    //     {`To download files using a file manifest, please follow these `}
-    //     <StyledLink
-    //       css={css`
-    //         line-height: inherit;
-    //       `}
-    //       href="https://overture.bio/documentation/score/user-guide/download"
-    //       rel="noopener noreferrer"
-    //       target="_blank"
-    //     >
-    //       instructions
-    //     </StyledLink>
-    //     .
-    //   </span>
-    // ), },
-  ];
+            setShowContributorsModal(true);
+          },
+          requiresRowSelection: false,
+        }
+      : [],
+  );
 
   const ContributorsModal = ({ show }: { show: boolean }) => {
     return show ? (
-      <Modal cancelText="Close" onCancelClick={closeModal} title={'Contributors'}>
-        <p>
+      <Modal cancelText="Close" onCloseClick={closeModal} title={'Contributors'}>
+        <p
+          css={css`
+            padding-right: 7px;
+            padding-left: 7px;
+          `}
+        >
           Your download has started. By downloading this data, you agree to acknowledge the
           contributors listed here [[URL]].
         </p>

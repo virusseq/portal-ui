@@ -36,9 +36,9 @@ const ModalContainer = styled.div`
   padding: 15px;
 `;
 
-type ModalHeaderProps = { title: string; onCancelClick: () => void };
+type ModalHeaderProps = { title: string; onCloseClick: () => void };
 
-const ModalHeader = ({ title, onCancelClick }: ModalHeaderProps) => {
+const ModalHeader = (props: ModalHeaderProps) => {
   const StyledTitle = styled('div')`
     margin-top: 10px;
     margin-left: 5px;
@@ -55,13 +55,13 @@ const ModalHeader = ({ title, onCancelClick }: ModalHeaderProps) => {
         margin-bottom: 10px;
       `}
     >
-      <StyledTitle>{title}</StyledTitle>
+      <StyledTitle>{props.title}</StyledTitle>
       <div
         css={css`
           font-size: 25px;
           cursor: pointer;
         `}
-        onClick={onCancelClick}
+        onClick={props.onCloseClick}
       >
         <DismissIcon height={15} width={15} fill={defaultTheme.colors.black} />
       </div>
@@ -75,22 +75,15 @@ const ModalBody = styled.div`
 `;
 
 type ModalFooterProps = {
-  showActionButton?: boolean;
-  disableActionButton?: boolean;
-  actionText?: string;
-  cancelText?: string;
-  onActionClick?: () => void;
-  onCancelClick?: () => void;
+  showActionButton: boolean;
+  disableActionButton: boolean;
+  actionText: string;
+  cancelText: string;
+  onActionClick: () => void;
+  onCloseClick: () => void;
 };
 
-const ModalFooter = ({
-  showActionButton = false,
-  disableActionButton = true,
-  actionText = 'Action',
-  cancelText = 'Cancel',
-  onActionClick = () => {},
-  onCancelClick = () => {},
-}: ModalFooterProps) => {
+const ModalFooter = (props: ModalFooterProps) => {
   return (
     <div
       css={css`
@@ -101,9 +94,9 @@ const ModalFooter = ({
         justify-content: flex-end;
       `}
     >
-      {showActionButton && (
-        <Button onClick={onActionClick} disabled={disableActionButton}>
-          {actionText}
+      {props.showActionButton && (
+        <Button onClick={props.onActionClick} disabled={props.disableActionButton}>
+          {props.actionText}
         </Button>
       )}
       <UnStyledButton
@@ -114,26 +107,42 @@ const ModalFooter = ({
           border: none;
           padding: 6px 15px;
         `}
-        onClick={onCancelClick}
+        onClick={props.onCloseClick}
       >
-        {cancelText}
+        {props.cancelText}
       </UnStyledButton>
     </div>
   );
 };
 
-type ModalProps = ModalHeaderProps & ModalFooterProps & { children: ReactNode | ReactNodeArray };
+type ModalProps = Partial<ModalHeaderProps> & Partial<ModalFooterProps> & { children: ReactNode };
 
-export const Modal = ({ children, title, onCancelClick, ...restFooterProps }: ModalProps) => {
+export const Modal = ({
+  children,
+  title = '',
+  showActionButton = false,
+  disableActionButton = true,
+  actionText = 'Action',
+  cancelText = 'Cancel',
+  onActionClick = () => {},
+  onCloseClick = () => {},
+}: ModalProps) => {
   const ref = modalPortalRef.current;
   const mounted = useMounted();
 
   const ModalContent = (
     <ModalOverlay>
       <ModalContainer>
-        <ModalHeader title={title} onCancelClick={onCancelClick} />
+        <ModalHeader title={title} onCloseClick={onCloseClick} />
         <ModalBody>{children}</ModalBody>
-        <ModalFooter onCancelClick={onCancelClick} {...restFooterProps} />
+        <ModalFooter
+          showActionButton={showActionButton}
+          disableActionButton={disableActionButton}
+          cancelText={cancelText}
+          actionText={actionText}
+          onCloseClick={onCloseClick}
+          onActionClick={onActionClick}
+        />
       </ModalContainer>
     </ModalOverlay>
   );
