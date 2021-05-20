@@ -78,7 +78,7 @@ type ModalFooterProps = {
   showActionButton: boolean;
   disableActionButton: boolean;
   actionText: string;
-  cancelText: string;
+  closeText: string;
   onActionClick: () => void;
   onCloseClick: () => void;
 };
@@ -109,7 +109,7 @@ const ModalFooter = (props: ModalFooterProps) => {
         `}
         onClick={props.onCloseClick}
       >
-        {props.cancelText}
+        {props.closeText}
       </UnStyledButton>
     </div>
   );
@@ -123,7 +123,7 @@ export const Modal = ({
   showActionButton = false,
   disableActionButton = true,
   actionText = 'Action',
-  cancelText = 'Cancel',
+  closeText = 'Close',
   onActionClick = () => {},
   onCloseClick = () => {},
 }: ModalProps) => {
@@ -138,7 +138,7 @@ export const Modal = ({
         <ModalFooter
           showActionButton={showActionButton}
           disableActionButton={disableActionButton}
-          cancelText={cancelText}
+          closeText={closeText}
           actionText={actionText}
           onCloseClick={onCloseClick}
           onActionClick={onActionClick}

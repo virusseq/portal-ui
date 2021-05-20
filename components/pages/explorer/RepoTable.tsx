@@ -343,7 +343,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
 
   const ContributorsModal = ({ show }: { show: boolean }) => {
     return show ? (
-      <Modal cancelText="Close" onCloseClick={closeModal} title={'Contributors'}>
+      <Modal onCloseClick={closeModal} title={'Contributors'}>
         <p
           css={css`
             padding-right: 7px;
