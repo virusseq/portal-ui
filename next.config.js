@@ -14,6 +14,7 @@ module.exports = withCSS({
     NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS: process.env.NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS || '',
     // using ASSET_PREFIX for the public runtime BASE_PATH because basePath in the top level config was not working
     // with the dms reverse proxy setup
+    NEXT_PUBLIC_DOWNLOAD_ALL_URL: process.env.NEXT_PUBLIC_DOWNLOAD_ALL_URL,
     NEXT_PUBLIC_BASE_PATH: process.env.ASSET_PREFIX || '/',
     NEXT_PUBLIC_ADMIN_EMAIL: process.env.NEXT_PUBLIC_ADMIN_EMAIL,
     NEXT_PUBLIC_LAB_NAME: process.env.NEXT_PUBLIC_LAB_NAME,
@@ -21,6 +22,7 @@ module.exports = withCSS({
     NEXT_PUBLIC_MUSE_API: process.env.NEXT_PUBLIC_MUSE_API_URL,
     NEXT_PUBLIC_SSO_PROVIDERS: process.env.NEXT_PUBLIC_SSO_PROVIDERS,
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID,
+    NEXT_PUBLIC_SYSTEM_ALERTS: process.env.NEXT_PUBLIC_SYSTEM_ALERTS,
   },
   assetPrefix: process.env.ASSET_PREFIX || '',
   redirects: async () => [

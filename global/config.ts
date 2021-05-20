@@ -37,6 +37,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_ARRANGER_API: publicConfig.NEXT_PUBLIC_ARRANGER_API || 'http://localhost:5050',
     NEXT_PUBLIC_ARRANGER_ADMIN_UI: publicConfig.NEXT_PUBLIC_ARRANGER_ADMIN_UI,
     NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS: publicConfig.NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS || '',
+    NEXT_PUBLIC_DOWNLOAD_ALL_URL: publicConfig.NEXT_PUBLIC_DOWNLOAD_ALL_URL || '',
     NEXT_PUBLIC_BASE_PATH: publicConfig.NEXT_PUBLIC_BASE_PATH || '',
     NEXT_PUBLIC_ADMIN_EMAIL: publicConfig.NEXT_PUBLIC_ADMIN_EMAIL,
     NEXT_PUBLIC_LAB_NAME: publicConfig.NEXT_PUBLIC_LAB_NAME || 'Data Management System',
@@ -44,6 +45,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_MUSE_API: publicConfig.NEXT_PUBLIC_MUSE_API || '',
     NEXT_PUBLIC_SSO_PROVIDERS: publicConfig.NEXT_PUBLIC_SSO_PROVIDERS || '',
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: publicConfig.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || '',
+    NEXT_PUBLIC_SYSTEM_ALERTS: publicConfig.NEXT_PUBLIC_SYSTEM_ALERTS || '[]',
   } as {
     NEXT_PUBLIC_EGO_API_ROOT: string;
     NEXT_PUBLIC_EGO_CLIENT_ID: string;
@@ -55,6 +57,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_ARRANGER_API: string;
     NEXT_PUBLIC_ARRANGER_ADMIN_UI: string;
     NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS: string;
+    NEXT_PUBLIC_DOWNLOAD_ALL_URL: string;
     NEXT_PUBLIC_BASE_PATH: string;
     NEXT_PUBLIC_ADMIN_EMAIL: string;
     NEXT_PUBLIC_LAB_NAME: string;
@@ -62,5 +65,6 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_MUSE_API: string;
     NEXT_PUBLIC_SSO_PROVIDERS: string;
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: string;
+    NEXT_PUBLIC_SYSTEM_ALERTS: string;
   };
 };
