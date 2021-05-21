@@ -28,7 +28,7 @@ import { Avatar, ChevronDown } from './theme/icons';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { UserWithId } from '../global/types';
 import { InternalLink as Link } from './Link';
-import { USER_PATH } from '../global/utils/constants';
+import { STUDIES_PATH, USER_PATH } from '../global/utils/constants';
 import useTrackingContext from '../global/hooks/useTrackingContext';
 
 const getDisplayName = (user?: UserWithId) => {
@@ -176,6 +176,11 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
             }
           `}
         >
+          <li>
+            <Link path={STUDIES_PATH}>
+              <StyledListLink>Mange Studies</StyledListLink>
+            </Link>
+          </li>
           <li>
             <Link path={USER_PATH}>
               <StyledListLink>Profile & Token</StyledListLink>
