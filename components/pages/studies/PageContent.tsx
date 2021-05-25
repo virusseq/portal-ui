@@ -1,73 +1,30 @@
 import { css } from '@emotion/react';
-import React from 'react';
+import styled from '@emotion/styled';
+import { create } from 'lodash';
+import { table } from 'node:console';
+import React, { useEffect, useState } from 'react';
 import { Column } from 'react-table';
+import useStudiesSvcData from '../../../global/hooks/useStudiesSvcData';
+import { CreateStudyBody } from '../../../global/hooks/useStudiesSvcData/types';
 import Button, { UnStyledButton } from '../../Button';
 import GenericTable from '../../GenericTable';
 import { Bin } from '../../theme/icons';
 import defaultTheme from '../../theme/index';
+import AddSubmitterModal from './modals/AddSubmittersModal';
+import CreateStudyModal from './modals/CreateStudyModal';
+import DeleteSubmitterModal from './modals/DeleteSubmitterModal';
 
-const dummyData = [
-  {
-    studyId: 'COVID-PR',
-    name: 'COVID-PR',
-    organization: '"Institute of PRs"',
-    description: '"Description for COVID-PR"',
-    users: [
-      {
-        name: 'submitter6@example.com',
-        email: 'submitter6@example.com',
-        status: 'APPROVED',
-      },
-    ],
-  },
-  {
-    studyId: 'TEST-CA',
-    name: 'TEST-CA',
-    organization: '"Institute of Tests"',
-    description: '"Description for TEST-CA"',
-    users: [
-      {
-        name: 'submitter2@example.com',
-        email: 'submitter2@example.com',
-        status: 'APPROVED',
-      },
-      {
-        name: 'submitter1@example.com',
-        email: 'submitter1@example.com',
-        status: 'APPROVED',
-      },
-      {
-        name: 'submitter3@example.com',
-        email: 'submitter3@example.com',
-        status: 'APPROVED',
-      },
-    ],
-  },
-  {
-    studyId: 'DASH-CA',
-    name: 'DASH-CA',
-    organization: '"Institute of Dashs"',
-    description: '"Description for DASH-CA"',
-    users: [
-      {
-        name: 'submitter5@example.com',
-        email: 'submitter5@example.com',
-        status: 'APPROVED',
-      },
-      {
-        name: 'submitter4@example.com',
-        email: 'submitter4@example.com',
-        status: 'APPROVED',
-      },
-    ],
-  },
-];
-
-const handleRemove = () => {
-  alert('NOT IMPLEMENTATION YET!');
+type Study = {
+  studyName: string;
+  studyId: string;
+  organization: string;
+  description: string;
+  emailAddresses: string[];
 };
 
-const columnData: Column<Record<string, unknown>>[] = [
+const columnData = (
+  deleteFuncGenerator: ({ email, studyId }: any) => () => void,
+): Column<Record<string, unknown>>[] => [
   {
     accessor: 'studyId',
     Header: 'Study ID',
@@ -77,7 +34,7 @@ const columnData: Column<Record<string, unknown>>[] = [
     Header: 'Organization',
   },
   {
-    accessor: 'name',
+    accessor: 'studyName',
     Header: 'Study Name',
   },
   {
@@ -85,18 +42,22 @@ const columnData: Column<Record<string, unknown>>[] = [
     Header: 'Description',
   },
   {
-    accessor: 'users',
+    accessor: (row) => {
+      const studyId = row.studyId;
+      return (row as Study).emailAddresses?.map((ea) => ({ studyId, email: ea }));
+    },
     Header: 'Data Submitters',
-    Cell: ({ value }: { value: any[] }) =>
-      value ? (
+    Cell: ({ value }: { value: DeleteRow[] }) => {
+      return Array.isArray(value) ? (
         <div
           css={css`
             margin-left: -10px;
             margin-right: -10px;
           `}
         >
-          {value.map(({ email }, i) => (
+          {value.map((v, i) => (
             <div
+              key={i}
               css={css`
                 display: flex;
                 justify-content: space-between;
@@ -112,11 +73,11 @@ const columnData: Column<Record<string, unknown>>[] = [
                   margin-left: 15px;
                 `}
               >
-                {email}
+                {v.email}
               </div>
 
               <UnStyledButton
-                onClick={handleRemove}
+                onClick={deleteFuncGenerator(v)}
                 css={css`
                   margin-top: 5px;
                   margin-bottom: 5px;
@@ -128,11 +89,66 @@ const columnData: Column<Record<string, unknown>>[] = [
             </div>
           ))}
         </div>
-      ) : null,
+      ) : null;
+    },
   },
 ];
 
+type DeleteRow = { studyId: string; email: string };
+const EMPTY_DELETE_ROW = { studyId: '', email: '' };
+
 const PageContent = () => {
+  const [showCreateStudyModal, setShowCreateStudyModal] = useState(false);
+  const [showAddSubmitterModal, setShowAddSubmitterModal] = useState(false);
+  const [submitterToDelete, setSubmitterToDelete] = useState<DeleteRow>({ ...EMPTY_DELETE_ROW });
+
+  const [tableData, setTableData] = useState<Study[]>([]);
+  const { fetchStudies, createStudy, addUser, deleteSubmitter } = useStudiesSvcData();
+
+  useEffect(() => {
+    fetchStudies().then(setTableData);
+  }, []);
+
+  const closeAllModals = () => {
+    setShowCreateStudyModal(false);
+    setShowAddSubmitterModal(false);
+    setSubmitterToDelete({ ...EMPTY_DELETE_ROW });
+  };
+
+  const onCreateSubmit = async (currentFormData: any) => {
+    const createResult = await createStudy(currentFormData);
+    setTableData(tableData.concat(createResult.study));
+    closeAllModals();
+  };
+
+  const onAddUserSubmit = async (currentFormData: any) => {
+    const addResult = await addUser(currentFormData);
+    const updatedTableData = tableData.map((td) => {
+      if (td.studyId === addResult.data.studyId) {
+        td.emailAddresses.push(...addResult.data.emailAddresses);
+      }
+      return td;
+    });
+    setTableData(updatedTableData);
+    closeAllModals();
+  };
+
+  const onRemoveSubmitter = async () => {
+    const removeResult = await deleteSubmitter(submitterToDelete);
+    const updatedTableData = tableData.map((td) => {
+      if (td.studyId === removeResult.data.studyId) {
+        td.emailAddresses = td.emailAddresses.filter((ea) => ea !== removeResult.data.email);
+      }
+      return td;
+    });
+    setTableData(updatedTableData);
+    closeAllModals();
+  };
+
+  const tableDeleteButtonFunc = (dr: DeleteRow) => () => {
+    setSubmitterToDelete(dr);
+  };
+
   return (
     <div
       css={css`
@@ -141,6 +157,22 @@ const PageContent = () => {
         flex-direction: column;
       `}
     >
+      <CreateStudyModal
+        showModal={showCreateStudyModal}
+        onClose={closeAllModals}
+        onSubmit={onCreateSubmit}
+      />
+      <AddSubmitterModal
+        showModal={showAddSubmitterModal}
+        onClose={closeAllModals}
+        onSubmit={onAddUserSubmit}
+      />
+      <DeleteSubmitterModal
+        email={submitterToDelete.email}
+        studyId={submitterToDelete.email}
+        onClose={closeAllModals}
+        onSubmit={onRemoveSubmitter}
+      />
       <div
         css={css`
           display: flex;
@@ -166,13 +198,14 @@ const PageContent = () => {
             css={css`
               margin-right: 20px;
             `}
+            onClick={() => setShowCreateStudyModal(true)}
           >
             Create a Study
           </Button>
-          <Button>Add Data Submitters</Button>
+          <Button onClick={() => setShowAddSubmitterModal(true)}>Add Data Submitters</Button>
         </div>
       </div>
-      <GenericTable columns={columnData} data={dummyData} />
+      <GenericTable columns={columnData(tableDeleteButtonFunc)} data={tableData} />
     </div>
   );
 };

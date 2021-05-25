@@ -46,6 +46,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_SSO_PROVIDERS: publicConfig.NEXT_PUBLIC_SSO_PROVIDERS || '',
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: publicConfig.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || '',
     NEXT_PUBLIC_SYSTEM_ALERTS: publicConfig.NEXT_PUBLIC_SYSTEM_ALERTS || '[]',
+    NEXT_PUBLIC_STUDIES_SVC_URL: publicConfig.NEXT_PUBLIC_STUDIES_SVC_URL || '',
   } as {
     NEXT_PUBLIC_EGO_API_ROOT: string;
     NEXT_PUBLIC_EGO_CLIENT_ID: string;
@@ -66,5 +67,6 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_SSO_PROVIDERS: string;
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: string;
     NEXT_PUBLIC_SYSTEM_ALERTS: string;
+    NEXT_PUBLIC_STUDIES_SVC_URL: string;
   };
 };
