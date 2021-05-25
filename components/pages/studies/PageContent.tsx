@@ -13,6 +13,8 @@ import defaultTheme from '../../theme/index';
 import AddSubmitterModal from './modals/AddSubmittersModal';
 import CreateStudyModal from './modals/CreateStudyModal';
 import DeleteSubmitterModal from './modals/DeleteSubmitterModal';
+import DismissIcon from '../../theme/icons/dismiss';
+import NotifactionDiv from './Notification';
 
 type Study = {
   studyName: string;
@@ -97,16 +99,31 @@ const columnData = (
 type DeleteRow = { studyId: string; email: string };
 const EMPTY_DELETE_ROW = { studyId: '', email: '' };
 
+type Notification = {
+  success: boolean;
+  title: string;
+  message: string;
+};
+
+const DUMMY_NOTI = {
+  success: false,
+  title: 'BIG BAD TITLE',
+  message: 'LITTLE GOOD MESSAGE',
+};
+
 const PageContent = () => {
   const [showCreateStudyModal, setShowCreateStudyModal] = useState(false);
   const [showAddSubmitterModal, setShowAddSubmitterModal] = useState(false);
   const [submitterToDelete, setSubmitterToDelete] = useState<DeleteRow>({ ...EMPTY_DELETE_ROW });
 
+  const [notification, setNotification] = useState<Notification | null>(DUMMY_NOTI);
+
   const [tableData, setTableData] = useState<Study[]>([]);
   const { fetchStudies, createStudy, addUser, deleteSubmitter } = useStudiesSvcData();
 
   useEffect(() => {
-    fetchStudies().then(setTableData);
+    // fetchStudies().then(setTableData);
+    setTableData([]);
   }, []);
 
   const closeAllModals = () => {
@@ -135,18 +152,29 @@ const PageContent = () => {
 
   const onRemoveSubmitter = async () => {
     const removeResult = await deleteSubmitter(submitterToDelete);
-    const updatedTableData = tableData.map((td) => {
-      if (td.studyId === removeResult.data.studyId) {
-        td.emailAddresses = td.emailAddresses.filter((ea) => ea !== removeResult.data.email);
-      }
-      return td;
+    setNotification({
+      success: removeResult.success,
+      message: removeResult.message,
+      title: 'I NEED TO COME FROM SOME WHERE',
     });
-    setTableData(updatedTableData);
+    if (removeResult.success) {
+      const updatedTableData = tableData.map((td) => {
+        if (td.studyId === removeResult.data.studyId) {
+          td.emailAddresses = td.emailAddresses.filter((ea) => ea !== removeResult.data.email);
+        }
+        return td;
+      });
+      setTableData(updatedTableData);
+    }
     closeAllModals();
   };
 
   const tableDeleteButtonFunc = (dr: DeleteRow) => () => {
     setSubmitterToDelete(dr);
+  };
+
+  const onNotifiactionDismiss = () => {
+    setNotification(null);
   };
 
   return (
@@ -173,6 +201,7 @@ const PageContent = () => {
         onClose={closeAllModals}
         onSubmit={onRemoveSubmitter}
       />
+      <NotifactionDiv notification={notification} onDismiss={onNotifiactionDismiss} />
       <div
         css={css`
           display: flex;
