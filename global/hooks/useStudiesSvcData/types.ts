@@ -36,16 +36,16 @@ export type Study = {
 export type CreateStudyBody = {
   studyId: string;
   organization: string;
-  studyName: string;
+  name: string;
   description: string;
 };
 
 export type AddUserBody = {
   studyId: string;
-  emailAddresses: string[];
+  submitters: string[];
 };
 
 export type DeleteUserBody = {
   studyId: string;
-  email: string;
+  submitter: string;
 };

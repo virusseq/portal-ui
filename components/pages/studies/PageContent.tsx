@@ -1,11 +1,7 @@
 import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import { create } from 'lodash';
-import { table } from 'node:console';
 import React, { useEffect, useState } from 'react';
 import { Column } from 'react-table';
 import useStudiesSvcData from '../../../global/hooks/useStudiesSvcData';
-import { CreateStudyBody } from '../../../global/hooks/useStudiesSvcData/types';
 import Button, { UnStyledButton } from '../../Button';
 import GenericTable from '../../GenericTable';
 import { Bin } from '../../theme/icons';
@@ -13,15 +9,14 @@ import defaultTheme from '../../theme/index';
 import AddSubmitterModal from './modals/AddSubmittersModal';
 import CreateStudyModal from './modals/CreateStudyModal';
 import DeleteSubmitterModal from './modals/DeleteSubmitterModal';
-import DismissIcon from '../../theme/icons/dismiss';
 import NotifactionDiv from './Notification';
 
 type Study = {
-  studyName: string;
+  name: string;
   studyId: string;
   organization: string;
   description: string;
-  emailAddresses: string[];
+  submitters: string[];
 };
 
 const columnData = (
@@ -36,7 +31,7 @@ const columnData = (
     Header: 'Organization',
   },
   {
-    accessor: 'studyName',
+    accessor: 'name',
     Header: 'Study Name',
   },
   {
@@ -46,7 +41,7 @@ const columnData = (
   {
     accessor: (row) => {
       const studyId = row.studyId;
-      return (row as Study).emailAddresses?.map((ea) => ({ studyId, email: ea }));
+      return (row as Study).submitters?.map((s) => ({ studyId, submitter: s }));
     },
     Header: 'Data Submitters',
     Cell: ({ value }: { value: DeleteRow[] }) => {
@@ -75,7 +70,7 @@ const columnData = (
                   margin-left: 15px;
                 `}
               >
-                {v.email}
+                {v.submitter}
               </div>
 
               <UnStyledButton
@@ -96,8 +91,8 @@ const columnData = (
   },
 ];
 
-type DeleteRow = { studyId: string; email: string };
-const EMPTY_DELETE_ROW = { studyId: '', email: '' };
+type DeleteRow = { studyId: string; submitter: string };
+const EMPTY_DELETE_ROW = { studyId: '', submitter: '' };
 
 type Notification = {
   success: boolean;
@@ -105,25 +100,22 @@ type Notification = {
   message: string;
 };
 
-const DUMMY_NOTI = {
-  success: false,
-  title: 'BIG BAD TITLE',
-  message: 'LITTLE GOOD MESSAGE',
-};
-
 const PageContent = () => {
   const [showCreateStudyModal, setShowCreateStudyModal] = useState(false);
   const [showAddSubmitterModal, setShowAddSubmitterModal] = useState(false);
   const [submitterToDelete, setSubmitterToDelete] = useState<DeleteRow>({ ...EMPTY_DELETE_ROW });
 
-  const [notification, setNotification] = useState<Notification | null>(DUMMY_NOTI);
+  const [notification, setNotification] = useState<Notification | null>(null);
 
   const [tableData, setTableData] = useState<Study[]>([]);
   const { fetchStudies, createStudy, addUser, deleteSubmitter } = useStudiesSvcData();
 
+  const updateTable = () => {
+    fetchStudies().then(setTableData);
+  };
+
   useEffect(() => {
-    // fetchStudies().then(setTableData);
-    setTableData([]);
+    updateTable();
   }, []);
 
   const closeAllModals = () => {
@@ -134,19 +126,23 @@ const PageContent = () => {
 
   const onCreateSubmit = async (currentFormData: any) => {
     const createResult = await createStudy(currentFormData);
-    setTableData(tableData.concat(createResult.study));
+    setNotification({
+      success: createResult.success,
+      message: createResult.message,
+      title: 'I NEED TO COME FROM SOME WHERE',
+    });
+    updateTable();
     closeAllModals();
   };
 
   const onAddUserSubmit = async (currentFormData: any) => {
     const addResult = await addUser(currentFormData);
-    const updatedTableData = tableData.map((td) => {
-      if (td.studyId === addResult.data.studyId) {
-        td.emailAddresses.push(...addResult.data.emailAddresses);
-      }
-      return td;
+    setNotification({
+      success: addResult.success,
+      message: addResult.message,
+      title: 'I NEED TO COME FROM SOME WHERE',
     });
-    setTableData(updatedTableData);
+    updateTable();
     closeAllModals();
   };
 
@@ -157,15 +153,7 @@ const PageContent = () => {
       message: removeResult.message,
       title: 'I NEED TO COME FROM SOME WHERE',
     });
-    if (removeResult.success) {
-      const updatedTableData = tableData.map((td) => {
-        if (td.studyId === removeResult.data.studyId) {
-          td.emailAddresses = td.emailAddresses.filter((ea) => ea !== removeResult.data.email);
-        }
-        return td;
-      });
-      setTableData(updatedTableData);
-    }
+    updateTable();
     closeAllModals();
   };
 
@@ -196,8 +184,8 @@ const PageContent = () => {
         onSubmit={onAddUserSubmit}
       />
       <DeleteSubmitterModal
-        email={submitterToDelete.email}
-        studyId={submitterToDelete.email}
+        email={submitterToDelete.submitter}
+        studyId={submitterToDelete.studyId}
         onClose={closeAllModals}
         onSubmit={onRemoveSubmitter}
       />

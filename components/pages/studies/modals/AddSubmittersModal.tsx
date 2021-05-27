@@ -14,10 +14,10 @@ const FormRow = styled('div')`
 
 type FormData = {
   studyId: string;
-  emailAddresses: string[];
+  submitters: string[];
 };
 
-const EMPTY_FORM: FormData = Object.freeze({ studyId: '', emailAddresses: [''] });
+const EMPTY_FORM: FormData = Object.freeze({ studyId: '', submitters: [''] });
 
 type AddSubmitterModalProps = {
   showModal: boolean;
@@ -41,20 +41,20 @@ const AddSubmitterModal = ({ showModal, onClose, onSubmit }: AddSubmitterModalPr
     const updatedFormData = { ...formData };
     const target = event.target as InputHTMLAttributes<typeof event>;
     const updatedValue = target.value?.toString() || '';
-    updatedFormData.emailAddresses[index] = updatedValue;
+    updatedFormData.submitters[index] = updatedValue;
     setFormData(updatedFormData);
   };
 
   const addEmailInput = () => {
     const updatedFormData = { ...formData };
-    updatedFormData.emailAddresses.push('');
+    updatedFormData.submitters.push('');
     setFormData(updatedFormData);
   };
 
   const handleSubmit = () => {
     console.log('Submitting to svc');
     onSubmit(formData);
-    setFormData({ studyId: '', emailAddresses: [''] });
+    setFormData({ studyId: '', submitters: [''] });
   };
 
   return showModal ? (
@@ -88,7 +88,7 @@ const AddSubmitterModal = ({ showModal, onClose, onSubmit }: AddSubmitterModalPr
           address must already be registered in the VirusSeq Data Portal before you can add them.
         </FormRow>
         <FormRow>Email Address</FormRow>
-        {formData.emailAddresses.map((ea, i) => {
+        {formData.submitters.map((ea, i) => {
           return (
             <input type="text" size={20} value={ea} onChange={updateEmailAddresses(i)}></input>
           );

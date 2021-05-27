@@ -7,6 +7,7 @@ import { AddUserBody, CreateStudyBody, DeleteUserBody, Study } from './types';
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
+  Authorization: 'Bearer JWT',
 };
 
 const useStudiesSvcData = () => {
@@ -16,7 +17,7 @@ const useStudiesSvcData = () => {
 
   const fetchStudies = () => {
     setAwaitingResponse(true);
-    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), { method: 'GET' }).then(
+    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), { method: 'GET', headers }).then(
       (res) => {
         setAwaitingResponse(false);
         return res.json();
@@ -26,7 +27,7 @@ const useStudiesSvcData = () => {
 
   const createStudy = (createStudyBody: CreateStudyBody) => {
     setAwaitingResponse(true);
-    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/study'), {
+    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), {
       method: 'POST',
       headers,
       body: JSON.stringify(createStudyBody),
@@ -38,7 +39,7 @@ const useStudiesSvcData = () => {
 
   const addUser = (addUserBody: AddUserBody) => {
     setAwaitingResponse(true);
-    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/users'), {
+    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies/submitters'), {
       method: 'POST',
       headers,
       body: JSON.stringify(addUserBody),
@@ -50,10 +51,13 @@ const useStudiesSvcData = () => {
 
   const deleteSubmitter = (dub: DeleteUserBody) => {
     setAwaitingResponse(true);
-    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/users'), {
+    const url = urlJoin(
+      NEXT_PUBLIC_STUDIES_SVC_URL,
+      `/studies/submitters?studyId=${dub.studyId}&submitter=${dub.submitter}`,
+    );
+    return fetch(url, {
       method: 'DELETE',
       headers,
-      body: JSON.stringify(dub),
     }).then((res) => {
       setAwaitingResponse(false);
       return res.json();

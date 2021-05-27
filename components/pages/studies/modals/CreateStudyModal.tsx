@@ -7,14 +7,14 @@ import { Modal } from '../../../Modal';
 type FormData = {
   studyId: string;
   organization: string;
-  studyName: string;
+  name: string;
   description: string;
 };
 
 const EMPTY_FORM = Object.freeze({
   studyId: '',
   organization: '',
-  studyName: '',
+  name: '',
   description: '',
 });
 
@@ -87,8 +87,8 @@ const CreateStudyModal = ({ showModal, onClose, onSubmit }: any) => {
             type="text"
             key="studyName"
             size={40}
-            onChange={handleInputChange('studyName')}
-            value={formData.studyName}
+            onChange={handleInputChange('name')}
+            value={formData.name}
           ></input>
         </FormRow>
         <FormRow>
