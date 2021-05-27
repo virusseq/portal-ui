@@ -19,7 +19,7 @@
  *
  */
 
-import { FunctionComponent, ReactElement } from 'react';
+import { FunctionComponent, ReactElement, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
@@ -28,6 +28,7 @@ import { getConfig } from '../../../global/config';
 import useTrackingContext from '../../../global/hooks/useTrackingContext';
 import defaultTheme from '../../theme';
 import { PageContentProps } from './index';
+import { Modal } from '../../Modal';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -272,6 +273,11 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     NEXT_PUBLIC_MUSE_API,
   } = getConfig();
 
+  const [showContributorsModal, setShowContributorsModal] = useState(false);
+  const closeModal = () => {
+    setShowContributorsModal(false);
+  };
+
   const objectIdsStr = props.selectedTableRows.join(',');
 
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -293,6 +299,8 @@ const RepoTable = (props: PageContentProps): ReactElement => {
         window.location.assign(
           urlJoin(NEXT_PUBLIC_MUSE_API, `/download?objectIds=${objectIdsStr}`),
         );
+
+        setShowContributorsModal(true);
       },
       requiresRowSelection: true,
     },
@@ -307,6 +315,8 @@ const RepoTable = (props: PageContentProps): ReactElement => {
         window.location.assign(
           urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`),
         );
+
+        setShowContributorsModal(true);
       },
       requiresRowSelection: true,
     },
@@ -323,24 +333,48 @@ const RepoTable = (props: PageContentProps): ReactElement => {
             });
 
             NEXT_PUBLIC_DOWNLOAD_ALL_URL && window.location.assign(NEXT_PUBLIC_DOWNLOAD_ALL_URL);
+
+            setShowContributorsModal(true);
           },
           requiresRowSelection: false,
         }
       : [],
   );
 
-  console.log('exporters', customExporters);
+  const ContributorsModal = ({ show }: { show: boolean }) => {
+    return show ? (
+      <Modal onCloseClick={closeModal} title={'Contributors'}>
+        <p
+          css={css`
+            padding-right: 7px;
+            padding-left: 7px;
+          `}
+        >
+          Your download has started. By downloading this data, you agree to acknowledge the
+          contributors listed here [[URL]].
+        </p>
+      </Modal>
+    ) : null;
+  };
 
   return (
-    <div css={getTableStyle(theme)}>
-      <Table
-        {...props}
-        allowTSVExport={false}
-        showFilterInput={false}
-        columnDropdownText={'Columns'}
-        exporter={customExporters}
-        downloadUrl={urlJoin(NEXT_PUBLIC_ARRANGER_API, NEXT_PUBLIC_ARRANGER_PROJECT_ID, 'download')}
-      />
+    <div>
+      <div css={getTableStyle(theme)}>
+        <Table
+          {...props}
+          allowTSVExport={false}
+          showFilterInput={false}
+          columnDropdownText={'Columns'}
+          exporter={customExporters}
+          downloadUrl={urlJoin(
+            NEXT_PUBLIC_ARRANGER_API,
+            NEXT_PUBLIC_ARRANGER_PROJECT_ID,
+            'download',
+          )}
+        />
+      </div>
+
+      <ContributorsModal show={showContributorsModal} />
     </div>
   );
 };
