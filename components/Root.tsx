@@ -19,7 +19,7 @@
  *
  */
 
-import { ReactElement } from 'react';
+import { createRef, ReactElement } from 'react';
 import { ThemeProvider } from '@emotion/react';
 
 import { AuthProvider } from '../global/hooks/useAuthContext';
@@ -35,6 +35,11 @@ import React from 'react';
  * portal ref where modals will show up
  */
 export const modalPortalRef = React.createRef<HTMLDivElement>();
+
+/**
+ * portal ref where modals will show up
+ */
+export const modalPortalRef = createRef<HTMLDivElement>();
 
 const Root = ({
   children,
