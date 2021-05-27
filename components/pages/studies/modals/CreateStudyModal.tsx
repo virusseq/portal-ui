@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { ChangeEventHandler, InputHTMLAttributes, useState } from 'react';
-import useStudiesSvcData from '../../../../global/hooks/useStudiesSvcData';
 import { Modal } from '../../../Modal';
 
 type FormData = {

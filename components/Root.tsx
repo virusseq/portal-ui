@@ -29,7 +29,6 @@ import { ClientSideGetInitialPropsContext } from '../global/utils/pages/types';
 import Head from './Head';
 import defaultTheme from './theme';
 import SystemAlerts from './SystemAlerts';
-import React from 'react';
 
 /**
  * portal ref where modals will show up

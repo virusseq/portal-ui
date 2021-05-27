@@ -1,16 +1,96 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { ChangeEventHandler, InputHTMLAttributes, useState } from 'react';
-import Button from '../../../Button';
+import React, { ChangeEventHandler, InputHTMLAttributes, useState } from 'react';
+import Button, { UnStyledButton } from '../../../Button';
 import { Modal } from '../../../Modal';
+import { Bin, PlusIcon } from '../../../theme/icons';
+import defaultTheme from '../../../theme/index';
 
-const FormRow = styled('div')`
+const FormText = styled('div')`
       display: flex; 
       width 100%;
       justify-content: space-between;
-      margin-left: 20px;
-      margin-right: 20px;
+      font-size: 16px;
+      line-height: 24px;
+      ${defaultTheme.typography.baseFont}
       `;
+
+const BoldText = styled('div')`
+  ${defaultTheme.typography.baseFont}
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: bold;
+`;
+
+const AddButton = ({ onClick }: any) => {
+  return (
+    <UnStyledButton
+      css={css`
+        color: ${defaultTheme.colors.primary};
+        background-color: ${defaultTheme.colors.white};
+        font-size: 14px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        border-radius: 5px;
+        border: 1px solid ${defaultTheme?.colors.primary};
+        padding: 6px 15px;
+      `}
+      onClick={onClick}
+    >
+      <PlusIcon
+        style={css`
+          margin-right: 5px;
+        `}
+      />
+      Add Another
+    </UnStyledButton>
+  );
+};
+
+const FormTextInput = ({
+  label,
+  onChange,
+  value,
+  showBinButton,
+  offsetForNoBin,
+  onBinClick,
+  size = 40,
+}: any) => {
+  return (
+    <FormText>
+      <BoldText>{label}</BoldText>
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+        `}
+      >
+        <input
+          type="text"
+          size={size}
+          onChange={onChange}
+          value={value}
+          css={css`
+            margin-right: ${offsetForNoBin ? '28px' : '0px'};
+          `}
+        />
+        {showBinButton && (
+          <div
+            onClick={onBinClick}
+            css={css`
+              pad-top: 10px;
+              margin-left: 10px;
+              cursor: pointer;
+            `}
+          >
+            <Bin />
+          </div>
+        )}
+      </div>
+    </FormText>
+  );
+};
 
 type FormData = {
   studyId: string;
@@ -76,24 +156,33 @@ const AddSubmitterModal = ({ showModal, onClose, onSubmit }: AddSubmitterModalPr
           width: 675px;
           height: 400px;
           justify-content: space-evenly;
+          margin-left: 30px;
+          margin-right: 30px;
         `}
       >
-        <FormRow>Which study would you like to add data submitter(s) to?</FormRow>
-        <FormRow>
-          Study ID
-          <input type="text" size={40} onChange={updateStudyId} value={formData.studyId}></input>
-        </FormRow>
-        <FormRow>
+        <FormText>Which study would you like to add data submitter(s) to?</FormText>
+        <FormTextInput
+          label="Study ID"
+          onChange={updateStudyId}
+          value={formData.studyId}
+          size={43}
+        />
+        <FormText>
           What email addresses would you like to add for the data submitter(s)? Note: the email
           address must already be registered in the VirusSeq Data Portal before you can add them.
-        </FormRow>
-        <FormRow>Email Address</FormRow>
+        </FormText>
         {formData.submitters.map((ea, i) => {
           return (
-            <input type="text" size={20} value={ea} onChange={updateEmailAddresses(i)}></input>
+            <FormTextInput
+              label="Email Address"
+              value={ea}
+              onChange={updateEmailAddresses(i)}
+              showBinButton={i !== 0}
+              offsetForNoBin={i === 0}
+            />
           );
         })}
-        <Button onClick={addEmailInput}>Add Another</Button>
+        <AddButton onClick={addEmailInput} />
       </div>
     </Modal>
   ) : null;

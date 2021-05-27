@@ -17,12 +17,14 @@ const useStudiesSvcData = () => {
 
   const fetchStudies = () => {
     setAwaitingResponse(true);
-    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), { method: 'GET', headers }).then(
-      (res) => {
+    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), { method: 'GET', headers })
+      .then((res) => {
         setAwaitingResponse(false);
         return res.json();
-      },
-    );
+      })
+      .catch((err) => {
+        return [];
+      });
   };
 
   const createStudy = (createStudyBody: CreateStudyBody) => {
