@@ -71,7 +71,8 @@ const ModalHeader = (props: ModalHeaderProps) => {
 
 const ModalBody = styled.div`
   display: flex;
-  margin-bottom: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
 `;
 
 type ModalFooterProps = {
@@ -87,6 +88,7 @@ const ModalFooter = (props: ModalFooterProps) => {
   return (
     <div
       css={css`
+        margin-top: 15px;
         padding: 8px 0px;
         border-top: solid 1px ${defaultTheme.colors.grey_4};
         display: flex;

@@ -152,8 +152,8 @@ const Usage = (): ReactElement => (
     <h2>Contact us</h2>
 
     <p>
-      Your privacy and concerns are important to use. We welcome you to contact us with your
-      comments, questions, complaints, and or suggestions about or policy or a privacy-related
+      Your privacy and concerns are important to us. We welcome you to contact us with your
+      comments, questions, complaints, and or suggestions about our policy or a privacy-related
       issue. Please contact us at{' '}
       <StyledLink
         href="mailto:info@virusseq-dataportal.ca"

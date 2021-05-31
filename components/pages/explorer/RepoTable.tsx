@@ -19,7 +19,7 @@
  *
  */
 
-import { FunctionComponent, ReactElement, useState } from 'react';
+import React, { FunctionComponent, ReactElement, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
@@ -28,7 +28,7 @@ import { getConfig } from '../../../global/config';
 import useTrackingContext from '../../../global/hooks/useTrackingContext';
 import defaultTheme from '../../theme';
 import { PageContentProps } from './index';
-import { Modal } from '../../Modal';
+import DownloadInfoModal from './DownloadInfoModal';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -273,10 +273,8 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     NEXT_PUBLIC_MUSE_API,
   } = getConfig();
 
-  const [showContributorsModal, setShowContributorsModal] = useState(false);
-  const closeModal = () => {
-    setShowContributorsModal(false);
-  };
+  const [showDownloadInfoModal, setShowDownloadInfoModal] = useState(false);
+  const closeModal = () => setShowDownloadInfoModal(false);
 
   const objectIdsStr = props.selectedTableRows.join(',');
 
@@ -300,7 +298,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
           urlJoin(NEXT_PUBLIC_MUSE_API, `/download?objectIds=${objectIdsStr}`),
         );
 
-        setShowContributorsModal(true);
+        setShowDownloadInfoModal(true);
       },
       requiresRowSelection: true,
     },
@@ -316,7 +314,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
           urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`),
         );
 
-        setShowContributorsModal(true);
+        setShowDownloadInfoModal(true);
       },
       requiresRowSelection: true,
     },
@@ -334,28 +332,12 @@ const RepoTable = (props: PageContentProps): ReactElement => {
 
             NEXT_PUBLIC_DOWNLOAD_ALL_URL && window.location.assign(NEXT_PUBLIC_DOWNLOAD_ALL_URL);
 
-            setShowContributorsModal(true);
+            setShowDownloadInfoModal(true);
           },
           requiresRowSelection: false,
         }
       : [],
   );
-
-  const ContributorsModal = ({ show }: { show: boolean }) => {
-    return show ? (
-      <Modal onCloseClick={closeModal} title={'Contributors'}>
-        <p
-          css={css`
-            padding-right: 7px;
-            padding-left: 7px;
-          `}
-        >
-          Your download has started. By downloading this data, you agree to acknowledge the
-          contributors listed here [[URL]].
-        </p>
-      </Modal>
-    ) : null;
-  };
 
   return (
     <div>
@@ -374,7 +356,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
         />
       </div>
 
-      <ContributorsModal show={showContributorsModal} />
+      {showDownloadInfoModal && <DownloadInfoModal onClose={closeModal} />}
     </div>
   );
 };
