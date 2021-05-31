@@ -6,7 +6,7 @@ import defaultTheme from '../../theme/index';
 import AddSubmitterModal from './modals/AddSubmittersModal';
 import CreateStudyModal from './modals/CreateStudyModal';
 import DeleteSubmitterModal from './modals/DeleteSubmitterModal';
-import NotifactionDiv from './Notification';
+import usingNotification from './usingNotification';
 import StudiesTable from './StudiesTable';
 import { DeleteRow, Study } from './types';
 
@@ -23,7 +23,7 @@ const PageContent = () => {
   const [showAddSubmitterModal, setShowAddSubmitterModal] = useState(false);
   const [submitterToDelete, setSubmitterToDelete] = useState<DeleteRow>({ ...EMPTY_DELETE_ROW });
 
-  const [notification, setNotification] = useState<Notification | null>(null);
+  const { addNotification, NotificationsDiv } = usingNotification();
 
   const [tableData, setTableData] = useState<Study[]>([]);
   const { fetchStudies, createStudy, addUser, deleteSubmitter } = useStudiesSvcData();
@@ -42,34 +42,31 @@ const PageContent = () => {
     setSubmitterToDelete({ ...EMPTY_DELETE_ROW });
   };
 
-  const onCreateSubmit = async (currentFormData: any) => {
+  const submitCreateStudy = async (currentFormData: any) => {
     const createResult = await createStudy(currentFormData);
-    setNotification({
+    addNotification({
       success: createResult.success,
       message: createResult.message,
-      title: 'I NEED TO COME FROM SOME WHERE',
     });
     updateTable();
     closeAllModals();
   };
 
-  const onAddUserSubmit = async (currentFormData: any) => {
+  const submitAddUser = async (currentFormData: any) => {
     const addResult = await addUser(currentFormData);
-    setNotification({
+    addNotification({
       success: addResult.success,
       message: addResult.message,
-      title: 'I NEED TO COME FROM SOME WHERE',
     });
     updateTable();
     closeAllModals();
   };
 
-  const onRemoveSubmitter = async () => {
+  const submitRemoveSubmitter = async () => {
     const removeResult = await deleteSubmitter(submitterToDelete);
-    setNotification({
+    addNotification({
       success: removeResult.success,
       message: removeResult.message,
-      title: 'I NEED TO COME FROM SOME WHERE',
     });
     updateTable();
     closeAllModals();
@@ -77,10 +74,6 @@ const PageContent = () => {
 
   const tableDeleteButtonFunc = (dr: DeleteRow) => () => {
     setSubmitterToDelete(dr);
-  };
-
-  const onNotifiactionDismiss = () => {
-    setNotification(null);
   };
 
   return (
@@ -94,20 +87,20 @@ const PageContent = () => {
       <CreateStudyModal
         showModal={showCreateStudyModal}
         onClose={closeAllModals}
-        onSubmit={onCreateSubmit}
+        submitData={submitCreateStudy}
       />
       <AddSubmitterModal
         showModal={showAddSubmitterModal}
         onClose={closeAllModals}
-        onSubmit={onAddUserSubmit}
+        submitData={submitAddUser}
       />
       <DeleteSubmitterModal
         email={submitterToDelete.submitter}
         studyId={submitterToDelete.studyId}
         onClose={closeAllModals}
-        onSubmit={onRemoveSubmitter}
+        onSubmit={submitRemoveSubmitter}
       />
-      <NotifactionDiv notification={notification} onDismiss={onNotifiactionDismiss} />
+      {NotificationsDiv}
       <div
         css={css`
           display: flex;
