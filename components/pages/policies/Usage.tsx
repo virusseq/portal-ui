@@ -32,13 +32,13 @@ const Usage = (): ReactElement => (
     <p>
       The Canadian VirusSeq Data Portal (CVDP, also referred to as "the Portal") is an open-access
       data portal intended to facilitate access to Canadian SARS-CoV-2 sequences and associated
-      non-sensitive metadata adhering to the FAIR Data Principles{' '}
+      non-sensitive metadata adhering to the{' '}
       <StyledLink
         href="https://www.go-fair.org/fair-principles/"
         rel="noopener noreferrer"
         target="_blank"
       >
-        FAIR data principles
+        FAIR Data principles
       </StyledLink>
       . The Portal will manage and share limited contextual metadata and viral genome sequences
       among Canadian public health labs, researchers and other groups interested in accessing the
