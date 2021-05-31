@@ -52,7 +52,7 @@ const Usage = (): ReactElement => (
       collection, storage, and processing of any user data.
     </p>
 
-    <h2>Sensitive or Identifiable Data</h2>
+    <h2>Sensitive and or Identifiable Data</h2>
 
     <p>
       Submitters are responsible for not submitting any sensitive or personal information to the
