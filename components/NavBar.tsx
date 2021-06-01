@@ -149,7 +149,7 @@ const NavBar = (): ReactElement => {
               About VirusSeq Data Portal
             </a>
           </Link>
-          <Link disabled={DISABLE_EXPLORER} path={EXPLORER_PATH}>
+          <Link path={EXPLORER_PATH}>
             <a css={DISABLE_EXPLORER ? exploreDataLinkDisabledCss : exploreDataLinkEnabledCss}>
               Explore VirusSeq Data
             </a>
