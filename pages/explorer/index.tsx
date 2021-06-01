@@ -21,6 +21,8 @@
 
 import React from 'react';
 import Explorer from '../../components/pages/explorer';
+import Error404 from '../../components/pages/404';
+import { DISABLE_EXPLORER } from '../../global/config';
 import { createPage } from '../../global/utils/pages';
 
 const ExplorerPage = createPage({
@@ -29,7 +31,7 @@ const ExplorerPage = createPage({
   },
   isPublic: true,
 })(() => {
-  return <Explorer />;
+  return DISABLE_EXPLORER ? <Error404 /> : <Explorer />;
 });
 
 export default ExplorerPage;

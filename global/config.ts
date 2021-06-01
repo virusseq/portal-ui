@@ -21,6 +21,9 @@
 
 import getNextConfig from 'next/config';
 
+export const DISABLE_EXPLORER = true;
+export const DISABLE_SUBMISSION = true;
+
 export const getConfig = (): Record<string, string> => {
   const publicConfig: { [k: string]: string } = getNextConfig()?.publicRuntimeConfig || {};
 

@@ -27,6 +27,7 @@ import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icon
 
 import useAuthContext from '../global/hooks/useAuthContext';
 import StyledLink, { InternalLink } from './Link';
+import { DISABLE_SUBMISSION } from '../global/config';
 
 const Footer = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
@@ -117,7 +118,7 @@ const Footer = (): ReactElement => {
             </StyledLink>
           </li>
 
-          {!token && (
+          {!token && !DISABLE_SUBMISSION && (
             <li>
               <InternalLink path="/login">
                 <StyledLink>Submitter Login</StyledLink>

@@ -20,8 +20,10 @@
  */
 
 import React from 'react';
+import Error404 from '../../components/pages/404';
 
 import User from '../../components/pages/user';
+import { DISABLE_SUBMISSION } from '../../global/config';
 import { createPage } from '../../global/utils/pages';
 
 const UserPage = createPage({
@@ -29,7 +31,7 @@ const UserPage = createPage({
     return { egoJwt };
   },
 })(() => {
-  return <User />;
+  return DISABLE_SUBMISSION ? <Error404 /> : <User />;
 });
 
 export default UserPage;

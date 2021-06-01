@@ -27,11 +27,17 @@ import { ROOT_PATH } from '../../global/utils/constants';
 import getInternalLink from '../../global/utils/getInternalLink';
 import { createPage } from '../../global/utils/pages';
 import useAuthContext from '../../global/hooks/useAuthContext';
+import { DISABLE_SUBMISSION } from '../../global/config';
+import Error404 from '../../components/pages/404';
 
 const LoginPage = createPage({
   getInitialProps: async () => {},
   isPublic: true,
 })(() => {
+  if (DISABLE_SUBMISSION) {
+    return <Error404 />;
+  }
+
   const { token } = useAuthContext();
 
   return token ? ( // logged in, so it shouldn't give you a login page

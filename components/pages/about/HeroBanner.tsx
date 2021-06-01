@@ -27,6 +27,7 @@ import { EXPLORER_PATH, TEAM_PATH } from '../../../global/utils/constants';
 import { StyledLinkAsButton, InternalLink as Link } from '../../Link';
 import { MapleLeaf } from '../../theme/icons';
 import ReleaseData from './ReleaseData';
+import { DISABLE_EXPLORER } from '../../../global/config';
 
 /** Layout notes:
   - Article is the full-width background for the hero banner
@@ -35,6 +36,32 @@ import ReleaseData from './ReleaseData';
 
 const HeroBanner = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
+
+  const enabledButtonCss = css`
+    ${theme.typography.button};
+    background-color: ${theme.colors.accent3};
+    border-color: ${theme.colors.accent3};
+    line-height: 20px;
+    margin-right: 15px;
+    padding: 8px 20px;
+    width: fit-content;
+
+    &:hover {
+      color: ${theme.colors.white};
+      background-color: ${theme.colors.accent3_dark};
+    }
+  `;
+
+  const disabledButtonCss = css`
+    ${theme.typography.button};
+    background-color: ${theme.colors.grey_5};
+    border-color: ${theme.colors.grey_5};
+    line-height: 20px;
+    margin-right: 15px;
+    padding: 8px 20px;
+    width: fit-content;
+    pointer-events: none;
+  `;
 
   return (
     <article
@@ -117,7 +144,7 @@ const HeroBanner = (): ReactElement => {
           databases.
         </p>
 
-        <ReleaseData />
+        {!DISABLE_EXPLORER && <ReleaseData />}
 
         <div
           css={css`
@@ -125,22 +152,7 @@ const HeroBanner = (): ReactElement => {
           `}
         >
           <Link path={EXPLORER_PATH}>
-            <StyledLinkAsButton
-              css={css`
-                ${theme.typography.button};
-                background-color: ${theme.colors.accent3};
-                border-color: ${theme.colors.accent3};
-                line-height: 20px;
-                margin-right: 15px;
-                padding: 8px 20px;
-                width: fit-content;
-
-                &:hover {
-                  color: ${theme.colors.white};
-                  background-color: ${theme.colors.accent3_dark};
-                }
-              `}
-            >
+            <StyledLinkAsButton css={DISABLE_EXPLORER ? disabledButtonCss : enabledButtonCss}>
               Explore the Data
             </StyledLinkAsButton>
           </Link>

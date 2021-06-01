@@ -35,6 +35,7 @@ import {
   USER_PATH,
   TEAM_PATH,
 } from '../global/utils/constants';
+import { DISABLE_EXPLORER, DISABLE_SUBMISSION } from '../global/config';
 
 const NavBar = (): ReactElement => {
   const { token } = useAuthContext();
@@ -73,6 +74,17 @@ const NavBar = (): ReactElement => {
     &:hover {
       ${activeLinkStyle}
     }
+  `;
+
+  const exploreDataLinkDisabledCss = css`
+    ${linkStyle}
+    pointer-events: none;
+    color: ${theme.colors.grey_5};
+  `;
+
+  const exploreDataLinkEnabledCss = css`
+    ${linkStyle}
+    ${router.asPath.startsWith(EXPLORER_PATH) ? activeLinkStyle : ''}
   `;
 
   return (
@@ -137,13 +149,8 @@ const NavBar = (): ReactElement => {
               About VirusSeq Data Portal
             </a>
           </Link>
-          <Link path={EXPLORER_PATH}>
-            <a
-              css={css`
-                ${linkStyle}
-                ${router.asPath.startsWith(EXPLORER_PATH) ? activeLinkStyle : ''}
-              `}
-            >
+          <Link disabled={DISABLE_EXPLORER} path={EXPLORER_PATH}>
+            <a css={DISABLE_EXPLORER ? exploreDataLinkDisabledCss : exploreDataLinkEnabledCss}>
               Explore VirusSeq Data
             </a>
           </Link>
@@ -158,7 +165,7 @@ const NavBar = (): ReactElement => {
             </a>
           </Link>
         </div>
-        {token && (
+        {!DISABLE_SUBMISSION && token && (
           <div
             css={css`
               display: flex;

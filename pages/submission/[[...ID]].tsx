@@ -20,7 +20,9 @@
  */
 
 import React from 'react';
+import Error404 from '../../components/pages/404';
 import Submission from '../../components/pages/submission';
+import { DISABLE_SUBMISSION } from '../../global/config';
 import { createPage } from '../../global/utils/pages';
 
 const SubmissionPage = createPage({
@@ -29,7 +31,7 @@ const SubmissionPage = createPage({
   },
   isPublic: false,
 })(() => {
-  return <Submission />;
+  return DISABLE_SUBMISSION ? <Error404 /> : <Submission />;
 });
 
 export default SubmissionPage;
