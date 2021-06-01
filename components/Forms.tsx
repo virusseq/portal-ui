@@ -1,11 +1,32 @@
-import { ChangeEventHandler, InputHTMLAttributes, ReactElement, useState } from 'react';
+/*
+ *
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ *
+ *  This program and the accompanying materials are made available under the terms of
+ *  the GNU Affero General Public License v3.0. You should have received a copy of the
+ *  GNU Affero General Public License along with this program.
+ *   If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ *  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ *  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ *  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ *  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+import { ChangeEventHandler, ReactElement, useState } from 'react';
 import yup from 'yup';
-import { get, isEmpty, update } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import styled from '@emotion/styled';
-import defaultTheme from '../../theme/index';
+import defaultTheme from './theme/index';
 import { css } from '@emotion/react';
 import { Row } from 'react-grid-system';
-import { Bin } from '../../theme/icons';
+import { Bin } from './theme/icons';
 
 type ErrorsByPathMap = Record<string, string>;
 
@@ -36,6 +57,7 @@ const StyledText = ({ text, color = 'black', bold = false, font = 16 }: any) => 
 };
 
 export type FormInputBaseProps = {
+  key?: string | number;
   label: string;
   required: boolean;
   errorMessage: string;
@@ -49,6 +71,7 @@ export type InputElementBaseProps = {
 
 /** Template for all FormInput types */
 const FormInputTemplate = ({
+  key,
   label,
   required,
   errorMessage,
@@ -57,7 +80,7 @@ const FormInputTemplate = ({
   inputElement: ReactElement<InputElementBaseProps>;
 }) => {
   return (
-    <Row justify={'between'} nogutter>
+    <Row key={key} justify={'between'} nogutter>
       <Row nogutter>
         <StyledText text={label} bold />
         {required && <StyledText color="red" text="  *" bold />}
@@ -83,18 +106,39 @@ type FormInputSearchSelectProps = FormInputBaseProps &
     size: number;
   };
 
-export const FormInputSearchSelect = ({ options, ...props }: FormInputSearchSelectProps) => {
+export const FormInputSearchSelect = ({
+  key = '',
+  label,
+  required,
+  errorMessage,
+  options,
+  ...props
+}: FormInputSearchSelectProps) => {
   const inputElement = (
     <div>
-      <input list="options" {...props} />
-      <datalist id="options">
-        {options.map((o) => (
-          <option value={o} />
+      <input
+        css={css`
+          padding: 6px 10px;
+        `}
+        list={`${key}-options`}
+        {...props}
+      />
+      <datalist id={`${key}-options`}>
+        {options.map((o, i) => (
+          <option key={`${key}-options-${i}]`} value={o} />
         ))}
       </datalist>
     </div>
   );
-  return <FormInputTemplate {...props} inputElement={inputElement} />;
+  return (
+    <FormInputTemplate
+      key={key}
+      label={label}
+      required={required}
+      errorMessage={errorMessage}
+      inputElement={inputElement}
+    />
+  );
 };
 
 type FormInputTextProps = FormInputBaseProps &
@@ -102,10 +146,25 @@ type FormInputTextProps = FormInputBaseProps &
     size: number;
   };
 
-export const FormInputText = ({ label, required, errorMessage, ...props }: FormInputTextProps) => {
-  const inputElement = <input type="text" {...props} />;
+export const FormInputText = ({
+  key,
+  label,
+  required,
+  errorMessage,
+  ...props
+}: FormInputTextProps) => {
+  const inputElement = (
+    <input
+      css={css`
+        padding: 6px 10px;
+      `}
+      type="text"
+      {...props}
+    />
+  );
   return (
     <FormInputTemplate
+      key={key}
       label={label}
       required={required}
       errorMessage={errorMessage}
@@ -120,6 +179,7 @@ type FormInputTextAreaProps = FormInputBaseProps &
   };
 
 export const FormInputTextArea = ({
+  key,
   label,
   required,
   errorMessage,
@@ -130,6 +190,7 @@ export const FormInputTextArea = ({
       rows={10}
       css={css`
         resize: vertical;
+        padding: 6px 10px;
       `}
       {...props}
     />
@@ -137,6 +198,7 @@ export const FormInputTextArea = ({
 
   return (
     <FormInputTemplate
+      key={key}
       label={label}
       required={required}
       errorMessage={errorMessage}
@@ -152,14 +214,28 @@ type FormInputTextBinProps = FormInputBaseProps &
     onBinClick: () => void;
   };
 
-export const FormInputTextBin = ({ showBin, onBinClick, ...props }: FormInputTextBinProps) => {
+export const FormInputTextBin = ({
+  label,
+  required,
+  errorMessage,
+  showBin,
+  onBinClick,
+  ...props
+}: FormInputTextBinProps) => {
   const inputElement = (
     <Row nogutter>
-      <input type="text" {...props} />
+      <input
+        css={css`
+          padding: 6px 10px;
+        `}
+        type="text"
+        {...props}
+      />
       <div
         onClick={onBinClick}
         css={css`
           visibility: ${showBin ? 'unset' : 'hidden'};
+          padding: 6px 10px;
           margin-left: 8px;
           cursor: pointer;
         `}
@@ -169,7 +245,14 @@ export const FormInputTextBin = ({ showBin, onBinClick, ...props }: FormInputTex
     </Row>
   );
 
-  return <FormInputTemplate {...props} inputElement={inputElement} />;
+  return (
+    <FormInputTemplate
+      label={label}
+      required={required}
+      errorMessage={errorMessage}
+      inputElement={inputElement}
+    />
+  );
 };
 
 export function usingFormValidator<T>(

@@ -19,33 +19,16 @@
  *
  */
 
-import { ReactElement } from 'react';
-import { css } from '@emotion/react';
+import yup from '../../../../global/utils/validations';
 
-import { IconProps } from './types';
+const CreateStudyValidations = yup
+  .object()
+  .shape({
+    studyId: yup.string().trim().label('Study ID').required().max(15),
+    organization: yup.string().trim().label('Organization').required(),
+    name: yup.string().trim().label('Study Name').required(),
+    description: yup.string().trim().label('Description'),
+  })
+  .defined();
 
-const PlusIcon = ({ width = 12, height = 12, style }: IconProps): ReactElement => {
-  return (
-    <svg
-      css={css`
-        ${style};
-        height: ${height}px;
-        width: ${width}px;
-      `}
-      height={height}
-      width={width}
-      viewBox={`0 0 12 13`}
-    >
-      <g fill="none" fillRule="evenodd">
-        <g fill="#28519D">
-          <path
-            d="M8.331 6.577H6.583v1.76c0 .318-.262.577-.583.577-.32 0-.583-.26-.583-.577v-1.76H3.67c-.321 0-.583-.26-.583-.577 0-.317.262-.577.583-.577h1.748v-1.76c0-.318.262-.577.583-.577.32 0 .583.26.583.577v1.76H8.33c.321 0 .583.26.583.577 0 .317-.262.577-.583.577M6 0C2.686 0 0 2.686 0 6s2.686 6 6 6 6-2.686 6-6-2.686-6-6-6"
-            transform="translate(-414 -477) translate(0 -1) translate(383 98) translate(20.5 123.67) translate(.5 129) translate(0 121) translate(10 7)"
-          />
-        </g>
-      </g>
-    </svg>
-  );
-};
-
-export default PlusIcon;
+export default CreateStudyValidations;

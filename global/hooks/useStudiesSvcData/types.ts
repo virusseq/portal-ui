@@ -19,33 +19,27 @@
  *
  */
 
-export type StudyUser = {
-  name: string;
-  email: string;
-  status: string;
-};
-
 export type Study = {
   name: string;
   studyId: string;
   organization: string;
   description: string;
-  users: StudyUser[];
+  submitters: string[];
 };
 
-export type CreateStudyBody = {
+export type CreateStudyReq = {
   studyId: string;
   organization: string;
   name: string;
   description: string;
 };
 
-export type AddUserBody = {
+export type AddUserReq = {
   studyId: string;
   submitters: string[];
 };
 
-export type DeleteUserBody = {
+export type DeleteUserReq = {
   studyId: string;
   submitter: string;
 };

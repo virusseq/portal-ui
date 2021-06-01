@@ -1,17 +1,38 @@
+/*
+ *
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ *
+ *  This program and the accompanying materials are made available under the terms of
+ *  the GNU Affero General Public License v3.0. You should have received a copy of the
+ *  GNU Affero General Public License along with this program.
+ *   If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ *  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ *  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ *  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ *  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
 import { css } from '@emotion/react';
 import React, { ChangeEventHandler, InputHTMLAttributes } from 'react';
 import { UnStyledButton } from '../../../Button';
 import { Modal } from '../../../Modal';
 import { PlusIcon } from '../../../theme/icons';
 import defaultTheme from '../../../theme/index';
-import { AddSubmittersValidations } from './validations';
+import createAddSubmittersValidations from './validations';
 import {
   FormTextBlock,
-  FormInputText,
   FormInputTextBin,
   usingFormValidator,
   FormInputSearchSelect,
-} from '../Forms';
+} from '../../../Forms';
+import { Study } from '../../../../global/hooks/useStudiesSvcData/types';
 
 const AddButton = ({ onClick }: any) => {
   return (
@@ -47,28 +68,28 @@ type FormData = {
 const EMPTY_FORM: any = Object.freeze({ studyId: '', submitters: [''] });
 
 type AddSubmitterModalProps = {
-  showModal: boolean;
+  studies: Study[];
   onClose: () => void;
   submitData: (currentFormData: FormData) => Promise<void>;
 };
 
-const AddSubmitterModal = ({ showModal, onClose, submitData }: AddSubmitterModalProps) => {
+const AddSubmitterModal = ({ studies, onClose, submitData }: AddSubmitterModalProps) => {
   const {
-    isFormInvalid,
     formData,
     formErrors,
     setFormData,
     validateForm,
     validateField,
-  } = usingFormValidator<FormData>(EMPTY_FORM, AddSubmittersValidations);
+    clearFieldError,
+  } = usingFormValidator<FormData>(EMPTY_FORM, createAddSubmittersValidations(studies));
 
-  const updateStudyId: ChangeEventHandler = async (event) => {
+  const updateStudyId: ChangeEventHandler = (event) => {
     event.preventDefault();
 
     const target = event.target as InputHTMLAttributes<typeof event>;
     setFormData({ ...formData, studyId: target.value?.toString() || '' });
 
-    await validateField('studyId');
+    clearFieldError('studyId');
   };
 
   const updateSubmitters = (index: number): ChangeEventHandler => (event) => {
@@ -79,6 +100,8 @@ const AddSubmitterModal = ({ showModal, onClose, submitData }: AddSubmitterModal
     const updatedValue = target.value?.toString() || '';
     updatedFormData.submitters[index] = updatedValue;
     setFormData(updatedFormData);
+
+    clearFieldError(`submitters[${index}]`);
   };
 
   const addEmailInput = () => {
@@ -110,11 +133,11 @@ const AddSubmitterModal = ({ showModal, onClose, submitData }: AddSubmitterModal
 
   const notFilledRequiredFields = formData.studyId === '' || formData.submitters[0] === '';
 
-  return showModal ? (
+  return (
     <Modal
       title={'Add Data Submitters'}
       showActionButton={true}
-      disableActionButton={isFormInvalid || notFilledRequiredFields}
+      disableActionButton={notFilledRequiredFields}
       actionText={'Add Data Submitters'}
       closeText={'Cancel'}
       onCloseClick={onClose}
@@ -140,7 +163,7 @@ const AddSubmitterModal = ({ showModal, onClose, submitData }: AddSubmitterModal
           errorMessage={formErrors[`studyId`]}
           value={formData[`studyId`]}
           size={43}
-          options={['ASDF', 'fdsa']}
+          options={studies.map((s) => s.studyId)}
         />
         <FormTextBlock>
           What email addresses would you like to add for the data submitter(s)? Note: the email
@@ -149,10 +172,11 @@ const AddSubmitterModal = ({ showModal, onClose, submitData }: AddSubmitterModal
         {formData.submitters.map((s, i) => {
           return (
             <FormInputTextBin
+              key={i}
               required={true}
               label="Email Address"
               value={s}
-              size={40}
+              size={37}
               onChange={updateSubmitters(i)}
               onBlur={onBlur(`submitters[${i}]`)}
               onBinClick={removeEmailInput(i)}
@@ -164,7 +188,7 @@ const AddSubmitterModal = ({ showModal, onClose, submitData }: AddSubmitterModal
         <AddButton onClick={addEmailInput} />
       </div>
     </Modal>
-  ) : null;
+  );
 };
 
 export default AddSubmitterModal;
