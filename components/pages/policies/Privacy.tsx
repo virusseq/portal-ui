@@ -142,8 +142,8 @@ const Usage = (): ReactElement => (
     <h2>Privacy policy revisions</h2>
 
     <p>
-      This privacy policy was last revised on April 26, 2021. These policies are subject to change
-      and we encourage you to review this Privacy Policy each time you visit the portal. If any
+      This privacy policy was last revised on May 31, 2021. These policies are subject to change and
+      we encourage you to review this Privacy Policy each time you visit the portal. If any
       significant changes are made to this policy, a notice will be posted on the homepage for a
       reasonable period of time after the change is implemented, so that the user may be fully aware
       of any changes before using the CVDP website.
