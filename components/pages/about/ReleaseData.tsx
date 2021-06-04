@@ -21,9 +21,11 @@
 
 import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { format, isValid } from 'date-fns';
 // import Highcharts from 'highcharts';
 // import HighchartsReact from 'highcharts-react-official';
 
+import { getConfig } from '../../../global/config';
 import defaultTheme from '../../theme';
 import { CoronaVirus, CrossHairs, File, Storage } from '../../theme/icons';
 import useReleaseData from '../../../global/hooks/useReleaseData';
@@ -52,6 +54,7 @@ import useReleaseData from '../../../global/hooks/useReleaseData';
 
 const ReleaseData = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
+  const { NEXT_PUBLIC_RELEASE_DATE } = getConfig();
   const [
     {
       fileCount = 0,
@@ -62,6 +65,12 @@ const ReleaseData = (): ReactElement => {
     },
     isFetchingData,
   ] = useReleaseData();
+
+  const releaseDate =
+    !!NEXT_PUBLIC_RELEASE_DATE &&
+    (Number.isNaN(Number(NEXT_PUBLIC_RELEASE_DATE))
+      ? new Date(NEXT_PUBLIC_RELEASE_DATE)
+      : Number(NEXT_PUBLIC_RELEASE_DATE) && new Date(Number(NEXT_PUBLIC_RELEASE_DATE)));
 
   return (
     <main
@@ -79,22 +88,24 @@ const ReleaseData = (): ReactElement => {
           /* } */
         `}
       >
-        <header
-          css={css`
-            & > * {
-              margin: 0;
-            }
-          `}
-        >
-          <h3
+        {releaseDate && isValid(releaseDate) && (
+          <header
             css={css`
-              font-size: 17px;
-              font-weight: normal;
+              & > * {
+                margin: 0;
+              }
             `}
           >
-            As of April 27, 2021
-          </h3>
-        </header>
+            <h3
+              css={css`
+                font-size: 17px;
+                font-weight: normal;
+              `}
+            >
+              As of {format(releaseDate, 'MMMM dd, yyyy')}
+            </h3>
+          </header>
+        )}
 
         <ul
           css={css`

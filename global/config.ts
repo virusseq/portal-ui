@@ -45,6 +45,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_MUSE_API: publicConfig.NEXT_PUBLIC_MUSE_API || '',
     NEXT_PUBLIC_SSO_PROVIDERS: publicConfig.NEXT_PUBLIC_SSO_PROVIDERS || '',
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: publicConfig.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || '',
+    NEXT_PUBLIC_RELEASE_DATE: publicConfig.NEXT_PUBLIC_RELEASE_DATE || '',
     NEXT_PUBLIC_SYSTEM_ALERTS: publicConfig.NEXT_PUBLIC_SYSTEM_ALERTS || '[]',
   } as {
     NEXT_PUBLIC_EGO_API_ROOT: string;
@@ -65,6 +66,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_MUSE_API: string;
     NEXT_PUBLIC_SSO_PROVIDERS: string;
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: string;
+    NEXT_PUBLIC_RELEASE_DATE: string;
     NEXT_PUBLIC_SYSTEM_ALERTS: string;
   };
 };
