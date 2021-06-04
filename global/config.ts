@@ -47,6 +47,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: publicConfig.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || '',
     NEXT_PUBLIC_SYSTEM_ALERTS: publicConfig.NEXT_PUBLIC_SYSTEM_ALERTS || '[]',
     NEXT_PUBLIC_STUDIES_SVC_URL: publicConfig.NEXT_PUBLIC_STUDIES_SVC_URL || '',
+    NEXT_PUBLIC_SCOPE_COLLABORATOR_WRITE: publicConfig.NEXT_PUBLIC_SCOPE_COLLABORATOR_WRITE || 'COLLABORATOR.WRITE',
   } as {
     NEXT_PUBLIC_EGO_API_ROOT: string;
     NEXT_PUBLIC_EGO_CLIENT_ID: string;
@@ -68,5 +69,6 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: string;
     NEXT_PUBLIC_SYSTEM_ALERTS: string;
     NEXT_PUBLIC_STUDIES_SVC_URL: string;
+    NEXT_PUBLIC_SCOPE_COLLABORATOR_WRITE: string;
   };
 };

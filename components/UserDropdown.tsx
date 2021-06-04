@@ -115,7 +115,7 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
     };
   }, [open]);
   const theme: typeof defaultTheme = useTheme();
-  const { logout } = useAuthContext();
+  const { logout, userIsCollaborator } = useAuthContext();
 
   const handleLogout = () => logout(logEvent);
 
@@ -177,15 +177,15 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
           `}
         >
           <li>
-            <Link path={STUDIES_PATH}>
-              <StyledListLink>Mange Studies</StyledListLink>
-            </Link>
-          </li>
-          <li>
             <Link path={USER_PATH}>
               <StyledListLink>Profile & Token</StyledListLink>
             </Link>
           </li>
+          {userIsCollaborator && <li>
+            <Link path={STUDIES_PATH}>
+              <StyledListLink>Mange Studies</StyledListLink>
+            </Link>
+          </li>}
           <li>
             <StyledListLink onClick={handleLogout}>Logout</StyledListLink>
           </li>

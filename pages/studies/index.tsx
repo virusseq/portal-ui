@@ -22,14 +22,17 @@
 import React from 'react';
 import ManageStudies from '../../components/pages/studies';
 import { createPage } from '../../global/utils/pages';
+import useAuthContext from '../../global/hooks/useAuthContext';
+import Error403 from '../../components/pages/403';
 
 const StudiesPage = createPage({
   getInitialProps: async ({ query, egoJwt }) => {
     return { query, egoJwt };
   },
-  isPublic: true,
+  isPublic: false,
 })(() => {
-  return <ManageStudies />;
+  const { userIsCollaborator } = useAuthContext();
+  return userIsCollaborator ? <ManageStudies /> : <Error403 query={{}}/>;
 });
 
 export default StudiesPage;
