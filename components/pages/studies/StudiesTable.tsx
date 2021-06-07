@@ -22,12 +22,11 @@
 import { css } from '@emotion/react';
 import React from 'react';
 import { Column } from 'react-table';
-import { Study } from '../../../global/hooks/useStudiesSvcData/types';
+import { RemoveSubmitterReq, Study } from '../../../global/hooks/useStudiesSvcData/types';
 import { UnStyledButton } from '../../Button';
 import GenericTable from '../../GenericTable';
 import { Bin } from '../../theme/icons';
 import defaultTheme from '../../theme/index';
-import { DeleteRow } from './PageContent';
 
 const SubmitterDeleteRow = ({ hasBottomBorder, submitter, onDeleteClick }: any) => {
   return (
@@ -87,7 +86,7 @@ const columnData = (
       return (row as Study).submitters?.map((s) => ({ studyId, submitter: s }));
     },
     Header: 'Data Submitters',
-    Cell: ({ value }: { value: DeleteRow[] }) => {
+    Cell: ({ value }: { value: RemoveSubmitterReq[] }) => {
       return Array.isArray(value) ? (
         <div
           css={css`
