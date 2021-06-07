@@ -27,7 +27,7 @@ import DMSAdminContact from '../DMSAdminContact';
 const Error401 = (): ReactElement => {
   return (
     <ErrorPageLayout errorTitle="401: Unauthorized" subtitle="Error 401 - Unauthorized">
-      You are curretnly not authorized to view the page you requested. If the problem persists,
+      You are currently not authorized to view the page you requested. If the problem persists,
       please contact the <DMSAdminContact /> for help.
     </ErrorPageLayout>
   );
