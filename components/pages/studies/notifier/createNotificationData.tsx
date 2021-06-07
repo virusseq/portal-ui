@@ -9,7 +9,7 @@ function createNotificationDivData(ni: NotificationInfo) {
     return {
       message: <div>You can now add submitters to {BoldedStudy}</div>,
       title: 'Study was successfully created',
-      success: false,
+      success: true,
     };
   } else if (ni.notifierReason === NotificationType.SUBMITTERS_ADDED) {
     return {
@@ -19,7 +19,7 @@ function createNotificationDivData(ni: NotificationInfo) {
         </div>
       ),
       title: 'Data submitter(s) successfully added',
-      success: false,
+      success: true,
     };
   } else if (ni.notifierReason === NotificationType.SUBMITTERS_REMOVED) {
     return {
@@ -29,7 +29,7 @@ function createNotificationDivData(ni: NotificationInfo) {
         </div>
       ),
       title: 'Data submitter(s) successfully removed',
-      success: false,
+      success: true,
     };
   }
 

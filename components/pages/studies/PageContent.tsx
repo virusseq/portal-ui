@@ -57,8 +57,8 @@ const PageContent = () => {
 
   const updateTable = async () => {
     const res = await fetchStudies();
-    if (res.success && res.data) {
-      setTableData(res.data);
+    if (res.success) {
+      setTableData(res.data || []);
     } else {
       const { type, studyId, submitters } = res.error || {};
       notifier.addNotification({
@@ -101,11 +101,13 @@ const PageContent = () => {
   };
 
   const submitCreateStudy = async (currentFormData: any) => {
+    console.log(currentFormData);
     const { success, error } = await createStudy(currentFormData);
     afterSubmit(success, error, NotificationType.STUDY_CREATED);
   };
 
   const submitAddUser = async (currentFormData: any) => {
+    console.log(currentFormData);
     const { success, error } = await addSubmitterToStudy(currentFormData);
     afterSubmit(success, error, NotificationType.SUBMITTERS_ADDED);
   };

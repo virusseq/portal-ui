@@ -54,6 +54,10 @@ function convertToStudiesRes<T>(obj: any | undefined): StudiesSvcRes<T> {
   };
 }
 
+const APP_JSON_HEADER = {
+  'Content-Type': 'application/json',
+};
+
 const useStudiesSvcData = () => {
   const { NEXT_PUBLIC_STUDIES_SVC_URL } = getConfig();
   const { fetchWithAuth } = useAuthContext();
@@ -62,11 +66,14 @@ const useStudiesSvcData = () => {
   const wrapWithHandlers = <T>(promise: Promise<Response>) => {
     setAwaitingResponse(true);
     return promise
-      .then((res) => {
+      .then((res) => res.json())
+      .then((body) => {
+        console.log(body);
         setAwaitingResponse(false);
-        return convertToStudiesRes<T>(res.json());
+        return convertToStudiesRes<T>(body);
       })
       .catch((err) => {
+        console.log(err);
         setAwaitingResponse(false);
         return convertToStudiesRes<T>({ success: false, error: { type: ErrorType.UNKNOWN } });
       });
@@ -80,8 +87,10 @@ const useStudiesSvcData = () => {
   };
 
   const createStudy = (createStudyReq: CreateStudyReq): Promise<StudiesSvcRes<undefined>> => {
+    console.log(createStudyReq);
     const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), {
       method: 'POST',
+      headers: APP_JSON_HEADER,
       body: JSON.stringify(createStudyReq),
     });
     return wrapWithHandlers(promise);
@@ -90,8 +99,9 @@ const useStudiesSvcData = () => {
   const addSubmitterToStudy = (
     addSubmitterReq: AddSubmitterReq,
   ): Promise<StudiesSvcRes<undefined>> => {
-    const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies/submitters'), {
+    const promise = fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies/submitters'), {
       method: 'POST',
+      headers: APP_JSON_HEADER,
       body: JSON.stringify(addSubmitterReq),
     });
     return wrapWithHandlers(promise);
