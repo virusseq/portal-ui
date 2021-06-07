@@ -19,7 +19,7 @@
  *
  */
 
-import { ReactElement } from 'react';
+import { createRef, ReactElement } from 'react';
 import { ThemeProvider } from '@emotion/react';
 
 import { AuthProvider } from '../global/hooks/useAuthContext';
@@ -29,6 +29,11 @@ import { ClientSideGetInitialPropsContext } from '../global/utils/pages/types';
 import Head from './Head';
 import defaultTheme from './theme';
 import SystemAlerts from './SystemAlerts';
+
+/**
+ * portal ref where modals will show up
+ */
+export const modalPortalRef = createRef<HTMLDivElement>();
 
 const Root = ({
   children,
@@ -73,6 +78,7 @@ const Root = ({
           <TrackingProvider>
             <ThemeProvider theme={defaultTheme}>
               <SystemAlerts />
+              <div ref={modalPortalRef} />
               {children}
             </ThemeProvider>
           </TrackingProvider>
