@@ -23,72 +23,98 @@ import { useState } from 'react';
 import { getConfig } from '../../config';
 import useAuthContext from '../useAuthContext';
 import urlJoin from 'url-join';
-import { AddUserReq, CreateStudyReq, DeleteUserReq, Study } from './types';
+import {
+  AddSubmitterReq,
+  CreateStudyReq,
+  RemoveSubmitterReq,
+  ErrorType,
+  StudiesSvcRes,
+  Study,
+} from './types';
 
-const headers = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-  Authorization:
-    'Bearer eyJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2MjE1MjY5ODksImV4cCI6MTYyMzY3NDQ3Miwic3ViIjoiNzdmMWVmNzgtNzQ5NS00YjRhLTk4MmEtNmI5NTMyZGM2OWZiIiwiaXNzIjoiZWdvIiwianRpIjoiMDVmODQ4YTItMjZlNy00YjRhLWE4NjMtNzg0MDk0NTk0MWQwIiwiY29udGV4dCI6eyJzY29wZSI6WyJET01BSU4uV1JJVEUiLCJzb25nLlJFQUQiLCJpZC5XUklURSIsInNjb3JlLlJFQUQiLCJpZC5SRUFEIiwic2NvcmUuV1JJVEUiLCJzb25nLldSSVRFIiwiRE9NQUlOLlJFQUQiXSwiYXBwbGljYXRpb24iOnsibmFtZSI6ImFkbWluSWQiLCJjbGllbnRJZCI6ImFkbWluSWQiLCJyZWRpcmVjdFVyaSI6Imh0dHA6Ly9leGFtcGxlLmNvbSIsImRlc2NyaXB0aW9uIjoic29uZ1Njb3JlQWRtaW4iLCJzdGF0dXMiOiJBUFBST1ZFRCIsInR5cGUiOiJDTElFTlQifX19.kyehofFmhwe0V_A1hGLsLxDvYqQ43vnAEa2t4h1LWhYxfHcOeUlOdRbgXAxh7YjrPQ4AFi2SZs1J__ikoVdcljBIcn8KYGV8OXsESQM2bwCLZttAJJJhyHYHUl78_3vpGLI3hBkxubqkZm09Jbqo7vB9vJ0tAYxZeKSLO_er1SA69VrrWO7Rx4ayGQ7B7_4DnfUBWW8KgniLVQZDv_mXzUfUIJIQW-Ux3gufZvw10Y2CKAAeVOk4Y7hsoqunTA4n2d8oNUj86LwiGR8RryhYrsI-0kZyWh5ywdJ4iVtXD7YmCu_npej2naskRPmE3egH7dkykN4V3oIEoZ4QCPELyA',
-};
+function isValidErrorType(type: any): type is ErrorType {
+  return typeof type === 'string' && Object.values(ErrorType).includes(type as ErrorType);
+}
+
+function convertToStudiesRes<T>(obj: any | undefined): StudiesSvcRes<T> {
+  const success = (obj && obj.success) || false;
+  if (success) {
+    return { success };
+  }
+
+  const { type, studyId, submitters } = obj.error;
+
+  return {
+    success,
+    error: {
+      type: isValidErrorType(type) ? type : ErrorType.UNKNOWN,
+      studyId: studyId || '',
+      submitters: submitters || [],
+    },
+  };
+}
 
 const useStudiesSvcData = () => {
   const { NEXT_PUBLIC_STUDIES_SVC_URL } = getConfig();
-  //   const { fetchWithAuth, token } = useAuthContext();
+  const { fetchWithAuth } = useAuthContext();
   const [awaitingResponse, setAwaitingResponse] = useState(false);
 
-  const fetchStudies = () => {
+  const wrapWithHandlers = <T>(promise: Promise<Response>) => {
     setAwaitingResponse(true);
-    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), { method: 'GET', headers })
+    return promise
       .then((res) => {
         setAwaitingResponse(false);
-        return res.json();
+        return convertToStudiesRes<T>(res.json());
       })
       .catch((err) => {
-        return [];
+        setAwaitingResponse(false);
+        return convertToStudiesRes<T>({ success: false, error: { type: ErrorType.UNKNOWN } });
       });
   };
 
-  const createStudy = (createStudyBody: CreateStudyReq) => {
-    setAwaitingResponse(true);
-    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(createStudyBody),
-    }).then((res) => {
-      setAwaitingResponse(false);
-      return res.json();
+  const fetchStudies = (): Promise<StudiesSvcRes<Study[]>> => {
+    const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), {
+      method: 'GET',
     });
+    return wrapWithHandlers(promise);
   };
 
-  const addUser = (addUserBody: AddUserReq) => {
-    setAwaitingResponse(true);
-    return fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies/submitters'), {
+  const createStudy = (createStudyReq: CreateStudyReq): Promise<StudiesSvcRes<undefined>> => {
+    const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), {
       method: 'POST',
-      headers,
-      body: JSON.stringify(addUserBody),
-    }).then((res) => {
-      setAwaitingResponse(false);
-      return res.json();
+      body: JSON.stringify(createStudyReq),
     });
+    return wrapWithHandlers(promise);
   };
 
-  const deleteSubmitter = (dub: DeleteUserReq) => {
-    setAwaitingResponse(true);
+  const addSubmitterToStudy = (
+    addSubmitterReq: AddSubmitterReq,
+  ): Promise<StudiesSvcRes<undefined>> => {
+    const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies/submitters'), {
+      method: 'POST',
+      body: JSON.stringify(addSubmitterReq),
+    });
+    return wrapWithHandlers(promise);
+  };
+
+  const removeSubmitterFromStudy = (
+    removeSubmitterReq: RemoveSubmitterReq,
+  ): Promise<StudiesSvcRes<undefined>> => {
     const url = urlJoin(
       NEXT_PUBLIC_STUDIES_SVC_URL,
-      `/studies/submitters?studyId=${dub.studyId}&submitter=${dub.submitter}`,
+      `/studies/submitters?studyId=${removeSubmitterReq.studyId}&submitter=${removeSubmitterReq.submitter}`,
     );
-    return fetch(url, {
-      method: 'DELETE',
-      headers,
-    }).then((res) => {
-      setAwaitingResponse(false);
-      return res.json();
-    });
+    const promise = fetchWithAuth(url, { method: 'DELETE' });
+    return wrapWithHandlers(promise);
   };
 
-  return { awaitingResponse, fetchStudies, createStudy, addUser, deleteSubmitter };
+  return {
+    awaitingResponse,
+    fetchStudies,
+    createStudy,
+    addSubmitterToStudy,
+    removeSubmitterFromStudy,
+  };
 };
 
 export default useStudiesSvcData;

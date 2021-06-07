@@ -27,31 +27,47 @@ import defaultTheme from '../../theme/index';
 import AddSubmitterModal from './addSubmitter/modal';
 import CreateStudyModal from './createStudy/modal';
 import DeleteSubmitterModal from './DeleteSubmitterModal';
-import useNotifier from './notifier/useNotifier';
+import useNotifier, { NotificationType } from './notifier/useNotifier';
 import StudiesTable from './StudiesTable';
-import { Study } from '../../../global/hooks/useStudiesSvcData/types';
+import {
+  RemoveSubmitterReq,
+  StudiesSvcResError,
+  Study,
+} from '../../../global/hooks/useStudiesSvcData/types';
 
-export type DeleteRow = { studyId: string; submitter: string };
-const EMPTY_DELETE_ROW: DeleteRow = { studyId: '', submitter: '' };
+const EMPTY_DELETE_ROW: RemoveSubmitterReq = Object.freeze({ studyId: '', submitter: '' });
 
 const PageContent = () => {
+  const [tableData, setTableData] = useState<Study[]>([]);
+
   const [showCreateStudyModal, setShowCreateStudyModal] = useState(false);
   const [showAddSubmitterModal, setShowAddSubmitterModal] = useState(false);
-  const [submitterToDelete, setSubmitterToDelete] = useState<DeleteRow>({ ...EMPTY_DELETE_ROW });
+  const [submitterToRemove, setSubmitterToRemove] = useState<RemoveSubmitterReq>({
+    ...EMPTY_DELETE_ROW,
+  });
 
   const notifier = useNotifier();
-
-  const [tableData, setTableData] = useState<Study[]>([]);
   const {
     awaitingResponse,
     fetchStudies,
     createStudy,
-    addUser,
-    deleteSubmitter,
+    addSubmitterToStudy,
+    removeSubmitterFromStudy,
   } = useStudiesSvcData();
 
-  const updateTable = () => {
-    fetchStudies().then(setTableData);
+  const updateTable = async () => {
+    const res = await fetchStudies();
+    if (res.success && res.data) {
+      setTableData(res.data);
+    } else {
+      const { type, studyId, submitters } = res.error || {};
+      notifier.addNotification({
+        success: false,
+        notifierReason: type as any,
+        studyId,
+        submitters,
+      });
+    }
   };
 
   useEffect(() => {
@@ -61,38 +77,46 @@ const PageContent = () => {
   const closeAllModals = () => {
     setShowCreateStudyModal(false);
     setShowAddSubmitterModal(false);
-    setSubmitterToDelete({ ...EMPTY_DELETE_ROW });
+    setSubmitterToRemove({ ...EMPTY_DELETE_ROW });
+  };
+
+  const afterSubmit = (
+    success: boolean,
+    error: StudiesSvcResError | undefined,
+    onSuccessNotifyState: NotificationType,
+  ) => {
+    if (!success && error) {
+      const { type, studyId, submitters } = error;
+      notifier.addNotification({
+        success: false,
+        notifierReason: type as any,
+        studyId,
+        submitters,
+      });
+    } else {
+      notifier.addNotification({ success: true, notifierReason: onSuccessNotifyState });
+    }
+    closeAllModals();
+    updateTable();
   };
 
   const submitCreateStudy = async (currentFormData: any) => {
-    createStudy(currentFormData).then((res) => {
-      closeAllModals();
-      console.log(res);
-      notifier.addNotification(res);
-      updateTable();
-    });
+    const { success, error } = await createStudy(currentFormData);
+    afterSubmit(success, error, NotificationType.STUDY_CREATED);
   };
 
   const submitAddUser = async (currentFormData: any) => {
-    addUser(currentFormData).then((res) => {
-      closeAllModals();
-      console.log(res);
-      notifier.addNotification(res);
-      updateTable();
-    });
+    const { success, error } = await addSubmitterToStudy(currentFormData);
+    afterSubmit(success, error, NotificationType.SUBMITTERS_ADDED);
   };
 
   const submitRemoveSubmitter = async () => {
-    deleteSubmitter(submitterToDelete).then((res) => {
-      closeAllModals();
-      console.log(res);
-      notifier.addNotification(res);
-      updateTable();
-    });
+    const { success, error } = await removeSubmitterFromStudy(submitterToRemove);
+    afterSubmit(success, error, NotificationType.SUBMITTERS_REMOVED);
   };
 
-  const tableDeleteButtonFunc = (dr: DeleteRow) => () => {
-    setSubmitterToDelete(dr);
+  const createRemoveSubmitterModalFunc = (dr: RemoveSubmitterReq) => () => {
+    setSubmitterToRemove(dr);
   };
 
   return (
@@ -119,8 +143,8 @@ const PageContent = () => {
         />
       )}
       <DeleteSubmitterModal
-        email={submitterToDelete.submitter}
-        studyId={submitterToDelete.studyId}
+        email={submitterToRemove.submitter}
+        studyId={submitterToRemove.studyId}
         onClose={closeAllModals}
         onSubmit={submitRemoveSubmitter}
       />
@@ -160,7 +184,7 @@ const PageContent = () => {
           </Button>
         </div>
       </div>
-      <StudiesTable tableDeleteButtonFunc={tableDeleteButtonFunc} tableData={tableData} />
+      <StudiesTable tableDeleteButtonFunc={createRemoveSubmitterModalFunc} tableData={tableData} />
     </div>
   );
 };

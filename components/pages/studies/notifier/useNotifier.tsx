@@ -20,26 +20,22 @@
  */
 
 import { useState } from 'react';
-import createNotificationData from './createNotificationData';
+import { ErrorType } from '../../../../global/hooks/useStudiesSvcData/types';
+import createNotificationDivData from './createNotificationData';
 import NotifactionDiv from './NotificationDiv';
 
-export enum SuccessStateReason {
+enum SuccessType {
   STUDY_CREATED = 'STUDY_CREATED',
   SUBMITTERS_ADDED = 'SUBMITTERS_ADDED',
   SUBMITTERS_REMOVED = 'SUBMITTERS_REMOVED',
-  STUDY_NOT_FOUND = 'STUDY_NOT_FOUND',
-  SUBMITTERS_NOT_FOUND = 'SUBMITTERS_NOT_FOUND',
-  STUDY_ALREADY_EXISTS = 'STUDY_ALREADY_EXISTS',
-  SUBMITTERS_ALREADY_IN_STUDY = 'SUBMITTER_ALREADY_IN_STUDY',
-  SUBMITTER_NOT_IN_STUDY = 'SUBMITTER_NOT_IN_STUDY',
-  FAILED_TO_CREATE_STUDY = 'FAILED_TO_CREATE_STUDY',
-  FAILED_TO_REMOVE_SUBMITTER_FROM_STUDY = 'FAILED_TO_REMOVE_SUBMITTER_FROM_STUDY',
-  FAILED_TO_ADD_SUBMITTERS_TO_STUDY = 'FAILED_TO_ADD_SUBMITTERS_TO_STUDY',
 }
+
+export const NotificationType = { ...ErrorType, ...SuccessType };
+export type NotificationType = SuccessType | ErrorType;
 
 export type NotificationInfo = {
   success: boolean;
-  successStateReason: SuccessStateReason;
+  notifierReason: NotificationType;
   studyId?: string;
   submitters?: string[];
 };
@@ -60,7 +56,7 @@ const useNotification = () => {
   const NotificationsDiv = (
     <div>
       {notifications.map((n, i) => {
-        const { message, success, title } = createNotificationData(n);
+        const { message, success, title } = createNotificationDivData(n);
 
         return (
           <NotifactionDiv

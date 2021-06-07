@@ -34,19 +34,35 @@ export type CreateStudyReq = {
   description: string;
 };
 
-export type AddUserReq = {
+export type AddSubmitterReq = {
   studyId: string;
   submitters: string[];
 };
 
-export type DeleteUserReq = {
+export type RemoveSubmitterReq = {
   studyId: string;
   submitter: string;
 };
 
-export enum ErrorReason {
+export type StudiesSvcResError = {
+  type: ErrorType;
+  studyId: string;
+  submitters: string[];
+};
+
+export type StudiesSvcRes<T> = {
+  success: boolean;
+  // data is condition on success, if success is true data will exist with type T
+  data?: T;
+  // error is condition of success, if success is false error will exist with error.type
+  error?: StudiesSvcResError;
+};
+
+// Error types returned by studies svc
+export enum ErrorType {
+  UNKNOWN = 'UNKNOWN',
   STUDY_NOT_FOUND = 'STUDY_NOT_FOUND',
-  SUBMITTERS_NOT_FOUND = 'STUDY_NOT_FOUND',
+  SUBMITTERS_NOT_FOUND = 'SUBMITTERS_NOT_FOUND',
   STUDY_ALREADY_EXISTS = 'STUDY_ALREADY_EXISTS',
   SUBMITTERS_ALREADY_IN_STUDY = 'SUBMITTER_ALREADY_IN_STUDY',
   SUBMITTER_NOT_IN_STUDY = 'SUBMITTER_NOT_IN_STUDY',
