@@ -19,20 +19,18 @@
  *
  */
 
-import React from 'react';
-import ManageStudies from '../../components/pages/studies';
-import { createPage } from '../../global/utils/pages';
-import useAuthContext from '../../global/hooks/useAuthContext';
-import Error401 from '../../components/pages/401';
+import { ReactElement } from 'react';
 
-const StudiesPage = createPage({
-  getInitialProps: async ({ query, egoJwt }) => {
-    return { query, egoJwt };
-  },
-  isPublic: false,
-})(() => {
-  const { userIsCollaborator } = useAuthContext();
-  return userIsCollaborator ? <ManageStudies /> : <Error401 />;
-});
+import { ErrorPageLayout } from '../PageLayout';
+import DMSAdminContact from '../DMSAdminContact';
 
-export default StudiesPage;
+const Error401 = (): ReactElement => {
+  return (
+    <ErrorPageLayout errorTitle="401: Unauthorized" subtitle="Error 401 - Unauthorized">
+      You are curretnly not authorized to view the page you requested. If the problem persists,
+      please contact the <DMSAdminContact /> for help.
+    </ErrorPageLayout>
+  );
+};
+
+export default Error401;

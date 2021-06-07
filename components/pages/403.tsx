@@ -44,7 +44,7 @@ const isValidProviderType = (providerType: ProviderType) =>
 const Error403 = ({
   query,
 }: {
-  query: { error_type?: EgoLoginError; provider_type?: string };
+  query: { error_type: EgoLoginError; provider_type?: string };
 }): ReactElement => {
   const { error_type: errorType, provider_type: providerType } = query;
   const providerTypeDisplayName = isValidProviderType(providerType as ProviderType)
