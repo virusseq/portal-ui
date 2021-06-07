@@ -14,8 +14,7 @@ const DownloadInfoModal = ({ onClose }: { onClose: () => void }) => {
         `}
       >
         <p>
-          Your download has started. By downloading this data, you agree to{' '}
-          <StyledLink href="/acknoledgements">acknowledge</StyledLink> the Canadian Public Health
+          Your download has started. By downloading this data, you agree to acknowledge the Canadian Public Health
           Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having contributed data
           and follow all <StyledLink href="./policies">CVDP policies</StyledLink>.
         </p>
