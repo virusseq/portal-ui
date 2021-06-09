@@ -28,6 +28,16 @@ import GenericTable from '../../GenericTable';
 import { Bin } from '../../theme/icons';
 import defaultTheme from '../../theme/index';
 
+const getTableStyle = (theme: typeof defaultTheme) => css`
+  & tbody {
+    tr td {
+      vertical-align: top;
+      text-align: left;
+      border-top: 1px solid ${theme.colors.accent};
+    }
+  }
+`;
+
 const SubmitterDeleteRow = ({ hasBottomBorder, submitter, onDeleteClick }: any) => {
   return (
     <div
@@ -111,6 +121,7 @@ const columnData = (
 const StudiesTable = ({ tableDeleteButtonFunc, tableData }: any) => {
   return (
     <GenericTable
+      style={getTableStyle(defaultTheme)}
       columns={columnData(tableDeleteButtonFunc)}
       data={tableData}
       sortable={{

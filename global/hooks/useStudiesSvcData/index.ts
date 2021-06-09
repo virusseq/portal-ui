@@ -39,7 +39,7 @@ function isValidErrorType(type: any): type is ErrorType {
 function convertToStudiesRes<T>(obj: any | undefined): StudiesSvcRes<T> {
   const success = (obj && obj.success) || false;
   if (success) {
-    return { success };
+    return { success, data: obj.data };
   }
 
   const { type, studyId, submitters } = obj.error;
@@ -99,7 +99,7 @@ const useStudiesSvcData = () => {
   const addSubmitterToStudy = (
     addSubmitterReq: AddSubmitterReq,
   ): Promise<StudiesSvcRes<undefined>> => {
-    const promise = fetch(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies/submitters'), {
+    const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies/submitters'), {
       method: 'POST',
       headers: APP_JSON_HEADER,
       body: JSON.stringify(addSubmitterReq),

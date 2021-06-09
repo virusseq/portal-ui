@@ -38,8 +38,8 @@ function createNotificationDivData(ni: NotificationInfo) {
     return {
       message: (
         <div>
-          Submtters need to be registered before adding them to a study. Thse submitters could not
-          be found: {Submitters}
+          Submitter(s) could not be found: [{Submitters}]. Submtters need to be registered before
+          adding them to a study.
         </div>
       ),
       title: 'Submtter(s) not found',

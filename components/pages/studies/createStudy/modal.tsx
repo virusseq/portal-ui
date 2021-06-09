@@ -40,12 +40,11 @@ const EMPTY_FORM = Object.freeze({
 });
 
 type CreateStudyModalProps = {
-  showModal: boolean;
   onClose: () => void;
   submitData: (currentFormData: FormData) => Promise<void>;
 };
 
-const CreateStudyModal = ({ showModal, onClose, submitData }: CreateStudyModalProps) => {
+const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
   const {
     isFormInvalid,
     formData,
@@ -82,7 +81,7 @@ const CreateStudyModal = ({ showModal, onClose, submitData }: CreateStudyModalPr
   const notFilledRequiredFields =
     formData.studyId === '' || formData.name === '' || formData.organization === '';
 
-  return showModal ? (
+  return (
     <Modal
       key="CreateForm"
       title={'Create a Study'}
@@ -143,7 +142,7 @@ const CreateStudyModal = ({ showModal, onClose, submitData }: CreateStudyModalPr
         />
       </div>
     </Modal>
-  ) : null;
+  );
 };
 
 export default CreateStudyModal;

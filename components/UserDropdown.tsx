@@ -176,16 +176,18 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
             }
           `}
         >
+          {userIsCollaborator && (
+            <li>
+              <Link path={STUDIES_PATH}>
+                <StyledListLink>Manage Studies</StyledListLink>
+              </Link>
+            </li>
+          )}
           <li>
             <Link path={USER_PATH}>
               <StyledListLink>Profile & Token</StyledListLink>
             </Link>
           </li>
-          {userIsCollaborator && <li>
-            <Link path={STUDIES_PATH}>
-              <StyledListLink>Mange Studies</StyledListLink>
-            </Link>
-          </li>}
           <li>
             <StyledListLink onClick={handleLogout}>Logout</StyledListLink>
           </li>

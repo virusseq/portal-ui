@@ -30,6 +30,8 @@ import DeleteSubmitterModal from './DeleteSubmitterModal';
 import useNotifier, { NotificationType } from './notifier/useNotifier';
 import StudiesTable from './StudiesTable';
 import {
+  AddSubmitterReq,
+  CreateStudyReq,
   RemoveSubmitterReq,
   StudiesSvcResError,
   Study,
@@ -45,6 +47,8 @@ const PageContent = () => {
   const [submitterToRemove, setSubmitterToRemove] = useState<RemoveSubmitterReq>({
     ...EMPTY_DELETE_ROW,
   });
+
+  const showDeleteModal = submitterToRemove.studyId !== '' && submitterToRemove.submitter !== '';
 
   const notifier = useNotifier();
   const {
@@ -80,41 +84,65 @@ const PageContent = () => {
     setSubmitterToRemove({ ...EMPTY_DELETE_ROW });
   };
 
-  const afterSubmit = (
-    success: boolean,
-    error: StudiesSvcResError | undefined,
+  function afterSubmitError(error: StudiesSvcResError | undefined) {
+    const { type, studyId, submitters } = error || { type: NotificationType.UNKNOWN };
+    notifier.addNotification({
+      success: false,
+      notifierReason: type as any,
+      studyId,
+      submitters,
+    });
+    closeAllModals();
+  }
+
+  function afterSubmitSuccess(
     onSuccessNotifyState: NotificationType,
-  ) => {
-    if (!success && error) {
-      const { type, studyId, submitters } = error;
-      notifier.addNotification({
-        success: false,
-        notifierReason: type as any,
-        studyId,
-        submitters,
-      });
-    } else {
-      notifier.addNotification({ success: true, notifierReason: onSuccessNotifyState });
-    }
+    studyId: string = '',
+    submitters: string[] = [],
+  ) {
+    notifier.addNotification({
+      success: true,
+      studyId,
+      submitters,
+      notifierReason: onSuccessNotifyState,
+    });
+
     closeAllModals();
     updateTable();
-  };
+  }
 
-  const submitCreateStudy = async (currentFormData: any) => {
+  const submitCreateStudy = async (currentFormData: CreateStudyReq) => {
     console.log(currentFormData);
     const { success, error } = await createStudy(currentFormData);
-    afterSubmit(success, error, NotificationType.STUDY_CREATED);
+    if (success) {
+      afterSubmitSuccess(NotificationType.STUDY_CREATED, currentFormData.studyId);
+    } else {
+      afterSubmitError(error);
+    }
   };
 
-  const submitAddUser = async (currentFormData: any) => {
+  const submitAddUser = async (currentFormData: AddSubmitterReq) => {
     console.log(currentFormData);
     const { success, error } = await addSubmitterToStudy(currentFormData);
-    afterSubmit(success, error, NotificationType.SUBMITTERS_ADDED);
+    if (success) {
+      afterSubmitSuccess(
+        NotificationType.SUBMITTERS_ADDED,
+        currentFormData.studyId,
+        currentFormData.submitters,
+      );
+    } else {
+      afterSubmitError(error);
+    }
   };
 
   const submitRemoveSubmitter = async () => {
     const { success, error } = await removeSubmitterFromStudy(submitterToRemove);
-    afterSubmit(success, error, NotificationType.SUBMITTERS_REMOVED);
+    if (success) {
+      const { studyId, submitter } = submitterToRemove;
+      afterSubmitSuccess(NotificationType.SUBMITTERS_REMOVED, studyId, [submitter]);
+    } else {
+      afterSubmitError(error);
+    }
   };
 
   const createRemoveSubmitterModalFunc = (dr: RemoveSubmitterReq) => () => {
@@ -132,11 +160,9 @@ const PageContent = () => {
         padding-bottom: ${defaultTheme.dimensions.footer.height + 60}px;
       `}
     >
-      <CreateStudyModal
-        showModal={showCreateStudyModal}
-        onClose={closeAllModals}
-        submitData={submitCreateStudy}
-      />
+      {showCreateStudyModal && (
+        <CreateStudyModal onClose={closeAllModals} submitData={submitCreateStudy} />
+      )}
       {showAddSubmitterModal && (
         <AddSubmitterModal
           studies={tableData}
@@ -144,12 +170,14 @@ const PageContent = () => {
           submitData={submitAddUser}
         />
       )}
-      <DeleteSubmitterModal
-        email={submitterToRemove.submitter}
-        studyId={submitterToRemove.studyId}
-        onClose={closeAllModals}
-        onSubmit={submitRemoveSubmitter}
-      />
+      {showDeleteModal && (
+        <DeleteSubmitterModal
+          submitter={submitterToRemove.submitter}
+          studyId={submitterToRemove.studyId}
+          onClose={closeAllModals}
+          onSubmit={submitRemoveSubmitter}
+        />
+      )}
       {notifier.NotificationsDiv}
       <div
         css={css`

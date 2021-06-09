@@ -32,7 +32,8 @@ import {
   usingFormValidator,
   FormInputSearchSelect,
 } from '../../../Forms';
-import { Study } from '../../../../global/hooks/useStudiesSvcData/types';
+import { AddSubmitterReq, Study } from '../../../../global/hooks/useStudiesSvcData/types';
+import { cloneDeep } from 'lodash';
 
 const AddButton = ({ onClick }: any) => {
   return (
@@ -60,17 +61,12 @@ const AddButton = ({ onClick }: any) => {
   );
 };
 
-type FormData = {
-  studyId: string;
-  submitters: string[];
-};
-
-const EMPTY_FORM: any = Object.freeze({ studyId: '', submitters: [''] });
+const EMPTY_FORM: AddSubmitterReq = Object.freeze({ studyId: '', submitters: [''] });
 
 type AddSubmitterModalProps = {
   studies: Study[];
   onClose: () => void;
-  submitData: (currentFormData: FormData) => Promise<void>;
+  submitData: (currentFormData: AddSubmitterReq) => Promise<void>;
 };
 
 const AddSubmitterModal = ({ studies, onClose, submitData }: AddSubmitterModalProps) => {
@@ -81,7 +77,10 @@ const AddSubmitterModal = ({ studies, onClose, submitData }: AddSubmitterModalPr
     validateForm,
     validateField,
     clearFieldError,
-  } = usingFormValidator<FormData>(EMPTY_FORM, createAddSubmittersValidations(studies));
+  } = usingFormValidator<AddSubmitterReq>(
+    cloneDeep(EMPTY_FORM),
+    createAddSubmittersValidations(studies),
+  );
 
   const updateStudyId: ChangeEventHandler = (event) => {
     event.preventDefault();
@@ -117,16 +116,13 @@ const AddSubmitterModal = ({ studies, onClose, submitData }: AddSubmitterModalPr
     validateForm();
   };
 
-  const handleSubmit = () => {
-    validateForm()
-      .then((valid) => {
-        if (!valid) {
-          throw Error('Form data is not valid, refuse to submit!');
-        }
-      })
-      .then(() => submitData(formData))
-      .then(() => setFormData({ studyId: '', submitters: [''] }))
-      .catch((err) => console.error(err));
+  const handleSubmit = async () => {
+    const valid = await validateForm();
+    // care about valid only because formErrors will render validation errors
+    if (valid) {
+      await submitData(formData);
+      setFormData(cloneDeep(EMPTY_FORM));
+    }
   };
 
   const onBlur = (field: string) => () => validateField(field);
