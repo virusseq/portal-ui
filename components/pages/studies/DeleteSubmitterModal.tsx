@@ -22,6 +22,7 @@
 import { css } from '@emotion/react';
 import React from 'react';
 import { Modal } from '../../Modal';
+import defaultTheme from '../../theme/index';
 
 type DeleteSubmitterModalProps = {
   onClose: () => void;
@@ -50,6 +51,7 @@ const DeleteSubmitterModal = ({
         css={css`
           padding-right: 7px;
           padding-left: 7px;
+          ${defaultTheme.typography.baseFont}
         `}
       >
         Are you sure you want to remove <b>{email}</b> from <b>{studyId}</b>?

@@ -44,7 +44,9 @@ const useNotification = () => {
   const [notifications, setNotifications] = useState<NotificationInfo[]>([]);
 
   const addNotification = (n: NotificationInfo) => {
-    setNotifications(notifications.concat(n));
+    // add to start of array so stored in order from latest to oldest
+    const updatedNotification = [n, ...notifications];
+    setNotifications(updatedNotification);
   };
 
   const buildDismissFunc = (i: number) => () => {
