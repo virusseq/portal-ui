@@ -5,13 +5,13 @@ function createNotificationDivData(ni: NotificationInfo) {
   const Submitters = ni.submitters ? ni.submitters.join(', ') : '';
 
   // HAPPY PATHS
-  if (ni.notifierReason === NotificationType.STUDY_CREATED) {
+  if (ni.type === NotificationType.STUDY_CREATED) {
     return {
       message: <div>You can now add submitters to {BoldedStudy}</div>,
       title: 'Study was successfully created',
       success: true,
     };
-  } else if (ni.notifierReason === NotificationType.SUBMITTERS_ADDED) {
+  } else if (ni.type === NotificationType.SUBMITTERS_ADDED) {
     return {
       message: (
         <div>
@@ -21,7 +21,7 @@ function createNotificationDivData(ni: NotificationInfo) {
       title: 'Data submitter(s) successfully added',
       success: true,
     };
-  } else if (ni.notifierReason === NotificationType.SUBMITTERS_REMOVED) {
+  } else if (ni.type === NotificationType.SUBMITTERS_REMOVED) {
     return {
       message: (
         <div>
@@ -34,7 +34,7 @@ function createNotificationDivData(ni: NotificationInfo) {
   }
 
   // SAD PATHS
-  else if (ni.notifierReason === NotificationType.SUBMITTERS_NOT_FOUND) {
+  else if (ni.type === NotificationType.SUBMITTERS_NOT_FOUND) {
     return {
       message: (
         <div>
@@ -45,13 +45,13 @@ function createNotificationDivData(ni: NotificationInfo) {
       title: 'Submtter(s) not found',
       success: false,
     };
-  } else if (ni.notifierReason === NotificationType.STUDY_NOT_FOUND) {
+  } else if (ni.type === NotificationType.STUDY_NOT_FOUND) {
     return {
       message: <div>Study {BoldedStudy} could not be found. Has it been created?</div>,
       title: 'Study not found',
       success: false,
     };
-  } else if (ni.notifierReason === NotificationType.STUDY_ALREADY_EXISTS) {
+  } else if (ni.type === NotificationType.STUDY_ALREADY_EXISTS) {
     return {
       message: (
         <div>
@@ -61,7 +61,7 @@ function createNotificationDivData(ni: NotificationInfo) {
       title: 'Your study could not be created',
       success: false,
     };
-  } else if (ni.notifierReason === NotificationType.SUBMITTERS_ALREADY_IN_STUDY) {
+  } else if (ni.type === NotificationType.SUBMITTERS_ALREADY_IN_STUDY) {
     return {
       message: (
         <div>
@@ -71,7 +71,7 @@ function createNotificationDivData(ni: NotificationInfo) {
       title: 'Submitter(s) could not be added',
       success: false,
     };
-  } else if (ni.notifierReason === NotificationType.SUBMITTER_NOT_IN_STUDY) {
+  } else if (ni.type === NotificationType.SUBMITTER_NOT_IN_STUDY) {
     return {
       message: (
         <div>
@@ -82,13 +82,13 @@ function createNotificationDivData(ni: NotificationInfo) {
       title: 'Submitter could not be removed',
       success: false,
     };
-  } else if (ni.notifierReason === NotificationType.FAILED_TO_CREATE_STUDY) {
+  } else if (ni.type === NotificationType.FAILED_TO_CREATE_STUDY) {
     return {
       message: <div>{BoldedStudy} could not be created due to an unknown error.</div>,
       title: 'Your study could not be created',
       success: false,
     };
-  } else if (ni.notifierReason === NotificationType.FAILED_TO_REMOVE_SUBMITTER_FROM_STUDY) {
+  } else if (ni.type === NotificationType.FAILED_TO_REMOVE_SUBMITTER_FROM_STUDY) {
     return {
       message: (
         <div>
@@ -98,7 +98,7 @@ function createNotificationDivData(ni: NotificationInfo) {
       title: 'Submitter(s) could not be removed',
       success: false,
     };
-  } else if (ni.notifierReason === NotificationType.FAILED_TO_ADD_SUBMITTERS_TO_STUDY) {
+  } else if (ni.type === NotificationType.FAILED_TO_ADD_SUBMITTERS_TO_STUDY) {
     return {
       message: (
         <div>

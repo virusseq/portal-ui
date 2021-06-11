@@ -24,15 +24,9 @@ import React, { ChangeEventHandler, InputHTMLAttributes } from 'react';
 import { Modal } from '../../../Modal';
 import { FormInputTextArea, FormInputText, usingFormValidator } from '../../../Forms';
 import CreateStudyValidations from './validations';
+import { CreateStudyReq } from '../../../../global/hooks/useStudiesSvcData/types';
 
-type FormData = {
-  studyId: string;
-  organization: string;
-  name: string;
-  description: string;
-};
-
-const EMPTY_FORM = Object.freeze({
+const EMPTY_FORM: CreateStudyReq = Object.freeze({
   studyId: '',
   organization: '',
   name: '',
@@ -41,7 +35,7 @@ const EMPTY_FORM = Object.freeze({
 
 type CreateStudyModalProps = {
   onClose: () => void;
-  submitData: (currentFormData: FormData) => Promise<void>;
+  submitData: (currentFormData: CreateStudyReq) => Promise<void>;
 };
 
 const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
@@ -53,7 +47,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
     validateForm,
     validateField,
     clearFieldError,
-  } = usingFormValidator<FormData>(EMPTY_FORM, CreateStudyValidations);
+  } = usingFormValidator<CreateStudyReq>(EMPTY_FORM, CreateStudyValidations);
 
   const handleSubmit = () => {
     validateForm()
@@ -69,14 +63,14 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
       .catch((err) => console.error(err));
   };
 
-  const buildOnChangeFunc = (key: keyof FormData): ChangeEventHandler => (event) => {
+  const buildOnChangeFunc = (key: keyof CreateStudyReq): ChangeEventHandler => (event) => {
     event.preventDefault();
     const target = event.target as InputHTMLAttributes<typeof event>;
     setFormData({ ...formData, [key]: target.value || '' });
     clearFieldError(key);
   };
 
-  const buildOnBlurFunc = (key: keyof FormData) => () => validateField(key);
+  const buildOnBlurFunc = (key: keyof CreateStudyReq) => () => validateField(key);
 
   const notFilledRequiredFields =
     formData.studyId === '' || formData.name === '' || formData.organization === '';

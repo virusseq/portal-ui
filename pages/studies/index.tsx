@@ -31,8 +31,8 @@ const StudiesPage = createPage({
   },
   isPublic: false,
 })(() => {
-  const { userIsCollaborator } = useAuthContext();
-  return userIsCollaborator ? <ManageStudies /> : <Error401 />;
+  const { userIsCurator } = useAuthContext();
+  return userIsCurator ? <ManageStudies /> : <Error401 />;
 });
 
 export default StudiesPage;

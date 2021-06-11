@@ -33,7 +33,7 @@ type T_AuthContext = {
   logout: (logEvent: LogEventFunctionType) => void;
   user?: UserWithId;
   userHasWriteScopes?: boolean;
-  userIsCollaborator?: boolean;
+  userIsCurator?: boolean;
   fetchWithAuth: typeof fetch;
 };
 
@@ -52,7 +52,7 @@ export const AuthProvider = ({
   egoJwt?: string;
   children: ReactElement;
 }): ReactElement => {
-  const { NEXT_PUBLIC_KEYCLOAK, NEXT_PUBLIC_SCOPE_COLLABORATOR_WRITE } = getConfig();
+  const { NEXT_PUBLIC_KEYCLOAK, NEXT_PUBLIC_SCOPE_CURATOR_WRITE } = getConfig();
   const [token, setTokenState] = useState(egoJwt);
   const router = useRouter();
 
@@ -100,8 +100,8 @@ export const AuthProvider = ({
 
   const userHasWriteScopes = user?.scope.some((scope) => scope.toLowerCase().includes('write'));
 
-  const userIsCollaborator = user?.scope.some(
-    (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_COLLABORATOR_WRITE.toLowerCase(),
+  const userIsCurator = user?.scope.some(
+    (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_CURATOR_WRITE.toLowerCase(),
   );
 
   const authData = {
@@ -109,7 +109,7 @@ export const AuthProvider = ({
     logout,
     user,
     userHasWriteScopes,
-    userIsCollaborator,
+    userIsCurator,
     fetchWithAuth,
   };
 

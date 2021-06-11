@@ -67,7 +67,7 @@ const PageContent = () => {
       const { type, studyId, submitters } = res.error || {};
       notifier.addNotification({
         success: false,
-        notifierReason: type as any,
+        type: type || NotificationType.UNKNOWN,
         studyId,
         submitters,
       });
@@ -88,7 +88,7 @@ const PageContent = () => {
     const { type, studyId, submitters } = error || { type: NotificationType.UNKNOWN };
     notifier.addNotification({
       success: false,
-      notifierReason: type as any,
+      type: type as any,
       studyId,
       submitters,
     });
@@ -104,7 +104,7 @@ const PageContent = () => {
       success: true,
       studyId,
       submitters,
-      notifierReason: onSuccessNotifyState,
+      type: onSuccessNotifyState,
     });
 
     closeAllModals();

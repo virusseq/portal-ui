@@ -20,22 +20,24 @@
  */
 
 import { useState } from 'react';
-import { ErrorType } from '../../../../global/hooks/useStudiesSvcData/types';
+import { ErrorType as StudiesSvcErrorType } from '../../../../global/hooks/useStudiesSvcData/types';
 import createNotificationDivData from './createNotificationData';
 import NotifactionDiv from './NotificationDiv';
 
-enum SuccessType {
+// StudiesSvcSuccessType aren't actually returned from service,
+// just being used here for convenient notification type lookup
+enum StudiesSvcSuccessType {
   STUDY_CREATED = 'STUDY_CREATED',
   SUBMITTERS_ADDED = 'SUBMITTERS_ADDED',
   SUBMITTERS_REMOVED = 'SUBMITTERS_REMOVED',
 }
 
-export const NotificationType = { ...ErrorType, ...SuccessType };
-export type NotificationType = SuccessType | ErrorType;
+export const NotificationType = { ...StudiesSvcErrorType, ...StudiesSvcSuccessType };
+export type NotificationType = StudiesSvcSuccessType | StudiesSvcErrorType;
 
 export type NotificationInfo = {
   success: boolean;
-  notifierReason: NotificationType;
+  type: NotificationType;
   studyId?: string;
   submitters?: string[];
 };
