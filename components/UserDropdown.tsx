@@ -115,7 +115,7 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
     };
   }, [open]);
   const theme: typeof defaultTheme = useTheme();
-  const { logout, userIsCollaborator } = useAuthContext();
+  const { logout, userIsCurator } = useAuthContext();
 
   const handleLogout = () => logout(logEvent);
 
@@ -176,7 +176,7 @@ const UserDropdown = ({ className }: { className?: string }): ReactElement => {
             }
           `}
         >
-          {userIsCollaborator && (
+          {userIsCurator && (
             <li>
               <Link path={STUDIES_PATH}>
                 <StyledListLink>Manage Studies</StyledListLink>
