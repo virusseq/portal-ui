@@ -27,15 +27,11 @@ import defaultTheme from '../../theme';
 
 const StudyAccess = (): ReactElement | null => {
   const theme: typeof defaultTheme = useTheme();
-  const {
-    user,
-    userHasWriteScopes,
-    userCanSubmitDataForAllStudy: userCanSubmitDataToAllStudy,
-  } = useAuthContext();
+  const { user, userHasWriteScopes, userCanSubmitDataForAllStudy } = useAuthContext();
   const [effectiveScopes, setEffectiveScopes] = useState<string[] | null>(null);
 
   useEffect(() => {
-    if (userCanSubmitDataToAllStudy) {
+    if (userCanSubmitDataForAllStudy) {
       setEffectiveScopes(['All Studies']);
       return;
     }
@@ -46,7 +42,7 @@ const StudyAccess = (): ReactElement | null => {
           .filter((scope) => scope.includes('WRITE'))
           .map((scope) => scope.replace('.WRITE', '')),
       );
-  }, [userHasWriteScopes, userCanSubmitDataToAllStudy]);
+  }, [userHasWriteScopes, userCanSubmitDataForAllStudy]);
 
   return userHasWriteScopes && effectiveScopes && effectiveScopes.length > 0 ? (
     <div
@@ -67,7 +63,7 @@ const StudyAccess = (): ReactElement | null => {
       </h2>
 
       <p>You are authorized to submit data for the following studies:</p>
-      {userCanSubmitDataToAllStudy ? (
+      {userCanSubmitDataForAllStudy ? (
         <b>All Studies</b>
       ) : (
         <ul
