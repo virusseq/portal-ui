@@ -31,7 +31,6 @@ const SystemAlerts = () => {
       if (!isAlertDefs(systemAlerts)) {
         throw new Error('System Alert types are invalid!');
       }
-      console.debug('Loaded system_alers:', systemAlerts);
       return systemAlerts;
     } catch (e) {
       console.error('Failed to parse systems alerts! Using empty array!', e);

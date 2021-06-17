@@ -72,6 +72,8 @@ const accent3 = {
 
 const success = {
   success: '#00ddbe',
+  success_dark: '#009984',
+  success_light: '#e6f2f4',
 };
 
 const error = {
