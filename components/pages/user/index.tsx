@@ -29,6 +29,7 @@ import defaultTheme from '../../theme';
 import AccessTokenInfo from './AccessTokenInfo';
 import AuthenticatedBadge from './AuthenticatedBadge';
 import StudyAccess from './StudyAccess';
+import DataCuratorBadge from './DataCuratorBadge';
 
 const StyledPageLayout = styled(PageLayout)`
   ${({ theme }: { theme?: typeof defaultTheme }) =>
@@ -74,7 +75,7 @@ const UserEmail = styled('div')`
 `;
 
 const UserComponent = (): ReactElement => {
-  const { user } = useAuthContext();
+  const { user, userIsCurator } = useAuthContext();
   return (
     <StyledPageLayout subtitle="User Profile & Token">
       <FlexDiv
@@ -97,7 +98,14 @@ const UserComponent = (): ReactElement => {
                   flex-direction: column;
                 `}
               >
-                <UserTitle>{`${user.firstName} ${user.lastName}`}</UserTitle>
+                <FlexDiv
+                  css={css`
+                    flex-direction: row;
+                  `}
+                >
+                  <UserTitle>{`${user.firstName} ${user.lastName}`}</UserTitle>
+                  {userIsCurator && <DataCuratorBadge />}
+                </FlexDiv>
                 <UserEmail>{user.email || ''}</UserEmail>
               </FlexDiv>
               <AuthenticatedBadge provider={user.providerType} />

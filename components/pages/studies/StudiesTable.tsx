@@ -28,6 +28,8 @@ import GenericTable from '../../GenericTable';
 import { Bin } from '../../theme/icons';
 import defaultTheme from '../../theme/index';
 
+type RemoveFuncGenerator = (req: RemoveSubmitterReq) => () => void;
+
 const getTableStyle = (theme: typeof defaultTheme) => css`
   & tbody {
     tr td {
@@ -38,7 +40,17 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
   }
 `;
 
-const SubmitterDeleteRow = ({ hasBottomBorder, submitter, onDeleteClick }: any) => {
+type RemovableSubmitterRowProps = {
+  hasBottomBorder: boolean;
+  submitter: string;
+  onDeleteClick: () => void;
+};
+
+const RemovableSubmitterRow = ({
+  hasBottomBorder,
+  submitter,
+  onDeleteClick,
+}: RemovableSubmitterRowProps) => {
   return (
     <div
       css={css`
@@ -72,7 +84,7 @@ const SubmitterDeleteRow = ({ hasBottomBorder, submitter, onDeleteClick }: any) 
 };
 
 const columnData = (
-  deleteFuncGenerator: ({ email, studyId }: any) => () => void,
+  removeFuncGenerator: RemoveFuncGenerator,
 ): Column<Record<string, unknown>>[] => [
   {
     accessor: 'studyId',
@@ -105,10 +117,10 @@ const columnData = (
           `}
         >
           {value.map((v, i) => (
-            <SubmitterDeleteRow
+            <RemovableSubmitterRow
               key={i}
               submitter={v.submitter}
-              onDeleteClick={deleteFuncGenerator(v)}
+              onDeleteClick={removeFuncGenerator(v)}
               hasBottomBorder={i < value.length - 1}
             />
           ))}
@@ -118,7 +130,12 @@ const columnData = (
   },
 ];
 
-const StudiesTable = ({ tableDeleteButtonFunc, tableData }: any) => {
+type StudiesTableProp = {
+  tableDeleteButtonFunc: RemoveFuncGenerator;
+  tableData: Study[];
+};
+
+const StudiesTable = ({ tableDeleteButtonFunc, tableData }: StudiesTableProp) => {
   return (
     <GenericTable
       style={getTableStyle(defaultTheme)}

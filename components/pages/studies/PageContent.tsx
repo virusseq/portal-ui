@@ -36,6 +36,7 @@ import {
   StudiesSvcResError,
   Study,
 } from '../../../global/hooks/useStudiesSvcData/types';
+import Loader from '../../Loader';
 
 const EMPTY_DELETE_ROW: RemoveSubmitterReq = Object.freeze({ studyId: '', submitter: '' });
 
@@ -92,7 +93,6 @@ const PageContent = () => {
       studyId,
       submitters,
     });
-    closeAllModals();
   }
 
   function afterSubmitSuccess(
@@ -100,19 +100,17 @@ const PageContent = () => {
     studyId: string = '',
     submitters: string[] = [],
   ) {
+    updateTable();
     notifier.addNotification({
       success: true,
       studyId,
       submitters,
       type: onSuccessNotifyState,
     });
-
-    closeAllModals();
-    updateTable();
   }
 
   const submitCreateStudy = async (currentFormData: CreateStudyReq) => {
-    console.log(currentFormData);
+    closeAllModals();
     const { success, error } = await createStudy(currentFormData);
     if (success) {
       afterSubmitSuccess(NotificationType.STUDY_CREATED, currentFormData.studyId);
@@ -122,7 +120,7 @@ const PageContent = () => {
   };
 
   const submitAddUser = async (currentFormData: AddSubmitterReq) => {
-    console.log(currentFormData);
+    closeAllModals();
     const { success, error } = await addSubmitterToStudy(currentFormData);
     if (success) {
       afterSubmitSuccess(
@@ -136,6 +134,7 @@ const PageContent = () => {
   };
 
   const submitRemoveSubmitter = async () => {
+    closeAllModals();
     const { success, error } = await removeSubmitterFromStudy(submitterToRemove);
     if (success) {
       const { studyId, submitter } = submitterToRemove;
@@ -214,7 +213,14 @@ const PageContent = () => {
           </Button>
         </div>
       </div>
-      <StudiesTable tableDeleteButtonFunc={createRemoveSubmitterModalFunc} tableData={tableData} />
+      {awaitingResponse ? (
+        <Loader />
+      ) : (
+        <StudiesTable
+          tableDeleteButtonFunc={createRemoveSubmitterModalFunc}
+          tableData={tableData}
+        />
+      )}
     </div>
   );
 };
