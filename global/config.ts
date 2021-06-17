@@ -50,8 +50,8 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_STUDIES_SVC_URL: publicConfig.NEXT_PUBLIC_STUDIES_SVC_URL || '',
     NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE:
       publicConfig.NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE || 'STUDY-SVC.WRITE',
-    NEXT_PUBLIC_SCOPE_ALL_STUDY_WRITE:
-      publicConfig.NEXT_PUBLIC_SCOPE_ALL_STUDY_WRITE || 'MUSE.WRITE',
+    NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE:
+      publicConfig.NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE || 'MUSE.WRITE',
   } as {
     NEXT_PUBLIC_EGO_API_ROOT: string;
     NEXT_PUBLIC_EGO_CLIENT_ID: string;
@@ -75,6 +75,6 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_SYSTEM_ALERTS: string;
     NEXT_PUBLIC_STUDIES_SVC_URL: string;
     NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE: string;
-    NEXT_PUBLIC_SCOPE_ALL_STUDY_WRITE: string;
+    NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE: string;
   };
 };

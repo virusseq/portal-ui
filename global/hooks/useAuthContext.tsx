@@ -34,6 +34,7 @@ type T_AuthContext = {
   user?: UserWithId;
   userHasWriteScopes?: boolean;
   userIsCurator?: boolean;
+  userHasAccessToStudySvc?: boolean;
   userCanSubmitDataForAllStudy?: boolean;
   fetchWithAuth: typeof fetch;
 };
@@ -56,7 +57,7 @@ export const AuthProvider = ({
   const {
     NEXT_PUBLIC_KEYCLOAK,
     NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE,
-    NEXT_PUBLIC_SCOPE_ALL_STUDY_WRITE,
+    NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE,
   } = getConfig();
   const [token, setTokenState] = useState(egoJwt);
   const router = useRouter();
@@ -105,11 +106,8 @@ export const AuthProvider = ({
 
   const userHasWriteScopes = user?.scope.some((scope) => scope.toLowerCase().includes('write'));
 
-  console.log(NEXT_PUBLIC_SCOPE_ALL_STUDY_WRITE);
-  console.log(NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE);
-
   const userCanSubmitDataForAllStudy = user?.scope.some(
-    (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_ALL_STUDY_WRITE.toLowerCase(),
+    (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE.toLowerCase(),
   );
 
   const userHasAccessToStudySvc = user?.scope.some(
@@ -124,6 +122,7 @@ export const AuthProvider = ({
     user,
     userHasWriteScopes,
     userIsCurator,
+    userHasAccessToStudySvc,
     userCanSubmitDataForAllStudy,
     fetchWithAuth,
   };
