@@ -27,10 +27,18 @@ import defaultTheme from '../../theme';
 
 const StudyAccess = (): ReactElement | null => {
   const theme: typeof defaultTheme = useTheme();
-  const { user, userHasWriteScopes } = useAuthContext();
+  const {
+    user,
+    userHasWriteScopes,
+    userCanSubmitDataForAllStudy: userCanSubmitDataToAllStudy,
+  } = useAuthContext();
   const [effectiveScopes, setEffectiveScopes] = useState<string[] | null>(null);
 
   useEffect(() => {
+    if (userCanSubmitDataToAllStudy) {
+      setEffectiveScopes(['All Studies']);
+      return;
+    }
     userHasWriteScopes &&
       !effectiveScopes &&
       setEffectiveScopes(
@@ -38,7 +46,7 @@ const StudyAccess = (): ReactElement | null => {
           .filter((scope) => scope.includes('WRITE'))
           .map((scope) => scope.replace('.WRITE', '')),
       );
-  }, [userHasWriteScopes]);
+  }, [userHasWriteScopes, userCanSubmitDataToAllStudy]);
 
   return userHasWriteScopes && effectiveScopes && effectiveScopes.length > 0 ? (
     <div
@@ -59,19 +67,22 @@ const StudyAccess = (): ReactElement | null => {
       </h2>
 
       <p>You are authorized to submit data for the following studies:</p>
-
-      <ul
-        css={css`
-          ${theme.typography.subheading};
-          font-weight: normal;
-          color: ${theme.colors.accent_dark};
-          margin-bottom: 1rem;
-        `}
-      >
-        {effectiveScopes?.map((scope) => (
-          <li key={scope}>{scope}</li>
-        ))}
-      </ul>
+      {userCanSubmitDataToAllStudy ? (
+        <b>All Studies</b>
+      ) : (
+        <ul
+          css={css`
+            ${theme.typography.subheading};
+            font-weight: normal;
+            color: ${theme.colors.accent_dark};
+            margin-bottom: 1rem;
+          `}
+        >
+          {effectiveScopes?.map((scope) => (
+            <li key={scope}>{scope}</li>
+          ))}
+        </ul>
+      )}
     </div>
   ) : null;
 };
