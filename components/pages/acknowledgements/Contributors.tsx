@@ -19,17 +19,28 @@
  *
  */
 
-import { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 
 import defaultTheme from '../../theme';
+import useSingularityData from '../../../global/hooks/useSingularityData';
+import { LoaderWrapper } from '../../Loader';
 
 const Contributors = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
+  const { awaitingResponse, fetchContributors } = useSingularityData();
+  const [contributorsList, setContributorsList] = useState([]);
+
+  useEffect(() => {
+    fetchContributors().then((response) => {
+      response.data && setContributorsList(response.data);
+    });
+  }, []);
+
   return (
     <section
       css={css`
-        margin: 5px 0 10px;
+        margin: 0 0 10px;
       `}
     >
       <h2
@@ -40,7 +51,22 @@ const Contributors = (): ReactElement => {
         The following members have contributed data to the Canadian VirusSeq Data Portal:
       </h2>
 
-      <p>
+      <LoaderWrapper loading={awaitingResponse} size="10px">
+        <p>
+          {contributorsList.map((contributor) => (
+            <React.Fragment key={contributor}>
+              {contributor}
+              <br />
+            </React.Fragment>
+          ))}
+        </p>
+      </LoaderWrapper>
+
+      <p
+        css={css`
+          ${theme.typography.data};
+        `}
+      >
         [List of contributors will be extracted from the “Sample collected by” and “Sample submitted
         by” columns]
       </p>

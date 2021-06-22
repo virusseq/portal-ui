@@ -30,7 +30,7 @@ const Partners = (): ReactElement => {
   return (
     <section
       css={css`
-        margin: 5px 0 10px;
+        margin: 5px 0 0;
       `}
     >
       <h2
