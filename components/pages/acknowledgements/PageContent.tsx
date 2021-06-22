@@ -23,13 +23,12 @@ import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 
 import defaultTheme from '../../theme';
-import Funding from './Funding';
-import Parners from './Partners';
-import Portal from './Portal';
-import Cloud from './Cloud';
+import Policy from './Policy';
+import Contributors from './Contributors';
 
 const PageContent = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
+  const currentDatetime = new Date();
 
   return (
     <main
@@ -69,13 +68,11 @@ const PageContent = (): ReactElement => {
             margin-top: 10px 0 0;
           `}
         >
-          A Made-in-Canada Data Solution
+          Updated on {currentDatetime.toLocaleString()}
         </p>
 
-        <Funding />
-        <Parners />
-        <Portal />
-        <Cloud />
+        <Policy />
+        <Contributors />
       </article>
     </main>
   );
