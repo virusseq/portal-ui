@@ -91,11 +91,11 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
         css={css`
           display: flex;
           flex-direction: column;
-          width: 675px;
-          height: 400px;
+          row-gap: 5px;
+          width: 630px;
           justify-content: space-evenly;
-          margin-left: 30px;
-          margin-right: 30px;
+          margin-top: 10px;
+          padding-right: 10px;
         `}
       >
         <FormInputText
@@ -105,7 +105,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
           onBlur={buildOnBlurFunc(`studyId`)}
           errorMessage={formErrors[`studyId`]}
           value={formData[`studyId`]}
-          size={43}
+          size={50}
         />
         <FormInputText
           required={true}
@@ -114,7 +114,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
           onBlur={buildOnBlurFunc(`organization`)}
           errorMessage={formErrors[`organization`]}
           value={formData[`organization`]}
-          size={43}
+          size={50}
         />
         <FormInputText
           required={true}
@@ -123,7 +123,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
           onBlur={buildOnBlurFunc(`name`)}
           errorMessage={formErrors[`name`]}
           value={formData[`name`]}
-          size={43}
+          size={50}
         />
         <FormInputTextArea
           required={false}
@@ -132,7 +132,8 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
           onBlur={buildOnBlurFunc(`description`)}
           errorMessage={formErrors[`description`]}
           value={formData[`description`]}
-          cols={44}
+          cols={52}
+          rows={8}
         />
       </div>
     </Modal>
