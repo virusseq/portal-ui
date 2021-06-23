@@ -185,6 +185,7 @@ export const FormInputText = ({
 type FormInputTextAreaProps = FormInputBaseProps &
   InputElementBaseProps & {
     cols: number;
+    rows: number;
   };
 
 export const FormInputTextArea = ({
@@ -196,7 +197,6 @@ export const FormInputTextArea = ({
 }: FormInputTextAreaProps) => {
   const inputElement = (
     <textarea
-      rows={10}
       css={css`
         ${inputTextStyle}
         resize: vertical;
