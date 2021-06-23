@@ -30,6 +30,13 @@ import { Bin } from './theme/icons';
 
 type ErrorsByPathMap = Record<string, string>;
 
+const inputTextStyle = css`
+  ${defaultTheme.typography.baseFont}
+  font-size: 16px;
+  border-radius: 5px;
+  border: solid 1px ${defaultTheme.colors.grey_5};
+`;
+
 export const FormTextBlock = styled('div')`
       display: flex; 
       width 100%;
@@ -93,7 +100,7 @@ const FormInputTemplate = ({
       >
         <div>
           {inputElement}
-          <StyledText text={errorMessage || ' '} color="red" font={12} />
+          <StyledText text={errorMessage || ' '} color={defaultTheme.colors.error} font={11} />
         </div>
       </div>
     </Row>
@@ -118,6 +125,7 @@ export const FormInputSearchSelect = ({
     <div>
       <input
         css={css`
+          ${inputTextStyle}
           padding: 6px 10px;
         `}
         list={`${key}-options`}
@@ -156,6 +164,7 @@ export const FormInputText = ({
   const inputElement = (
     <input
       css={css`
+        ${inputTextStyle}
         padding: 6px 10px;
       `}
       type="text"
@@ -189,6 +198,7 @@ export const FormInputTextArea = ({
     <textarea
       rows={10}
       css={css`
+        ${inputTextStyle}
         resize: vertical;
         padding: 6px 10px;
       `}
@@ -226,6 +236,7 @@ export const FormInputTextBin = ({
     <Row nogutter>
       <input
         css={css`
+          ${inputTextStyle}
           padding: 6px 10px;
         `}
         type="text"

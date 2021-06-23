@@ -94,6 +94,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
           width: 675px;
           height: 400px;
           justify-content: space-evenly;
+          margin-top: 25px;
           margin-left: 30px;
           margin-right: 30px;
         `}
@@ -105,7 +106,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
           onBlur={buildOnBlurFunc(`studyId`)}
           errorMessage={formErrors[`studyId`]}
           value={formData[`studyId`]}
-          size={43}
+          size={55}
         />
         <FormInputText
           required={true}
@@ -114,7 +115,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
           onBlur={buildOnBlurFunc(`organization`)}
           errorMessage={formErrors[`organization`]}
           value={formData[`organization`]}
-          size={43}
+          size={55}
         />
         <FormInputText
           required={true}
@@ -123,7 +124,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
           onBlur={buildOnBlurFunc(`name`)}
           errorMessage={formErrors[`name`]}
           value={formData[`name`]}
-          size={43}
+          size={55}
         />
         <FormInputTextArea
           required={false}
@@ -132,7 +133,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
           onBlur={buildOnBlurFunc(`description`)}
           errorMessage={formErrors[`description`]}
           value={formData[`description`]}
-          cols={44}
+          cols={57}
         />
       </div>
     </Modal>
