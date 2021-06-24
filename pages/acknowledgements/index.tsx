@@ -20,16 +20,16 @@
  */
 
 import React from 'react';
-import Team from '../../components/pages/acknowledgements';
+import Acknowledgements from '../../components/pages/acknowledgements';
 import { createPage } from '../../global/utils/pages';
 
-const TeamPage = createPage({
+const AcknowledgementsPage = createPage({
   getInitialProps: async ({ query, egoJwt }) => {
     return { query, egoJwt };
   },
   isPublic: true,
 })(() => {
-  return <Team />;
+  return <Acknowledgements />;
 });
 
-export default TeamPage;
+export default AcknowledgementsPage;

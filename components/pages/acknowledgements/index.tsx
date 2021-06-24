@@ -24,10 +24,10 @@ import { ReactElement } from 'react';
 import PageContent from './PageContent';
 import PageLayout from '../../PageLayout';
 
-const TeamPage = (): ReactElement => (
+const Acknowledgements = (): ReactElement => (
   <PageLayout subtitle="Acknowledgement of Contributions">
     <PageContent />
   </PageLayout>
 );
 
-export default TeamPage;
+export default Acknowledgements;

@@ -20,20 +20,21 @@
  */
 
 import { useState } from 'react';
+import urlJoin from 'url-join';
 
 import { getConfig } from '../../config';
 import processStream from '../../utils/processStream';
 import { ContributorsResponse, SingularityErrorResponse } from './types';
 
 const useSingularityData = () => {
-  const { NEXT_PUBLIC_MUSE_API } = getConfig();
+  const { NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
   const [awaitingResponse, setAwaitingResponse] = useState(false);
 
   // For reference: https://singularity.dev.cancogen.cancercollaboratory.org/swagger-ui/
   const fetchContributors = () => {
     setAwaitingResponse(true);
 
-    return fetch(`${NEXT_PUBLIC_MUSE_API}contributors`, {
+    return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/contributors'), {
       method: 'GET',
     })
       .then((response) => {
