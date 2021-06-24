@@ -23,7 +23,7 @@ import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 
 import defaultTheme from '../../theme';
-import { EXPLORER_PATH, TEAM_PATH } from '../../../global/utils/constants';
+import { EXPLORER_PATH, TEAM_PATH, ACKNOWLEDGEMENTS_PATH } from '../../../global/utils/constants';
 import { StyledLinkAsButton, InternalLink as Link } from '../../Link';
 import { MapleLeaf } from '../../theme/icons';
 import ReleaseData from './ReleaseData';
@@ -152,6 +152,7 @@ const HeroBanner = (): ReactElement => {
                 background-color: ${theme.colors.accent3};
                 border-color: ${theme.colors.accent3};
                 line-height: 20px;
+                margin-right: 15px;
                 padding: 8px 20px;
                 width: fit-content;
 
@@ -162,6 +163,26 @@ const HeroBanner = (): ReactElement => {
               `}
             >
               Meet the Team
+            </StyledLinkAsButton>
+          </Link>
+
+          <Link path={ACKNOWLEDGEMENTS_PATH}>
+            <StyledLinkAsButton
+              css={css`
+                ${theme.typography.button};
+                background-color: ${theme.colors.accent3};
+                border-color: ${theme.colors.accent3};
+                line-height: 20px;
+                padding: 8px 20px;
+                width: fit-content;
+
+                &:hover {
+                  color: ${theme.colors.white};
+                  background-color: ${theme.colors.accent3_dark};
+                }
+              `}
+            >
+              Acknowledgements
             </StyledLinkAsButton>
           </Link>
         </div>
