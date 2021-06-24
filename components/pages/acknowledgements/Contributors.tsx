@@ -61,15 +61,6 @@ const Contributors = (): ReactElement => {
           ))}
         </p>
       </LoaderWrapper>
-
-      <p
-        css={css`
-          ${theme.typography.data};
-        `}
-      >
-        [List of contributors will be extracted from the “Sample collected by” and “Sample submitted
-        by” columns]
-      </p>
     </section>
   );
 };
