@@ -27,7 +27,7 @@ const SubmissionPage = createPage({
   getInitialProps: async ({ query, egoJwt }) => {
     return { query, egoJwt };
   },
-  isPublic: true,
+  isPublic: false,
 })(() => {
   return <Submission />;
 });
