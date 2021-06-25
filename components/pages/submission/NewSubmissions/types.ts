@@ -22,8 +22,8 @@
 export type ErrorTypes =
   | 'invalidFields'
   | 'missingHeaders'
-  | 'sampleIdInFileMissingInTsv'
-  | 'sampleIdInRecordMissingInFile'
+  | 'fastaHeaderInFileMissingInTsv'
+  | 'fastaHeaderInRecordMissingInFile'
   | 'unknownHeaders'
   | string; // in case new error types are added, the app won't just crash
 
