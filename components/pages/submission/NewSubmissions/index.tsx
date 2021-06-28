@@ -134,11 +134,11 @@ const NewSubmissions = (): ReactElement => {
       <h1 className="view-title">Start a New Submission</h1>
 
       <p>
-        Virus metadata is submitted as a .tsv file. Viral genome data must be submitted as a{' '}
-        <span className="code">.fasta</span> file. Up to 5000 samples can be submitted in a single
-        submission, but note that the larger the file the longer the submission will take. Fasta
-        files are accepted individually, or as a single concatenated fasta containing all samples in
-        one file.
+        Virus metadata is submitted as a <span className="code">.tsv</span> file. Viral genome data
+        must be submitted as a <span className="code">.fasta</span> file. Up to 5000 samples can be
+        submitted in a single submission, but note that the larger the file the longer the
+        submission will take. FASTA files are accepted individually, or as a single concatenated
+        FASTA containing all samples in one file.
       </p>
 
       <h2>To format your viral sequence metadata:</h2>
@@ -193,7 +193,7 @@ const NewSubmissions = (): ReactElement => {
           Each sequence must be preceded be a description line, beginning with a &gt;. The
           description line should include &gt;hCoV-19/<span className="code">country</span>/
           <span className="code">identifier</span>/<span className="code">year</span> sequenced.
-          This identifier must match exactly the "Isolate" column in the TSV file.
+          This identifier must match exactly the "fasta header name" column in the TSV file.
         </li>
       </ol>
 

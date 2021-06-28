@@ -72,9 +72,9 @@ const ErrorMessage = ({
     ) : (
       <li key={type}>
         <p>
-          {type === 'sampleIdInFileMissingInTsv'
+          {type === 'fastaHeaderInFileMissingInTsv'
             ? 'Missing samples in the TSV'
-            : type === 'sampleIdInRecordMissingInFile'
+            : type === 'fastaHeaderInRecordMissingInFile'
             ? 'Missing samples in the Fasta'
             : type === 'missingHeaders'
             ? 'Missing headers in the TSV'
