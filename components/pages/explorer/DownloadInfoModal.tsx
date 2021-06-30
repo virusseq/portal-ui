@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { ACKNOWLEDGEMENTS_PATH } from '../../../global/utils/constants';
 import StyledLink, { InternalLink } from '../../Link';
 import { Modal } from '../../Modal';
 import defaultTheme from '../../theme';
@@ -14,9 +15,10 @@ const DownloadInfoModal = ({ onClose }: { onClose: () => void }) => {
         `}
       >
         <p>
-          Your download has started. By downloading this data, you agree to acknowledge the Canadian Public Health
-          Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having contributed data
-          and follow all <StyledLink href="./policies">CVDP policies</StyledLink>.
+          Your download has started. By downloading this data, you agree to{' '}
+          <StyledLink href={ACKNOWLEDGEMENTS_PATH}>acknowledge</StyledLink> the Canadian Public
+          Health Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having contributed
+          data and follow all <StyledLink href="./policies">CVDP policies</StyledLink>.
         </p>
         <p>
           Data that is being shared is the work of many individuals and should be treated as

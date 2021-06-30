@@ -117,10 +117,12 @@ const ModalFooter = (props: ModalFooterProps) => {
   );
 };
 
-type ModalProps = Partial<ModalHeaderProps> & Partial<ModalFooterProps> & { children: ReactNode };
+type ModalProps = Partial<ModalHeaderProps> &
+  Partial<ModalFooterProps> &
+  Partial<{ children: ReactNode }>;
 
 export const Modal = ({
-  children,
+  children = null,
   title = '',
   showActionButton = false,
   disableActionButton = true,

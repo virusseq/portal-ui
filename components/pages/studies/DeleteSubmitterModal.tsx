@@ -19,50 +19,45 @@
  *
  */
 
-export type ErrorTypes =
-  | 'invalidFields'
-  | 'missingHeaders'
-  | 'fastaHeaderInFileMissingInTsv'
-  | 'fastaHeaderInRecordMissingInFile'
-  | 'unknownHeaders'
-  | string; // in case new error types are added, the app won't just crash
+import { css } from '@emotion/react';
+import React from 'react';
+import { Modal } from '../../Modal';
+import defaultTheme from '../../theme/index';
 
-export type InvalidFieldsType = {
-  fieldName: string;
-  index: number;
-  reason: 'EXPECTING_NUMBER_TYPE' | 'NOT_ALLOWED_TO_BE_EMPTY' | 'UNAUTHORIZED_FOR_STUDY_UPLOAD';
-  value: string;
+type DeleteSubmitterModalProps = {
+  onClose: () => void;
+  onSubmit: () => Promise<void>;
+  submitter: string;
+  studyId: string;
 };
 
-export type NoUploadErrorType = {
-  errorInfo?: {
-    invalidFields?: InvalidFieldsType[];
-    missingHeaders?: string[];
-    sampleIdInFileMissingInTsv?: string[];
-    sampleIdInRecordMissingInFile?: string[];
-    unknownHeaders?: string[];
-  };
-  message?: string;
-  status?: string;
+const DeleteSubmitterModal = ({
+  onClose,
+  onSubmit,
+  submitter: email,
+  studyId,
+}: DeleteSubmitterModalProps) => {
+  return (
+    <Modal
+      showActionButton={true}
+      disableActionButton={false}
+      onCloseClick={onClose}
+      onActionClick={onSubmit}
+      actionText="Remove"
+      closeText="Cancel"
+      title={'Remove Confirmation'}
+    >
+      <p
+        css={css`
+          padding-right: 7px;
+          padding-left: 7px;
+          ${defaultTheme.typography.baseFont}
+        `}
+      >
+        Are you sure you want to remove <b>{email}</b> from <b>{studyId}</b>?
+      </p>
+    </Modal>
+  );
 };
 
-export type ReaderCallbackType = (result: string | ArrayBuffer | null) => void;
-
-export type ValidationActionType =
-  | {
-      type: 'add fasta' | 'add tsv';
-      file: File;
-    }
-  | {
-      type: 'remove fasta' | 'remove tsv';
-      file: string;
-    }
-  | {
-      type: 'clear all' | 'is ready' | 'not ready';
-    };
-
-export type ValidationParametersType = {
-  oneTSV: File[];
-  oneOrMoreFasta: File[];
-  readyToUpload: boolean;
-};
+export default DeleteSubmitterModal;

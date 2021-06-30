@@ -34,6 +34,7 @@ import {
   SUBMISSION_PATH,
   USER_PATH,
   TEAM_PATH,
+  ACKNOWLEDGEMENTS_PATH
 } from '../global/utils/constants';
 
 const NavBar = (): ReactElement => {
@@ -155,6 +156,16 @@ const NavBar = (): ReactElement => {
               `}
             >
               Meet the Team
+            </a>
+          </Link>
+          <Link path={ACKNOWLEDGEMENTS_PATH}>
+            <a
+              css={css`
+                ${linkStyle}
+                ${router.asPath.startsWith(ACKNOWLEDGEMENTS_PATH) ? activeLinkStyle : ''}
+              `}
+            >
+              Acknowledgements
             </a>
           </Link>
         </div>

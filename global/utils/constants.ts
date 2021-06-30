@@ -32,9 +32,11 @@ export const ROOT_PATH = '/';
 export const ABOUT_PATH = ROOT_PATH;
 export const EXPLORER_PATH = '/explorer';
 export const USER_PATH = '/user';
+export const STUDIES_PATH = '/studies';
 export const LOGIN_PATH = '/login';
 export const SUBMISSION_PATH = '/submission';
 export const TEAM_PATH = '/team';
+export const ACKNOWLEDGEMENTS_PATH = '/acknowledgements';
 
 // external docs links
 const OVERTURE_DMS_DOCS_ROOT = 'https://overture.bio/documentation/dms/';

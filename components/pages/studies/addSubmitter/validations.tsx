@@ -19,50 +19,28 @@
  *
  */
 
-export type ErrorTypes =
-  | 'invalidFields'
-  | 'missingHeaders'
-  | 'fastaHeaderInFileMissingInTsv'
-  | 'fastaHeaderInRecordMissingInFile'
-  | 'unknownHeaders'
-  | string; // in case new error types are added, the app won't just crash
+import { Study } from '../../../../global/hooks/useStudiesSvcData/types';
+import yup from '../../../../global/utils/validations';
 
-export type InvalidFieldsType = {
-  fieldName: string;
-  index: number;
-  reason: 'EXPECTING_NUMBER_TYPE' | 'NOT_ALLOWED_TO_BE_EMPTY' | 'UNAUTHORIZED_FOR_STUDY_UPLOAD';
-  value: string;
+const createAddSubmittersValidations = (studies: Study[]) => {
+  return yup
+    .object()
+    .shape({
+      studyId: yup
+        .string()
+        .required()
+        .trim()
+        .label('Study ID')
+        .max(15)
+        // oneOf includes empty string so required error message is propagated correctly
+        .oneOf(studies.map((s) => s.studyId).concat(''), 'Study ID does not exist.')
+        .defined(),
+      submitters: yup
+        .array()
+        .of(yup.string().trim().label('Email Address').required().email())
+        .defined(),
+    })
+    .defined();
 };
 
-export type NoUploadErrorType = {
-  errorInfo?: {
-    invalidFields?: InvalidFieldsType[];
-    missingHeaders?: string[];
-    sampleIdInFileMissingInTsv?: string[];
-    sampleIdInRecordMissingInFile?: string[];
-    unknownHeaders?: string[];
-  };
-  message?: string;
-  status?: string;
-};
-
-export type ReaderCallbackType = (result: string | ArrayBuffer | null) => void;
-
-export type ValidationActionType =
-  | {
-      type: 'add fasta' | 'add tsv';
-      file: File;
-    }
-  | {
-      type: 'remove fasta' | 'remove tsv';
-      file: string;
-    }
-  | {
-      type: 'clear all' | 'is ready' | 'not ready';
-    };
-
-export type ValidationParametersType = {
-  oneTSV: File[];
-  oneOrMoreFasta: File[];
-  readyToUpload: boolean;
-};
+export default createAddSubmittersValidations;

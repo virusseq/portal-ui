@@ -271,6 +271,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
     NEXT_PUBLIC_DOWNLOAD_ALL_URL,
     NEXT_PUBLIC_MUSE_API,
+    NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS,
   } = getConfig();
 
   const [showDownloadInfoModal, setShowDownloadInfoModal] = useState(false);
@@ -280,11 +281,14 @@ const RepoTable = (props: PageContentProps): ReactElement => {
 
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 
+  const tsvExportColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',').map((c) => c.trim());
+
   const customExporters = [
     {
       label: 'Metadata Table',
       fileName: `virusseq-metadata-export-${today}.tsv`,
       requiresRowSelection: true,
+      columns: tsvExportColumns,
     }, // exports a TSV with what is displayed on the table (columns selected, etc.)
     {
       label: 'Consensus Seq',

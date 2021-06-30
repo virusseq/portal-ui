@@ -19,50 +19,15 @@
  *
  */
 
-export type ErrorTypes =
-  | 'invalidFields'
-  | 'missingHeaders'
-  | 'fastaHeaderInFileMissingInTsv'
-  | 'fastaHeaderInRecordMissingInFile'
-  | 'unknownHeaders'
-  | string; // in case new error types are added, the app won't just crash
+import { ReactElement } from 'react';
 
-export type InvalidFieldsType = {
-  fieldName: string;
-  index: number;
-  reason: 'EXPECTING_NUMBER_TYPE' | 'NOT_ALLOWED_TO_BE_EMPTY' | 'UNAUTHORIZED_FOR_STUDY_UPLOAD';
-  value: string;
-};
+import PageContent from './PageContent';
+import PageLayout from '../../PageLayout';
 
-export type NoUploadErrorType = {
-  errorInfo?: {
-    invalidFields?: InvalidFieldsType[];
-    missingHeaders?: string[];
-    sampleIdInFileMissingInTsv?: string[];
-    sampleIdInRecordMissingInFile?: string[];
-    unknownHeaders?: string[];
-  };
-  message?: string;
-  status?: string;
-};
+const Acknowledgements = (): ReactElement => (
+  <PageLayout subtitle="Acknowledgement of Contributions">
+    <PageContent />
+  </PageLayout>
+);
 
-export type ReaderCallbackType = (result: string | ArrayBuffer | null) => void;
-
-export type ValidationActionType =
-  | {
-      type: 'add fasta' | 'add tsv';
-      file: File;
-    }
-  | {
-      type: 'remove fasta' | 'remove tsv';
-      file: string;
-    }
-  | {
-      type: 'clear all' | 'is ready' | 'not ready';
-    };
-
-export type ValidationParametersType = {
-  oneTSV: File[];
-  oneOrMoreFasta: File[];
-  readyToUpload: boolean;
-};
+export default Acknowledgements;
