@@ -19,58 +19,50 @@
  *
  */
 
-export type ContributorsResponse = {
-  data: string[];
+import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
+import ReleasesTable from './ReleasesTable';
+import Description from './Description';
+import Policy from './Policy';
+
+import defaultTheme from '../../theme';
+const PageContent = (): ReactElement => {
+  const theme: typeof defaultTheme = useTheme();
+  return (
+    <main
+      css={css`
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: ${theme.dimensions.footer.height}px;
+      `}
+    >
+      <article
+        css={css`
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          margin: 30px 0;
+          max-width: 800px;
+          padding: 40px;
+          width: 100%;
+          row-gap: 25px;
+          ${theme.shadow.default};
+        `}
+      >
+        <b
+          css={css`
+            font-size: 26px;
+          `}
+        >
+          Data Relases
+        </b>
+        <Description />
+        <ReleasesTable />
+        <Policy />
+      </article>
+    </main>
+  );
 };
 
-export type SingularityErrorResponse = {
-  errorInfo: Record<string, unknown>;
-  message: string;
-  status: string;
-};
-
-export type Archive = {
-  id: string;
-  status: 'COMPLETE' | 'BUILDING' | 'FAILED';
-  type: 'SET_QUERY' | 'ALL';
-  hash_info: string;
-  hash: string;
-  object_id: string;
-  created_at: number;
-  num_of_samples: number;
-  num_of_downloads: number;
-};
-
-export type Pageable = {
-  totalPages: number;
-  totalElements: number;
-};
-
-export type ArchivesFetchRes = {
-  content: any;
-  pageable: {
-    pageNumber: number; // zero indexed!
-    pageSize: number;
-    paged: boolean;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean; // is this the last page
-  size: number;
-  number: number; // page number is zero indexed
-};
-
-export type PagedResponse<T> = {
-  content: Array<T>;
-  pageable: {
-    pageNumber: number; // zero indexed!
-    pageSize: number;
-    paged: boolean;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean; // is this the last page
-  size: number;
-  number: number; // page number is zero indexed
-
-}
+export default PageContent;

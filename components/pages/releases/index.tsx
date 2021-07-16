@@ -19,58 +19,15 @@
  *
  */
 
-export type ContributorsResponse = {
-  data: string[];
-};
+import { ReactElement } from 'react';
 
-export type SingularityErrorResponse = {
-  errorInfo: Record<string, unknown>;
-  message: string;
-  status: string;
-};
+import PageContent from './PageContent';
+import PageLayout from '../../PageLayout';
 
-export type Archive = {
-  id: string;
-  status: 'COMPLETE' | 'BUILDING' | 'FAILED';
-  type: 'SET_QUERY' | 'ALL';
-  hash_info: string;
-  hash: string;
-  object_id: string;
-  created_at: number;
-  num_of_samples: number;
-  num_of_downloads: number;
-};
+const ArchivePage = (): ReactElement => (
+  <PageLayout>
+    <PageContent />
+  </PageLayout>
+);
 
-export type Pageable = {
-  totalPages: number;
-  totalElements: number;
-};
-
-export type ArchivesFetchRes = {
-  content: any;
-  pageable: {
-    pageNumber: number; // zero indexed!
-    pageSize: number;
-    paged: boolean;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean; // is this the last page
-  size: number;
-  number: number; // page number is zero indexed
-};
-
-export type PagedResponse<T> = {
-  content: Array<T>;
-  pageable: {
-    pageNumber: number; // zero indexed!
-    pageSize: number;
-    paged: boolean;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean; // is this the last page
-  size: number;
-  number: number; // page number is zero indexed
-
-}
+export default ArchivePage;
