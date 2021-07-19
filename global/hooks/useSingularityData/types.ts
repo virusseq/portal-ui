@@ -46,31 +46,23 @@ export type Pageable = {
   totalElements: number;
 };
 
-export type ArchivesFetchRes = {
-  content: any;
-  pageable: {
-    pageNumber: number; // zero indexed!
-    pageSize: number;
-    paged: boolean;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean; // is this the last page
-  size: number;
-  number: number; // page number is zero indexed
+export type ArchivesFetchRes = PagedResponse<Archive>;
+
+export type ArchviesFetchReq = {
+  fromCreateTimeEpoch?: number;
+  toCreateTimeEpoch?: number;
+  size?: number;
+  page?: number;
+  sortDirection?: 'ASC' | 'DESC';
 };
 
 export type PagedResponse<T> = {
   content: Array<T>;
-  pageable: {
-    pageNumber: number; // zero indexed!
-    pageSize: number;
-    paged: boolean;
-  };
   totalPages: number;
   totalElements: number;
+  first: boolean; // is this the first page
   last: boolean; // is this the last page
   size: number;
-  number: number; // page number is zero indexed
-
-}
+  number: number; // current page number (zero indexed)
+  numberOfElements: number; // number of elements in current page
+};

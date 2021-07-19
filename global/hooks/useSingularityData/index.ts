@@ -24,7 +24,12 @@ import urlJoin from 'url-join';
 
 import { getConfig } from '../../config';
 import processStream from '../../utils/processStream';
-import { ContributorsResponse, SingularityErrorResponse } from './types';
+import {
+  ArchivesFetchRes,
+  ArchviesFetchReq,
+  ContributorsResponse,
+  SingularityErrorResponse,
+} from './types';
 
 const useSingularityData = () => {
   const { NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
@@ -62,9 +67,27 @@ const useSingularityData = () => {
       });
   };
 
+  const fetchReleaseInfo = (req?: ArchviesFetchReq): Promise<ArchivesFetchRes> => {
+    console.log(req);
+    const params = req
+      ? '?' +
+        Object.entries(req)
+          .map(([k, v]) => `${k}=${v}`)
+          .join('&')
+      : '';
+    console.log(params);
+    // const params = req ? new URLSearchParams(JSON.stringify(req)) : '';
+    setAwaitingResponse(true);
+    return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/archives', params)).then((res) => {
+      setAwaitingResponse(false);
+      return res.json();
+    }) as Promise<ArchivesFetchRes>;
+  };
+
   return {
     awaitingResponse,
     fetchContributors,
+    fetchReleaseInfo,
     setAwaitingResponse,
   };
 };
