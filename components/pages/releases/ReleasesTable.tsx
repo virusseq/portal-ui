@@ -9,6 +9,8 @@ import useSingularityData, {
 } from '../../../global/hooks/useSingularityData';
 import { format } from 'date-fns';
 import StyledLink from '../../Link';
+import defaultTheme from '../../theme/index';
+import styled from '@emotion/styled';
 
 const columnData = (): Column<Record<string, unknown>>[] => [
   {
@@ -42,15 +44,62 @@ const columnData = (): Column<Record<string, unknown>>[] => [
 const earliestRelease = 1626373700;
 const nowEpoch = Math.round(new Date().getTime() / 1000);
 
-type FilterDates = { fromCreateTimeEpoch: number | -1; toCreateTimeEpoch: number | -1 };
+type FilterDates = { createdAfterEpochSec: number | -1; createdBeforeEpochSec: number };
+
+const PageButton = ({
+  direction,
+  onClick,
+  disabled,
+}: {
+  direction: 'LEFT' | 'DOUBLE_LEFT' | 'RIGHT' | 'DOUBLE_RIGHT';
+  onClick: any;
+  disabled: boolean | undefined;
+}) => {
+  return (
+    <UnStyledButton
+      onClick={onClick}
+      disabled={disabled}
+      css={css`
+        cursor: ${disabled ? 'default' : undefined};
+        color: ${disabled ? defaultTheme.colors.grey_6 : defaultTheme.colors.primary};
+        font-size: 18px;
+        ${defaultTheme.typography.baseFont}
+      `}
+    >
+      {direction === 'LEFT' && '‹'}
+      {direction === 'DOUBLE_LEFT' && '«'}
+      {direction === 'RIGHT' && '›'}
+      {direction === 'DOUBLE_RIGHT' && '»'}
+    </UnStyledButton>
+  );
+};
+
+const PageNumber = ({ num }: { num: number }) => {
+  return (
+    <span
+      css={css`
+        font-size: 14px;
+        text-align: center;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        padding: 3px 4px 5px 4px;
+        background-color: ${defaultTheme.colors.grey_1};
+        ${defaultTheme.typography.baseFont};
+      `}
+    >
+      {num}
+    </span>
+  );
+};
 
 const ArchivesTable = (): ReactElement => {
-  const { fetchReleaseInfo } = useSingularityData();
+  const { fetchCompletedArchvieAllInfos: fetchReleaseInfo } = useSingularityData();
 
   const [tableData, setTableData] = useState<ArchivesFetchRes>();
   const [filterDates, setFilterDates] = useState<FilterDates>({
-    fromCreateTimeEpoch: earliestRelease,
-    toCreateTimeEpoch: nowEpoch,
+    createdAfterEpochSec: earliestRelease,
+    createdBeforeEpochSec: nowEpoch,
   });
 
   const updateData = (req: ArchviesFetchReq) => {
@@ -97,7 +146,7 @@ const ArchivesTable = (): ReactElement => {
       const { value } = e.target;
       const epochSecs = new Date(value).valueOf() / 1000;
       console.log(epochSecs);
-      const updatedFilterDates: FilterDates = { ...filterDates, fromCreateTimeEpoch: epochSecs };
+      const updatedFilterDates: FilterDates = { ...filterDates, createdAfterEpochSec: epochSecs };
       setFilterDates(updatedFilterDates);
       updateData({ ...updatedFilterDates });
     } catch (e) {
@@ -110,7 +159,7 @@ const ArchivesTable = (): ReactElement => {
       const { value } = e.target;
       const epochSecs = new Date(value).valueOf() / 1000;
       console.log(epochSecs);
-      const updatedFilterDates: FilterDates = { ...filterDates, toCreateTimeEpoch: epochSecs };
+      const updatedFilterDates: FilterDates = { ...filterDates, createdBeforeEpochSec: epochSecs };
       setFilterDates(updatedFilterDates);
       updateData({ ...updatedFilterDates });
     } catch (e) {
@@ -132,6 +181,7 @@ const ArchivesTable = (): ReactElement => {
         css={css`
           display: flex;
           justify-content: space-between;
+          align-items: center;
           font-size: 12px;
         `}
       >
@@ -184,22 +234,23 @@ const ArchivesTable = (): ReactElement => {
         <div
           css={css`
             display: inline-flex;
+            align-items: center;
             column-gap: 10px;
           `}
         >
-          <UnStyledButton onClick={goToFirstPage} disabled={tableData?.first}>
-            {'<<'}
-          </UnStyledButton>
-          <UnStyledButton onClick={goToPrevPage} disabled={tableData?.first}>
-            {'<'}
-          </UnStyledButton>
-          <span>{tableData?.number ? tableData?.number + 1 : 1}</span>
-          <UnStyledButton onClick={goToNextPage} disabled={tableData?.last}>
-            {'>'}
-          </UnStyledButton>
-          <UnStyledButton onClick={goToLastPage} disabled={tableData?.last}>
-            {'>>'}
-          </UnStyledButton>
+          <PageButton
+            direction={'DOUBLE_LEFT'}
+            onClick={goToFirstPage}
+            disabled={tableData?.first}
+          />
+          <PageButton direction={'LEFT'} onClick={goToPrevPage} disabled={tableData?.first} />
+          <PageNumber num={tableData?.number ? tableData?.number + 1 : 1} />
+          <PageButton direction={'RIGHT'} onClick={goToNextPage} disabled={tableData?.last} />
+          <PageButton
+            direction={'DOUBLE_RIGHT'}
+            onClick={goToLastPage}
+            disabled={tableData?.last}
+          />
         </div>
       </div>
     </div>

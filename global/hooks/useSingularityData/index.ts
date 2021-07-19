@@ -67,7 +67,7 @@ const useSingularityData = () => {
       });
   };
 
-  const fetchReleaseInfo = (req?: ArchviesFetchReq): Promise<ArchivesFetchRes> => {
+  const fetchCompletedArchvieAllInfos = (req?: ArchviesFetchReq): Promise<ArchivesFetchRes> => {
     console.log(req);
     const params = req
       ? '?' +
@@ -87,7 +87,7 @@ const useSingularityData = () => {
   return {
     awaitingResponse,
     fetchContributors,
-    fetchReleaseInfo,
+    fetchCompletedArchvieAllInfos,
     setAwaitingResponse,
   };
 };

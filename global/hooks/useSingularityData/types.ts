@@ -49,8 +49,8 @@ export type Pageable = {
 export type ArchivesFetchRes = PagedResponse<Archive>;
 
 export type ArchviesFetchReq = {
-  fromCreateTimeEpoch?: number;
-  toCreateTimeEpoch?: number;
+  createdAfterEpochSec?: number;
+  createdBeforeEpochSec?: number;
   size?: number;
   page?: number;
   sortDirection?: 'ASC' | 'DESC';

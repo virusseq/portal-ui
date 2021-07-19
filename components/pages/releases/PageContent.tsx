@@ -35,6 +35,7 @@ const PageContent = (): ReactElement => {
         display: flex;
         flex-direction: column;
         padding-bottom: ${theme.dimensions.footer.height}px;
+        ${theme.typography.baseFont};
       `}
     >
       <article
@@ -50,13 +51,15 @@ const PageContent = (): ReactElement => {
           ${theme.shadow.default};
         `}
       >
-        <b
+        <div
           css={css`
-            font-size: 26px;
+            font-size: 28px;
+            color: ${theme.colors.primary};
+            ${theme.typography.baseFont};
           `}
         >
           Data Relases
-        </b>
+        </div>
         <Description />
         <ReleasesTable />
         <Policy />

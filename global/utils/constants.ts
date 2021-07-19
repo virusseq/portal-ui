@@ -31,6 +31,7 @@ export const EGO_API_KEY_ENDPOINT = `${NEXT_PUBLIC_EGO_API_ROOT}/o/api_key`;
 export const ROOT_PATH = '/';
 export const ABOUT_PATH = ROOT_PATH;
 export const EXPLORER_PATH = '/explorer';
+export const RELEASES_PATH = '/releases';
 export const USER_PATH = '/user';
 export const STUDIES_PATH = '/studies';
 export const LOGIN_PATH = '/login';
