@@ -68,15 +68,12 @@ const useSingularityData = () => {
   };
 
   const fetchCompletedArchvieAllInfos = (req?: ArchviesFetchReq): Promise<ArchivesFetchRes> => {
-    console.log(req);
     const params = req
       ? '?' +
         Object.entries(req)
           .map(([k, v]) => `${k}=${v}`)
           .join('&')
       : '';
-    console.log(params);
-    // const params = req ? new URLSearchParams(JSON.stringify(req)) : '';
     setAwaitingResponse(true);
     return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/archives', params)).then((res) => {
       setAwaitingResponse(false);
