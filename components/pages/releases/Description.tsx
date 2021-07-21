@@ -19,50 +19,18 @@
  *
  */
 
-export type ContributorsResponse = {
-  data: string[];
+import { EXPLORER_PATH } from '../../../global/utils/constants';
+import StyledLink from '../../Link';
+
+const Description = () => {
+  return (
+    <div>
+      The VirusSeq Data Portal regularly releases submitted data. Each release bundles contains 2
+      files: <b>TSV file containing all submitted metadata</b> as of that relase data.time, as well
+      as a <b>FASTA file containg all the coreesponding sequences</b>. The lastes release is
+      availble in the <StyledLink href={EXPLORER_PATH}>data explorer</StyledLink>
+    </div>
+  );
 };
 
-export type SingularityErrorResponse = {
-  errorInfo: Record<string, unknown>;
-  message: string;
-  status: string;
-};
-
-export type Archive = {
-  id: string;
-  status: 'COMPLETE' | 'BUILDING' | 'FAILED';
-  type: 'SET_QUERY' | 'ALL';
-  hash_info: string;
-  hash: string;
-  object_id: string;
-  created_at: number;
-  num_of_samples: number;
-  num_of_downloads: number;
-};
-
-export type Pageable = {
-  totalPages: number;
-  totalElements: number;
-};
-
-export type ArchivesFetchRes = PagedResponse<Archive>;
-
-export type ArchviesFetchReq = {
-  createdAfterEpochSec?: number;
-  createdBeforeEpochSec?: number;
-  size?: number;
-  page?: number;
-  sortDirection?: 'ASC' | 'DESC';
-};
-
-export type PagedResponse<T> = {
-  content: Array<T>;
-  totalPages: number;
-  totalElements: number;
-  first: boolean; // is this the first page
-  last: boolean; // is this the last page
-  size: number;
-  number: number; // current page number (zero indexed)
-  numberOfElements: number; // number of elements in current page
-};
+export default Description;
