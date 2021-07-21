@@ -31,6 +31,14 @@ import useSingularityData, {
 import { format } from 'date-fns';
 import StyledLink from '../../Link';
 import defaultTheme from '../../theme/index';
+import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Download } from '../../theme/icons';
+
+function dateToEpochSec(date: Date | undefined) {
+  if (!date) return undefined;
+  return Math.round(date.getTime() / 1000);
+}
 
 const columnData = (): Column<Record<string, unknown>>[] => [
   {
@@ -50,7 +58,16 @@ const columnData = (): Column<Record<string, unknown>>[] => [
       const link = 'TBD';
       return (
         <StyledLink>
-          <b>⤓Download Dataset</b>
+          <div
+            css={css`
+              display: flex;
+              column-gap: 5px;
+              align-items: center;
+            `}
+          >
+            <Download />
+            <b>Download Dataset</b>
+          </div>
         </StyledLink>
       );
     },
@@ -60,11 +77,6 @@ const columnData = (): Column<Record<string, unknown>>[] => [
     Header: '# of samples',
   },
 ];
-
-const earliestRelease = 1626373700;
-const nowEpoch = Math.round(new Date().getTime() / 1000);
-
-type FilterDates = { createdAfterEpochSec: number | -1; createdBeforeEpochSec: number };
 
 const PageButton = ({
   direction,
@@ -113,14 +125,39 @@ const PageNumber = ({ num }: { num: number }) => {
   );
 };
 
+const StyledDatePicker = ({
+  onChange,
+  selected,
+  minDate,
+  maxDate,
+}: Pick<ReactDatePickerProps, 'onChange' | 'selected' | 'minDate' | 'maxDate'>) => {
+  return (
+    <DatePicker
+      css={css`
+        ${defaultTheme.typography.baseFont};
+        font-size: 12px;
+        border-radius: 5px;
+        border: solid 1px ${defaultTheme.colors.grey_5};
+        text-align: center;
+        padding: 5px 0px 5px 0px;
+        width: 80px;
+      `}
+      dateFormat="yyyy/MM/dd"
+      placeholderText="YYYY/MM/DD"
+      selected={selected}
+      onChange={onChange}
+      minDate={minDate}
+      maxDate={maxDate}
+    />
+  );
+};
+
 const ArchivesTable = (): ReactElement => {
   const { fetchCompletedArchvieAllInfos: fetchReleaseInfo } = useSingularityData();
 
   const [tableData, setTableData] = useState<ArchivesFetchRes>();
-  const [filterDates, setFilterDates] = useState<FilterDates>({
-    createdAfterEpochSec: earliestRelease,
-    createdBeforeEpochSec: nowEpoch,
-  });
+  const [archivesFrom, setArchivesFrom] = useState<Date>();
+  const [archivesTo, setArchiveTo] = useState<Date>();
 
   const updateData = (req: ArchviesFetchReq) => {
     fetchReleaseInfo(req).then(setTableData);
@@ -161,30 +198,24 @@ const ArchivesTable = (): ReactElement => {
     updateData({ page: tableData.totalPages - 1, size: tableData?.size || 10 });
   };
 
-  const updateFromDate: ChangeEventHandler<any> = (e) => {
-    try {
-      const { value } = e.target;
-      const epochSecs = new Date(value).valueOf() / 1000;
-      console.log(epochSecs);
-      const updatedFilterDates: FilterDates = { ...filterDates, createdAfterEpochSec: epochSecs };
-      setFilterDates(updatedFilterDates);
-      updateData({ ...updatedFilterDates });
-    } catch (e) {
-      console.error(e);
-    }
+  const updateFromDate = (date: Date) => {
+    date.setHours(0, 0, 0, 0); // set time to start of day
+    setArchivesFrom(date);
+    const updatedFilterDates = {
+      createdBeforeEpochSec: dateToEpochSec(archivesTo),
+      createdAfterEpochSec: dateToEpochSec(date),
+    };
+    updateData(updatedFilterDates);
   };
 
-  const updateToDate: ChangeEventHandler<any> = (e) => {
-    try {
-      const { value } = e.target;
-      const epochSecs = new Date(value).valueOf() / 1000;
-      console.log(epochSecs);
-      const updatedFilterDates: FilterDates = { ...filterDates, createdBeforeEpochSec: epochSecs };
-      setFilterDates(updatedFilterDates);
-      updateData({ ...updatedFilterDates });
-    } catch (e) {
-      console.error(e);
-    }
+  const updateToDate = (date: Date) => {
+    date.setHours(23, 59, 59, 999); // set time to end of day
+    setArchiveTo(date);
+    const updatedFilterDates = {
+      createdBeforeEpochSec: dateToEpochSec(date),
+      createdAfterEpochSec: dateToEpochSec(archivesFrom),
+    };
+    updateData(updatedFilterDates);
   };
 
   const offset = (tableData?.size || 0) * (tableData?.number || 0);
@@ -217,9 +248,19 @@ const ArchivesTable = (): ReactElement => {
           `}
         >
           <span>Filter by Date:</span>
-          <input type="date" id="fromDate" onChange={updateFromDate} />
+          <StyledDatePicker
+            onChange={updateFromDate}
+            selected={archivesFrom}
+            minDate={new Date('2021/1/1')}
+            maxDate={archivesTo}
+          />
           <span>to</span>
-          <input type="date" id="toDate" onChange={updateToDate} />
+          <StyledDatePicker
+            onChange={updateToDate}
+            selected={archivesTo}
+            minDate={archivesFrom}
+            maxDate={new Date()}
+          />
         </div>
       </div>
       <GenericTable

@@ -71,6 +71,7 @@ const useSingularityData = () => {
     const params = req
       ? '?' +
         Object.entries(req)
+          .filter(([k, v]) => v !== undefined)
           .map(([k, v]) => `${k}=${v}`)
           .join('&')
       : '';
