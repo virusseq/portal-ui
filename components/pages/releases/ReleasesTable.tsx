@@ -19,25 +19,44 @@
  *
  */
 
-import { ChangeEventHandler, ReactElement, useEffect, useState } from 'react';
+import React, {
+  ChangeEventHandler,
+  ComponentProps,
+  ReactElement,
+  useEffect,
+  useState,
+} from 'react';
 import { css } from '@emotion/react';
 import { Column } from 'react-table';
 import GenericTable from '../../GenericTable';
 import { UnStyledButton } from '../../Button';
 import useSingularityData, {
   ArchivesFetchRes,
+  ArchivesSortFields,
   ArchviesFetchReq,
 } from '../../../global/hooks/useSingularityData';
 import { format } from 'date-fns';
 import StyledLink from '../../Link';
 import defaultTheme from '../../theme/index';
 import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
+import urlJoin from 'url-join';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Download } from '../../theme/icons';
+import { getConfig } from '../../../global/config';
+
+const { NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
 
 function dateToEpochSec(date: Date | undefined) {
   if (!date) return undefined;
   return Math.round(date.getTime() / 1000);
+}
+
+function isValidSortField(s: unknown): s is ArchivesSortFields {
+  return s === 'createdAt' || s === 'numOfSamples';
+}
+
+function getFirstDefined<T>(...os: T[]): T | undefined {
+  return os.find((o) => o !== undefined && o !== null && Number(o) !== NaN);
 }
 
 const columnData = (): Column<Record<string, unknown>>[] => [
@@ -52,12 +71,21 @@ const columnData = (): Column<Record<string, unknown>>[] => [
     },
   },
   {
-    accessor: 'objectId',
+    accessor: 'id',
     Header: 'Metadata & Consensus Seq Files',
     Cell: ({ value }: { value: string }) => {
-      const link = 'TBD';
       return (
-        <StyledLink>
+        <StyledLink
+          onClick={() => {
+            if (!value || !NEXT_PUBLIC_SINGULARITY_API_URL) {
+              return;
+            }
+
+            window.location.assign(
+              urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/download/archive/', value),
+            );
+          }}
+        >
           <div
             css={css`
               display: flex;
@@ -71,6 +99,7 @@ const columnData = (): Column<Record<string, unknown>>[] => [
         </StyledLink>
       );
     },
+    disableSortBy: true,
   },
   {
     accessor: 'numOfSamples',
@@ -125,6 +154,9 @@ const PageNumber = ({ num }: { num: number }) => {
   );
 };
 
+const EARLIEST_ARCHVIES_FROM = new Date('2021/1/1');
+const LATEST_ARCHVIES_TO = new Date();
+
 const StyledDatePicker = ({
   onChange,
   selected,
@@ -140,7 +172,7 @@ const StyledDatePicker = ({
         border: solid 1px ${defaultTheme.colors.grey_5};
         text-align: center;
         padding: 5px 0px 5px 0px;
-        width: 80px;
+        width: 100px;
       `}
       dateFormat="yyyy/MM/dd"
       placeholderText="YYYY/MM/DD"
@@ -151,71 +183,102 @@ const StyledDatePicker = ({
     />
   );
 };
-
+type ArchviesFetchReqSort = Pick<ArchviesFetchReq, 'sortDirection' | 'sortField'>;
 const ArchivesTable = (): ReactElement => {
-  const { fetchCompletedArchvieAllInfos: fetchReleaseInfo } = useSingularityData();
+  const { fetchCompletedArchvieAllInfos } = useSingularityData();
 
   const [tableData, setTableData] = useState<ArchivesFetchRes>();
-  const [archivesFrom, setArchivesFrom] = useState<Date>();
-  const [archivesTo, setArchiveTo] = useState<Date>();
+  const [archivesAfter, setArchivesAfter] = useState<Date>(EARLIEST_ARCHVIES_FROM);
+  const [archivesBefore, setArchiveBefore] = useState<Date>(LATEST_ARCHVIES_TO);
+  const [sort, setSort] = useState<ArchviesFetchReqSort>({
+    sortDirection: 'DESC',
+    sortField: 'createdAt',
+  });
 
   const updateData = (req: ArchviesFetchReq) => {
-    fetchReleaseInfo(req).then(setTableData);
+    const mergedReq = {
+      createdBeforeEpochSec: getFirstDefined(
+        req.createdBeforeEpochSec,
+        dateToEpochSec(archivesBefore),
+        dateToEpochSec(LATEST_ARCHVIES_TO),
+      ),
+      createdAfterEpochSec: getFirstDefined(
+        req.createdAfterEpochSec,
+        dateToEpochSec(archivesAfter),
+        dateToEpochSec(EARLIEST_ARCHVIES_FROM),
+      ),
+      sortDirection: getFirstDefined(req.sortDirection, sort.sortDirection, 'DESC'),
+      sortField: getFirstDefined(req.sortField, sort.sortField, 'createdAt'),
+      size: getFirstDefined(req.size, tableData?.size, 20),
+      page: getFirstDefined(req.page, tableData?.number, 0),
+    };
+    console.log(mergedReq);
+    fetchCompletedArchvieAllInfos(mergedReq).then(setTableData);
   };
 
   useEffect(() => {
-    fetchReleaseInfo().then(setTableData);
+    updateData({});
   }, []);
 
   const updatePageSize: ChangeEventHandler<any> = (e) => {
-    const size = e.target.value as number;
+    const size = Number(e.target.value);
     if (isNaN(size)) return;
-    updateData({ page: 0, size });
+    updateData({ size });
   };
 
   const goToFirstPage = () => {
     console.log(tableData);
     if (tableData?.first) return;
-    updateData({ page: 0, size: tableData?.size || 10 });
+    updateData({ page: 0 });
   };
 
   const goToPrevPage = () => {
     console.log(tableData);
     if (tableData?.first || tableData?.number === undefined) return;
-    updateData({ page: tableData.number - 1, size: tableData?.size || 10 });
+    updateData({ page: tableData.number - 1 });
   };
 
   const goToNextPage = () => {
     console.log(tableData);
     if (tableData?.last || tableData?.number === undefined) return;
 
-    updateData({ page: tableData.number + 1, size: tableData?.size || 10 });
+    updateData({ page: tableData.number + 1 });
   };
 
   const goToLastPage = () => {
     console.log(tableData);
     if (tableData?.last || tableData?.totalPages === undefined) return;
-    updateData({ page: tableData.totalPages - 1, size: tableData?.size || 10 });
+    updateData({ page: tableData.totalPages - 1 });
   };
 
   const updateFromDate = (date: Date) => {
+    date = date || archivesAfter;
     date.setHours(0, 0, 0, 0); // set time to start of day
-    setArchivesFrom(date);
-    const updatedFilterDates = {
-      createdBeforeEpochSec: dateToEpochSec(archivesTo),
+    setArchivesAfter(date);
+    updateData({
       createdAfterEpochSec: dateToEpochSec(date),
-    };
-    updateData(updatedFilterDates);
+    });
   };
 
   const updateToDate = (date: Date) => {
+    date = date || archivesBefore;
     date.setHours(23, 59, 59, 999); // set time to end of day
-    setArchiveTo(date);
-    const updatedFilterDates = {
+    setArchiveBefore(date);
+    updateData({
       createdBeforeEpochSec: dateToEpochSec(date),
-      createdAfterEpochSec: dateToEpochSec(archivesFrom),
+    });
+  };
+
+  const updateSort: ComponentProps<typeof GenericTable>['onSortsChange'] = ([sort]) => {
+    if (!sort || !isValidSortField(sort.id)) {
+      return;
+    }
+    const updatedSort: ArchviesFetchReqSort = {
+      sortDirection: sort.desc ? 'DESC' : 'ASC',
+      sortField: sort.id,
     };
-    updateData(updatedFilterDates);
+    setSort(updatedSort);
+    updateData({ ...updatedSort });
   };
 
   const offset = (tableData?.size || 0) * (tableData?.number || 0);
@@ -250,30 +313,24 @@ const ArchivesTable = (): ReactElement => {
           <span>Filter by Date:</span>
           <StyledDatePicker
             onChange={updateFromDate}
-            selected={archivesFrom}
-            minDate={new Date('2021/1/1')}
-            maxDate={archivesTo}
+            selected={archivesAfter}
+            minDate={EARLIEST_ARCHVIES_FROM}
+            maxDate={archivesBefore}
           />
           <span>to</span>
           <StyledDatePicker
             onChange={updateToDate}
-            selected={archivesTo}
-            minDate={archivesFrom}
-            maxDate={new Date()}
+            selected={archivesBefore}
+            minDate={archivesAfter}
+            maxDate={LATEST_ARCHVIES_TO}
           />
         </div>
       </div>
       <GenericTable
         columns={columnData()}
         data={tableData?.content || []}
-        pageable={true}
-        sortable={{
-          defaultSortBy: [
-            {
-              id: 'createAt',
-            },
-          ],
-        }}
+        sortable={true}
+        onSortsChange={updateSort}
       />
       <div
         css={css`
@@ -284,7 +341,7 @@ const ArchivesTable = (): ReactElement => {
         <div>
           Show{' '}
           <select value={tableData?.size || 1} onChange={updatePageSize}>
-            {[1, 10, 20, 30, 40, 50].map((pageSize) => (
+            {[5, 10, 20, 30, 40, 50].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
                 {pageSize}
               </option>

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { ReactNode, ReactNodeArray } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 import DismissIcon from './theme/icons/dismiss';
 import defaultTheme from './theme';
@@ -15,18 +15,32 @@ const useMounted = () => {
   return mounted;
 };
 
-const ModalOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
-`;
+const ModalOverlay = ({
+  children,
+  widthPx,
+}: {
+  children: ReactElement;
+  widthPx: number;
+}): ReactElement => {
+  return (
+    <div
+      css={css`
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: ${widthPx}px;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+      `}
+    >
+      {children}
+    </div>
+  );
+};
 
 const ModalContainer = styled.div`
   display: flex;
@@ -135,7 +149,7 @@ export const Modal = ({
   const mounted = useMounted();
 
   const ModalContent = (
-    <ModalOverlay>
+    <ModalOverlay widthPx={window.outerWidth}>
       <ModalContainer>
         <ModalHeader title={title} onCloseClick={onCloseClick} />
         <ModalBody>{children}</ModalBody>
