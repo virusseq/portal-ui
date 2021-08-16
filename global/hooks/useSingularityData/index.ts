@@ -75,11 +75,21 @@ const useSingularityData = () => {
           .map(([k, v]) => `${k}=${v}`)
           .join('&')
       : '';
+
     setAwaitingResponse(true);
-    return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/archives', params)).then((res) => {
-      setAwaitingResponse(false);
-      return res.json();
-    }) as Promise<ArchivesFetchRes>;
+
+    return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/archives', params))
+      .then((res) => {
+        setAwaitingResponse(false);
+        if (res.status !== 200) {
+          throw Error("Couldn't fetch archives!");
+        }
+        return res.json();
+      })
+      .catch((err: { response: SingularityErrorResponse }) => {
+        console.error('error', err);
+        return Promise.reject(err);
+      }) as Promise<ArchivesFetchRes>;
   };
 
   return {

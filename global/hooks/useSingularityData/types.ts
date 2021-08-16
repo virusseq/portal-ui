@@ -54,7 +54,10 @@ export type ArchviesFetchReq = {
   size?: number;
   page?: number;
   sortDirection?: 'ASC' | 'DESC';
+  sortField?: ArchivesSortFields;
 };
+
+export type ArchivesSortFields = 'createdAt' | 'numOfSamples';
 
 export type PagedResponse<T> = {
   content: Array<T>;
