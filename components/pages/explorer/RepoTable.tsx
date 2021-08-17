@@ -29,6 +29,7 @@ import useTrackingContext from '../../../global/hooks/useTrackingContext';
 import defaultTheme from '../../theme';
 import { PageContentProps } from './index';
 import DownloadInfoModal from './DownloadInfoModal';
+import useArrangerOps from './useArrangerOps';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -263,7 +264,16 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
   }
 `;
 
+function buildSqonWithObjectIds(currentSqon: Object, objectIds: string[]) {
+  return {
+    op: 'and',
+    content: [currentSqon, { op: 'in', content: { field: 'object_id', value: objectIds } }],
+  };
+}
+
 const RepoTable = (props: PageContentProps): ReactElement => {
+  const { saveSet, isLoading } = useArrangerOps();
+
   const theme: typeof defaultTheme = useTheme();
   const { logEvent } = useTrackingContext();
   const {
@@ -290,6 +300,16 @@ const RepoTable = (props: PageContentProps): ReactElement => {
       requiresRowSelection: true,
       columns: tsvExportColumns,
     }, // exports a TSV with what is displayed on the table (columns selected, etc.)
+    {
+      label: 'Download Current Query',
+      function: () => {
+        const { sqon, selectedTableRows } = props;
+        const sqonToUse =
+          selectedTableRows?.length > 0 ? buildSqonWithObjectIds(sqon, selectedTableRows) : sqon;
+        console.log(sqonToUse);
+        saveSet(sqonToUse).then((setId) => console.log(setId));
+      },
+    },
     {
       label: 'Consensus Seq',
       function: () => {
