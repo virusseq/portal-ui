@@ -34,7 +34,8 @@ import {
   SUBMISSION_PATH,
   USER_PATH,
   TEAM_PATH,
-  ACKNOWLEDGEMENTS_PATH
+  ACKNOWLEDGEMENTS_PATH,
+  RELEASES_PATH,
 } from '../global/utils/constants';
 
 const NavBar = (): ReactElement => {
@@ -146,6 +147,16 @@ const NavBar = (): ReactElement => {
               `}
             >
               Explore VirusSeq Data
+            </a>
+          </Link>
+          <Link path={RELEASES_PATH}>
+            <a
+              css={css`
+                ${linkStyle}
+                ${router.asPath.startsWith(RELEASES_PATH) ? activeLinkStyle : ''}
+              `}
+            >
+              Data Releases
             </a>
           </Link>
           <Link path={TEAM_PATH}>

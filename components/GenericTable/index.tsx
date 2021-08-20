@@ -19,8 +19,8 @@
  *
  */
 
-import { ReactElement, useMemo } from 'react';
-import { Column, useSortBy, usePagination, useTable } from 'react-table';
+import { ReactElement, useEffect, useMemo } from 'react';
+import { Column, useSortBy, useTable, SortingRule } from 'react-table';
 import { css, useTheme, SerializedStyles } from '@emotion/react';
 import cx from 'classnames';
 
@@ -44,6 +44,7 @@ type GenericTableProps = {
         sortType?: string;
       }
     | boolean;
+  onSortsChange?: (s: Array<SortingRule<unknown>>) => void;
   style?: SerializedStyles;
 };
 
@@ -54,6 +55,7 @@ const GenericTable = ({
   pageable,
   sortable,
   style,
+  onSortsChange,
 }: GenericTableProps): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
   const memoisedColumns = useMemo(() => columns, []);
@@ -66,7 +68,7 @@ const GenericTable = ({
     [],
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, state } = useTable(
     {
       autoResetSortBy: false,
       columns: memoisedColumns,
@@ -77,10 +79,17 @@ const GenericTable = ({
       initialState: {
         ...sortBy,
       },
+      manualSortBy: typeof onSortsChange === 'function' ? true : false,
     },
     useSortBy,
     // usePagination,
   );
+
+  useEffect(() => {
+    if (typeof onSortsChange === 'function') {
+      onSortsChange(state.sortBy);
+    }
+  }, [state.sortBy]);
 
   return (
     <table

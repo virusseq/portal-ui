@@ -48,3 +48,4 @@ export { default as GenomeCanadaLogo } from './GenomeCanada_logo';
 export { default as MapleLeaf } from './MapleLeaf';
 export { default as Storage } from './Storage';
 export { default as PlusIcon } from './Plus';
+export { default as Download } from './download';
