@@ -1,6 +1,6 @@
 {
   "name": "virusseq-dataportal-ui",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "scripts": {
     "build": "next build",
