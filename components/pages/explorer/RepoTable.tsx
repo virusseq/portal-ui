@@ -30,6 +30,8 @@ import defaultTheme from '../../theme';
 import { PageContentProps } from './index';
 import DownloadInfoModal from './DownloadInfoModal';
 import useArrangerOps from './useArrangerOps';
+import { Download } from '../../theme/icons';
+import Button from '../../Button';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -363,6 +365,28 @@ const RepoTable = (props: PageContentProps): ReactElement => {
       : [],
   );
 
+  console.log(customExporters);
+
+  const DownloadButton = (
+    <Button
+      css={css`
+        display: flex;
+        height: 25px;
+        flex-direction: row;
+        align-items: center;
+        column-gap: 3px;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-right: 8px;
+        background-color: ${theme.colors.success_dark};
+        &:hover {
+          background-color: ${theme.colors.success_dark};
+        }
+      `}
+    >
+      <Download fill={'white'} /> <span>Download Dataset</span>
+    </Button>
+  );
   return (
     <div>
       <div css={getTableStyle(theme)}>
@@ -371,7 +395,9 @@ const RepoTable = (props: PageContentProps): ReactElement => {
           allowTSVExport={false}
           showFilterInput={false}
           columnDropdownText={'Columns'}
-          exporter={customExporters}
+          // exportTSVText={'Download'}
+          // exporter={() => {}}
+          customHeaderContent={DownloadButton}
           downloadUrl={urlJoin(
             NEXT_PUBLIC_ARRANGER_API,
             NEXT_PUBLIC_ARRANGER_PROJECT_ID,

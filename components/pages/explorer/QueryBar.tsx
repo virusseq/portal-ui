@@ -164,7 +164,12 @@ const QueryBar = (props: PageContentProps) => {
         ${getCss(theme)}
       `}
     >
-      <CurrentSQON {...props} />
+      <CurrentSQON
+        onClear={() => {
+          console.log("I've been called");
+        }}
+        {...props}
+      />
     </Row>
   );
 };
