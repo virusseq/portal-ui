@@ -50,7 +50,7 @@ const ModalContainer = styled.div`
   padding: 15px;
 `;
 
-type ModalHeaderProps = { title: string; onCloseClick: () => void };
+type ModalHeaderProps = { title: string | ReactElement; onCloseClick: () => void };
 
 const ModalHeader = (props: ModalHeaderProps) => {
   const StyledTitle = styled('div')`
@@ -65,11 +65,11 @@ const ModalHeader = (props: ModalHeaderProps) => {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         margin-bottom: 10px;
       `}
     >
-      <StyledTitle>{props.title}</StyledTitle>
+      {typeof props.title === 'string' ? <StyledTitle>{props.title}</StyledTitle> : props.title}
       <div
         css={css`
           font-size: 25px;

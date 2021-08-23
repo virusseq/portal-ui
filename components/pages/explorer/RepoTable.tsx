@@ -369,6 +369,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
 
   const DownloadButton = (
     <Button
+      onClick={() => setShowDownloadInfoModal(true)}
       css={css`
         display: flex;
         height: 25px;
