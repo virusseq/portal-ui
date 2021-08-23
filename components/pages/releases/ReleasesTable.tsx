@@ -67,7 +67,7 @@ const columnData = (): Column<Record<string, unknown>>[] => [
       const date = new Date(0);
       date.setUTCSeconds(value);
 
-      return <b>{format(date, 'LLLL d, yyyy h:m aaaa')}</b>;
+      return <b>{format(date, 'LLLL d, yyyy h:mm aaaa')}</b>;
     },
   },
   {
