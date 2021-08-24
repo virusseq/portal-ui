@@ -1,15 +1,16 @@
 import { css } from '@emotion/react';
 import React from 'react';
+import { Archive } from '../../../global/hooks/useSingularityData/types';
 import { ACKNOWLEDGEMENTS_PATH } from '../../../global/utils/constants';
 import StyledLink from '../../Link';
 import Loader from '../../Loader';
 import { Modal } from '../../Modal';
 import defaultTheme from '../../theme';
 import { Checkmark, CoronaVirus, File } from '../../theme/icons';
+import Error from '../../theme/icons/error';
 
-type Props = { onClose: () => void; viralGenomes?: number; fileName?: string; isLoading?: boolean };
-
-const CompleteCheckmark = (
+type Props = { onClose: () => void; archive: Archive };
+const CompleteCheckmark = () => (
   <div
     css={css`
       display: flex;
@@ -23,7 +24,9 @@ const CompleteCheckmark = (
   </div>
 );
 
-const DownloadInfoModal = ({ onClose, viralGenomes, fileName, isLoading = false }: Props) => {
+const DownloadInfoModal = ({ onClose, archive }: Props) => {
+  const { numOfSamples, id, status } = archive;
+
   const DownloadTitle = (
     <div
       css={css`
@@ -36,10 +39,25 @@ const DownloadInfoModal = ({ onClose, viralGenomes, fileName, isLoading = false 
         ${defaultTheme.typography.heading}
       `}
     >
-      {isLoading ? <Loader size={'20px'} margin={'0px'} /> : CompleteCheckmark}
-      {isLoading ? <span>Downloading...</span> : <span>Download Complete</span>}
+      {status === 'BUILDING' && (
+        <>
+          <Loader size={'20px'} margin={'0px'} /> <span>Downloading...</span>
+        </>
+      )}
+      {status === 'COMPLETE' && (
+        <>
+          <CompleteCheckmark /> <span>Download Complete</span>
+        </>
+      )}
+      {status === 'FAILED' && (
+        <>
+          <Error /> <span>Download Failed</span>
+        </>
+      )}
     </div>
   );
+
+  console.log('numOfSamples', numOfSamples);
   return (
     <Modal onCloseClick={onClose} title={DownloadTitle}>
       <div
@@ -68,7 +86,7 @@ const DownloadInfoModal = ({ onClose, viralGenomes, fileName, isLoading = false 
             `}
           >
             <CoronaVirus />
-            <span>{viralGenomes} Viral Genomes</span>
+            <span>{numOfSamples} Viral Genomes</span>
           </div>
           <div
             css={css`
@@ -78,7 +96,7 @@ const DownloadInfoModal = ({ onClose, viralGenomes, fileName, isLoading = false 
             `}
           >
             <File />
-            <span> ID: {fileName}</span>
+            <span> ID: {id}</span>
           </div>
         </div>
         <p>

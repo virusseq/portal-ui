@@ -19,7 +19,7 @@
  *
  */
 
-import React, { FunctionComponent, ReactElement, useState } from 'react';
+import React, { FunctionComponent, ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
@@ -32,6 +32,8 @@ import DownloadInfoModal from './DownloadInfoModal';
 import useArrangerOps from './useArrangerOps';
 import { Download } from '../../theme/icons';
 import Button from '../../Button';
+import useSingularityData, { Archive } from '../../../global/hooks/useSingularityData';
+import sleep from '../../utils/sleep';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -275,101 +277,67 @@ function buildSqonWithObjectIds(currentSqon: Object, objectIds: string[]) {
 
 const RepoTable = (props: PageContentProps): ReactElement => {
   const { saveSet, isLoading } = useArrangerOps();
+  const { startArchiveBuildBySetId, findArchvieById } = useSingularityData();
 
   const theme: typeof defaultTheme = useTheme();
-  const { logEvent } = useTrackingContext();
+  const { logEvent } = useTrackingContext(); // TBD what to do with this?
   const {
     NEXT_PUBLIC_ARRANGER_API,
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
-    NEXT_PUBLIC_DOWNLOAD_ALL_URL,
-    NEXT_PUBLIC_MUSE_API,
-    NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS,
+    NEXT_PUBLIC_SINGULARITY_API_URL,
   } = getConfig();
 
+  const [archive, setArchive] = useState<Archive | undefined>(undefined);
   const [showDownloadInfoModal, setShowDownloadInfoModal] = useState(false);
-  const closeModal = () => setShowDownloadInfoModal(false);
 
-  const objectIdsStr = props.selectedTableRows.join(',');
+  const showModal = () => setShowDownloadInfoModal(true);
+  const closeModal = () => {
+    setShowDownloadInfoModal(false);
+    setArchive(undefined);
+  };
+
+  const updateArchiveState = async () => {
+    if (archive?.status === 'BUILDING') {
+      await sleep(5000);
+      console.debug('Updating requested archvie info!');
+      await findArchvieById(archive.id).then(setArchive);
+    } else if (archive?.status === 'COMPLETE') {
+      window.location.assign(
+        urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/download/archive/', archive.id),
+      );
+      console.debug('Started archive download, done!');
+    }
+  };
+
+  useEffect(() => {
+    updateArchiveState();
+  }, [archive]);
 
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 
-  const tsvExportColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',').map((c) => c.trim());
+  const handleDownload = () => {
+    const { sqon, selectedTableRows } = props;
 
-  const customExporters = [
-    {
-      label: 'Metadata Table',
-      fileName: `virusseq-metadata-export-${today}.tsv`,
-      requiresRowSelection: true,
-      columns: tsvExportColumns,
-    }, // exports a TSV with what is displayed on the table (columns selected, etc.)
-    {
-      label: 'Download Current Query',
-      function: () => {
-        const { sqon, selectedTableRows } = props;
-        const sqonToUse =
-          selectedTableRows?.length > 0 ? buildSqonWithObjectIds(sqon, selectedTableRows) : sqon;
-        console.log(sqonToUse);
-        saveSet(sqonToUse).then((setId) => console.log(setId));
-      },
-    },
-    {
-      label: 'Consensus Seq',
-      function: () => {
-        logEvent({
-          category: 'Downloads',
-          action: 'Consensus Seq',
-        });
+    // TBD - need to normalize sqon?
+    const sqonToUse =
+      selectedTableRows?.length > 0 ? buildSqonWithObjectIds(sqon, selectedTableRows) : sqon;
+    console.log(sqonToUse);
 
-        window.location.assign(
-          urlJoin(NEXT_PUBLIC_MUSE_API, `/download?objectIds=${objectIdsStr}`),
-        );
-
-        setShowDownloadInfoModal(true);
-      },
-      requiresRowSelection: true,
-    },
-    {
-      label: 'Consensus Seq (Gzip)',
-      function: () => {
-        logEvent({
-          category: 'Downloads',
-          action: 'Consensus Seq Gzip',
-        });
-
-        window.location.assign(
-          urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`),
-        );
-
-        setShowDownloadInfoModal(true);
-      },
-      requiresRowSelection: true,
-    },
-  ].concat(
-    NEXT_PUBLIC_DOWNLOAD_ALL_URL
-      ? {
-          label: 'Download All',
-          function: () => {
-            logEvent({
-              category: 'Downloads',
-              action: `Downloading All${
-                NEXT_PUBLIC_DOWNLOAD_ALL_URL ? '' : ', bucket url unavailable'
-              }`,
-            });
-
-            NEXT_PUBLIC_DOWNLOAD_ALL_URL && window.location.assign(NEXT_PUBLIC_DOWNLOAD_ALL_URL);
-
-            setShowDownloadInfoModal(true);
-          },
-          requiresRowSelection: false,
-        }
-      : [],
-  );
-
-  console.log(customExporters);
+    saveSet(sqonToUse)
+      .then((setId) => {
+        console.debug('Saved set!', setId);
+        return startArchiveBuildBySetId(setId);
+      })
+      .then((archive) => {
+        console.debug('Archive created', archive);
+        setArchive(archive);
+        showModal();
+      });
+  };
 
   const DownloadButton = (
     <Button
-      onClick={() => setShowDownloadInfoModal(true)}
+      onClick={handleDownload}
       css={css`
         display: flex;
         height: 25px;
@@ -396,9 +364,8 @@ const RepoTable = (props: PageContentProps): ReactElement => {
           allowTSVExport={false}
           showFilterInput={false}
           columnDropdownText={'Columns'}
-          // exportTSVText={'Download'}
-          // exporter={() => {}}
           customHeaderContent={DownloadButton}
+          // TBD - can this be remvoed
           downloadUrl={urlJoin(
             NEXT_PUBLIC_ARRANGER_API,
             NEXT_PUBLIC_ARRANGER_PROJECT_ID,
@@ -407,7 +374,9 @@ const RepoTable = (props: PageContentProps): ReactElement => {
         />
       </div>
 
-      {showDownloadInfoModal && <DownloadInfoModal onClose={closeModal} />}
+      {showDownloadInfoModal && archive && (
+        <DownloadInfoModal onClose={closeModal} archive={archive} />
+      )}
     </div>
   );
 };

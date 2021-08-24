@@ -14,9 +14,9 @@ const saveSetMutation = `mutation ($sqon: JSON!)  {
 }`;
 
 const useArrangerOps = () => {
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const saveSet = (sqon: object) => {
+  const saveSet = (sqon: object): Promise<string> => {
     setIsLoading(true);
     return arrangerFetcher({
       body: {
@@ -31,14 +31,14 @@ const useArrangerOps = () => {
           },
         }) => {
           setIsLoading(false);
-          return setId as String;
+          return setId;
         },
       )
       .catch((err: any) => {
         setIsLoading(false);
         console.warn(err);
         Promise.reject(err);
-      });
+      }) as Promise<string>;
   };
 
   return { saveSet, isLoading };

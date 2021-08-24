@@ -33,12 +33,12 @@ export type Archive = {
   id: string;
   status: 'COMPLETE' | 'BUILDING' | 'FAILED';
   type: 'SET_QUERY' | 'ALL';
-  hash_info: string;
+  hashInfo: string;
   hash: string;
   object_id: string;
   created_at: number;
-  num_of_samples: number;
-  num_of_downloads: number;
+  numOfSamples: number;
+  numOfDownloads: number;
 };
 
 export type Pageable = {
