@@ -19,16 +19,22 @@
  *
  */
 
-import React, { FunctionComponent, ReactElement, useState } from 'react';
+import React, { FunctionComponent, ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
 
-import { getConfig } from '../../../global/config';
-import useTrackingContext from '../../../global/hooks/useTrackingContext';
-import defaultTheme from '../../theme';
-import { PageContentProps } from './index';
+import { getConfig } from '../../../../global/config';
+import useTrackingContext from '../../../../global/hooks/useTrackingContext';
+import defaultTheme from '../../../theme';
+import { PageContentProps } from '../index';
 import DownloadInfoModal from './DownloadInfoModal';
+import { Download } from '../../../theme/icons';
+import Button from '../../../Button';
+import useSingularityData, { Archive } from '../../../../global/hooks/useSingularityData';
+import sleep from '../../../utils/sleep';
+import { isEmpty } from 'lodash';
+import { buildSqonWithObjectIds, saveSet } from './helper';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -264,85 +270,87 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
 `;
 
 const RepoTable = (props: PageContentProps): ReactElement => {
+  const {
+    startArchiveBuildBySetId,
+    findArchvieById,
+    fetchLatestArchiveAllInfo,
+  } = useSingularityData();
+
   const theme: typeof defaultTheme = useTheme();
   const { logEvent } = useTrackingContext();
-  const {
-    NEXT_PUBLIC_ARRANGER_API,
-    NEXT_PUBLIC_ARRANGER_PROJECT_ID,
-    NEXT_PUBLIC_DOWNLOAD_ALL_URL,
-    NEXT_PUBLIC_MUSE_API,
-    NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS,
-  } = getConfig();
+  const { NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
 
+  const [archive, setArchive] = useState<Archive>();
   const [showDownloadInfoModal, setShowDownloadInfoModal] = useState(false);
-  const closeModal = () => setShowDownloadInfoModal(false);
 
-  const objectIdsStr = props.selectedTableRows.join(',');
+  const showModal = () => setShowDownloadInfoModal(true);
+  const closeModal = () => {
+    setShowDownloadInfoModal(false);
+    setArchive(undefined);
+  };
 
-  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const saveSetThenBuildArchive = async (sqon: object): Promise<Archive> => {
+    const setId = await saveSet(sqon);
+    logEvent({
+      category: 'Downloads',
+      action: 'Archvie Build',
+    });
+    return await startArchiveBuildBySetId(setId);
+  };
 
-  const tsvExportColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',').map((c) => c.trim());
+  const updateArchiveState = async () => {
+    if (archive?.status === 'BUILDING') {
+      await sleep(5000);
+      await findArchvieById(archive.id).then(setArchive);
+    } else if (archive?.status === 'COMPLETE') {
+      logEvent({
+        category: 'Downloads',
+        action: 'Archvie Download',
+      });
 
-  const customExporters = [
-    {
-      label: 'Metadata Table',
-      fileName: `virusseq-metadata-export-${today}.tsv`,
-      requiresRowSelection: true,
-      columns: tsvExportColumns,
-    }, // exports a TSV with what is displayed on the table (columns selected, etc.)
-    {
-      label: 'Consensus Seq',
-      function: () => {
-        logEvent({
-          category: 'Downloads',
-          action: 'Consensus Seq',
-        });
+      window.location.assign(
+        urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/download/archive/', archive.id),
+      );
+    }
+  };
 
-        window.location.assign(
-          urlJoin(NEXT_PUBLIC_MUSE_API, `/download?objectIds=${objectIdsStr}`),
-        );
+  useEffect(() => {
+    updateArchiveState();
+  }, [archive]);
 
-        setShowDownloadInfoModal(true);
-      },
-      requiresRowSelection: true,
-    },
-    {
-      label: 'Consensus Seq (Gzip)',
-      function: () => {
-        logEvent({
-          category: 'Downloads',
-          action: 'Consensus Seq Gzip',
-        });
+  const handleDownload = () => {
+    showModal();
 
-        window.location.assign(
-          urlJoin(NEXT_PUBLIC_MUSE_API, `/download/gzip?objectIds=${objectIdsStr}`),
-        );
+    const sqonToUse = buildSqonWithObjectIds(props.sqon, props.selectedTableRows);
 
-        setShowDownloadInfoModal(true);
-      },
-      requiresRowSelection: true,
-    },
-  ].concat(
-    NEXT_PUBLIC_DOWNLOAD_ALL_URL
-      ? {
-          label: 'Download All',
-          function: () => {
-            logEvent({
-              category: 'Downloads',
-              action: `Downloading All${
-                NEXT_PUBLIC_DOWNLOAD_ALL_URL ? '' : ', bucket url unavailable'
-              }`,
-            });
+    const archviePromise = isEmpty(sqonToUse)
+      ? fetchLatestArchiveAllInfo()
+      : saveSetThenBuildArchive(sqonToUse);
 
-            NEXT_PUBLIC_DOWNLOAD_ALL_URL && window.location.assign(NEXT_PUBLIC_DOWNLOAD_ALL_URL);
+    archviePromise.then(setArchive);
+  };
 
-            setShowDownloadInfoModal(true);
-          },
-          requiresRowSelection: false,
+  const DownloadButton = (
+    <Button
+      onClick={handleDownload}
+      css={css`
+        display: flex;
+        height: 25px;
+        flex-direction: row;
+        align-items: center;
+        column-gap: 3px;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-right: 8px;
+        background-color: ${theme.colors.success_dark};
+        &:hover {
+          background-color: ${theme.colors.success_dark};
         }
-      : [],
+      `}
+    >
+      <Download fill={'white'} /> <span>Download Dataset</span>
+    </Button>
   );
-
   return (
     <div>
       <div css={getTableStyle(theme)}>
@@ -351,16 +359,11 @@ const RepoTable = (props: PageContentProps): ReactElement => {
           allowTSVExport={false}
           showFilterInput={false}
           columnDropdownText={'Columns'}
-          exporter={customExporters}
-          downloadUrl={urlJoin(
-            NEXT_PUBLIC_ARRANGER_API,
-            NEXT_PUBLIC_ARRANGER_PROJECT_ID,
-            'download',
-          )}
+          customHeaderContent={DownloadButton}
         />
       </div>
 
-      {showDownloadInfoModal && <DownloadInfoModal onClose={closeModal} />}
+      {showDownloadInfoModal && <DownloadInfoModal onClose={closeModal} archive={archive} />}
     </div>
   );
 };
