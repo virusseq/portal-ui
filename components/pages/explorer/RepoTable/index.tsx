@@ -24,17 +24,17 @@ import { css, useTheme } from '@emotion/react';
 import dynamic from 'next/dynamic';
 import urlJoin from 'url-join';
 
-import { getConfig } from '../../../global/config';
-import useTrackingContext from '../../../global/hooks/useTrackingContext';
-import defaultTheme from '../../theme';
-import { PageContentProps } from './index';
+import { getConfig } from '../../../../global/config';
+import useTrackingContext from '../../../../global/hooks/useTrackingContext';
+import defaultTheme from '../../../theme';
+import { PageContentProps } from '../index';
 import DownloadInfoModal from './DownloadInfoModal';
-import useSaveSet from './useSaveSet';
-import { Download } from '../../theme/icons';
-import Button from '../../Button';
-import useSingularityData, { Archive } from '../../../global/hooks/useSingularityData';
-import sleep from '../../utils/sleep';
+import { Download } from '../../../theme/icons';
+import Button from '../../../Button';
+import useSingularityData, { Archive } from '../../../../global/hooks/useSingularityData';
+import sleep from '../../../utils/sleep';
 import { isEmpty } from 'lodash';
+import { buildSqonWithObjectIds, saveSet } from './helper';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -269,34 +269,7 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
   }
 `;
 
-function buildSqonWithObjectIds(currentSqon: Object, objectIds: string[]) {
-  const objectsSqon =
-    objectIds && objectIds.length > 0
-      ? { op: 'in', content: { field: 'object_id', value: objectIds } }
-      : {};
-
-  if (!isEmpty(currentSqon) && !isEmpty(objectsSqon)) {
-    return {
-      op: 'and',
-      content: [currentSqon, objectsSqon],
-    };
-  }
-
-  if (isEmpty(currentSqon) && !isEmpty(objectsSqon)) {
-    return objectsSqon;
-  }
-
-  if (!isEmpty(currentSqon) && isEmpty(objectsSqon)) {
-    return currentSqon;
-  }
-
-  return {};
-}
-
 const RepoTable = (props: PageContentProps): ReactElement => {
-  console.log(props);
-  const { saveSet, isLoading: isWaitingForSet } = useSaveSet();
-
   const {
     startArchiveBuildBySetId,
     findArchvieById,

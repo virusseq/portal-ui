@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
 import React from 'react';
-import { Archive } from '../../../global/hooks/useSingularityData/types';
-import { ACKNOWLEDGEMENTS_PATH } from '../../../global/utils/constants';
-import StyledLink from '../../Link';
-import Loader from '../../Loader';
-import { Modal } from '../../Modal';
-import defaultTheme from '../../theme';
-import { Checkmark, CoronaVirus, File } from '../../theme/icons';
-import Error from '../../theme/icons/error';
+import { Archive } from '../../../../global/hooks/useSingularityData/types';
+import { ACKNOWLEDGEMENTS_PATH } from '../../../../global/utils/constants';
+import StyledLink from '../../../Link';
+import Loader from '../../../Loader';
+import { Modal } from '../../../Modal';
+import defaultTheme from '../../../theme';
+import { Checkmark, CoronaVirus, File } from '../../../theme/icons';
+import Error from '../../../theme/icons/error';
 
 type Props = { onClose: () => void; archive?: Archive };
 const CompleteCheckmark = () => (
