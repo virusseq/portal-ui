@@ -13,7 +13,7 @@ const saveSetMutation = `mutation ($sqon: JSON!)  {
     }
 }`;
 
-const useArrangerOps = () => {
+const useSaveSet = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const saveSet = (sqon: object): Promise<string> => {
@@ -44,4 +44,4 @@ const useArrangerOps = () => {
   return { saveSet, isLoading };
 };
 
-export default useArrangerOps;
+export default useSaveSet;

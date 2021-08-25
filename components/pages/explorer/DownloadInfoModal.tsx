@@ -9,7 +9,7 @@ import defaultTheme from '../../theme';
 import { Checkmark, CoronaVirus, File } from '../../theme/icons';
 import Error from '../../theme/icons/error';
 
-type Props = { onClose: () => void; archive: Archive };
+type Props = { onClose: () => void; archive?: Archive };
 const CompleteCheckmark = () => (
   <div
     css={css`
@@ -24,8 +24,50 @@ const CompleteCheckmark = () => (
   </div>
 );
 
+const ArchiveStatDisplay = ({
+  numOfSamples = 0,
+  id = '',
+}: {
+  numOfSamples?: number;
+  id?: string;
+}) => {
+  return (
+    <div
+      css={css`
+        display: flex;
+        margin-top: 20px;
+        align-items: center;
+        border: solid 1px ${defaultTheme.colors.grey_3};
+        padding: 15px 20px 15px 20px;
+        column-gap: 40px;
+      `}
+    >
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+          column-gap: 10px;
+        `}
+      >
+        <CoronaVirus />
+        <span>{numOfSamples} Viral Genomes</span>
+      </div>
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+          column-gap: 10px;
+        `}
+      >
+        <File />
+        <span> ID: {id}</span>
+      </div>
+    </div>
+  );
+};
+
 const DownloadInfoModal = ({ onClose, archive }: Props) => {
-  const { numOfSamples, id, status } = archive;
+  const showDownloading = !archive || archive?.status === 'BUILDING';
 
   const DownloadTitle = (
     <div
@@ -39,17 +81,17 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
         ${defaultTheme.typography.heading}
       `}
     >
-      {status === 'BUILDING' && (
+      {showDownloading && (
         <>
           <Loader size={'20px'} margin={'0px'} /> <span>Downloading...</span>
         </>
       )}
-      {status === 'COMPLETE' && (
+      {archive?.status === 'COMPLETE' && (
         <>
           <CompleteCheckmark /> <span>Download Complete</span>
         </>
       )}
-      {status === 'FAILED' && (
+      {archive?.status === 'FAILED' && (
         <>
           <Error /> <span>Download Failed</span>
         </>
@@ -57,7 +99,6 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
     </div>
   );
 
-  console.log('numOfSamples', numOfSamples);
   return (
     <Modal onCloseClick={onClose} title={DownloadTitle}>
       <div
@@ -67,39 +108,16 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
           ${defaultTheme.typography.regular}
         `}
       >
-        <div
+        {!archive ? (
+          <Loader size={'25px'} />
+        ) : (
+          <ArchiveStatDisplay numOfSamples={archive?.numOfSamples} id={archive?.id} />
+        )}
+        <p
           css={css`
-            display: flex;
-            margin-top: 20px;
-            margin-bottom: 30px;
-            align-items: center;
-            border: solid 1px #dfdfe1;
-            padding: 15px 20px 15px 20px;
-            column-gap: 40px;
+            margin-top: 25px;
           `}
         >
-          <div
-            css={css`
-              display: flex;
-              align-items: center;
-              column-gap: 10px;
-            `}
-          >
-            <CoronaVirus />
-            <span>{numOfSamples} Viral Genomes</span>
-          </div>
-          <div
-            css={css`
-              display: flex;
-              align-items: center;
-              column-gap: 10px;
-            `}
-          >
-            <File />
-            <span> ID: {id}</span>
-          </div>
-        </div>
-        <p>
           Your download has started. By downloading this data, you agree to{' '}
           <StyledLink href={ACKNOWLEDGEMENTS_PATH}>acknowledge</StyledLink> the Canadian Public
           Health Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having contributed

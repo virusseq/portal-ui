@@ -98,10 +98,13 @@ const useSingularityData = () => {
       }) as Promise<ArchivesFetchRes>;
   };
 
+  const fetchLatestArchiveAllInfo = (): Promise<Archive> => {
+    return fetchCompletedArchvieAllInfos({ size: 1, page: 0 }).then((res) => res.content[0]);
+  };
+
   const startArchiveBuildBySetId = (setId: string): Promise<Archive> => {
     return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/build-archive/set-query'), {
       method: 'POST',
-      // mode: 'no-cors', // TODOD - update singularity with cors!
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ setId: setId }),
     })
@@ -130,6 +133,7 @@ const useSingularityData = () => {
     awaitingResponse,
     fetchContributors,
     fetchCompletedArchvieAllInfos,
+    fetchLatestArchiveAllInfo,
     setAwaitingResponse,
     startArchiveBuildBySetId,
     findArchvieById,

@@ -29,11 +29,12 @@ import useTrackingContext from '../../../global/hooks/useTrackingContext';
 import defaultTheme from '../../theme';
 import { PageContentProps } from './index';
 import DownloadInfoModal from './DownloadInfoModal';
-import useArrangerOps from './useArrangerOps';
+import useSaveSet from './useSaveSet';
 import { Download } from '../../theme/icons';
 import Button from '../../Button';
 import useSingularityData, { Archive } from '../../../global/hooks/useSingularityData';
 import sleep from '../../utils/sleep';
+import { isEmpty } from 'lodash';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -269,25 +270,44 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
 `;
 
 function buildSqonWithObjectIds(currentSqon: Object, objectIds: string[]) {
-  return {
-    op: 'and',
-    content: [currentSqon, { op: 'in', content: { field: 'object_id', value: objectIds } }],
-  };
+  const objectsSqon =
+    objectIds && objectIds.length > 0
+      ? { op: 'in', content: { field: 'object_id', value: objectIds } }
+      : {};
+
+  if (!isEmpty(currentSqon) && !isEmpty(objectsSqon)) {
+    return {
+      op: 'and',
+      content: [currentSqon, objectsSqon],
+    };
+  }
+
+  if (isEmpty(currentSqon) && !isEmpty(objectsSqon)) {
+    return objectsSqon;
+  }
+
+  if (!isEmpty(currentSqon) && isEmpty(objectsSqon)) {
+    return currentSqon;
+  }
+
+  return {};
 }
 
 const RepoTable = (props: PageContentProps): ReactElement => {
-  const { saveSet, isLoading } = useArrangerOps();
-  const { startArchiveBuildBySetId, findArchvieById } = useSingularityData();
+  console.log(props);
+  const { saveSet, isLoading: isWaitingForSet } = useSaveSet();
+
+  const {
+    startArchiveBuildBySetId,
+    findArchvieById,
+    fetchLatestArchiveAllInfo,
+  } = useSingularityData();
 
   const theme: typeof defaultTheme = useTheme();
-  const { logEvent } = useTrackingContext(); // TBD what to do with this?
-  const {
-    NEXT_PUBLIC_ARRANGER_API,
-    NEXT_PUBLIC_ARRANGER_PROJECT_ID,
-    NEXT_PUBLIC_SINGULARITY_API_URL,
-  } = getConfig();
+  const { logEvent } = useTrackingContext();
+  const { NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
 
-  const [archive, setArchive] = useState<Archive | undefined>(undefined);
+  const [archive, setArchive] = useState<Archive>();
   const [showDownloadInfoModal, setShowDownloadInfoModal] = useState(false);
 
   const showModal = () => setShowDownloadInfoModal(true);
@@ -296,16 +316,29 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     setArchive(undefined);
   };
 
+  const saveSetThenBuildArchive = async (sqon: object): Promise<Archive> => {
+    const setId = await saveSet(sqon);
+    logEvent({
+      category: 'Downloads',
+      action: 'Archvie Build',
+    });
+    console.debug('Saved set!', setId);
+    return await startArchiveBuildBySetId(setId);
+  };
+
   const updateArchiveState = async () => {
     if (archive?.status === 'BUILDING') {
       await sleep(5000);
-      console.debug('Updating requested archvie info!');
       await findArchvieById(archive.id).then(setArchive);
     } else if (archive?.status === 'COMPLETE') {
+      logEvent({
+        category: 'Downloads',
+        action: 'Archvie Download',
+      });
+
       window.location.assign(
         urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/download/archive/', archive.id),
       );
-      console.debug('Started archive download, done!');
     }
   };
 
@@ -313,26 +346,22 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     updateArchiveState();
   }, [archive]);
 
-  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-
   const handleDownload = () => {
+    showModal();
+
     const { sqon, selectedTableRows } = props;
 
-    // TBD - need to normalize sqon?
-    const sqonToUse =
-      selectedTableRows?.length > 0 ? buildSqonWithObjectIds(sqon, selectedTableRows) : sqon;
-    console.log(sqonToUse);
+    const sqonToUse = buildSqonWithObjectIds(sqon, selectedTableRows);
+    console.debug(sqonToUse);
 
-    saveSet(sqonToUse)
-      .then((setId) => {
-        console.debug('Saved set!', setId);
-        return startArchiveBuildBySetId(setId);
-      })
-      .then((archive) => {
-        console.debug('Archive created', archive);
-        setArchive(archive);
-        showModal();
-      });
+    const archviePromise = isEmpty(sqonToUse)
+      ? fetchLatestArchiveAllInfo()
+      : saveSetThenBuildArchive(sqonToUse);
+
+    archviePromise.then((archive) => {
+      console.debug('Archive', archive);
+      setArchive(archive);
+    });
   };
 
   const DownloadButton = (
@@ -365,18 +394,10 @@ const RepoTable = (props: PageContentProps): ReactElement => {
           showFilterInput={false}
           columnDropdownText={'Columns'}
           customHeaderContent={DownloadButton}
-          // TBD - can this be remvoed
-          downloadUrl={urlJoin(
-            NEXT_PUBLIC_ARRANGER_API,
-            NEXT_PUBLIC_ARRANGER_PROJECT_ID,
-            'download',
-          )}
         />
       </div>
 
-      {showDownloadInfoModal && archive && (
-        <DownloadInfoModal onClose={closeModal} archive={archive} />
-      )}
+      {showDownloadInfoModal && <DownloadInfoModal onClose={closeModal} archive={archive} />}
     </div>
   );
 };
