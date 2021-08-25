@@ -295,7 +295,6 @@ const RepoTable = (props: PageContentProps): ReactElement => {
       category: 'Downloads',
       action: 'Archvie Build',
     });
-    console.debug('Saved set!', setId);
     return await startArchiveBuildBySetId(setId);
   };
 
@@ -322,19 +321,13 @@ const RepoTable = (props: PageContentProps): ReactElement => {
   const handleDownload = () => {
     showModal();
 
-    const { sqon, selectedTableRows } = props;
-
-    const sqonToUse = buildSqonWithObjectIds(sqon, selectedTableRows);
-    console.debug(sqonToUse);
+    const sqonToUse = buildSqonWithObjectIds(props.sqon, props.selectedTableRows);
 
     const archviePromise = isEmpty(sqonToUse)
       ? fetchLatestArchiveAllInfo()
       : saveSetThenBuildArchive(sqonToUse);
 
-    archviePromise.then((archive) => {
-      console.debug('Archive', archive);
-      setArchive(archive);
-    });
+    archviePromise.then(setArchive);
   };
 
   const DownloadButton = (
