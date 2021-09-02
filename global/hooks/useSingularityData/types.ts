@@ -55,6 +55,7 @@ export type ArchviesFetchReq = {
   page?: number;
   sortDirection?: 'ASC' | 'DESC';
   sortField?: ArchivesSortFields;
+  status?: 'COMPLETE' | 'BUILDING' | 'FAILED';
 };
 
 export type ArchivesSortFields = 'createdAt' | 'numOfSamples';

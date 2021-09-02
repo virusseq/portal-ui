@@ -32,6 +32,18 @@ import {
   SingularityErrorResponse,
 } from './types';
 
+const DEFAULT_FAILED_ARCHIVE: Archive = {
+  id: 'FAILED TO CREATE',
+  object_id: '',
+  status: 'FAILED',
+  numOfDownloads: 0,
+  numOfSamples: 0,
+  type: 'SET_QUERY',
+  hash: '',
+  hashInfo: '',
+  created_at: 0,
+};
+
 const logErrorAndReject = (err: any) => {
   console.error('error', err);
   return Promise.reject(err);
@@ -99,7 +111,19 @@ const useSingularityData = () => {
   };
 
   const fetchLatestArchiveAllInfo = (): Promise<Archive> => {
-    return fetchCompletedArchvieAllInfos({ size: 1, page: 0 }).then((res) => res.content[0]);
+    return fetchCompletedArchvieAllInfos({
+      size: 1,
+      page: 0,
+      sortDirection: 'DESC',
+      sortField: 'createdAt',
+      status: 'COMPLETE',
+    }).then((res) => {
+      if (res.content[0]) {
+        return res.content[0];
+      } else {
+        return DEFAULT_FAILED_ARCHIVE;
+      }
+    });
   };
 
   const startArchiveBuildBySetId = (setId: string): Promise<Archive> => {
@@ -115,7 +139,10 @@ const useSingularityData = () => {
         }
         return res.json();
       })
-      .catch(logErrorAndReject) as Promise<Archive>;
+      .catch((err: any) => {
+        console.log('error', err);
+        return DEFAULT_FAILED_ARCHIVE;
+      }) as Promise<Archive>;
   };
 
   const findArchvieById = (archvieId: string): Promise<Archive> => {
@@ -126,7 +153,10 @@ const useSingularityData = () => {
         }
         return res.json();
       })
-      .catch(logErrorAndReject) as Promise<Archive>;
+      .catch((err: any) => {
+        console.log('error', err);
+        return DEFAULT_FAILED_ARCHIVE;
+      }) as Promise<Archive>;
   };
 
   return {
