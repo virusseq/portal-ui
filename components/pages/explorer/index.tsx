@@ -43,7 +43,7 @@ const Arranger = dynamic(
 export interface PageContentProps {
   sqon: RepoFiltersType;
   selectedTableRows: string[];
-  setSelectedTableRows: (id: string) => void;
+  setSelectedTableRows: (ids: []) => void;
   projectId: string;
   index: string;
   api: ({

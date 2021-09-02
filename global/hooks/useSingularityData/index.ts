@@ -25,11 +25,17 @@ import urlJoin from 'url-join';
 import { getConfig } from '../../config';
 import processStream from '../../utils/processStream';
 import {
+  Archive,
   ArchivesFetchRes,
   ArchviesFetchReq,
   ContributorsResponse,
   SingularityErrorResponse,
 } from './types';
+
+const logErrorAndReject = (err: any) => {
+  console.error('error', err);
+  return Promise.reject(err);
+};
 
 const useSingularityData = () => {
   const { NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
@@ -92,11 +98,45 @@ const useSingularityData = () => {
       }) as Promise<ArchivesFetchRes>;
   };
 
+  const fetchLatestArchiveAllInfo = (): Promise<Archive> => {
+    return fetchCompletedArchvieAllInfos({ size: 1, page: 0 }).then((res) => res.content[0]);
+  };
+
+  const startArchiveBuildBySetId = (setId: string): Promise<Archive> => {
+    return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/build-archive/set-query'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ setId: setId }),
+    })
+      .then((res) => {
+        console.log(res);
+        if (res.status !== 200) {
+          throw Error("Couldn't build archive!");
+        }
+        return res.json();
+      })
+      .catch(logErrorAndReject) as Promise<Archive>;
+  };
+
+  const findArchvieById = (archvieId: string): Promise<Archive> => {
+    return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/archives/', archvieId))
+      .then((res) => {
+        if (res.status !== 200) {
+          throw Error("Couldn't find archive!");
+        }
+        return res.json();
+      })
+      .catch(logErrorAndReject) as Promise<Archive>;
+  };
+
   return {
     awaitingResponse,
     fetchContributors,
     fetchCompletedArchvieAllInfos,
+    fetchLatestArchiveAllInfo,
     setAwaitingResponse,
+    startArchiveBuildBySetId,
+    findArchvieById,
   };
 };
 
