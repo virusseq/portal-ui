@@ -111,7 +111,9 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
         {!archive ? (
           <Loader size={'25px'} />
         ) : (
-          <ArchiveStatDisplay numOfSamples={archive?.numOfSamples} id={archive?.id} />
+          archive.status !== 'FAILED' && (
+            <ArchiveStatDisplay numOfSamples={archive?.numOfSamples} id={archive?.id} />
+          )
         )}
         <p
           css={css`
