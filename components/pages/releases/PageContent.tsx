@@ -58,7 +58,7 @@ const PageContent = (): ReactElement => {
             ${theme.typography.baseFont};
           `}
         >
-          Data Relases
+          Data Releases
         </div>
         <Description />
         <ReleasesTable />
