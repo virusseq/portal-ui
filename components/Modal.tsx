@@ -1,15 +1,16 @@
 import styled from '@emotion/styled';
-import React, { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import DismissIcon from './theme/icons/dismiss';
 import defaultTheme from './theme';
 import { modalPortalRef } from './Root';
 import { css } from '@emotion/react';
 import Button, { UnStyledButton } from './Button';
+import { navBarRef } from './NavBar';
 
 const useMounted = () => {
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
     setMounted(true);
   }, []);
   return mounted;
@@ -17,10 +18,12 @@ const useMounted = () => {
 
 const ModalOverlay = ({
   children,
-  widthPx,
+  width,
+  height,
 }: {
   children: ReactElement;
-  widthPx: number;
+  width: string;
+  height: string;
 }): ReactElement => {
   return (
     <div
@@ -28,8 +31,8 @@ const ModalOverlay = ({
         position: absolute;
         top: 0;
         left: 0;
-        width: ${widthPx}px;
-        height: 100%;
+        width: ${width};
+        height: ${height};
         display: flex;
         justify-content: center;
         align-items: center;
@@ -135,6 +138,8 @@ type ModalProps = Partial<ModalHeaderProps> &
   Partial<ModalFooterProps> &
   Partial<{ children: ReactNode }>;
 
+const DEFAULT_WIDTH = '110vw';
+
 export const Modal = ({
   children = null,
   title = '',
@@ -145,11 +150,27 @@ export const Modal = ({
   onActionClick = () => {},
   onCloseClick = () => {},
 }: ModalProps) => {
+  const navBar = navBarRef.current;
+  const [width, setWidth] = useState(navBar ? `${navBar.clientWidth}px` : DEFAULT_WIDTH);
+  const [height, setHeight] = useState(`${window.innerHeight}px`);
+
   const ref = modalPortalRef.current;
   const mounted = useMounted();
 
+  useEffect(() => {
+    // This ui is currently not responsize, so there are pages and components (navBar) that overflow
+    // if window size changes causing it becaome scrollable. When this happens ModalOverlay
+    // with width and height 100% doesn't cover the entire UI. This event listener will resize the
+    // window so that the overlay is always covering the entire UI. This solutions works for now,
+    // but ideally we should make the UI responsive so this doesn't need to be done.
+    window.addEventListener('resize', () => {
+      setWidth(navBar ? `${navBar.clientWidth}px` : DEFAULT_WIDTH);
+      setHeight(`${window.innerHeight}px`);
+    });
+  }, []);
+
   const ModalContent = (
-    <ModalOverlay widthPx={window.outerWidth}>
+    <ModalOverlay width={width} height={height}>
       <ModalContainer>
         <ModalHeader title={title} onCloseClick={onCloseClick} />
         <ModalBody>{children}</ModalBody>

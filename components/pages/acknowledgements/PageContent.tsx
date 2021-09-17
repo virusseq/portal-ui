@@ -28,7 +28,6 @@ import Contributors from './Contributors';
 
 const PageContent = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
-  const currentDatetime = new Date();
 
   return (
     <main
@@ -68,7 +67,7 @@ const PageContent = (): ReactElement => {
             margin-top: 10px 0 0;
           `}
         >
-          Updated on {currentDatetime.toLocaleString()}
+          Updated at 09/16/2021, 3:06:59 PM
         </p>
 
         <Policy />

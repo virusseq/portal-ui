@@ -280,10 +280,13 @@ const RepoTable = (props: PageContentProps): ReactElement => {
   const { logEvent } = useTrackingContext();
   const { NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
 
-  const [archive, setArchive] = useState<Archive>();
+  const [archive, setArchive] = useState<Archive | undefined>(undefined);
   const [showDownloadInfoModal, setShowDownloadInfoModal] = useState(false);
 
-  const showModal = () => setShowDownloadInfoModal(true);
+  const showModal = () => {
+    setArchive(undefined);
+    setShowDownloadInfoModal(true);
+  };
   const closeModal = () => {
     setShowDownloadInfoModal(false);
     setArchive(undefined);
@@ -302,10 +305,10 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     if (archive?.status === 'BUILDING') {
       await sleep(5000);
       await findArchvieById(archive.id).then(setArchive);
-    } else if (archive?.status === 'COMPLETE') {
+    } else if (archive?.status === 'COMPLETE' && showDownloadInfoModal) {
       logEvent({
         category: 'Downloads',
-        action: 'Archvie Download',
+        action: 'Archive Download',
       });
 
       window.location.assign(
