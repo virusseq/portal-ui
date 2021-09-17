@@ -25,6 +25,7 @@ import { css, useTheme } from '@emotion/react';
 import defaultTheme from '../../theme';
 import useSingularityData from '../../../global/hooks/useSingularityData';
 import { LoaderWrapper } from '../../Loader';
+import { format } from 'date-fns';
 
 const Contributors = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
@@ -59,7 +60,7 @@ const Contributors = (): ReactElement => {
           margin-top: 10px 0 0;
         `}
       >
-        Viewed at {currentDatetime.toLocaleString()}
+        Viewed at {format(currentDatetime, 'MM/dd/yyyy, h:mm:ss aa')}
       </p>
 
       <LoaderWrapper loading={awaitingResponse} size="10px">

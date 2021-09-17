@@ -25,6 +25,7 @@ import { css, useTheme } from '@emotion/react';
 import defaultTheme from '../../theme';
 import Policy from './Policy';
 import Contributors from './Contributors';
+import { format } from 'date-fns';
 
 const PageContent = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
@@ -67,7 +68,7 @@ const PageContent = (): ReactElement => {
             margin-top: 10px 0 0;
           `}
         >
-          Updated at 09/16/2021, 3:06:59 PM
+          Updated at {format(Date.parse('17 Sep 2021 12:20:00'), 'MM/dd/yyyy, h:mm:ss aa')}
         </p>
 
         <Policy />
