@@ -28,6 +28,8 @@ import { LoaderWrapper } from '../../Loader';
 
 const Contributors = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
+  const currentDatetime = new Date();
+
   const { awaitingResponse, fetchContributors } = useSingularityData();
   const [contributorsList, setContributorsList] = useState([]);
 
@@ -50,6 +52,15 @@ const Contributors = (): ReactElement => {
       >
         The following members have contributed data to the Canadian VirusSeq Data Portal:
       </h2>
+
+      <p
+        css={css`
+          font-style: italic;
+          margin-top: 10px 0 0;
+        `}
+      >
+        Viewed at {currentDatetime.toLocaleString()}
+      </p>
 
       <LoaderWrapper loading={awaitingResponse} size="10px">
         <p>

@@ -19,7 +19,7 @@
  *
  */
 
-import { ReactElement } from 'react';
+import { createRef, ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 import { useRouter } from 'next/router';
 
@@ -37,6 +37,11 @@ import {
   ACKNOWLEDGEMENTS_PATH,
   RELEASES_PATH,
 } from '../global/utils/constants';
+
+/**
+ * Portal ref of navBar. There is only one navBar in entire pagelayout.
+ */
+export const navBarRef = createRef<HTMLDivElement>();
 
 const NavBar = (): ReactElement => {
   const { token } = useAuthContext();
@@ -79,6 +84,7 @@ const NavBar = (): ReactElement => {
 
   return (
     <div
+      ref={navBarRef}
       css={css`
         display: flex;
         justify-content: flex-start;
