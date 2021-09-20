@@ -157,6 +157,7 @@ const PageContent = () => {
         padding-left: 60px;
         padding-right: 60px;
         padding-bottom: ${defaultTheme.dimensions.footer.height + 60}px;
+        overflow: auto;
       `}
     >
       {showCreateStudyModal && (
