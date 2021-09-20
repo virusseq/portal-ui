@@ -53,13 +53,13 @@ const CovidCloudPane = (): ReactElement => {
           max-width: 900px;
         `}
       >
-        Genome Canada has partnered with{' '}
+        Genome Canada has also partnered with{' '}
         <StyledLink href="https://www.dnastack.com" rel="noopener noreferrer" target="_blank">
           DNAstack
         </StyledLink>{' '}
-        to integrate COVID Cloud with the Canadian VirusSeq Data Portal. COVID Cloud is a
-        cloud-based platform that helps researchers find, visualize, and analyze genomics and other
-        datasets related to COVID-19.
+        to integrate VirusSeq data with their COVID Cloud Platform. COVID Cloud is a cloud-based
+        platform that helps researchers find, visualize, and analyze genomics and other datasets
+        related to COVID-19.
       </p>
       <a
         css={css`

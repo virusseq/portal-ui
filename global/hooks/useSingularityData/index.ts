@@ -133,7 +133,6 @@ const useSingularityData = () => {
       body: JSON.stringify({ setId: setId }),
     })
       .then((res) => {
-        console.log(res);
         if (res.status !== 200) {
           throw Error("Couldn't build archive!");
         }

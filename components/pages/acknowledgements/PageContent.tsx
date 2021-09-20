@@ -25,10 +25,10 @@ import { css, useTheme } from '@emotion/react';
 import defaultTheme from '../../theme';
 import Policy from './Policy';
 import Contributors from './Contributors';
+import { format } from 'date-fns';
 
 const PageContent = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
-  const currentDatetime = new Date();
 
   return (
     <main
@@ -68,7 +68,7 @@ const PageContent = (): ReactElement => {
             margin-top: 10px 0 0;
           `}
         >
-          Updated on {currentDatetime.toLocaleString()}
+          Updated at {format(Date.parse('17 Sep 2021 12:20:00'), 'MM/dd/yyyy, h:mm:ss aa')}
         </p>
 
         <Policy />
