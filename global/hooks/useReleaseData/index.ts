@@ -29,8 +29,8 @@ import { ReleaseDataProps } from './types';
 
 const arrangerFetcher = createArrangerFetcher({});
 
-const releaseQuery = `
-query ($sqon: JSON) {
+const releaseDataQuery = `
+query releaseDataQuery ($sqon: JSON) {
     file {
     aggregations(
       filters: $sqon,
@@ -81,25 +81,22 @@ const useReleaseData = (sqon?: RepoFiltersType): [ReleaseDataProps, boolean] => 
       setIsFetchingData(true);
       arrangerFetcher({
         body: {
-          query: releaseQuery,
+          query: releaseDataQuery,
           variables: { sqon },
         },
       })
-        .then(
-          async ({
-            data: {
-              file: {
-                aggregations: {
-                  analysis__host__host_age_bin: { buckets: hostAges = [] } = {},
-                  analysis__host__host_gender: { buckets: hostGenders = [] } = {},
-                  analysis__sample_collection__geo_loc_province: { buckets: provinces = [] } = {},
-                  donors__specimens__samples__sample_id: { bucket_count: genomes = 0 } = {},
-                  file__size: { stats: { count: fileCount = 0, sum: fileSize = 0 } = {} } = {},
-                  study_id: { bucket_count: studyCount = 0 } = {},
-                } = {},
-              },
-            },
-          }) => {
+        .then(async ({ data: { file: { aggregations = {} } = {} } }) => {
+          // aggregations will be null if there's an error in the response
+          if (aggregations) {
+            const {
+              analysis__host__host_age_bin: { buckets: hostAges = [] } = {},
+              analysis__host__host_gender: { buckets: hostGenders = [] } = {},
+              analysis__sample_collection__geo_loc_province: { buckets: provinces = [] } = {},
+              donors__specimens__samples__sample_id: { bucket_count: genomes = 0 } = {},
+              file__size: { stats: { count: fileCount = 0, sum: fileSize = 0 } = {} } = {},
+              study_id: { bucket_count: studyCount = 0 } = {},
+            } = aggregations;
+
             const [value, unit] = await formatFileSize(fileSize).split(' ');
             const filesByVariant = await provinces.reduce(
               (
@@ -147,9 +144,9 @@ const useReleaseData = (sqon?: RepoFiltersType): [ReleaseDataProps, boolean] => 
               genomes,
               studyCount,
             });
-            setIsFetchingData(false);
-          },
-        )
+          }
+          setIsFetchingData(false);
+        })
         .catch(async (err) => {
           console.warn(err);
           setIsFetchingData(false);
