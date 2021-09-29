@@ -35,7 +35,7 @@ const Policy = () => {
       <p>
         The CanCOGen VirusSeq project requests that authors who use data from the portal{' '}
         <StyledLink href={ACKNOWLEDGEMENTS_PATH}>acknowledge</StyledLink> the contributions of
-        Canadian researchvers in the acknowledgements section of hteir work. Authors are encouraged
+        Canadian researchers in the acknowledgements section of their work. Authors are encouraged
         to recognize the contributions of the appropriate specimens and research groups based on the
         datasets used in their research.
       </p>
