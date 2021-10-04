@@ -39,23 +39,6 @@ const Policy = () => {
         to recognize the contributions of the appropriate specimens and research groups based on the
         datasets used in their research.
       </p>
-
-      <p>An example of proper acknowledgement is:</p>
-
-      <p
-        css={css`
-          background-color: ${defaultTheme.colors.grey_2};
-          padding: 15px;
-        `}
-      >
-        The results here are in whole or part based upon data hosted at the Canadian Vrisuseq Data
-        Portal: https://virusseq-dataportal.ca/explorer.
-      </p>
-
-      <p>
-        Authors are encouraged to recognize the contribution of hte approprtiate specimens and
-        reasearch groups based on the dataset used in reasearch.
-      </p>
     </div>
   );
 };
