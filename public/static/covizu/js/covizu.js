@@ -1,3 +1,5 @@
+var customOptions = customOptions || {};
+
 var covizuOptions = $.extend(true, {}, defaultOptions, customOptions);
 
 $('#covizu-version').text(covizuOptions.covizuVersion);
