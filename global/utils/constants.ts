@@ -38,6 +38,7 @@ export const LOGIN_PATH = '/login';
 export const SUBMISSION_PATH = '/submission';
 export const TEAM_PATH = '/team';
 export const ACKNOWLEDGEMENTS_PATH = '/acknowledgements';
+export const VISUALIZATION_PATH = '/visualization';
 
 // external docs links
 const OVERTURE_DMS_DOCS_ROOT = 'https://overture.bio/documentation/dms/';
