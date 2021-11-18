@@ -30,6 +30,7 @@ module.exports = withCSS({
     NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE:
       process.env.NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE,
     NEXT_PUBLIC_COVIZU_DATA_VERSION: process.env.NEXT_PUBLIC_COVIZU_DATA_VERSION,
+    NEXT_PUBLIC_COVIZU_DATA_URL: process.env.NEXT_PUBLIC_COVIZU_DATA_URL,
   },
   assetPrefix: process.env.ASSET_PREFIX || '',
   redirects: async () => [
@@ -37,33 +38,6 @@ module.exports = withCSS({
       source: '/about',
       destination: '/',
       permanent: true,
-    },
-    {
-      source: '/static/covizu/data/clusters.json',
-      destination:
-        process.env.NEXT_PUBLIC_COVIZU_DATA_URL +
-        'clusters.' +
-        process.env.NEXT_PUBLIC_COVIZU_DATA_VERSION +
-        '.json',
-      permanent: false,
-    },
-    {
-      source: '/static/covizu/data/timetree.nwk',
-      destination:
-        process.env.NEXT_PUBLIC_COVIZU_DATA_URL +
-        'timetree.' +
-        process.env.NEXT_PUBLIC_COVIZU_DATA_VERSION +
-        '.nwk',
-      permanent: false,
-    },
-    {
-      source: '/static/covizu/data/dbstats.json',
-      destination:
-        process.env.NEXT_PUBLIC_COVIZU_DATA_URL +
-        'dbstats.' +
-        process.env.NEXT_PUBLIC_COVIZU_DATA_VERSION +
-        '.json',
-      permanent: false,
     },
   ],
 });
