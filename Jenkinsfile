@@ -79,7 +79,7 @@ spec:
           withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
           }
-          sh "docker build --network=host -f Dockerfile . -t ${dockerRepo}:${commit} -t ${dockerRepo}:edge"
+          sh "docker build --build-arg APP_COMMIT=${commit} --build-arg APP_VERSION=${version} --network=host -f Dockerfile . -t ${dockerRepo}:${commit} -t ${dockerRepo}:edge"
           sh "docker push ${dockerRepo}:${commit}"
           sh "docker push ${dockerRepo}:edge"
         }
@@ -114,7 +114,7 @@ spec:
           withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
           }
-          sh "docker build --network=host -f Dockerfile . -t ${dockerRepo}:${version} -t ${dockerRepo}:latest"
+          sh "docker build --build-arg APP_COMMIT=${commit} --build-arg APP_VERSION=${version} --network=host -f Dockerfile . -t ${dockerRepo}:${version} -t ${dockerRepo}:latest"
           sh "docker push ${dockerRepo}:${version}"
           sh "docker push ${dockerRepo}:latest"
         }
