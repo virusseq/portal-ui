@@ -210,10 +210,10 @@
             <h1><span onclick="$('#splash').dialog('open');"><small><i>open</i></small>CoVizu</span></h1>
           </div>
           <div id="covizu-i18n" style="font-size: 8pt;">
-            <a href="index.html">en</a>
-            <a href="index-es.html">es</a>
-            <a href="index-fr.html">fr</a>
-            <a href="index-zh.html">zh</a>
+            <a href="index.html" id="covizu-18n__en">en</a>
+            <a href="index-es.html" id="covizu-18n__es">es</a>
+            <a href="index-fr.html" id="covizu-18n__fr">fr</a>
+            <a href="index-zh.html" id="covizu-18n__zh">zh</a>
           </div>
           <div style="padding-top: 10px; padding-right: 6px;">
             <h3>Near real-time visualization of SARS-CoV-2 (hCoV-19) genomic variation</h3>
@@ -221,7 +221,6 @@
           <div style="font-weight: bold" id="covizu-credits">
             Enabled by data from
           </div>
-          <!-- END customizations -->
           <p>
             <div style="font-size: 0.9em;" id="div-last-update"></div>
             <div style="font-size: 0.9em;" id="div-number-genomes"></div>
@@ -271,7 +270,6 @@
       <a style="text-decoration: none;" href="https://en.wikipedia.org/wiki/Shoshinsha_mark" target="_new">
         &#128304;</a>icons.
     </p>
-    <p><small>UI v<span id="covizu-version"></span> / data v<span id="covizu-data-version"></span></small></p>
   </div>
 
   <div id="help-timetree" title="Help: Time-scaled tree interface">

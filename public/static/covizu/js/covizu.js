@@ -2,8 +2,9 @@ var customOptions = customOptions || {};
 
 var covizuOptions = $.extend(true, {}, defaultOptions, customOptions);
 
-$('#covizu-version').text(covizuOptions.covizuVersion);
-$('#covizu-data-version').text(covizuOptions.dataVersion);
+// to check versions in the console:
+// console.log(covizuOptions.covizuVersion)
+// console.log(covizuOptions.dataVersion)
 
 $( function() {
   $( "#tabs" ).tabs();
@@ -108,7 +109,7 @@ $.ajaxSetup({
 
 // load database statistics
 var dbstats, req;
-req = $.getJSON("data/dbstats.json", function(data) {
+req = $.getJSON(covizuOptions.dataUrls.dbstats, function(data) {
   dbstats = data;
   dbstats.nlineages = Object.keys(dbstats.lineages).length;
 });
@@ -149,13 +150,13 @@ var province_pal = {
 // load time-scaled phylogeny from server
 var nwk, df, countries;
 $.ajax({
-  url: "data/timetree.nwk",
+  url: covizuOptions.dataUrls.timetree,
   success: function(data) {
     nwk = data;
     df = readTree(data);
   }
 });
-$.getJSON("data/countries.json", function(data) {
+$.getJSON(covizuOptions.dataUrls.countries, function(data) {
   countries = data;
 });
 
@@ -165,7 +166,7 @@ var clusters, beaddata, tips,
 var map_cidx_to_id = [], id_to_cidx = [];
 
 // load cluster data from server
-req = $.getJSON("data/clusters.json", function(data) {
+req = $.getJSON(covizuOptions.dataUrls.clusters, function(data) {
   clusters = data;
 });
 
