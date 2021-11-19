@@ -29,6 +29,7 @@ import { ClientSideGetInitialPropsContext } from '../global/utils/pages/types';
 import Head from './Head';
 import defaultTheme from './theme';
 import SystemAlerts from './SystemAlerts';
+import { getConfig } from '../global/config';
 
 /**
  * portal ref where modals will show up
@@ -44,6 +45,9 @@ const Root = ({
   egoJwt?: string;
   pageContext: ClientSideGetInitialPropsContext;
 }): ReactElement => {
+  const { NEXT_PUBLIC_APP_VERSION, NEXT_PUBLIC_APP_COMMIT } = getConfig();
+  console.info(`App Version: ${NEXT_PUBLIC_APP_VERSION}, App Commit: ${NEXT_PUBLIC_APP_COMMIT}`);
+
   return (
     <>
       <style>
