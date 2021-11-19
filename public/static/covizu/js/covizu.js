@@ -104,16 +104,27 @@ $( "#ack-open" ).click(function() {
 
 // Forces the requested files to not be cached by the browser
 $.ajaxSetup({ 
-  cache: false 
+  cache: false,
+  crossDomain: true,
+  headers: {
+    accept: "application/json",
+    "Access-Control-Allow-Origin":"*"
+  },
+  method: 'GET',
 });
 
 // load database statistics
 var dbstats, req;
-req = $.getJSON(covizuOptions.dataUrls.dbstats, function(data) {
-  dbstats = data;
-  dbstats.nlineages = Object.keys(dbstats.lineages).length;
-});
-req.done(function() {
+
+$.ajax({
+  dataType: "json",
+  success: function (data) {
+    dbstats = data;
+    dbstats.nlineages = Object.keys(dbstats.lineages).length;
+  },
+  url: covizuOptions.dataUrls.dbstats,
+})
+.done(function () {
   $("#div-last-update").text(`${i18n_text.last_update}: ${dbstats.lastupdate}`);
   $("#div-number-genomes").text(`${i18n_text.number_genomes}: ${dbstats.noseqs}`);
   $("#div-number-lineages").text(`${i18n_text.number_lineages}: ${dbstats.nlineages}`);
@@ -149,28 +160,37 @@ var province_pal = {
 
 // load time-scaled phylogeny from server
 var nwk, df, countries;
+
 $.ajax({
-  url: covizuOptions.dataUrls.timetree,
-  success: function(data) {
+  success: function (data) {
     nwk = data;
     df = readTree(data);
-  }
-});
-$.getJSON(covizuOptions.dataUrls.countries, function(data) {
-  countries = data;
+  },
+  url: covizuOptions.dataUrls.timetree,
 });
 
+$.ajax({
+  dataType: "json",
+  success: function (data) {
+    countries = data;
+  },
+  url: covizuOptions.dataUrls.countries,
+})
 
 var clusters, beaddata, tips,
     accn_to_cid, cindex, lineage_to_cid;
 var map_cidx_to_id = [], id_to_cidx = [];
 
 // load cluster data from server
-req = $.getJSON(covizuOptions.dataUrls.clusters, function(data) {
-  clusters = data;
-});
 
-req.done(function() {
+$.ajax({
+  dataType: "json",
+  success: function (data) {
+    clusters = data;
+  },
+  url: covizuOptions.dataUrls.clusters,
+})
+.done(function () {
   $("#splash-button").button("enable");
   $("#splash-extra").html("");  // remove loading animation
 
