@@ -114,7 +114,7 @@ $.ajaxSetup({
 });
 
 // load database statistics
-var dbstats, req;
+var dbstats;
 
 $.ajax({
   dataType: "json",
