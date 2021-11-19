@@ -54,6 +54,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE:
       publicConfig.NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE || 'MUSE.WRITE',
     NEXT_PUBLIC_COVIZU_DATA_VERSION: publicConfig.NEXT_PUBLIC_COVIZU_DATA_VERSION || '',
+    NEXT_PUBLIC_COVIZU_DATA_URL: publicConfig.NEXT_PUBLIC_COVIZU_DATA_URL || '',
     NEXT_PUBLIC_APP_VERSION: publicConfig.NEXT_PUBLIC_APP_VERSION || '',
     NEXT_PUBLIC_APP_COMMIT: publicConfig.NEXT_PUBLIC_APP_COMMIT || '',
   } as {
@@ -81,6 +82,7 @@ export const getConfig = (): Record<string, string> => {
     NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE: string;
     NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE: string;
     NEXT_PUBLIC_COVIZU_DATA_VERSION: string;
+    NEXT_PUBLIC_COVIZU_DATA_URL: string;
     NEXT_PUBLIC_APP_VERSION: string;
     NEXT_PUBLIC_APP_COMMIT: string;
   };
