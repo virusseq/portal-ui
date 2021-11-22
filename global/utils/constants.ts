@@ -73,3 +73,6 @@ export const getProvince = ({
     ({ abbreviation, name }) =>
       short?.toUpperCase() === abbreviation || long?.toLowerCase() === name.toLowerCase(),
   ) || { abbreviation: '', name: `${long || short} not found` };
+
+// external covizu links
+export const covizuGithubUrl = 'https://github.com/PoonLab/covizu/tree/opendata';
