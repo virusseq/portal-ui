@@ -5,7 +5,8 @@ const dataUrl = urlParams.get('dataUrl') || '';
 $('#covizu-18n__en, #covizu-18n__fr').on('click', function (e) {
   e.preventDefault();
   var lang = e.target.id.split('__')[1];
-  var newUrl = 'index-' + lang + '.html?dataVersion=' + dataVersion + '&dataUrl=' + dataUrl;
+  var filename = lang === 'en' ? 'index.html' : 'index-' + lang + '.html';
+  var newUrl = filename + '?dataVersion=' + dataVersion + '&dataUrl=' + dataUrl;
   location.href = newUrl;
 });
 
