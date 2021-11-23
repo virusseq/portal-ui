@@ -22,14 +22,14 @@ import { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import defaultTheme from '../../theme';
 import { getConfig } from '../../../global/config';
+import { EXPLORER_PATH, covizuGithubUrl } from '../../../global/utils/constants';
+import { InternalLink as Link } from '../../Link';
 
 import PageLayout from '../../PageLayout';
 
 const VisualizationPage = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
   const { NEXT_PUBLIC_COVIZU_DATA_VERSION, NEXT_PUBLIC_COVIZU_DATA_URL } = getConfig();
-
-  console.log({ NEXT_PUBLIC_COVIZU_DATA_VERSION, NEXT_PUBLIC_COVIZU_DATA_URL });
 
   const [showCovizu, setShowCovizu] = useState(false);
   useEffect(() => {
@@ -56,23 +56,27 @@ const VisualizationPage = (): ReactElement => {
             `}
           >
             <a
-              href=""
               css={css`
                 color: ${theme.colors.primary_dark};
+                font-weight: bold;
               `}
+              href={covizuGithubUrl}
+              target="_blank"
             >
-              <strong>Covizu</strong>
+              Covizu
             </a>{' '}
             (an open source SARS-CoV-2 genome analysis and visualization system) has been used to
             visualize{' '}
-            <a
-              href=""
-              css={css`
-                color: ${theme.colors.primary_dark};
-              `}
-            >
-              Canadian VirusSeq data
-            </a>{' '}
+            <Link path={EXPLORER_PATH}>
+              <a
+                css={css`
+                  color: ${theme.colors.primary_dark};
+                  font-weight: bold;
+                `}
+              >
+                Canadian VirusSeq data
+              </a>
+            </Link>{' '}
             colocalized with International GenBank data in a time-scaled phylogenetic tree to
             highlight potential cases of importation from other countries or ongoing community
             transmission.
