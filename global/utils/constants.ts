@@ -75,4 +75,4 @@ export const getProvince = ({
   ) || { abbreviation: '', name: `${long || short} not found` };
 
 // external covizu links
-export const covizuGithubUrl = 'https://github.com/PoonLab/covizu/tree/opendata';
+export const covizuGithubUrl = 'https://github.com/PoonLab/CoVizu';
