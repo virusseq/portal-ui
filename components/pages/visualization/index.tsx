@@ -18,7 +18,7 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 import defaultTheme from '../../theme';
 import { getConfig } from '../../../global/config';
@@ -31,68 +31,58 @@ const VisualizationPage = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
   const { NEXT_PUBLIC_COVIZU_DATA_VERSION, NEXT_PUBLIC_COVIZU_DATA_URL } = getConfig();
 
-  const [showCovizu, setShowCovizu] = useState(false);
-  useEffect(() => {
-    const nextShowCovizu = localStorage.getItem('SHOW_COVIZU') === 'true';
-    setShowCovizu(nextShowCovizu);
-  }, []);
-
   return (
     <PageLayout subtitle="Visualize Data">
-      {showCovizu ? (
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+        `}
+      >
         <div
           css={css`
-            display: flex;
-            flex-direction: column;
+            background: ${theme.colors.grey_2};
+            border: ${theme.colors.grey_3} 1px solid;
+            padding: 15px 20px;
+            margin: 15px;
+            border-radius: 10px;
           `}
         >
-          <div
+          <a
             css={css`
-              background: ${theme.colors.grey_2};
-              border: ${theme.colors.grey_3} 1px solid;
-              padding: 15px 20px;
-              margin: 15px;
-              border-radius: 10px;
+              color: ${theme.colors.primary_dark};
+              font-weight: bold;
             `}
+            href={covizuGithubUrl}
+            target="_blank"
           >
+            Covizu
+          </a>{' '}
+          (an open source SARS-CoV-2 genome analysis and visualization system) has been used to
+          visualize{' '}
+          <Link path={EXPLORER_PATH}>
             <a
               css={css`
                 color: ${theme.colors.primary_dark};
                 font-weight: bold;
               `}
-              href={covizuGithubUrl}
-              target="_blank"
             >
-              Covizu
-            </a>{' '}
-            (an open source SARS-CoV-2 genome analysis and visualization system) has been used to
-            visualize{' '}
-            <Link path={EXPLORER_PATH}>
-              <a
-                css={css`
-                  color: ${theme.colors.primary_dark};
-                  font-weight: bold;
-                `}
-              >
-                Canadian VirusSeq data
-              </a>
-            </Link>{' '}
-            colocalized with International GenBank data in a time-scaled phylogenetic tree to
-            highlight potential cases of importation from other countries or ongoing community
-            transmission.
-          </div>
-          <iframe
-            css={css`
-              flex: 1;
-              border: 0;
-            `}
-            src={`/static/covizu/index.html?dataVersion=${NEXT_PUBLIC_COVIZU_DATA_VERSION}&dataUrl=${NEXT_PUBLIC_COVIZU_DATA_URL}`}
-            width="99%"
-          />
+              Canadian VirusSeq data
+            </a>
+          </Link>{' '}
+          colocalized with International GenBank data in a time-scaled phylogenetic tree to
+          highlight potential cases of importation from other countries or ongoing community
+          transmission.
         </div>
-      ) : (
-        <p>Coming Soon</p>
-      )}
+        <iframe
+          css={css`
+            flex: 1;
+            border: 0;
+          `}
+          src={`/static/covizu/index.html?dataVersion=${NEXT_PUBLIC_COVIZU_DATA_VERSION}&dataUrl=${NEXT_PUBLIC_COVIZU_DATA_URL}`}
+          width="99%"
+        />
+      </div>
     </PageLayout>
   );
 };
