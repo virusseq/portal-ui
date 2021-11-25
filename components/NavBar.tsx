@@ -19,7 +19,7 @@
  *
  */
 
-import { createRef, ReactElement, useEffect, useState } from 'react';
+import { createRef, ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 import { useRouter } from 'next/router';
 
@@ -97,12 +97,6 @@ const NavBar = (): ReactElement => {
     margin-left: 4px;
   `;
 
-  const [showCovizu, setShowCovizu] = useState(false);
-  useEffect(() => {
-    const nextShowCovizu = localStorage.getItem('SHOW_COVIZU') === 'true';
-    setShowCovizu(nextShowCovizu);
-  }, []);
-
   return (
     <div
       ref={navBarRef}
@@ -176,25 +170,23 @@ const NavBar = (): ReactElement => {
               Explore VirusSeq Data
             </a>
           </Link>
-          {showCovizu && (
-            <Link path={VISUALIZATION_PATH}>
-              <a
+          <Link path={VISUALIZATION_PATH}>
+            <a
+              css={css`
+                ${linkStyle}
+                ${router.asPath.startsWith(VISUALIZATION_PATH) ? activeLinkStyle : ''}
+              `}
+            >
+              Visualize Genomes
+              <div
                 css={css`
-                  ${linkStyle}
-                  ${router.asPath.startsWith(VISUALIZATION_PATH) ? activeLinkStyle : ''}
+                  ${newBadgeStyle}
                 `}
               >
-                Visualize Data
-                <div
-                  css={css`
-                    ${newBadgeStyle}
-                  `}
-                >
-                  new
-                </div>
-              </a>
-            </Link>
-          )}
+                new
+              </div>
+            </a>
+          </Link>
           <Link path={RELEASES_PATH}>
             <a
               css={css`
