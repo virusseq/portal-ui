@@ -1,0 +1,7 @@
+div.app-right {
+  overflow: auto;
+}
+
+#covizu-credits, #covizu-18n__zh, #covizu-18n__es {
+  display: none;
+}

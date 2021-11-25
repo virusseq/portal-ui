@@ -38,6 +38,7 @@ export const LOGIN_PATH = '/login';
 export const SUBMISSION_PATH = '/submission';
 export const TEAM_PATH = '/team';
 export const ACKNOWLEDGEMENTS_PATH = '/acknowledgements';
+export const VISUALIZATION_PATH = '/visualization';
 
 // external docs links
 const OVERTURE_DMS_DOCS_ROOT = 'https://overture.bio/documentation/dms/';
@@ -72,3 +73,6 @@ export const getProvince = ({
     ({ abbreviation, name }) =>
       short?.toUpperCase() === abbreviation || long?.toLowerCase() === name.toLowerCase(),
   ) || { abbreviation: '', name: `${long || short} not found` };
+
+// external covizu links
+export const covizuGithubUrl = 'https://github.com/PoonLab/CoVizu';

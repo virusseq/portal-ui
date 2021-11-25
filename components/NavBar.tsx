@@ -36,6 +36,7 @@ import {
   TEAM_PATH,
   ACKNOWLEDGEMENTS_PATH,
   RELEASES_PATH,
+  VISUALIZATION_PATH,
 } from '../global/utils/constants';
 
 /**
@@ -68,10 +69,11 @@ const NavBar = (): ReactElement => {
     font-weight: bold;
     height: 100%;
     justify-content: center;
-    padding: 0 2rem;
+    padding: 0 1rem;
     text-decoration: none;
     white-space: nowrap;
     width: fit-content;
+    font-size: 14px;
 
     svg path {
       fill: ${theme.colors.white};
@@ -80,6 +82,19 @@ const NavBar = (): ReactElement => {
     &:hover {
       ${activeLinkStyle}
     }
+  `;
+
+  const newBadgeStyle = `
+    background: ${theme.colors.warning};
+    color: ${theme.colors.primary_dark};
+    font-size: 10px;
+    line-height: 1;
+    text-transform: uppercase;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-weight: normal;
+    margin-top: -12px;
+    margin-left: 4px;
   `;
 
   return (
@@ -153,6 +168,23 @@ const NavBar = (): ReactElement => {
               `}
             >
               Explore VirusSeq Data
+            </a>
+          </Link>
+          <Link path={VISUALIZATION_PATH}>
+            <a
+              css={css`
+                ${linkStyle}
+                ${router.asPath.startsWith(VISUALIZATION_PATH) ? activeLinkStyle : ''}
+              `}
+            >
+              Visualize Genomes
+              <div
+                css={css`
+                  ${newBadgeStyle}
+                `}
+              >
+                new
+              </div>
             </a>
           </Link>
           <Link path={RELEASES_PATH}>
