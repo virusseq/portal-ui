@@ -73,6 +73,9 @@ const Contributors = (): ReactElement => {
           ))}
         </p>
       </LoaderWrapper>
+
+    <p>Funding for the VirusSeq website was provided by Genome Canada via a CANCoGEN grant.</p>
+
     </section>
   );
 };
