@@ -29,11 +29,7 @@ import PageLayout from '../../PageLayout';
 
 const VisualizationPage = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
-  const {
-    NEXT_PUBLIC_COVIZU_VERSION,
-    NEXT_PUBLIC_COVIZU_DATA_URL,
-    NEXT_PUBLIC_COVIZU_FILE_LIST_URL,
-  } = getConfig();
+  const { NEXT_PUBLIC_COVIZU_DATA_URL, NEXT_PUBLIC_COVIZU_FILE_LIST_URL } = getConfig();
 
   return (
     <PageLayout subtitle="Visualize Data">
@@ -83,7 +79,7 @@ const VisualizationPage = (): ReactElement => {
             flex: 1;
             border: 0;
           `}
-          src={`/static/covizu/index.html?covizuVersion=${NEXT_PUBLIC_COVIZU_VERSION}&dataUrl=${NEXT_PUBLIC_COVIZU_DATA_URL}&filesUrl=${NEXT_PUBLIC_COVIZU_FILE_LIST_URL}`}
+          src={`/static/covizu/index.html?dataUrl=${NEXT_PUBLIC_COVIZU_DATA_URL}&filesUrl=${NEXT_PUBLIC_COVIZU_FILE_LIST_URL}`}
           width="99%"
         />
       </div>

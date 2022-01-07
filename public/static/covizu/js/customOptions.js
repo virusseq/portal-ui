@@ -1,6 +1,6 @@
 // get data info from current URL
 var urlParams = new URLSearchParams(window.location.search);
-var covizuVersion = urlParams.get('covizuVersion') || '';
+var covizuVersion = '1.0.0';
 var dataUrl = urlParams.get('dataUrl') || '';
 var filesUrl = urlParams.get('filesUrl') || '';
 
@@ -57,7 +57,7 @@ $('#covizu-18n__en, #covizu-18n__fr').on('click', function (e) {
   e.preventDefault();
   var lang = e.target.id.split('__')[1];
   var filename = lang === 'en' ? 'index.html' : 'index-' + lang + '.html';
-  var newUrl = filename + '?covizuVersion=' + covizuVersion + '&dataUrl=' + dataUrl + '&filesUrl=' + filesUrl;
+  var newUrl = filename + '?dataUrl=' + dataUrl + '&filesUrl=' + filesUrl;
   location.href = newUrl;
 });
 
