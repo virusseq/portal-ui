@@ -1,5 +1,6 @@
 // get data info from current URL
 var urlParams = new URLSearchParams(window.location.search);
+// our covizu version number. may be different from upstream's version number.
 var covizuVersion = '1.0.0';
 var dataUrl = urlParams.get('dataUrl') || '';
 var filesUrl = urlParams.get('filesUrl') || '';
