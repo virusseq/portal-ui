@@ -4,7 +4,6 @@ var covizuOptions = $.extend(true, {}, defaultOptions, customOptions);
 
 // to check versions in the console:
 // console.log(covizuOptions.covizuVersion)
-// console.log(covizuOptions.dataVersion)
 
 $( function() {
   $( "#tabs" ).tabs();
