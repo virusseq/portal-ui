@@ -60,7 +60,6 @@ const VisualizationPage = (): ReactElement => {
         },
       })
       .then((res) => {
-        console.log({ res });
         const clusters = res.data;
         const clusterNames = clusters
           .map((cluster: ClusterData) => cluster.name)
