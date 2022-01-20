@@ -1,15 +1,19 @@
 // get data info from current URL
 var urlParams = new URLSearchParams(window.location.search);
-var dataVersion = urlParams.get('dataVersion') || '';
+// our covizu version number. may be different from upstream's version number.
+var covizuVersion = urlParams.get('covizuVersion') || '';
 var dataUrl = urlParams.get('dataUrl') || '';
+var dataDate = urlParams.get('dataDate') || '';
 
+// setup custom options
+var dataUrlWithVersion = dataUrl + covizuVersion + '/';
 var customOptions = {
-  dataVersion: dataVersion,
+  covizuVersion: covizuVersion,
   dataUrls: {
-    clusters: dataUrl + ['clusters', dataVersion, 'json'].join('.'),
+    clusters: dataUrlWithVersion + ['clusters', dataDate, 'json'].join('.'),
     countries: 'data/countries.json',
-    timetree: dataUrl + ['timetree', dataVersion, 'nwk'].join('.'),
-    dbstats: dataUrl + ['dbstats', dataVersion, 'json'].join('.'),
+    timetree: dataUrlWithVersion + ['timetree', dataDate, 'nwk'].join('.'),
+    dbstats: dataUrlWithVersion + ['dbstats', dataDate, 'json'].join('.'),
   },
 };
 
@@ -18,7 +22,7 @@ $('#covizu-18n__en, #covizu-18n__fr').on('click', function (e) {
   e.preventDefault();
   var lang = e.target.id.split('__')[1];
   var filename = lang === 'en' ? 'index.html' : 'index-' + lang + '.html';
-  var newUrl = filename + '?dataVersion=' + dataVersion + '&dataUrl=' + dataUrl;
+  var newUrl = filename + '?dataUrl=' + dataUrl + '&covizuVersion=' + covizuVersion + '&dataDate=' + dataDate;
   location.href = newUrl;
 });
 
