@@ -36,6 +36,8 @@ import sleep from '../../../utils/sleep';
 import { isEmpty } from 'lodash';
 import { buildSqonWithObjectIds, saveSet } from './helper';
 
+const COLUMNS_DROPDOWN_TOOLTIP = 'NOTE: changes for display only; no effect on downloads.';
+
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
   { ssr: false },
@@ -83,6 +85,31 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         &:not(:disabled):hover {
           background-color: ${theme.colors.secondary_light};
         }
+      }
+      & .dropDownButton:before {
+        display: block;
+        content: '${COLUMNS_DROPDOWN_TOOLTIP}';
+        font-size: 13px;
+        font-weight: normal;
+        padding: 2px;
+        position: absolute;
+        text-align: center;
+        background-color: #fef4c5;
+        border: 1px solid #d4b943;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        -ms-border-radius: 2px;
+        border-radius: 2px;
+        transform: translateY(-50%);
+        bottom: 72%;
+        right: 10%;
+        opacity: 0;
+        transition: 0.2s;
+      }
+
+      & .dropDownButton:hover::before {
+        opacity: 1;
+        transition-delay: 0.5s;
       }
 
       & .buttonWrapper button:before {
