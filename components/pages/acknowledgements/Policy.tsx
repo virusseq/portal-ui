@@ -46,7 +46,7 @@ const Partners = (): ReactElement => {
         author results obtained from your analyses of relevant data,
         provided that your published results acknowledge the contribution
         of VirusSeq and its partners. We suggest using the following
-        acknowledgement sentence: "The results here are in whole, or in
+        acknowledgement sentence: <strong>"The results here are in whole, or in
         part based upon data hosted at the Canadian VirusSeq Data 
         Portal: <StyledLink
           href="https://virusseq-dataportal.ca/"
@@ -58,7 +58,7 @@ const Partners = (): ReactElement => {
         We wish to acknowledge the Canadian Public Health Laboratory Network
         (CPHLN), Genome Canada and the CanCOGeN VirusSeq Consortium for their
         contribution to the Portal, see supplementary file for detailed
-        information" (supplementary file must be submitted as an addendum to
+        information"</strong> (supplementary file must be submitted as an addendum to
         your publication). You may redistribute the data available on the
         Canadian VirusSeq Data Portal under the same terms and conditions as
         specified in this policy. You should not impose any additional or
