@@ -25,7 +25,9 @@ import { css, useTheme } from '@emotion/react';
 import defaultTheme from '../../theme';
 import Policy from './Policy';
 import Contributors from './Contributors';
+import Individuals from './Individuals';
 import { format } from 'date-fns';
+
 
 const PageContent = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
@@ -73,6 +75,7 @@ const PageContent = (): ReactElement => {
 
         <Policy />
         <Contributors />
+        <Individuals />
       </article>
     </main>
   );
