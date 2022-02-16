@@ -55,7 +55,7 @@ const Partners = (): ReactElement => {
       </h3>
 
       <p>
-        <em>Cadham Provincial Laboratory collected specimens sequenced at the National Microbiology Lab (NML):</em><br /> Paul Van Caeseele, Jared Bullard, David Alexander, Kerry Dust.</br>
+        <em>Cadham Provincial Laboratory collected specimens sequenced at the National Microbiology Lab (NML):</em><br /> Paul Van Caeseele, Jared Bullard, David Alexander, Kerry Dust.
       </p>
 
       <p>
