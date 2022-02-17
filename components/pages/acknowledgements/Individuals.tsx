@@ -22,10 +22,9 @@
 import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 
-import StyledLink from '../../Link';
 import defaultTheme from '../../theme';
 
-const Partners = (): ReactElement => {
+const Individuals = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
   return (
     <section
