@@ -74,8 +74,6 @@ const Contributors = (): ReactElement => {
         </p>
       </LoaderWrapper>
 
-    <p>Funding for the VirusSeq Data Portal is provided by The Canadian COVID Genomics Network (CanCOGeN), and supported by Genome Canada and Innovation, Science and Economic Development Canada (ISED)</p>
-
     </section>
   );
 };

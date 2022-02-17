@@ -42,6 +42,20 @@ const Partners = (): ReactElement => {
       </h2>
 
       <h3>
+        Alberta
+      </h3>
+
+      <p>
+        <em>Genomes with prefix ABPHL</em><br />
+        Buss, E, Croxen M, Deo A, Dieu P, Gill K, Ferrato C, Khan F, Koleva P, Li V, Lloyd C, Lynch T, Ma R, Murphy S, Pabbaraju K, Shokoples S, Tipples G, Thayer J, Whitehouse M, Wong A, Yu C, Zelyas N
+      </p>
+
+      <p>
+        <em>Genomes in collaboration with UC (prefix AB-NNNNNN)</em><br />
+Gordon P, Lam LG, Pabbaraju K, Wong A, Ma R, Li V, Melin A, Tipples G, Berenger B, Zelyas N, Kellner J, Bernier F, Chui L, Croxen M
+      </p>
+
+      <h3>
         British Columbia
       </h3>
 
@@ -82,27 +96,22 @@ const Partners = (): ReactElement => {
       </p>
 
       <h3>
-        Alberta
+        Newfoundland and Labrador
       </h3>
 
       <p>
-        <em>Genomes with prefix ABPHL</em><br />
-        Buss, E, Croxen M, Deo A, Dieu P, Gill K, Ferrato C, Khan F, Koleva P, Li V, Lloyd C, Lynch T, Ma R, Murphy S, Pabbaraju K, Shokoples S, Tipples G, Thayer J, Whitehouse M, Wong A, Yu C, Zelyas N
+        <em>Dr. Leonard A. Miller Centre for Health Services; National Microbiology Laboratory</em><br />
+        Robert Needle, Yang Yu, Laura Gilbert, George Zahariadis, Chris Corkum, Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich, Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van Domselaar, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kirsten Biggar, Kerri Smith, Matthew Gilmour.
       </p>
-
-      <p>
-        <em>Genomes in collaboration with UC (prefix AB-NNNNNN)</em><br />
-Gordon P, Lam LG, Pabbaraju K, Wong A, Ma R, Li V, Melin A, Tipples G, Berenger B, Zelyas N, Kellner J, Bernier F, Chui L, Croxen M
-      </p>
-
 
       <h3>
-        Québec
+        Nova Scotia
       </h3>
 
       <p>
-        <em>Laboratoire de Santé Publique du Québec, McGill Génome Sciences Centre; CoVSeq Consortium</em><br />
-        Sandrine Moreira, Jiannis Ragoussis, Guillaume Bourque, Jesse Shapiro, Éric Fournier, Réjean Dion, Hugues Charest, Aurélie Guilbault, Benjamin Delisle, Sarah Reiling, Anne-Marie Roy, Shu-Huang Chen, Corinne Darmond, Sally Lee, Brent Brookes, Pierre Lepage, Jannick St-Cyr, Patrick Willet, Mathieu Bourgey, David Bujold, Hector Galvez, Paul Stretenowich, Pierre-Olivier Quirion, Romain Grégoire, Carmen Lia Murall, Julie Hussin, Raphaël Poujol, Jean-Christophe Grenier, Fatima Mostefai, Sylvie Laboissières, Alexandre Montpetit, Mark Lathrop, Michel Roger
+        <em>QEII Health Sciences Centre*; National Microbiology Laboratory</em><br />
+        Todd Hatchette, Jason LeBlanc, Janice Pettipas, Dan Gaston, Greg McCracken, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kirsten Biggar, Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich, Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van Domselaar.<br />
+        (*data tagged post September 14th should include Allana Loder)
       </p>
 
       <h3>
@@ -125,22 +134,12 @@ Gordon P, Lam LG, Pabbaraju K, Wong A, Ma R, Li V, Melin A, Tipples G, Berenger 
       </p>
 
       <h3>
-        Newfoundland and Labrador
+        Québec
       </h3>
 
       <p>
-        <em>Dr. Leonard A. Miller Centre for Health Services; National Microbiology Laboratory</em><br />
-        Robert Needle, Yang Yu, Laura Gilbert, George Zahariadis, Chris Corkum, Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich, Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van Domselaar, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kirsten Biggar, Kerri Smith, Matthew Gilmour.
-      </p>
-
-      <h3>
-        Nova Scotia
-      </h3>
-
-      <p>
-        <em>QEII Health Sciences Centre*; National Microbiology Laboratory</em><br />
-        Todd Hatchette, Jason LeBlanc, Janice Pettipas, Dan Gaston, Greg McCracken, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kirsten Biggar, Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich, Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van Domselaar.<br />
-        (*data tagged post September 14th should include Allana Loder)
+        <em>Laboratoire de Santé Publique du Québec, McGill Génome Sciences Centre; CoVSeq Consortium</em><br />
+        Sandrine Moreira, Jiannis Ragoussis, Guillaume Bourque, Jesse Shapiro, Éric Fournier, Réjean Dion, Hugues Charest, Aurélie Guilbault, Benjamin Delisle, Sarah Reiling, Anne-Marie Roy, Shu-Huang Chen, Corinne Darmond, Sally Lee, Brent Brookes, Pierre Lepage, Jannick St-Cyr, Patrick Willet, Mathieu Bourgey, David Bujold, Hector Galvez, Paul Stretenowich, Pierre-Olivier Quirion, Romain Grégoire, Carmen Lia Murall, Julie Hussin, Raphaël Poujol, Jean-Christophe Grenier, Fatima Mostefai, Sylvie Laboissières, Alexandre Montpetit, Mark Lathrop, Michel Roger
       </p>
 
       <h2
@@ -238,4 +237,4 @@ Gordon P, Lam LG, Pabbaraju K, Wong A, Ma R, Li V, Melin A, Tipples G, Berenger 
   );
 };
 
-export default Partners;
+export default Individuals;
