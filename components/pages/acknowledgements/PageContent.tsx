@@ -24,7 +24,11 @@ import { css, useTheme } from '@emotion/react';
 
 import defaultTheme from '../../theme';
 import Policy from './Policy';
+
+/* trying without the contrib section
 import Contributors from './Contributors';
+*/
+
 import Individuals from './Individuals';
 import { format } from 'date-fns';
 
@@ -70,11 +74,12 @@ const PageContent = (): ReactElement => {
             margin-top: 10px 0 0;
           `}
         >
-          Updated at {format(Date.parse('17 Sep 2021 12:20:00'), 'MM/dd/yyyy, h:mm:ss aa')}
+          Updated at {format(Date.parse('17 Feb 2022 12:20:00'), 'MM/dd/yyyy, h:mm:ss aa')}
         </p>
 
         <Policy />
-        <Contributors />
+        <!--  Commented out for testing without this section -->
+        <!--  <Contributors /> -->
         <Individuals />
 
         <p>Funding for the VirusSeq Data Portal is provided by The Canadian COVID Genomics Network (CanCOGeN), and supported by Genome Canada and Innovation, Science and Economic Development Canada (ISED)</p>
