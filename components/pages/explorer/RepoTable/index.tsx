@@ -36,7 +36,7 @@ import sleep from '../../../utils/sleep';
 import { isEmpty } from 'lodash';
 import { buildSqonWithObjectIds, saveSet } from './helper';
 
-const COLUMNS_DROPDOWN_TOOLTIP = 'NOTE: changes for display only; no effect on downloads.';
+const COLUMNS_DROPDOWN_TOOLTIP = 'Column selection does \\a not affect downloads.';
 
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
@@ -88,10 +88,11 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
       }
       & .dropDownButton:before {
         display: block;
+        white-space: pre;
         content: '${COLUMNS_DROPDOWN_TOOLTIP}';
         font-size: 13px;
         font-weight: normal;
-        padding: 2px;
+        padding: 3px;
         position: absolute;
         text-align: center;
         background-color: #fef4c5;
