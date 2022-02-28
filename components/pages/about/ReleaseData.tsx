@@ -64,7 +64,7 @@ const ReleaseData = (): ReactElement => {
       genomes = 0,
       studyCount = 0,
     },
-    isFetchingData,
+    isFetchingData = true,
   ] = useReleaseData();
 
   const releaseDate =
