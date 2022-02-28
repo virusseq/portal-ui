@@ -105,7 +105,7 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         bottom: 72%;
         right: 10%;
         opacity: 0;
-        transition: 0.2s;
+        transition: 0.1s;
       }
 
       & .dropDownHeader::after {
