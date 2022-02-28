@@ -86,7 +86,7 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
           background-color: ${theme.colors.secondary_light};
         }
       }
-      & .dropDownButton:before {
+      & .dropDownHeader::before {
         display: block;
         white-space: pre;
         content: '${COLUMNS_DROPDOWN_TOOLTIP}';
@@ -108,9 +108,27 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         transition: 0.2s;
       }
 
-      & .dropDownButton:hover::before {
+      & .dropDownHeader::after {
+        content: '';
+        position: absolute;
+        bottom: 40%;
+        right: 30%;
+        margin-left: -5px;
+        transform: translateY(-50%);
+        border: 10px solid #d4b943;
+        border-color: #d4b943 transparent transparent transparent;
+        opacity: 0;
+        transition: 0.1s;
+      }
+
+      & .dropDownHeader:hover::after {
         opacity: 1;
-        transition-delay: 0.5s;
+        transition-delay: 0.1s;
+      }
+
+      & .dropDownHeader:hover::before {
+        opacity: 1;
+        transition-delay: 0.1s;
       }
 
       & .buttonWrapper button:before {
