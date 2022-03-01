@@ -74,10 +74,10 @@ query releaseDataQuery ($sqon: JSON) {
 
 const useReleaseData = (sqon?: RepoFiltersType): [ReleaseDataProps, boolean] => {
   const [releaseData, setReleaseData] = useState<ReleaseDataProps>();
-  const [isFetchingData, setIsFetchingData] = useState(false);
+  const [isFetchingData, setIsFetchingData] = useState(true);
 
   useEffect(() => {
-    if (!isFetchingData) {
+    if (!isFetchingData || !releaseData) {
       setIsFetchingData(true);
       arrangerFetcher({
         body: {

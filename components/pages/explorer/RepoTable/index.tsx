@@ -94,7 +94,7 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         font-weight: normal;
         padding: 3px;
         position: absolute;
-        text-align: center;
+        text-align: left;
         background-color: #fef4c5;
         border: 1px solid #d4b943;
         -moz-border-radius: 2px;
