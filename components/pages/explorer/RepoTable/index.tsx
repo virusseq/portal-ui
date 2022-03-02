@@ -36,6 +36,8 @@ import sleep from '../../../utils/sleep';
 import { isEmpty } from 'lodash';
 import { buildSqonWithObjectIds, saveSet } from './helper';
 
+const COLUMNS_DROPDOWN_TOOLTIP = 'Column selection does \\a not affect downloads.';
+
 const Table = dynamic(
   () => import('@arranger/components/dist/Arranger').then((comp) => comp.Table),
   { ssr: false },
@@ -83,6 +85,50 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         &:not(:disabled):hover {
           background-color: ${theme.colors.secondary_light};
         }
+      }
+      & .dropDownHeader::before {
+        display: block;
+        white-space: pre;
+        content: '${COLUMNS_DROPDOWN_TOOLTIP}';
+        font-size: 13px;
+        font-weight: normal;
+        padding: 3px;
+        position: absolute;
+        text-align: left;
+        background-color: #fef4c5;
+        border: 1px solid #d4b943;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        -ms-border-radius: 2px;
+        border-radius: 2px;
+        transform: translateY(-50%);
+        bottom: 72%;
+        right: 10%;
+        opacity: 0;
+        transition: 0.1s;
+      }
+
+      & .dropDownHeader::after {
+        content: '';
+        position: absolute;
+        bottom: 40%;
+        right: 30%;
+        margin-left: -5px;
+        transform: translateY(-50%);
+        border: 10px solid #d4b943;
+        border-color: #d4b943 transparent transparent transparent;
+        opacity: 0;
+        transition: 0.1s;
+      }
+
+      & .dropDownHeader:hover::after {
+        opacity: 1;
+        transition-delay: 0.1s;
+      }
+
+      & .dropDownHeader:hover::before {
+        opacity: 1;
+        transition-delay: 0.1s;
       }
 
       & .buttonWrapper button:before {

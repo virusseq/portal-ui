@@ -29,6 +29,7 @@ import { getConfig } from '../../../global/config';
 import defaultTheme from '../../theme';
 import { CoronaVirus, CrossHairs, File, Storage } from '../../theme/icons';
 import useReleaseData from '../../../global/hooks/useReleaseData';
+import Loader from '../../Loader';
 
 // const getChartStyles = (theme: typeof defaultTheme) => css`
 //   margin: 0;
@@ -63,7 +64,7 @@ const ReleaseData = (): ReactElement => {
       genomes = 0,
       studyCount = 0,
     },
-    isFetchingData,
+    isFetchingData = true,
   ] = useReleaseData();
 
   const releaseDate =
@@ -140,27 +141,33 @@ const ReleaseData = (): ReactElement => {
             }
           `}
         >
-          <li>
-            <File />
-            <span>{fileCount}</span>Files
-          </li>
-          <li>
-            <CoronaVirus />
-            <span>{genomes}</span>Viral Genomes
-          </li>
-          <li>
-            <CrossHairs
-              style={css`
-                margin-left: -1px;
-              `}
-            />
-            <span>{studyCount}</span>Studies
-          </li>
-          <li>
-            <Storage />
-            <span>{fileSize.value}</span>
-            {fileSize.unit}
-          </li>
+          {isFetchingData ? (
+            <Loader size={'11px'} />
+          ) : (
+            <>
+              <li>
+                <File />
+                <span>{fileCount}</span>Files
+              </li>
+              <li>
+                <CoronaVirus />
+                <span>{genomes}</span>Viral Genomes
+              </li>
+              <li>
+                <CrossHairs
+                  style={css`
+                    margin-left: -1px;
+                  `}
+                />
+                <span>{studyCount}</span>Studies
+              </li>
+              <li>
+                <Storage />
+                <span>{fileSize.value}</span>
+                {fileSize.unit}
+              </li>
+            </>
+          )}
         </ul>
       </aside>
 
