@@ -29,21 +29,18 @@ import useReleaseData from '../../../global/hooks/useReleaseData';
 import Loader from '../../Loader';
 import { CoronaVirus, CrossHairs, File, Storage } from '../../theme/icons';
 import { PageContentProps } from '.';
-import formatRange from '../../../global/utils/formatRange';
 
 const DataAnalysis = ({ sqon }: PageContentProps): ReactElement => {
-  const [
-    {
-      fileCount = 0,
-      filesByVariant = [],
-      fileSize = { unit: 'B', value: '0' },
-      hostAges = [],
-      hostGenders = [],
-      genomes = 0,
-      studyCount = 0,
-    },
-    isFetchingData,
-  ] = useReleaseData(sqon);
+  const [releaseData, isFetchingData] = useReleaseData(sqon);
+
+  const {
+    fileCount = 0,
+    filesByVariant = [],
+    fileSize = { unit: 'B', value: '0' },
+    hostGenders = [],
+    genomesAgg = { value: 0, type: 'CARDINALITY' },
+    studyCount = 0,
+  } = releaseData;
 
   return (
     <>
@@ -101,7 +98,8 @@ const DataAnalysis = ({ sqon }: PageContentProps): ReactElement => {
             </li>
             <li>
               <CoronaVirus />
-              <span>{genomes}</span>Viral Genomes
+              <span>{genomesAgg.type === 'CARDINALITY' ? '~' : ''}</span>
+              <span>{genomesAgg.value}</span>Viral Genomes
             </li>
             <li>
               <CrossHairs
@@ -176,7 +174,7 @@ const DataAnalysis = ({ sqon }: PageContentProps): ReactElement => {
                   },
                   series: [
                     {
-                      data: Object.values(filesByVariant)?.map((province) => ({
+                      data: filesByVariant?.map((province) => ({
                         name: province?.name,
                         y: province?.count,
                       })),
@@ -200,12 +198,9 @@ const DataAnalysis = ({ sqon }: PageContentProps): ReactElement => {
                         maximumFractionDigits: 2,
                       })}%)`;
                     },
-                    //   pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
                   },
                   xAxis: {
-                    categories: Object.keys(filesByVariant)?.map((abbreviation) =>
-                      abbreviation?.toUpperCase(),
-                    ),
+                    categories: filesByVariant?.map((fv) => fv.abbreviation.toUpperCase()),
                     reversed: true,
                   },
                   yAxis: {

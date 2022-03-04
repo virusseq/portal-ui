@@ -56,16 +56,14 @@ import Loader from '../../Loader';
 const ReleaseData = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
   const { NEXT_PUBLIC_RELEASE_DATE } = getConfig();
-  const [
-    {
-      fileCount = 0,
-      filesByVariant = {},
-      fileSize = { unit: 'B', value: '0' },
-      genomes = 0,
-      studyCount = 0,
-    },
-    isFetchingData = true,
-  ] = useReleaseData();
+  const [releaseData, isFetchingData = true] = useReleaseData();
+
+  const {
+    fileCount = 0,
+    fileSize = { unit: 'B', value: '0' },
+    genomesAgg = { value: 0, type: 'CARDINALITY' },
+    studyCount = 0,
+  } = releaseData;
 
   const releaseDate =
     !!NEXT_PUBLIC_RELEASE_DATE &&
@@ -151,7 +149,7 @@ const ReleaseData = (): ReactElement => {
               </li>
               <li>
                 <CoronaVirus />
-                <span>{genomes}</span>Viral Genomes
+                <span>{genomesAgg.value}</span>Viral Genomes
               </li>
               <li>
                 <CrossHairs
