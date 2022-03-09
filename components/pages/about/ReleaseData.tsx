@@ -19,7 +19,7 @@
  *
  */
 
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import { format, isValid } from 'date-fns';
 // import Highcharts from 'highcharts';
@@ -30,40 +30,53 @@ import defaultTheme from '../../theme';
 import { CoronaVirus, CrossHairs, File, Storage } from '../../theme/icons';
 import useReleaseData from '../../../global/hooks/useReleaseData';
 import Loader from '../../Loader';
-
-// const getChartStyles = (theme: typeof defaultTheme) => css`
-//   margin: 0;
-//   flex-grow: 1;
-
-//   rect.highcharts-background,
-//   rect.highcharts-plot-background,
-//   rect.highcharts-plot-border {
-//     fill: none;
-//   }
-
-//   .highcharts-legend-box {
-//     fill: ${theme.colors.primary};
-//   }
-
-//   g.highcharts-axis text,
-//   g.highcharts-axis-labels text,
-//   g.highcharts-legend text {
-//     color: ${theme.colors.white} !important;
-//     fill: ${theme.colors.white} !important;
-//   }
-// `;
+import useSingularityData from '../../../global/hooks/useSingularityData';
+import { ReleaseDataProps } from '../../../global/hooks/useReleaseData/types';
 
 const ReleaseData = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
   const { NEXT_PUBLIC_RELEASE_DATE } = getConfig();
-  const [releaseData, isFetchingData = true] = useReleaseData();
+  const [releaseData, loadingArrangerData] = useReleaseData();
+  const { fetchTotalCounts } = useSingularityData();
+
+  const [isLoadingSingularityData, setIsLoadingSingularityData] = useState<boolean>(true);
+  const [releaseDataProps, setReleaseDataProps] = useState<ReleaseDataProps>();
+
+  useEffect(() => {
+    fetchTotalCounts()
+      .then((counts) => {
+        const [fileValue, fileUnit] = counts.fileSizeHumanReadable.split(' ');
+        setReleaseDataProps({
+          fileCount: counts.files,
+          genomesCount: {
+            value: counts.samples,
+            type: 'EXACT',
+          },
+          fileSize: {
+            unit: fileUnit,
+            value: fileValue,
+          },
+          studyCount: counts.studies,
+        });
+        setIsLoadingSingularityData(false);
+      })
+      .catch(() => {
+        console.error('fetchTotalCounts failed, use Arranger fallback');
+        setReleaseDataProps(undefined);
+        setIsLoadingSingularityData(false);
+      });
+  }, []);
 
   const {
     fileCount = 0,
     fileSize = { unit: 'B', value: '0' },
     genomesCount = { value: 0, type: 'APPROXIMATE' },
     studyCount = 0,
-  } = releaseData;
+  } = releaseDataProps || releaseData;
+
+  // either we're waiting on arranger or singularity data
+  const showLoader =
+    (releaseDataProps === undefined && loadingArrangerData) || isLoadingSingularityData;
 
   const releaseDate =
     !!NEXT_PUBLIC_RELEASE_DATE &&
@@ -139,7 +152,7 @@ const ReleaseData = (): ReactElement => {
             }
           `}
         >
-          {isFetchingData ? (
+          {showLoader ? (
             <Loader size={'11px'} />
           ) : (
             <>
