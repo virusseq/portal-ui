@@ -39,7 +39,7 @@ const ReleaseData = (): ReactElement => {
   const [releaseData, loadingArrangerData] = useReleaseData();
   const { fetchTotalCounts } = useSingularityData();
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingSingularityData, setIsLoadingSingularityData] = useState<boolean>(true);
   const [releaseDataProps, setReleaseDataProps] = useState<ReleaseDataProps>();
 
   useEffect(() => {
@@ -58,12 +58,12 @@ const ReleaseData = (): ReactElement => {
           },
           studyCount: counts.studies,
         });
-        setIsLoading(false);
+        setIsLoadingSingularityData(false);
       })
       .catch(() => {
         console.error('fetchTotalCounts failed, use Arranger fallback');
         setReleaseDataProps(undefined);
-        setIsLoading(false);
+        setIsLoadingSingularityData(false);
       });
   }, []);
 
@@ -74,8 +74,9 @@ const ReleaseData = (): ReactElement => {
     studyCount = 0,
   } = releaseDataProps || releaseData;
 
-  // either we're waiting on singularity or arranger data
-  const showLoader = (releaseDataProps === undefined && loadingArrangerData) || isLoading;
+  // either we're waiting on arranger or singularity data
+  const showLoader =
+    (releaseDataProps === undefined && loadingArrangerData) || isLoadingSingularityData;
 
   const releaseDate =
     !!NEXT_PUBLIC_RELEASE_DATE &&
