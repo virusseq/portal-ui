@@ -30,6 +30,7 @@ import {
   ArchviesFetchReq,
   ContributorsResponse,
   SingularityErrorResponse,
+  TotalCounts,
 } from './types';
 
 const DEFAULT_FAILED_ARCHIVE: Archive = {
@@ -83,6 +84,23 @@ const useSingularityData = () => {
         console.error('error', err);
         return Promise.reject(err);
       });
+  };
+
+  const fetchTotalCounts = (): Promise<TotalCounts> => {
+    setAwaitingResponse(true);
+
+    return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/aggregations/total-counts'))
+      .then((res) => {
+        if (res.status !== 200) {
+          throw Error("Couldn't fetch total-counts!");
+        }
+        return res.json();
+      })
+      .catch((err: { response: SingularityErrorResponse }) => {
+        console.error('error', err);
+        return Promise.reject(err);
+      })
+      .finally(() => setAwaitingResponse(false)) as Promise<TotalCounts>;
   };
 
   const fetchCompletedArchvieAllInfos = (req?: ArchviesFetchReq): Promise<ArchivesFetchRes> => {
@@ -161,6 +179,7 @@ const useSingularityData = () => {
   return {
     awaitingResponse,
     fetchContributors,
+    fetchTotalCounts,
     fetchCompletedArchvieAllInfos,
     fetchLatestArchiveAllInfo,
     setAwaitingResponse,
