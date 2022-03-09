@@ -61,7 +61,7 @@ const ReleaseData = (): ReactElement => {
   const {
     fileCount = 0,
     fileSize = { unit: 'B', value: '0' },
-    genomesAgg = { value: 0, type: 'CARDINALITY' },
+    genomesCount = { value: 0, type: 'APPROXIMATE' },
     studyCount = 0,
   } = releaseData;
 
@@ -149,7 +149,8 @@ const ReleaseData = (): ReactElement => {
               </li>
               <li>
                 <CoronaVirus />
-                <span>{genomesAgg.value}</span>Viral Genomes
+                <span>{genomesCount.type === 'APPROXIMATE' ? '~' : ''}</span>
+                <span>{genomesCount.value}</span>Viral Genomes
               </li>
               <li>
                 <CrossHairs

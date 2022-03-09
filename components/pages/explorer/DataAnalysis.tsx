@@ -38,7 +38,7 @@ const DataAnalysis = ({ sqon }: PageContentProps): ReactElement => {
     filesByVariant = [],
     fileSize = { unit: 'B', value: '0' },
     hostGenders = [],
-    genomesAgg = { value: 0, type: 'CARDINALITY' },
+    genomesCount = { value: 0, type: 'APPROXIMATE' },
     studyCount = 0,
   } = releaseData;
 
@@ -98,8 +98,8 @@ const DataAnalysis = ({ sqon }: PageContentProps): ReactElement => {
             </li>
             <li>
               <CoronaVirus />
-              <span>{genomesAgg.type === 'CARDINALITY' ? '~' : ''}</span>
-              <span>{genomesAgg.value}</span>Viral Genomes
+              <span>{genomesCount.type === 'APPROXIMATE' ? '~' : ''}</span>
+              <span>{genomesCount.value}</span>Viral Genomes
             </li>
             <li>
               <CrossHairs

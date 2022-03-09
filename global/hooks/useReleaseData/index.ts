@@ -25,7 +25,7 @@ import createArrangerFetcher from '../../../components/utils/arrangerFetcher';
 import { getProvince } from '../../utils/constants';
 import formatFileSize from '../../utils/formatFileSize';
 import { RepoFiltersType } from '../../types/sqon';
-import { AggregationCount, FilesByVariantType, ReleaseDataProps } from './types';
+import { Count, FilesByVariantType, ReleaseDataProps } from './types';
 import { getConfig } from '../../config';
 
 const {
@@ -97,6 +97,11 @@ const fetchArrangerData = (query: string, sqon?: RepoFiltersType) => {
   });
 };
 
+function roundToSignificantDigits(a: number, sigDigs: number) {
+  const digitsToKeep = a.toString().length - sigDigs;
+  return Math.floor(a / Math.pow(10, digitsToKeep)) * Math.pow(10, digitsToKeep);
+}
+
 const fetchReleaseData = async (sqon?: RepoFiltersType) => {
   return fetchArrangerData(RELEASE_DATA_QUERY, sqon).then(
     ({ data: { file: { aggregations = {} } = {} } }) => {
@@ -123,9 +128,9 @@ const fetchReleaseData = async (sqon?: RepoFiltersType) => {
           })
           .filter((fv: FilesByVariantType) => fv.abbreviation !== '');
 
-        const genomesAgg: AggregationCount = {
-          value: genomesCardinality,
-          type: 'CARDINALITY',
+        const genomesCount: Count = {
+          value: roundToSignificantDigits(genomesCardinality, 2),
+          type: 'APPROXIMATE',
         };
 
         return {
@@ -137,7 +142,7 @@ const fetchReleaseData = async (sqon?: RepoFiltersType) => {
           filesByVariant,
           hostGenders,
           studyCount,
-          genomesAgg,
+          genomesCount,
         };
       }
     },
@@ -145,20 +150,22 @@ const fetchReleaseData = async (sqon?: RepoFiltersType) => {
 };
 
 const tuneGenomesAggs = async (sqon?: RepoFiltersType, currentReleaseData?: ReleaseDataProps) => {
-  const currentGenomesValue = currentReleaseData?.genomesAgg?.value;
+  const currentGenomesValue = currentReleaseData?.genomesCount?.value;
+  console.log(NEXT_PUBLIC_ARRANGER_MAX_BUCKET_COUNTS);
+  console.log(currentGenomesValue);
   if (currentGenomesValue && currentGenomesValue >= NEXT_PUBLIC_ARRANGER_MAX_BUCKET_COUNTS) {
     // genomesValue is too high to do a bucket_count query so return
     return Promise.resolve(currentReleaseData);
   }
   return fetchArrangerData(GENOMES_COUNT_QUERY, sqon).then(
     ({ data: { file: { aggregations = {} } = {} } }) => {
-      if (aggregations && currentReleaseData?.genomesAgg) {
+      if (aggregations && currentReleaseData?.genomesCount) {
         const {
           donors__specimens__samples__sample_id: { bucket_count: genomnesCount = 0 } = {},
         } = aggregations;
 
-        currentReleaseData.genomesAgg.value = genomnesCount;
-        currentReleaseData.genomesAgg.type = 'BUCKET_COUNT';
+        currentReleaseData.genomesCount.value = genomnesCount;
+        currentReleaseData.genomesCount.type = 'EXACT';
       }
       return { ...currentReleaseData };
     },

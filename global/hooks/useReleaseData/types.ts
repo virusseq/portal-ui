@@ -30,9 +30,9 @@ type AggBuckets = {
   key?: number;
 };
 
-export type AggregationCount = {
+export type Count = {
   value: number;
-  type: 'CARDINALITY' | 'BUCKET_COUNT';
+  type: 'APPROXIMATE' | 'EXACT';
 };
 
 export type ReleaseDataProps = {
@@ -44,5 +44,5 @@ export type ReleaseDataProps = {
   };
   hostGenders?: Array<AggBuckets>;
   studyCount?: number;
-  genomesAgg?: AggregationCount;
+  genomesCount?: Count;
 };
