@@ -78,17 +78,20 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
         margin-left: 10px;
         margin-top: 10px;
         color: ${defaultTheme.colors.primary};
-        ${defaultTheme.typography.heading}
+        ${defaultTheme.typography.heading};
+        span {
+          font-size: 22px;
+        }
       `}
     >
       {showDownloading && (
         <>
-          <Loader size={'20px'} margin={'0px'} /> <span>Downloading...</span>
+          <Loader size={'20px'} margin={'0px'} /> <span>Preparing Download...</span>
         </>
       )}
       {archive?.status === 'COMPLETE' && (
         <>
-          <CompleteCheckmark /> <span>Download Complete</span>
+          <CompleteCheckmark /> <span>Download Initiated</span>
         </>
       )}
       {archive?.status === 'FAILED' && (
