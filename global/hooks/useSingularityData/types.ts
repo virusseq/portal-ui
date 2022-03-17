@@ -70,3 +70,12 @@ export type PagedResponse<T> = {
   number: number; // current page number (zero indexed)
   numberOfElements: number; // number of elements in current page
 };
+
+export type TotalCounts = {
+  files: number;
+  samples: number;
+  studies: number;
+  fileSizeBytes: number;
+  fileSizeHumanReadable: string;
+  timestamp: number;
+};

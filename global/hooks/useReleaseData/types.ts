@@ -19,7 +19,7 @@
  *
  */
 
-type FilesByVariantType = {
+export type FilesByVariantType = {
   abbreviation: string;
   count: number;
   name: string;
@@ -30,15 +30,19 @@ type AggBuckets = {
   key?: number;
 };
 
+export type Count = {
+  value: number;
+  type: 'APPROXIMATE' | 'EXACT';
+};
+
 export type ReleaseDataProps = {
   fileCount?: number;
-  filesByVariant?: [FilesByVariantType | undefined];
+  filesByVariant?: Array<FilesByVariantType>;
   fileSize?: {
     unit: string;
     value: string;
   };
-  hostAges?: AggBuckets[] | undefined;
-  hostGenders?: AggBuckets[] | undefined;
+  hostGenders?: Array<AggBuckets>;
   studyCount?: number;
-  genomes?: number;
+  genomesCount?: Count;
 };
