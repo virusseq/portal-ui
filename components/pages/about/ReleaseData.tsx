@@ -158,12 +158,12 @@ const ReleaseData = (): ReactElement => {
             <>
               <li>
                 <File />
-                <span>{fileCount}</span>Files
+                <span>{fileCount?.toLocaleString('en-CA')}</span>Files
               </li>
               <li>
                 <CoronaVirus />
-                <span>{genomesCount.type === 'APPROXIMATE' ? '~' : ''}</span>
-                <span>{genomesCount.value}</span>Viral Genomes
+                <span>{genomesCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
+                <span>{genomesCount?.value?.toLocaleString('en-CA')}</span>Viral Genomes
               </li>
               <li>
                 <CrossHairs
@@ -171,12 +171,12 @@ const ReleaseData = (): ReactElement => {
                     margin-left: -1px;
                   `}
                 />
-                <span>{studyCount}</span>Studies
+                <span>{studyCount?.toLocaleString('en-CA')}</span>Studies
               </li>
               <li>
                 <Storage />
-                <span>{fileSize.value}</span>
-                {fileSize.unit}
+                <span>{fileSize?.value}</span>
+                {fileSize?.unit}
               </li>
             </>
           )}
