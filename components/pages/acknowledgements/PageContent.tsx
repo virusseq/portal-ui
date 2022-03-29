@@ -74,7 +74,7 @@ const PageContent = (): ReactElement => {
             margin-top: 10px 0 0;
           `}
         >
-          Updated at {format(Date.parse('17 Feb 2022 12:20:00'), 'MM/dd/yyyy, h:mm:ss aa')}
+          Updated at {format(Date.parse('29 Mar 2022 12:20:00'), 'MM/dd/yyyy, h:mm:ss aa')}
         </p>
 
         <Policy />
