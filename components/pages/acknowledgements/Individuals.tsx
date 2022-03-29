@@ -141,6 +141,20 @@ Gordon P, Lam LG, Pabbaraju K, Wong A, Ma R, Li V, Melin A, Tipples G, Berenger 
         Sandrine Moreira, Jiannis Ragoussis, Guillaume Bourque, Jesse Shapiro, Éric Fournier, Réjean Dion, Hugues Charest, Aurélie Guilbault, Benjamin Delisle, Sarah Reiling, Anne-Marie Roy, Shu-Huang Chen, Corinne Darmond, Sally Lee, Brent Brookes, Pierre Lepage, Jannick St-Cyr, Patrick Willet, Mathieu Bourgey, David Bujold, Hector Galvez, Paul Stretenowich, Pierre-Olivier Quirion, Romain Grégoire, Carmen Lia Murall, Julie Hussin, Raphaël Poujol, Jean-Christophe Grenier, Fatima Mostefai, Sylvie Laboissières, Alexandre Montpetit, Mark Lathrop, Michel Roger
       </p>
 
+      <h3>
+        Saskatchewan
+      </h3>
+
+      <p>
+        <em>Roy Romanow Provincial Laboratory</em><br />
+        Ryan McDonald, Keith MacKenzie, Meredith Faires, Kara Loos, Stefani Kary, Rachel DePaulo, Laura Klassen, Alanna Senecal, Amanda Lang, Jessica Minion, Roy Romanow Provincial Laboratory - Molecular Diagnostics.
+      </p>
+
+      <p>
+        <em>National Microbiology Laboratory</em><br />
+        Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich, Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van Domselaar, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kristen Biggar, Emily Haidl, Chanchal Yadav, Jeff Tuff, Connor Chato, Katherine Eaton, and Adrian Zetner.
+      </p>
+
       <h2
         css={css`
           ${theme.typography.subheading};
