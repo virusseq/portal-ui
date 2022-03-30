@@ -46,20 +46,20 @@ const CovidCloudPane = (): ReactElement => {
         width: calc(100% - 100px);
       `}
     >
-      <img src="/images/covid-cloud.png" alt="logo for Covid Cloud" width="180" />
+      <img src="/images/viral-ai.png" alt="logo for Viral AI" width="180" />
       <p
         css={css`
           margin: 20px 0;
           max-width: 900px;
         `}
       >
-        Genome Canada has also partnered with{' '}
-        <StyledLink href="https://www.dnastack.com" rel="noopener noreferrer" target="_blank">
-          DNAstack
-        </StyledLink>{' '}
-        to integrate VirusSeq data with their COVID Cloud Platform. COVID Cloud is a cloud-based
-        platform that helps researchers find, visualize, and analyze genomics and other datasets
-        related to COVID-19.
+        Genome Canada has also partnered with DNAstack to share{' '}
+        <StyledLink href="https://viral.ai/collections/virusseq/overview" rel="noopener noreferrer" target="_blank">
+          VirusSeq data on Viral AI
+        </StyledLink>{' '}, a federated network for genomic variant surveillance and infectious disease research. 
+        Viral AI was designed to deliver equitable access to software infrastructure, accelerate international data sharing, 
+        and empower scientists and public health officials with globally representative datasets they need to mitigate 
+        current and future infectious disease outbreaks.
       </p>
       <a
         css={css`
@@ -69,11 +69,11 @@ const CovidCloudPane = (): ReactElement => {
           font-weight: bold;
           text-decoration: none;
         `}
-        href="https://virusseq.covidcloud.ca/"
+        href="https://viral.ai/collections/virusseq/overview"
         rel="noopener noreferrer"
         target="_blank"
       >
-        Explore VirusSeq Data on COVID Cloud
+        Explore VirusSeq Data on Viral AI
         <ChevronDown
           fill={theme.colors.primary}
           height={11}
