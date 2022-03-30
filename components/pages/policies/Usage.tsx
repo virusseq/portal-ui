@@ -135,6 +135,23 @@ const Usage = (): ReactElement => (
       .
     </p>
 
+    <h2>Data standards guidelines</h2>
+
+    <p>
+      As data needs change over time, the data standard implemented by the Data Portal evolves 
+      (additional fields and terms may be added, requirements may be updated, etc). This may alter the 
+      database schema as well as the types of information provided by data stewards. For more information, 
+      please contact Dr. Emma Griffiths at{' '}
+      <StyledLink
+        href="mailto:ega12@sfu.ca"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        ega12@sfu.ca
+      </StyledLink>
+      .
+    </p>
+
     <h2>Recognition of the work of the data submitters</h2>
 
     <p>
