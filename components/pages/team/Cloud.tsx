@@ -41,7 +41,7 @@ const Cloud = (): ReactElement => (
           Cloud Based Platform:{' '}
         </span>
         Genome Canada has also partnered with DNAstack to share{' '}
-        <StyledLink href="https://www.dnastack.com" rel="noopener noreferrer" target="_blank">
+        <StyledLink href="https://viral.ai/collections/virusseq/overview" rel="noopener noreferrer" target="_blank">
           VirusSeq data on Viral AI
         </StyledLink>{' '},
          a federated network for genomic variant surveillance and infectious disease research. 
