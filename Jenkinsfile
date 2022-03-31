@@ -72,7 +72,7 @@ spec:
 
     stage('Build & Publish Development Changes') {
       when {
-      branch 'develop'
+        branch 'develop'
       }
       steps {
         container('docker') {
@@ -88,22 +88,24 @@ spec:
 
     stage('deploy to cancogen-virus-seq-dev') {
       when {
-        branch "develop"
+        anyOf {
+          branch 'develop'
+          branch 'jenkins_test'
+        }
       }
       steps {
         build(job: "virusseq/update-app-version", parameters: [
           [$class: 'StringParameterValue', name: 'CANCOGEN_ENV', value: 'dev' ],
           [$class: 'StringParameterValue', name: 'TARGET_RELEASE', value: 'portal'],
-          [$class: 'StringParameterValue', name: 'NEW_APP_VERSION', value: "${commit}" ]
+          [$class: 'StringParameterValue', name: 'NEW_APP_VERSION', value: "${commit}" ],
+          [$class: 'StringParameterValue', name: 'BUILD_BRANCH', value: env.BRANCH_NAME ]
         ])
       }
     }
 
     stage('Release & Tag') {
       when {
-        anyOf {
-          branch 'main'
-        }
+        branch 'main'
       }
       steps {
         container('docker') {
