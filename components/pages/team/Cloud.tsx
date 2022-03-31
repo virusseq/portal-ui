@@ -40,34 +40,36 @@ const Cloud = (): ReactElement => (
         >
           Cloud Based Platform:{' '}
         </span>
-        Genome Canada has also partnered with{' '}
+        Genome Canada has also partnered with DNAstack to share{' '}
         <StyledLink href="https://www.dnastack.com" rel="noopener noreferrer" target="_blank">
-          DNAstack
-        </StyledLink>{' '}
-        to integrate VirusSeq data with their COVID Cloud Platform. COVID Cloud is a cloud-based
-        platform that helps researchers find, visualize, and analyze genomics and other datasets
-        related to COVID-19. COVID Cloud is sharing Canadian and international data over APIs
-        developed by the{' '}
+          VirusSeq data on Viral AI
+        </StyledLink>{' '},
+         a federated network for genomic variant surveillance and infectious disease research. 
+         Viral AI helps researchers to find, visualize, and analyze genomics, epidemiological
+         and other datasets related to COVID-19. Viral AI was designed to deliver equitable
+         access to software infrastructure, accelerate international data sharing, and empower
+         scientists and public health officials witih globally representative datasets they
+         need to mitigate current and future infectious disease outbreaks. The Viral AI network
+         shares Canadian and international data over APIs developed by the{' '}
         <StyledLink href="https://www.ga4gh.org" rel="noopener noreferrer" target="_blank">
           Global Alliance for Genomics & Health
-        </StyledLink>{' '}
-        and provides tools for researchers to search, visualize, and analyze data in the cloud.
-        COVID Cloud is developed by a{' '}
+        </StyledLink>{' '}.
+         Viral AI was developed in partnership with a{' '}
         <StyledLink
           href="https://www.digitalsupercluster.ca/covid-19-program-page/beacon-realtime-global-data-sharing-network/"
           rel="noopener noreferrer"
           target="_blank"
         >
-          consortium of Canadian partners
+          consortium of Canadian experts
         </StyledLink>{' '}
-        and funded by Canada’s{' '}
+        in infectious disease, ethics, policy, cloud computing, and artificial intelligence, and supported by Canada’s{' '}
         <StyledLink
           href="https://www.digitalsupercluster.ca/"
           rel="noopener noreferrer"
           target="_blank"
         >
-          Digital Technology Supercluster.
-        </StyledLink>
+          Digital Technology Supercluster
+        </StyledLink>.
       </p>
 
       <span
@@ -81,13 +83,13 @@ const Cloud = (): ReactElement => (
         `}
       >
         <StyledLink
-          href="https://virusseq.covidcloud.ca/"
+          href="https://viral.ai/collections/virusseq/overview"
           rel="noopener noreferrer"
           target="_blank"
         >
           <img
-            src="images/covid-cloud.png"
-            alt="Covid Cloud Logo"
+            src="images/viral-ai.png"
+            alt="Viral AI Logo"
             css={css`
               margin: 10px 0 20px;
               width: 128px;

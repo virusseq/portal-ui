@@ -51,7 +51,7 @@ const Portal = (): ReactElement => (
         </StyledLink>{' '}
         at the{' '}
         <StyledLink href="https://www.oicr.on.ca">Ontario Institute for Cancer Research</StyledLink>
-        , led by Dr. Christina Yung, Director of Genome Informatics and Dr. Lincoln Stein, Head of
+        , led by Dr. Mélanie Courtot, Director of Genome Informatics and Dr. Lincoln Stein, Head of
         Adaptive Oncology. The software is powered by{' '}
         <StyledLink href="https://www.overture.bio" rel="noopener noreferrer" target="_blank">
           Overture
