@@ -29,8 +29,6 @@ import useTrackingContext from '../../../../global/hooks/useTrackingContext';
 import defaultTheme from '../../../theme';
 import { PageContentProps } from '../index';
 import DownloadInfoModal from './DownloadInfoModal';
-import { Download } from '../../../theme/icons';
-import Button from '../../../Button';
 import useSingularityData, { Archive } from '../../../../global/hooks/useSingularityData';
 import sleep from '../../../utils/sleep';
 import { isEmpty } from 'lodash';
@@ -62,7 +60,10 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
     }
 
     & .group {
+      display: flex;
+      flex-direction: row-reverse;
       height: 32px;
+
       & .buttonWrapper button,
       & .dropDownHeader button {
         align-items: center;
@@ -82,43 +83,13 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
           color: ${theme.colors.grey_6};
         }
 
-        &:not(:disabled):hover {
-          background-color: ${theme.colors.secondary_light};
+        .dropDownButtonContent {
+          color: ${theme.colors.primary};
         }
       }
-      & .dropDownHeader::before {
-        display: block;
-        white-space: pre;
-        content: '${COLUMNS_DROPDOWN_TOOLTIP}';
-        font-size: 13px;
-        font-weight: normal;
-        padding: 3px;
-        position: absolute;
-        text-align: left;
-        background-color: #fef4c5;
-        border: 1px solid #d4b943;
-        -moz-border-radius: 2px;
-        -webkit-border-radius: 2px;
-        -ms-border-radius: 2px;
-        border-radius: 2px;
-        transform: translateY(-50%);
-        bottom: 72%;
-        right: 10%;
-        opacity: 0;
-        transition: 0.1s;
-      }
 
-      & .dropDownHeader::after {
-        content: '';
-        position: absolute;
-        bottom: 40%;
-        right: 30%;
-        margin-left: -5px;
-        transform: translateY(-50%);
-        border: 10px solid #d4b943;
-        border-color: #d4b943 transparent transparent transparent;
-        opacity: 0;
-        transition: 0.1s;
+      & .dropDownHeader {
+        height: fit-content;
       }
 
       & .dropDownHeader:hover::after {
@@ -131,16 +102,7 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
         transition-delay: 0.1s;
       }
 
-      & .buttonWrapper button:before {
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23${theme.colors.primary.slice(
-          1,
-        )}' fill-rule='evenodd' d='M1.32 17.162h17.162c.729 0 1.32.59 1.32 1.32 0 .73-.591 1.32-1.32 1.32H1.32c-.729 0-1.32-.59-1.32-1.32 0-.73.591-1.32 1.32-1.32zm4.93-8.87l2.232 2.227V1.512c0-.774.63-1.402 1.406-1.402.777 0 1.406.628 1.406 1.402v9.032l2.257-2.252c.55-.548 1.44-.548 1.989 0 .549.547.55 1.435 0 1.983l-4.976 4.963c-.366.365-.96.365-1.327 0l-4.975-4.963c-.549-.548-.549-1.435 0-1.983.55-.548 1.439-.548 1.988 0z'/%3E%3C/svg%3E%0A");
-        margin-top: 2px;
-        margin-right: 4px;
-      }
       & .dropDownHeader button {
-        margin-right: 8px;
-
         &:after {
           content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.grey_6.slice(
             1,
@@ -148,36 +110,27 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
           margin-top: 2px;
           margin-left: -3px;
         }
-
-        &:not(:disabled) {
-          &:after {
-            content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.primary.slice(
-              1,
-            )}' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
-          }
-
-          .dropDownButtonContent {
-            color: ${theme.colors.primary};
-          }
-        }
       }
 
       & .dropDownButton svg {
         display: none;
       }
-      & div.dropDownContent {
-        right: 7px !important;
+
+      & .dropDownContent {
         border-radius: 5px;
         ${theme.shadow.default};
-      }
-      & .dropDownContent {
         max-width: 200px;
         max-height: 285px;
         overflow-y: auto;
-        top: 82%;
+        right: 7px !important;
 
         ${theme.typography.label};
         font-weight: normal;
+
+        .dropDownContentElement:hover,
+        .dropDownContentElement:focus {
+          background: ${theme.colors.secondary_light};
+        }
 
         /* left-orient checkboxes */
         &.multiple {
@@ -186,10 +139,95 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
             padding-left: 8px;
             position: relative;
           }
+
           & .dropDownContentElement input[type='checkbox' i] {
             position: absolute;
             left: -17px;
             bottom: 4px;
+          }
+        }
+      }
+
+      /* Columns Button */
+      & > .dropDownHeader {
+        button:not(:disabled) {
+          &:after {
+            content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.primary.slice(
+              1,
+            )}' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
+          }
+
+          &:hover {
+            background: ${theme.colors.secondary_light};
+          }
+        }
+
+        /* Tooltip */
+        &::before {
+          display: block;
+          white-space: pre;
+          content: '${COLUMNS_DROPDOWN_TOOLTIP}';
+          font-size: 13px;
+          font-weight: normal;
+          padding: 3px;
+          position: absolute;
+          text-align: left;
+          background-color: #fef4c5;
+          border: 1px solid #d4b943;
+          border-radius: 2px;
+          transform: translateY(-50%);
+          bottom: 72%;
+          right: 10%;
+          opacity: 0;
+          transition: 0.1s;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 40%;
+          right: 30%;
+          margin-left: -5px;
+          transform: translateY(-50%);
+          border: 10px solid #d4b943;
+          border-color: #d4b943 transparent transparent transparent;
+          opacity: 0;
+          transition: 0.1s;
+        }
+      }
+
+      /* Downloads button */
+      & > .buttonWrapper button {
+        align-items: center;
+        background: ${theme.colors.success_dark};
+        border-color: ${theme.colors.primary};
+        display: flex;
+        flex-direction: row;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-right: 8px;
+
+        &:before {
+          content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23${theme.colors.white.slice(
+            1,
+          )}' fill-rule='evenodd' d='M1.32 17.162h17.162c.729 0 1.32.59 1.32 1.32 0 .73-.591 1.32-1.32 1.32H1.32c-.729 0-1.32-.59-1.32-1.32 0-.73.591-1.32 1.32-1.32zm4.93-8.87l2.232 2.227V1.512c0-.774.63-1.402 1.406-1.402.777 0 1.406.628 1.406 1.402v9.032l2.257-2.252c.55-.548 1.44-.548 1.989 0 .549.547.55 1.435 0 1.983l-4.976 4.963c-.366.365-.96.365-1.327 0l-4.975-4.963c-.549-.548-.549-1.435 0-1.983.55-.548 1.439-.548 1.988 0z'/%3E%3C/svg%3E%0A");
+          margin-top: 2px;
+          margin-right: 4px;
+        }
+
+        &:hover {
+          background: ${theme.colors.success_dark};
+        }
+
+        &:not(:disabled) {
+          &:after {
+            content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${theme.colors.white.slice(
+              1,
+            )}' fill-rule='evenodd' d='M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z'/%3E%3C/svg%3E");
+          }
+
+          .dropDownButtonContent {
+            color: ${theme.colors.white};
           }
         }
       }
@@ -316,15 +354,17 @@ const getTableStyle = (theme: typeof defaultTheme) => css`
 `;
 
 const RepoTable = (props: PageContentProps): ReactElement => {
-  const {
-    startArchiveBuildBySetId,
-    findArchvieById,
-    fetchLatestArchiveAllInfo,
-  } = useSingularityData();
+  const { fetchLatestArchiveAllInfo, findArchiveById, startArchiveBuildBySetId } =
+    useSingularityData();
 
   const theme: typeof defaultTheme = useTheme();
   const { logEvent } = useTrackingContext();
-  const { NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
+  const {
+    NEXT_PUBLIC_ARRANGER_API,
+    NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS,
+    NEXT_PUBLIC_ARRANGER_PROJECT_ID,
+    NEXT_PUBLIC_SINGULARITY_API_URL,
+  } = getConfig();
 
   const [archive, setArchive] = useState<Archive | undefined>(undefined);
   const [showDownloadInfoModal, setShowDownloadInfoModal] = useState(false);
@@ -342,7 +382,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     const setId = await saveSet(sqon);
     logEvent({
       category: 'Downloads',
-      action: 'Archvie Build',
+      action: 'Archive Build',
     });
     return await startArchiveBuildBySetId(setId);
   };
@@ -350,7 +390,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
   const updateArchiveState = async () => {
     if (archive?.status === 'BUILDING') {
       await sleep(5000);
-      await findArchvieById(archive.id).then(setArchive);
+      await findArchiveById(archive.id).then(setArchive);
     } else if (archive?.status === 'COMPLETE' && showDownloadInfoModal) {
       logEvent({
         category: 'Downloads',
@@ -367,7 +407,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     updateArchiveState();
   }, [archive]);
 
-  const handleDownload = () => {
+  const handleBundleDownload = () => {
     showModal();
 
     const sqonToUse = buildSqonWithObjectIds(props.sqon, props.selectedTableRows);
@@ -379,36 +419,34 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     archviePromise.then(setArchive);
   };
 
-  const DownloadButton = (
-    <Button
-      onClick={handleDownload}
-      css={css`
-        display: flex;
-        height: 25px;
-        flex-direction: row;
-        align-items: center;
-        column-gap: 3px;
-        padding-left: 10px;
-        padding-right: 10px;
-        margin-right: 8px;
-        background-color: ${theme.colors.success_dark};
-        &:hover {
-          background-color: ${theme.colors.success_dark};
-        }
-      `}
-    >
-      <Download fill={'white'} /> <span>Download Dataset</span>
-    </Button>
-  );
+  const today = new Date().toISOString();
+  const tsvExportColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',').map((c) => c.trim());
+  const customExporters = [
+    {
+      columns: tsvExportColumns,
+      fileName: `virusseq-metadata-export-${today}.tsv`,
+      function: 'saveTSV',
+      label: 'Metadata only',
+    },
+    { function: handleBundleDownload, label: 'Metadata & Fasta files' },
+  ];
+
   return (
     <div>
       <div css={getTableStyle(theme)}>
         <Table
           {...props}
-          allowTSVExport={false}
+          allowTSVExport
+          columnDropdownText="Columns"
+          downloadUrl={urlJoin(
+            NEXT_PUBLIC_ARRANGER_API,
+            NEXT_PUBLIC_ARRANGER_PROJECT_ID,
+            'download',
+          )}
+          enableSelectedTableRowsExporterFilter
+          exporter={customExporters}
+          exporterLabel="Download Dataset"
           showFilterInput={false}
-          columnDropdownText={'Columns'}
-          customHeaderContent={DownloadButton}
         />
       </div>
 

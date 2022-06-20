@@ -33,7 +33,7 @@ import { UnStyledButton } from '../../Button';
 import useSingularityData, {
   ArchivesFetchRes,
   ArchivesSortFields,
-  ArchviesFetchReq,
+  ArchivesFetchReq,
 } from '../../../global/hooks/useSingularityData';
 import { format } from 'date-fns';
 import StyledLink from '../../Link';
@@ -154,8 +154,8 @@ const PageNumber = ({ num }: { num: number }) => {
   );
 };
 
-const EARLIEST_ARCHVIES_FROM = new Date('2021/1/1');
-const LATEST_ARCHVIES_TO = new Date();
+const EARLIEST_ARCHIVES_FROM = new Date('2021/1/1');
+const LATEST_ARCHIVES_TO = new Date();
 
 const StyledDatePicker = ({
   onChange,
@@ -183,29 +183,29 @@ const StyledDatePicker = ({
     />
   );
 };
-type ArchviesFetchReqSort = Pick<ArchviesFetchReq, 'sortDirection' | 'sortField'>;
+type ArchivesFetchReqSort = Pick<ArchivesFetchReq, 'sortDirection' | 'sortField'>;
 const ArchivesTable = (): ReactElement => {
-  const { fetchCompletedArchvieAllInfos } = useSingularityData();
+  const { fetchCompletedArchiveAllInfos } = useSingularityData();
 
   const [tableData, setTableData] = useState<ArchivesFetchRes>();
-  const [archivesAfter, setArchivesAfter] = useState<Date>(EARLIEST_ARCHVIES_FROM);
-  const [archivesBefore, setArchiveBefore] = useState<Date>(LATEST_ARCHVIES_TO);
-  const [sort, setSort] = useState<ArchviesFetchReqSort>({
+  const [archivesAfter, setArchivesAfter] = useState<Date>(EARLIEST_ARCHIVES_FROM);
+  const [archivesBefore, setArchiveBefore] = useState<Date>(LATEST_ARCHIVES_TO);
+  const [sort, setSort] = useState<ArchivesFetchReqSort>({
     sortDirection: 'DESC',
     sortField: 'createdAt',
   });
 
-  const updateData = (req: ArchviesFetchReq) => {
+  const updateData = (req: ArchivesFetchReq) => {
     const mergedReq = {
       createdBeforeEpochSec: getFirstDefined(
         req.createdBeforeEpochSec,
         dateToEpochSec(archivesBefore),
-        dateToEpochSec(LATEST_ARCHVIES_TO),
+        dateToEpochSec(LATEST_ARCHIVES_TO),
       ),
       createdAfterEpochSec: getFirstDefined(
         req.createdAfterEpochSec,
         dateToEpochSec(archivesAfter),
-        dateToEpochSec(EARLIEST_ARCHVIES_FROM),
+        dateToEpochSec(EARLIEST_ARCHIVES_FROM),
       ),
       sortDirection: getFirstDefined(req.sortDirection, sort.sortDirection, 'DESC'),
       sortField: getFirstDefined(req.sortField, sort.sortField, 'createdAt'),
@@ -213,7 +213,7 @@ const ArchivesTable = (): ReactElement => {
       page: getFirstDefined(req.page, tableData?.number, 0),
     };
     console.log(mergedReq);
-    fetchCompletedArchvieAllInfos(mergedReq).then(setTableData);
+    fetchCompletedArchiveAllInfos(mergedReq).then(setTableData);
   };
 
   useEffect(() => {
@@ -273,7 +273,7 @@ const ArchivesTable = (): ReactElement => {
     if (!sort || !isValidSortField(sort.id)) {
       return;
     }
-    const updatedSort: ArchviesFetchReqSort = {
+    const updatedSort: ArchivesFetchReqSort = {
       sortDirection: sort.desc ? 'DESC' : 'ASC',
       sortField: sort.id,
     };
@@ -314,7 +314,7 @@ const ArchivesTable = (): ReactElement => {
           <StyledDatePicker
             onChange={updateFromDate}
             selected={archivesAfter}
-            minDate={EARLIEST_ARCHVIES_FROM}
+            minDate={EARLIEST_ARCHIVES_FROM}
             maxDate={archivesBefore}
           />
           <span>to</span>
@@ -322,7 +322,7 @@ const ArchivesTable = (): ReactElement => {
             onChange={updateToDate}
             selected={archivesBefore}
             minDate={archivesAfter}
-            maxDate={LATEST_ARCHVIES_TO}
+            maxDate={LATEST_ARCHIVES_TO}
           />
         </div>
       </div>
