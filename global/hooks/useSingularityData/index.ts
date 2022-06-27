@@ -27,7 +27,7 @@ import processStream from '../../utils/processStream';
 import {
   Archive,
   ArchivesFetchRes,
-  ArchviesFetchReq,
+  ArchivesFetchReq,
   ContributorsResponse,
   SingularityErrorResponse,
   TotalCounts,
@@ -103,7 +103,7 @@ const useSingularityData = () => {
       .finally(() => setAwaitingResponse(false)) as Promise<TotalCounts>;
   };
 
-  const fetchCompletedArchvieAllInfos = (req?: ArchviesFetchReq): Promise<ArchivesFetchRes> => {
+  const fetchCompletedArchiveAllInfos = (req?: ArchivesFetchReq): Promise<ArchivesFetchRes> => {
     const params = req
       ? '?' +
         Object.entries(req)
@@ -129,7 +129,7 @@ const useSingularityData = () => {
   };
 
   const fetchLatestArchiveAllInfo = (): Promise<Archive> => {
-    return fetchCompletedArchvieAllInfos({
+    return fetchCompletedArchiveAllInfos({
       size: 1,
       page: 0,
       sortDirection: 'DESC',
@@ -162,8 +162,8 @@ const useSingularityData = () => {
       }) as Promise<Archive>;
   };
 
-  const findArchvieById = (archvieId: string): Promise<Archive> => {
-    return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/archives/', archvieId))
+  const findArchiveById = (archiveId: string): Promise<Archive> => {
+    return fetch(urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/archives/', archiveId))
       .then((res) => {
         if (res.status !== 200) {
           throw Error("Couldn't find archive!");
@@ -180,11 +180,11 @@ const useSingularityData = () => {
     awaitingResponse,
     fetchContributors,
     fetchTotalCounts,
-    fetchCompletedArchvieAllInfos,
+    fetchCompletedArchiveAllInfos,
     fetchLatestArchiveAllInfo,
     setAwaitingResponse,
     startArchiveBuildBySetId,
-    findArchvieById,
+    findArchiveById,
   };
 };
 

@@ -48,7 +48,7 @@ export type Pageable = {
 
 export type ArchivesFetchRes = PagedResponse<Archive>;
 
-export type ArchviesFetchReq = {
+export type ArchivesFetchReq = {
   createdAfterEpochSec?: number;
   createdBeforeEpochSec?: number;
   size?: number;
