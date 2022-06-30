@@ -420,7 +420,26 @@ const RepoTable = (props: PageContentProps): ReactElement => {
   };
 
   const today = new Date().toISOString();
-  const tsvExportColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',').map((c) => c.trim());
+  const tsvExportColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',').map((column) => {
+    const fieldName = column.trim();
+    return {
+      fieldName,
+      displayName: ({ displayName, Header }: { displayName?: string; Header: string }) => {
+        switch (fieldName) {
+          case 'study_id':
+            return fieldName;
+
+          default:
+            return (displayName || Header)
+              .toLowerCase()
+              .replace(/(\s+)ct(\s+)/g, '$1Ct$2')
+              .replace(/(\s+)id/g, '$1ID')
+              .replace(/(\s*)gisaid(\s*)/g, '$1GISAID$2');
+        }
+      },
+    };
+  });
+
   const customExporters = [
     {
       columns: tsvExportColumns,
