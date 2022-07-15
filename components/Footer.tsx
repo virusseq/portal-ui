@@ -51,9 +51,24 @@ const Footer = (): ReactElement => {
         right: 0px;
       `}
     >
-      <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
-        <GenomeCanadaLogo width={85} />
-      </a>
+      <section
+        css={css`
+          align-items: center;
+          display: flex;
+
+          > :not(:last-of-type) {
+            margin-right: 1rem;
+          }
+        `}
+      >
+        <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
+          <GenomeCanadaLogo width={85} />
+        </a>
+        <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
+          <img src="/images/cancogen-logo.png" alt="Cancogen logo" width="132" />
+        </a>
+      </section>
+
       <section
         css={css`
           display: flex;
@@ -79,6 +94,7 @@ const Footer = (): ReactElement => {
               display: inline;
               padding: 0 20px;
               position: relative;
+              text-align: center;
 
               &:not(:first-of-type)::before {
                 color: ${theme.colors.accent};
@@ -172,7 +188,7 @@ const Footer = (): ReactElement => {
             display: flex;
             font-weight: bold;
             justify-content: center;
-            margin-left: 20px;
+            margin-left: 1rem;
             text-decoration: none;
           `}
           href="https://github.com/cancogen-virus-seq"
