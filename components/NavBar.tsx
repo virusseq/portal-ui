@@ -118,7 +118,8 @@ const NavBar = (): ReactElement => {
         css={css`
           display: flex;
           align-items: center;
-          margin-left: 40px;
+          margin-left: 50px;
+          margin-right: 70px;
           cursor: pointer;
         `}
       >
@@ -130,7 +131,7 @@ const NavBar = (): ReactElement => {
               text-decoration: none;
             `}
           >
-            <img src="/images/navbar-logo.png" alt="logos for CanCOGeN and VirusSeq" width="296" />
+            <img src="/images/navbar-logo.png" alt="VirusSeq logo" width="182" />
           </a>
         </Link>
       </div>
