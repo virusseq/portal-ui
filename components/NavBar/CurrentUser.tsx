@@ -22,25 +22,46 @@
 import { ReactElement } from 'react';
 import { css } from '@emotion/react';
 
-import { IconProps } from './types';
+import useAuthContext from '../../global/hooks/useAuthContext';
+import { UserWithId } from '../../global/types';
 
-const ChevronDown = ({ fill, width, height, size, style }: IconProps): ReactElement => {
+const getDisplayName = (user?: UserWithId) => {
+  const greeting = 'Hello';
+  if (user) {
+    if (user.firstName) {
+      return `${greeting}, ${user.firstName}`;
+    } else if (user.lastName) {
+      return `${greeting}, ${user.lastName}`;
+    } else if (user.email) {
+      return `${greeting}, ${user.email}`;
+    }
+  }
+  return greeting;
+};
+
+export const CurrentUser = (): ReactElement => {
+  const { user } = useAuthContext();
   return (
-    <svg
+    <div
       css={css`
-        ${style}
+        display: flex;
+        align-items: center;
+        justify-content: center;
       `}
-      width={size || width}
-      height={size || height}
-      viewBox="0 0 12 12"
     >
-      <path
-        fill={fill}
-        fillRule="evenodd"
-        d="M9.952 3.342c.468-.456 1.228-.456 1.697 0 .234.228.351.526.351.825 0 .298-.117.597-.351.825l-4.8 4.666c-.469.456-1.23.456-1.697 0l-4.8-4.666c-.47-.456-.47-1.194 0-1.65.468-.456 1.228-.456 1.696 0L6 7.184l3.952-3.842z"
-      />
-    </svg>
+      <span
+        css={css`
+          padding-left: 5px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 142px;
+        `}
+      >
+        {getDisplayName(user)}
+      </span>
+    </div>
   );
 };
 
-export default ChevronDown;
+export default CurrentUser;

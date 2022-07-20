@@ -24,7 +24,7 @@ import { css, useTheme } from '@emotion/react';
 import axios from 'axios';
 import defaultTheme from '../../theme';
 import { getConfig } from '../../../global/config';
-import { EXPLORER_PATH, covizuGithubUrl } from '../../../global/utils/constants';
+import { covizuGithubUrl, INTERNAL_PATHS } from '../../../global/utils/constants';
 import { InternalLink as Link } from '../../Link';
 import PageLayout from '../../PageLayout';
 
@@ -111,7 +111,7 @@ const VisualizationPage = (): ReactElement => {
               </a>{' '}
               (an open source SARS-CoV-2 genome analysis and visualization system) has been used to
               visualize{' '}
-              <Link path={EXPLORER_PATH}>
+              <Link path={INTERNAL_PATHS.EXPLORER}>
                 <a
                   css={css`
                     color: ${theme.colors.primary_dark};

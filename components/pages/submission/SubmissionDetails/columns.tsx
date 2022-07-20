@@ -68,12 +68,12 @@ const columnData: Column<Record<string, unknown>>[] = [
   },
   {
     accessor: 'status',
-    Cell: ({ row: { original }, value }: { row: Row; value: UploadStatusType }): ReactElement => {
+    Cell: ({ row: { original }, value }: { row: Row; value: unknown }): ReactElement => {
       const { error } = original as UploadDataType;
 
       return (
         <>
-          <StatusIcon status={value} />
+          <StatusIcon status={value as UploadStatusType} />
 
           <span
             css={css`

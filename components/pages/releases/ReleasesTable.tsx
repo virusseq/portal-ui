@@ -63,9 +63,9 @@ const columnData = (): Column<Record<string, unknown>>[] => [
   {
     accessor: 'createdAt',
     Header: 'Release Date',
-    Cell: ({ value }: { value: number }) => {
+    Cell: ({ value }: { value: unknown }) => {
       const date = new Date(0);
-      date.setUTCSeconds(value);
+      date.setUTCSeconds(value as number);
 
       return <b>{format(date, 'LLLL d, yyyy h:mm aaaa')}</b>;
     },
@@ -73,7 +73,7 @@ const columnData = (): Column<Record<string, unknown>>[] => [
   {
     accessor: 'id',
     Header: 'Metadata & Consensus Seq Files',
-    Cell: ({ value }: { value: string }) => {
+    Cell: ({ value }: { value: unknown }) => {
       return (
         <StyledLink
           onClick={() => {

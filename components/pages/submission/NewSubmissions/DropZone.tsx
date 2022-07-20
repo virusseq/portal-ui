@@ -50,7 +50,8 @@ const DropZone = ({
     accept: '.fa,.gz,.fasta,.tsv,text/tab-separated-values',
     disabled,
     onDrop: useCallback(
-      (acceptedFiles) => acceptedFiles.forEach(validator(validationState, validationDispatch)),
+      (acceptedFiles: File[]) =>
+        acceptedFiles.forEach(validator(validationState, validationDispatch)),
       [validationDispatch, validationState],
     ),
   });

@@ -26,6 +26,7 @@ import defaultTheme from './theme';
 import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
 
 import useAuthContext from '../global/hooks/useAuthContext';
+import { INTERNAL_PATHS } from '../global/utils/constants';
 import StyledLink, { InternalLink } from './Link';
 
 const Footer = (): ReactElement => {
@@ -64,7 +65,7 @@ const Footer = (): ReactElement => {
         <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
           <GenomeCanadaLogo width={85} />
         </a>
-        <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
+        <a href="https://www.genomecanada.ca/en/cancogen" rel="noopener noreferrer" target="_blank">
           <img src="/images/cancogen-logo.png" alt="Cancogen logo" width="132" />
         </a>
       </section>
@@ -118,7 +119,7 @@ const Footer = (): ReactElement => {
           </li>
 
           <li>
-            <InternalLink path="/policies">
+            <InternalLink path={INTERNAL_PATHS.POLICIES}>
               <StyledLink>Policies</StyledLink>
             </InternalLink>
           </li>
@@ -135,7 +136,7 @@ const Footer = (): ReactElement => {
 
           {!token && (
             <li>
-              <InternalLink path="/login">
+              <InternalLink path={INTERNAL_PATHS.LOGIN}>
                 <StyledLink>Submitter Login</StyledLink>
               </InternalLink>
             </li>

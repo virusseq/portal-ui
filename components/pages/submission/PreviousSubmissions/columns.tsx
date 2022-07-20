@@ -19,6 +19,7 @@
  *
  */
 
+import { ReactElement } from 'react';
 import { Column } from 'react-table';
 import { format } from 'date-fns';
 import { css } from '@emotion/react';
@@ -30,15 +31,17 @@ import StyledLink from '../../../Link';
 const columnData: Column<Record<string, unknown>>[] = [
   {
     accessor: 'submissionId',
-    Cell: ({ value }: { value: string }) => (
-      <StyledLink href={getInternalLink({ path: `/submission/${value}` })}>{value}</StyledLink>
+    Cell: ({ value }: { value: unknown }) => (
+      <StyledLink href={getInternalLink({ path: `/submission/${value}` })}>
+        {value as string}
+      </StyledLink>
     ),
     Header: 'Submission ID',
     sortType: uuidSort,
   },
   {
     accessor: 'studyIds',
-    Cell: ({ value }: { value: string[] }) =>
+    Cell: ({ value }: { value: unknown }) =>
       value ? (
         <ul
           css={css`
@@ -46,7 +49,7 @@ const columnData: Column<Record<string, unknown>>[] = [
             padding-left: 15px;
           `}
         >
-          {value.map((id) => (
+          {(value as string[]).map((id) => (
             <li key={id}>{id}</li>
           ))}
         </ul>
@@ -55,7 +58,8 @@ const columnData: Column<Record<string, unknown>>[] = [
   },
   {
     accessor: 'createdAt',
-    Cell: ({ value }: { value: number }) => format(new Date(value), 'yyyy-MM-dd'),
+    Cell: ({ value }: { value: unknown }) =>
+      format(new Date(value as number), 'yyyy-MM-dd') as unknown as ReactElement,
     Header: 'Submission Date',
     sortType: numberSort,
   },

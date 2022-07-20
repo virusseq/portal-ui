@@ -19,16 +19,16 @@
  *
  */
 
-import { EXPLORER_PATH } from '../../../global/utils/constants';
+import { INTERNAL_PATHS } from '../../../global/utils/constants';
 import StyledLink from '../../Link';
 
 const Description = () => {
   return (
     <div>
       The VirusSeq Data Portal regularly releases submitted data. Each release bundle contains 2
-      files: a <b>TSV file containing all submitted metadata</b> as of that release date-time, as well
-      as a <b>FASTA file containing all the corresponding sequences</b>. The latest release is
-      available in the <StyledLink href={EXPLORER_PATH}>data explorer</StyledLink>.
+      files: a <b>TSV file containing all submitted metadata</b> as of that release date-time, as
+      well as a <b>FASTA file containing all the corresponding sequences</b>. The latest release is
+      available in the <StyledLink href={INTERNAL_PATHS.EXPLORER}>data explorer</StyledLink>.
     </div>
   );
 };

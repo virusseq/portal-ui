@@ -19,10 +19,11 @@
  *
  */
 
-import { css } from '@emotion/react';
 import React from 'react';
+import { css } from '@emotion/react';
+
 import { Archive } from '../../../../global/hooks/useSingularityData/types';
-import { ACKNOWLEDGEMENTS_PATH } from '../../../../global/utils/constants';
+import { INTERNAL_PATHS } from '../../../../global/utils/constants';
 import StyledLink from '../../../Link';
 import Loader from '../../../Loader';
 import { Modal } from '../../../Modal';
@@ -145,9 +146,10 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
           `}
         >
           Your download has started. By downloading this data, you agree to{' '}
-          <StyledLink href={ACKNOWLEDGEMENTS_PATH}>acknowledge</StyledLink> the Canadian Public
-          Health Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having contributed
-          data and follow all <StyledLink href="./policies">CVDP policies</StyledLink>.
+          <StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the Canadian
+          Public Health Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having
+          contributed data and follow all{' '}
+          <StyledLink href={INTERNAL_PATHS.POLICIES}>CVDP policies</StyledLink>.
         </p>
         <p>
           Data that is being shared is the work of many individuals and should be treated as
