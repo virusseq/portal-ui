@@ -31,7 +31,7 @@ const FileRow = ({
   active = false,
   file: { name = '', type = '' },
   handleRemove = () => {
-    console.log('clicked');
+    // console.log('clicked');
   },
 }: {
   active: boolean;

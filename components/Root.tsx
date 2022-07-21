@@ -19,7 +19,7 @@
  *
  */
 
-import { createRef, ReactElement } from 'react';
+import { createRef, ReactElement, useEffect } from 'react';
 import { ThemeProvider } from '@emotion/react';
 
 import { AuthProvider } from '../global/hooks/useAuthContext';
@@ -46,7 +46,11 @@ const Root = ({
   pageContext: ClientSideGetInitialPropsContext;
 }): ReactElement => {
   const { NEXT_PUBLIC_APP_VERSION, NEXT_PUBLIC_APP_COMMIT } = getConfig();
-  console.info(`App Version: ${NEXT_PUBLIC_APP_VERSION}, App Commit: ${NEXT_PUBLIC_APP_COMMIT}`);
+
+  useEffect(() => {
+    NEXT_PUBLIC_APP_VERSION && console.info(`App Version: ${NEXT_PUBLIC_APP_VERSION}`);
+    NEXT_PUBLIC_APP_COMMIT && console.info(`App Commit: ${NEXT_PUBLIC_APP_COMMIT}`);
+  }, [NEXT_PUBLIC_APP_COMMIT, NEXT_PUBLIC_APP_VERSION]);
 
   return (
     <>

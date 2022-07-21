@@ -68,12 +68,10 @@ const useStudiesSvcData = () => {
     return promise
       .then((res) => res.json())
       .then((body) => {
-        console.log(body);
         setAwaitingResponse(false);
         return convertToStudiesRes<T>(body);
       })
       .catch((err) => {
-        console.log(err);
         setAwaitingResponse(false);
         return convertToStudiesRes<T>({ success: false, error: { type: ErrorType.UNKNOWN } });
       });

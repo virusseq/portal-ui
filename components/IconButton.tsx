@@ -29,7 +29,9 @@ const IconButton = ({
   fill,
   height,
   width,
-  onClick = () => {},
+  onClick = () => {
+    // console.log('nada');
+  },
 }: {
   Icon: React.ComponentType<IconProps>;
   fill: string;

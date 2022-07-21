@@ -52,6 +52,7 @@ const ErrorTitle = styled('h1')`
 
 const ErrorNotification = ({
   children,
+  className,
   title,
   size,
   styles = '',
@@ -59,6 +60,7 @@ const ErrorNotification = ({
   dismissible = false,
 }: {
   children: React.ReactNode;
+  className?: string;
   title?: string;
   size: ErrorSize;
   styles?: string;
@@ -66,6 +68,7 @@ const ErrorNotification = ({
   dismissible?: boolean;
 }): ReactElement => (
   <div
+    className={className}
     css={css`
       display: flex;
       flex: 1;

@@ -97,7 +97,7 @@ const PageContent = () => {
 
   function afterSubmitSuccess(
     onSuccessNotifyState: NotificationType,
-    studyId: string = '',
+    studyId = '',
     submitters: string[] = [],
   ) {
     updateTable();

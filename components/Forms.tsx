@@ -38,13 +38,13 @@ const inputTextStyle = css`
 `;
 
 export const FormTextBlock = styled('div')`
-      display: flex; 
-      width 100%;
-      justify-content: space-between;
-      font-size: 16px;
-      line-height: 24px;
-      ${defaultTheme.typography.baseFont}
-      `;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  font-size: 16px;
+  line-height: 24px;
+  ${defaultTheme.typography.baseFont}
+`;
 
 const StyledText = ({ text, color = 'black', bold = false, font = 16 }: any) => {
   return (
@@ -266,7 +266,7 @@ export const FormInputTextBin = ({
   );
 };
 
-export function usingFormValidator<T>(
+export function useFormValidator<T>(
   initialForm: T,
   formSchema: yup.BaseSchema<T>,
 ): {

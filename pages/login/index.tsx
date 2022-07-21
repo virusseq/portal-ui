@@ -29,7 +29,9 @@ import { createPage } from '../../global/utils/pages';
 import useAuthContext from '../../global/hooks/useAuthContext';
 
 const LoginPage = createPage({
-  getInitialProps: async () => {},
+  getInitialProps: async () => {
+    // console.log('nada');
+  },
   isPublic: true,
 })(() => {
   const { token } = useAuthContext();

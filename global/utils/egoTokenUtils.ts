@@ -28,14 +28,13 @@ import { EgoJwtData, UserWithId } from '../types';
 
 const { NEXT_PUBLIC_EGO_PUBLIC_KEY } = getConfig();
 
-const verifyJwt: (egoPublicKey: string) => (egoJwt?: string) => boolean = (egoPublicKey) => (
-  egoJwt,
-) => {
+const verifyJwt = (egoPublicKey: string) => (egoJwt?: string) => {
   try {
     if (!egoJwt || !egoPublicKey) {
       return false;
     } else {
-      return jwt.verify(egoJwt, egoPublicKey, { algorithms: ['RS256'] }) && true;
+      jwt.verify(egoJwt, egoPublicKey, { algorithms: ['RS256'] });
+      return true;
     }
   } catch (err) {
     return false;

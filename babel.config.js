@@ -1,12 +1,13 @@
 module.exports = {
   presets: [
-    'next/babel',
     [
-      '@babel/preset-react',
+      'next/babel',
       {
-        development: process.env.BABEL_ENV === 'development',
-        runtime: 'automatic',
-        importSource: '@emotion/react',
+        'preset-react': {
+          development: process.env.BABEL_ENV === 'development',
+          runtime: 'automatic',
+          importSource: '@emotion/react',
+        },
       },
     ],
     '@babel/preset-typescript',

@@ -38,8 +38,8 @@ type ClusterData = {
 
 const covizuVersion = '1.0.0';
 const filesPath = '?format=json&prefix=' + covizuVersion + '/clusters.20';
-const clustersFilenameTest = /^(\d+\.){2}\d+\/(clusters\.)\d{4}(\-\d{2}){2}(\.json)$/;
-const dateTest = /\d{4}(\-\d{2}){2}/;
+const clustersFilenameTest = /^(\d+\.){2}\d+\/(clusters\.)\d{4}(-\d{2}){2}(\.json)$/;
+const dateTest = /\d{4}(-\d{2}){2}/;
 
 const VisualizationPage = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
