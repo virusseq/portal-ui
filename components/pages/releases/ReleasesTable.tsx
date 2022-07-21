@@ -44,7 +44,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Download } from '../../theme/icons';
 import { getConfig } from '../../../global/config';
 
-const { NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
+const { NEXT_PUBLIC_ENABLE_DOWNLOADS, NEXT_PUBLIC_SINGULARITY_API_URL } = getConfig();
 
 function dateToEpochSec(date: Date | undefined) {
   if (!date) return undefined;
@@ -76,10 +76,11 @@ const columnData = (): Column<Record<string, unknown>>[] => [
     Cell: ({ value }: { value: unknown }) => {
       return (
         <StyledLink
+          disabled={!NEXT_PUBLIC_ENABLE_DOWNLOADS}
           onClick={() => {
-            if (NEXT_PUBLIC_SINGULARITY_API_URL && value) {
+            if (NEXT_PUBLIC_ENABLE_DOWNLOADS && NEXT_PUBLIC_SINGULARITY_API_URL && value) {
               window.location.assign(
-                urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/download/archive/', value as string),
+                urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/download/archive/', value),
               );
             }
           }}
