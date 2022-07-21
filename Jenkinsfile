@@ -1,19 +1,10 @@
-def dockerRepo = "ghcr.io/cancogen-virus-seq/portal"
-def githubRepo = "cancogen-virus-seq/portal"
-def commit = "UNKNOWN"
-def version = "UNKNOWN"
-
-pipeline {
-    agent {
-        kubernetes {
-            label 'portal-executor'
-            yaml """
+String podSpec = '''
 apiVersion: v1
 kind: Pod
 spec:
   containers:
   - name: node
-    image: node:12.13.1
+    image: node:16
     tty: true
     securityContext:
       runAsUser: 1000
@@ -46,80 +37,124 @@ spec:
   volumes:
   - name: dind-storage
     emptyDir: {}
-"""
-        }
-    }
-    stages {
-        stage('Prepare') {
-            steps {
-                script {
-                    commit = sh(returnStdout: true, script: 'git describe --always').trim()
-                }
-                script {
-                    version = sh(returnStdout: true, script: 'cat ./package.json | grep version | cut -d \':\' -f2 | sed -e \'s/"//\' -e \'s/",//\'').trim()
-                }
-            }
-        }
+'''
 
-    stage('Test') {
-      steps {
-        container('node') {
-          sh "npm ci"
-          sh "npm run test"
-        }
-      }
+pipeline {
+  agent {
+    kubernetes {
+      yaml podSpec
     }
+  }
 
-    stage('Build & Publish Development Changes') {
-      when {
-        branch 'develop'
-      }
+  environment {
+    dockerImgRepo = 'ghcr.io/cancogen-virus-seq/portal'
+    githubRepo = 'cancogen-virus-seq/portal'
+
+    commit = sh(
+      returnStdout: true,
+      script: 'git describe --always'
+    ).trim()
+
+    version = sh(
+      returnStdout: true,
+      script: 'cat ./package.json | ' +
+        'grep "version" | ' +
+        'cut -d : -f2 | ' +
+        "sed \'s:[\",]::g\'"
+    ).trim()
+  }
+
+  options {
+    timeout(time: 30, unit: 'MINUTES')
+    timestamps()
+  }
+
+  stages {
+    stage('Build images') {
       steps {
         container('docker') {
-          withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
-          }
-          sh "docker build --build-arg APP_COMMIT=${commit} --build-arg APP_VERSION=${version} --network=host -f Dockerfile . -t ${dockerRepo}:${commit} -t ${dockerRepo}:edge"
-          sh "docker push ${dockerRepo}:${commit}"
-          sh "docker push ${dockerRepo}:edge"
+          sh "docker build \
+            --build-arg APP_COMMIT=${commit} \
+            --build-arg APP_VERSION=${version} \
+            --network=host \
+            -f Dockerfile \
+            -t portal:${commit} ."
         }
       }
     }
 
-    stage('deploy to cancogen-virus-seq-dev') {
+    stage('Publish images') {
       when {
         anyOf {
           branch 'develop'
-          branch 'jenkins_test'
+          branch 'main'
+          branch 'upgrades'
+          branch 'test'
         }
       }
       steps {
-        build(job: "virusseq/update-app-version", parameters: [
-          [$class: 'StringParameterValue', name: 'CANCOGEN_ENV', value: 'dev' ],
-          [$class: 'StringParameterValue', name: 'TARGET_RELEASE', value: 'portal'],
-          [$class: 'StringParameterValue', name: 'NEW_APP_VERSION', value: "${commit}" ],
-          [$class: 'StringParameterValue', name: 'BUILD_BRANCH', value: env.BRANCH_NAME ]
-        ])
+        container('docker') {
+          withCredentials([usernamePassword(
+            credentialsId:'argoContainers',
+            usernameVariable: 'USERNAME',
+            passwordVariable: 'PASSWORD'
+          )]) {
+            sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
+
+            script {
+              if (env.BRANCH_NAME ==~ /(develop|upgrades|test)/) { //push edge and commit tags
+                sh "docker tag portal:${commit} ${dockerImgRepo}:${commit}"
+                sh "docker push ${dockerImgRepo}:${commit}"
+
+                sh "docker tag portal:${commit} ${dockerImgRepo}:edge"
+                sh "docker push ${dockerImgRepo}:edge"
+              }
+
+              if (env.BRANCH_NAME ==~ /(main)/) { // push latest and version tags
+                sh "docker tag portal:${commit} ${dockerImgRepo}:${version}"
+                sh "docker push ${dockerImgRepo}:${version}"
+
+                sh "docker tag portal:${commit} ${dockerImgRepo}:latest"
+                sh "docker push ${dockerImgRepo}:latest"
+              }
+            }
+          }
+        }
       }
     }
 
-    stage('Release & Tag') {
+    stage('Publish Git Version Tag') {
       when {
         branch 'main'
       }
       steps {
         container('docker') {
-          withCredentials([usernamePassword(credentialsId: 'argoGithub', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+          withCredentials([usernamePassword(
+            credentialsId: 'argoGithub',
+            passwordVariable: 'GIT_PASSWORD',
+            usernameVariable: 'GIT_USERNAME'
+          )]) {
             sh "git tag ${version}"
             sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${githubRepo} --tags"
           }
-          withCredentials([usernamePassword(credentialsId:'argoContainers', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
-          }
-          sh "docker build --build-arg APP_COMMIT=${commit} --build-arg APP_VERSION=${version} --network=host -f Dockerfile . -t ${dockerRepo}:${version} -t ${dockerRepo}:latest"
-          sh "docker push ${dockerRepo}:${version}"
-          sh "docker push ${dockerRepo}:latest"
         }
+      }
+    }
+
+    stage('Deploy to cancogen-virus-seq-dev') {
+      when {
+        anyOf {
+          branch 'develop'
+          branch 'upgrades'
+        }
+      }
+      steps {
+        build(job: 'virusseq/update-app-version', parameters: [
+          [$class: 'StringParameterValue', name: 'CANCOGEN_ENV', value: 'dev' ],
+          [$class: 'StringParameterValue', name: 'TARGET_RELEASE', value: 'portal'],
+          [$class: 'StringParameterValue', name: 'NEW_APP_VERSION', value: "${commit}" ],
+          [$class: 'StringParameterValue', name: 'BUILD_BRANCH', value: env.BRANCH_NAME ]
+        ])
       }
     }
   }
