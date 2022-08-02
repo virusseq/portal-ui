@@ -100,7 +100,7 @@ Gordon P, Lam LG, Pabbaraju K, Wong A, Ma R, Li V, Melin A, Tipples G, Berenger 
 
       <p>
         <em>Dr. Leonard A. Miller Centre for Health Services; National Microbiology Laboratory</em><br />
-        Robert Needle, Yang Yu, Laura Gilbert, George Zahariadis, Chris Corkum, Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich, Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van Domselaar, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kirsten Biggar, Kerri Smith, Matthew Gilmour.
+        Robert Needle, Yang Yu, Laura Gilbert, George Zahariadis, Chris Corkum, Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich, Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van Domselaar, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kirsten Biggar, Kerri Smith, Phillip Andrews, Matthew Gilmour.
       </p>
 
       <h3>
