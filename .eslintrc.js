@@ -33,6 +33,7 @@ module.exports = {
       },
     ],
     'import/newline-after-import': 'warn',
+    'use-isnan': 'warn',
     '@emotion/import-from-emotion': 'error',
     '@emotion/no-vanilla': 'error',
     '@emotion/pkg-renaming': 'error',

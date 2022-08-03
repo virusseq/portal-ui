@@ -56,7 +56,7 @@ function isValidSortField(s: unknown): s is ArchivesSortFields {
 }
 
 function getFirstDefined<T>(...os: T[]): T | undefined {
-  return os.find((o) => o !== undefined && o !== null && !Number.isNaN(Number(o)));
+  return os.find((o) => o !== undefined && o !== null && Number(o) !== NaN);
 }
 
 const columnData = (): Column<Record<string, unknown>>[] => [
