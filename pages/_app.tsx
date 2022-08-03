@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -24,7 +24,7 @@ import { AppContext } from 'next/app';
 import Router from 'next/router';
 
 import Root from '../components/Root';
-import { EGO_JWT_KEY, LOGIN_PATH } from '../global/utils/constants';
+import { EGO_JWT_KEY, INTERNAL_PATHS } from '../global/utils/constants';
 import { PageWithConfig } from '../global/utils/pages/types';
 import getInternalLink from '../global/utils/getInternalLink';
 import { isValidJwt } from '../global/utils/egoTokenUtils';
@@ -39,21 +39,23 @@ const DMSApp = ({
   ctx: any;
 }): ReactElement => {
   const [initialToken, setInitialToken] = useState<string>();
+
   useEffect(() => {
     const egoJwt = localStorage.getItem(EGO_JWT_KEY) || undefined;
-    if (isValidJwt(egoJwt)) {
+
+    if (egoJwt && isValidJwt(egoJwt)) {
       setInitialToken(egoJwt);
     } else {
-      setInitialToken(undefined);
+      egoJwt && setInitialToken(undefined);
       // redirect to logout when token is expired/missing only if user is on a non-public page
       if (!Component.isPublic) {
         Router.push({
-          pathname: getInternalLink({ path: LOGIN_PATH }),
+          pathname: getInternalLink({ path: INTERNAL_PATHS.LOGIN }),
           query: { session_expired: true },
         });
       }
     }
-  });
+  }, [Component.isPublic]);
 
   return (
     <Root pageContext={ctx} egoJwt={initialToken}>

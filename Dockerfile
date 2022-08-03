@@ -1,4 +1,4 @@
-FROM node:12.13.1-alpine
+FROM node:16-alpine
 
 ARG ASSET_PREFIX
 ARG APP_COMMIT
@@ -10,8 +10,6 @@ ENV ASSET_PREFIX $ASSET_PREFIX
 
 ENV APP_UID=9999
 ENV APP_GID=9999
-
-ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN apk --no-cache add shadow
 RUN groupmod -g $APP_GID node
@@ -26,8 +24,8 @@ COPY . /usr/src
 
 VOLUME [ "/usr/src/public/static/dms_user_assets" ]
 
-RUN npm ci
-RUN npm run build
+RUN npm ci --legacy-peer-deps
+RUN NEXT_TELEMETRY_DISABLED=1 npm run build
 
 EXPOSE 3000
 CMD npm start

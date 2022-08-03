@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -68,12 +68,12 @@ const columnData: Column<Record<string, unknown>>[] = [
   },
   {
     accessor: 'status',
-    Cell: ({ row: { original }, value }: { row: Row; value: UploadStatusType }): ReactElement => {
+    Cell: ({ row: { original }, value }: { row: Row; value: unknown }): ReactElement => {
       const { error } = original as UploadDataType;
 
       return (
         <>
-          <StatusIcon status={value} />
+          <StatusIcon status={value as UploadStatusType} />
 
           <span
             css={css`

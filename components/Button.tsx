@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -46,6 +46,7 @@ export const ButtonElement = styled(UnStyledButton)`
     line-height: 24px;
     border-radius: 5px;
     border: 1px solid ${theme?.colors.primary};
+    box-sizing: border-box;
     padding: 6px 15px;
     &:hover {
       background-color: ${theme?.colors.primary_dark};
@@ -71,16 +72,20 @@ const Button = React.forwardRef<
     isAsync?: boolean;
     className?: string;
     isLoading?: boolean;
+    title?: string;
   }
 >(
   (
     {
       children,
-      onClick = (e) => {},
+      onClick = (e) => {
+        // console.log('nada');
+      },
       disabled = false,
       isAsync = false,
       className,
       isLoading: controlledLoadingState,
+      title,
     },
     ref = React.createRef(),
   ) => {
@@ -103,6 +108,7 @@ const Button = React.forwardRef<
         onClick={isAsync ? onClickFn : onClick}
         disabled={disabled || shouldShowLoading}
         className={className}
+        title={title}
       >
         <span
           css={css`
@@ -111,18 +117,33 @@ const Button = React.forwardRef<
         >
           {children}
         </span>
-        <span
-          css={css`
-            position: absolute;
-            visibility: ${shouldShowLoading ? 'visible' : 'hidden'};
-            bottom: 1px;
-          `}
-        >
-          <Spinner height={20} width={20} />
-        </span>
+
+        {isAsync && (
+          <span
+            css={css`
+              position: absolute;
+              visibility: ${shouldShowLoading ? 'visible' : 'hidden'};
+              bottom: 1px;
+            `}
+          >
+            <Spinner height={20} width={20} />
+          </span>
+        )}
       </ButtonElement>
     );
   },
 );
+
+export const TransparentButton = styled(ButtonElement)`
+  background: none;
+  border: none;
+  justify-content: flex-start;
+  text-align: left;
+
+  &:focus,
+  &:hover {
+    background: none;
+  }
+`;
 
 export default Button;

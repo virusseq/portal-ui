@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -28,14 +28,13 @@ import { EgoJwtData, UserWithId } from '../types';
 
 const { NEXT_PUBLIC_EGO_PUBLIC_KEY } = getConfig();
 
-const verifyJwt: (egoPublicKey: string) => (egoJwt?: string) => boolean = (egoPublicKey) => (
-  egoJwt,
-) => {
+const verifyJwt = (egoPublicKey: string) => (egoJwt?: string) => {
   try {
     if (!egoJwt || !egoPublicKey) {
       return false;
     } else {
-      return jwt.verify(egoJwt, egoPublicKey, { algorithms: ['RS256'] }) && true;
+      jwt.verify(egoJwt, egoPublicKey, { algorithms: ['RS256'] });
+      return true;
     }
   } catch (err) {
     return false;

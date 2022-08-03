@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -24,14 +24,14 @@ import { css } from '@emotion/react';
 
 import { IconProps } from './types';
 
-const ChevronDown = ({ fill, width, height, style }: IconProps): ReactElement => {
+const ChevronDown = ({ fill, width, height, size, style }: IconProps): ReactElement => {
   return (
     <svg
       css={css`
         ${style}
       `}
-      width={width}
-      height={height}
+      width={size || width}
+      height={size || height}
       viewBox="0 0 12 12"
     >
       <path

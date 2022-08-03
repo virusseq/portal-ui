@@ -35,7 +35,7 @@ export const saveSet = (sqon: object): Promise<string> => {
     }) as Promise<string>;
 };
 
-export function buildSqonWithObjectIds(currentSqon: Object, objectIds: string[]) {
+export function buildSqonWithObjectIds(currentSqon: Record<string, unknown>, objectIds: string[]) {
   const objectsSqon =
     objectIds && objectIds.length > 0
       ? { op: 'in', content: { field: 'object_id', value: objectIds } }

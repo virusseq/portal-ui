@@ -147,8 +147,12 @@ export const Modal = ({
   disableActionButton = true,
   actionText = 'Action',
   closeText = 'Close',
-  onActionClick = () => {},
-  onCloseClick = () => {},
+  onActionClick = () => {
+    // console.log('nada');
+  },
+  onCloseClick = () => {
+    // console.log('nada');
+  },
 }: ModalProps) => {
   const navBar = navBarRef.current;
   const [width, setWidth] = useState(navBar ? `${navBar.clientWidth}px` : DEFAULT_WIDTH);

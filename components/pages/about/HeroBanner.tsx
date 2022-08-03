@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -22,8 +22,8 @@
 import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 
+import { INTERNAL_PATHS } from '../../../global/utils/constants';
 import defaultTheme from '../../theme';
-import { EXPLORER_PATH, TEAM_PATH, ACKNOWLEDGEMENTS_PATH } from '../../../global/utils/constants';
 import { StyledLinkAsButton, InternalLink as Link } from '../../Link';
 import { MapleLeaf } from '../../theme/icons';
 import ReleaseData from './ReleaseData';
@@ -110,7 +110,7 @@ const HeroBanner = (): ReactElement => {
             font-weight: normal;
           `}
         >
-          The goal of the CanCOGeN VirusSeq project is to sequence up to 150,000 viral samples from
+          The goal of the CanCOGeN VirusSeq project was to sequence up to 150,000 viral samples from
           Canadians testing positive for COVID-19. The VirusSeq Data Portal is an open-source and
           open-access data portal for all Canadian SARS-CoV-2 sequences and associated non-personal
           contextual data. It harmonizes, validates and automates submission to international
@@ -124,7 +124,7 @@ const HeroBanner = (): ReactElement => {
             display: flex;
           `}
         >
-          <Link path={EXPLORER_PATH}>
+          <Link path={INTERNAL_PATHS.EXPLORER}>
             <StyledLinkAsButton
               css={css`
                 ${theme.typography.button};
@@ -145,7 +145,7 @@ const HeroBanner = (): ReactElement => {
             </StyledLinkAsButton>
           </Link>
 
-          <Link path={TEAM_PATH}>
+          <Link path={INTERNAL_PATHS.RELEASES}>
             <StyledLinkAsButton
               css={css`
                 ${theme.typography.button};
@@ -162,27 +162,7 @@ const HeroBanner = (): ReactElement => {
                 }
               `}
             >
-              Meet the Team
-            </StyledLinkAsButton>
-          </Link>
-
-          <Link path={ACKNOWLEDGEMENTS_PATH}>
-            <StyledLinkAsButton
-              css={css`
-                ${theme.typography.button};
-                background-color: ${theme.colors.accent3};
-                border-color: ${theme.colors.accent3};
-                line-height: 20px;
-                padding: 8px 20px;
-                width: fit-content;
-
-                &:hover {
-                  color: ${theme.colors.white};
-                  background-color: ${theme.colors.accent3_dark};
-                }
-              `}
-            >
-              Acknowledgements
+              Download the Data
             </StyledLinkAsButton>
           </Link>
         </div>

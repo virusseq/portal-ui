@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -26,6 +26,7 @@ import defaultTheme from './theme';
 import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
 
 import useAuthContext from '../global/hooks/useAuthContext';
+import { INTERNAL_PATHS } from '../global/utils/constants';
 import StyledLink, { InternalLink } from './Link';
 
 const Footer = (): ReactElement => {
@@ -51,9 +52,24 @@ const Footer = (): ReactElement => {
         right: 0px;
       `}
     >
-      <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
-        <GenomeCanadaLogo width={85} />
-      </a>
+      <section
+        css={css`
+          align-items: center;
+          display: flex;
+
+          > :not(:last-of-type) {
+            margin-right: 1rem;
+          }
+        `}
+      >
+        <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
+          <GenomeCanadaLogo width={85} />
+        </a>
+        <a href="https://www.genomecanada.ca/en/cancogen" rel="noopener noreferrer" target="_blank">
+          <img src="/images/cancogen-logo.png" alt="Cancogen logo" width="132" />
+        </a>
+      </section>
+
       <section
         css={css`
           display: flex;
@@ -79,6 +95,7 @@ const Footer = (): ReactElement => {
               display: inline;
               padding: 0 20px;
               position: relative;
+              text-align: center;
 
               &:not(:first-of-type)::before {
                 color: ${theme.colors.accent};
@@ -102,7 +119,7 @@ const Footer = (): ReactElement => {
           </li>
 
           <li>
-            <InternalLink path="/policies">
+            <InternalLink path={INTERNAL_PATHS.POLICIES}>
               <StyledLink>Policies</StyledLink>
             </InternalLink>
           </li>
@@ -119,7 +136,7 @@ const Footer = (): ReactElement => {
 
           {!token && (
             <li>
-              <InternalLink path="/login">
+              <InternalLink path={INTERNAL_PATHS.LOGIN}>
                 <StyledLink>Submitter Login</StyledLink>
               </InternalLink>
             </li>
@@ -172,7 +189,7 @@ const Footer = (): ReactElement => {
             display: flex;
             font-weight: bold;
             justify-content: center;
-            margin-left: 20px;
+            margin-left: 1rem;
             text-decoration: none;
           `}
           href="https://github.com/cancogen-virus-seq"

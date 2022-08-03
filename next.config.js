@@ -1,10 +1,34 @@
-const withCSS = require('@zeit/next-css');
+const path = require('path');
 
-module.exports = withCSS({
+const withPlugins = require('next-compose-plugins');
+const { patchWebpackConfig: patchForGlobalCSS } = require('next-global-css');
+const withTranspileModules = require('next-transpile-modules')([]);
+
+module.exports = withPlugins([withTranspileModules], {
+  webpack: (config, options) => {
+    // These 'react' related configs are added to enable linking packages in development
+    // (e.g. Arranger), and not get the "broken Hooks" warning.
+    // https://reactjs.org/warnings/invalid-hook-call-warning.html#duplicate-react
+    if (options.isServer) {
+      config.externals = ['react', ...config.externals];
+    }
+
+    config.resolve.alias['react'] = path.resolve(__dirname, '.', 'node_modules', 'react');
+    config.resolve.alias['@emotion/react'] = path.resolve(
+      __dirname,
+      '.',
+      'node_modules',
+      '@emotion/react',
+    );
+
+    process.env.NODE_ENV === 'development' && (config.optimization.minimize = false);
+
+    return patchForGlobalCSS(config, options);
+  },
   publicRuntimeConfig: {
     NEXT_PUBLIC_EGO_API_ROOT: process.env.NEXT_PUBLIC_EGO_API_ROOT,
     NEXT_PUBLIC_EGO_CLIENT_ID: process.env.NEXT_PUBLIC_EGO_CLIENT_ID,
-    EGO_PUBLIC_KEY: process.env.EGO_PUBLIC_KEY,
+    EGO_PUBLIC_KEY: (process.env.EGO_PUBLIC_KEY || '').replace(/\\n/g, '\n'),
     NEXT_PUBLIC_KEYCLOAK: process.env.NEXT_PUBLIC_KEYCLOAK_API_URL,
     NEXT_PUBLIC_ARRANGER_PROJECT_ID: process.env.NEXT_PUBLIC_ARRANGER_PROJECT_ID,
     NEXT_PUBLIC_ARRANGER_GRAPHQL_FIELD: process.env.NEXT_PUBLIC_ARRANGER_GRAPHQL_FIELD,
@@ -40,10 +64,10 @@ module.exports = withCSS({
   },
   assetPrefix: process.env.ASSET_PREFIX || '',
   redirects: async () => [
-    {
-      source: '/about',
-      destination: '/',
-      permanent: true,
-    },
+    // {
+    //   source: '/about',
+    //   destination: '/',
+    //   permanent: true,
+    // },
   ],
 });

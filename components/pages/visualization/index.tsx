@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -24,7 +24,7 @@ import { css, useTheme } from '@emotion/react';
 import axios from 'axios';
 import defaultTheme from '../../theme';
 import { getConfig } from '../../../global/config';
-import { EXPLORER_PATH, covizuGithubUrl } from '../../../global/utils/constants';
+import { covizuGithubUrl, INTERNAL_PATHS } from '../../../global/utils/constants';
 import { InternalLink as Link } from '../../Link';
 import PageLayout from '../../PageLayout';
 
@@ -38,8 +38,8 @@ type ClusterData = {
 
 const covizuVersion = '1.0.0';
 const filesPath = '?format=json&prefix=' + covizuVersion + '/clusters.20';
-const clustersFilenameTest = /^(\d+\.){2}\d+\/(clusters\.)\d{4}(\-\d{2}){2}(\.json)$/;
-const dateTest = /\d{4}(\-\d{2}){2}/;
+const clustersFilenameTest = /^(\d+\.){2}\d+\/(clusters\.)\d{4}(-\d{2}){2}(\.json)$/;
+const dateTest = /\d{4}(-\d{2}){2}/;
 
 const VisualizationPage = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
@@ -111,7 +111,7 @@ const VisualizationPage = (): ReactElement => {
               </a>{' '}
               (an open source SARS-CoV-2 genome analysis and visualization system) has been used to
               visualize{' '}
-              <Link path={EXPLORER_PATH}>
+              <Link path={INTERNAL_PATHS.EXPLORER}>
                 <a
                   css={css`
                     color: ${theme.colors.primary_dark};

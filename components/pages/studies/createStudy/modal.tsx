@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -22,7 +22,7 @@
 import { css } from '@emotion/react';
 import React, { ChangeEventHandler, InputHTMLAttributes } from 'react';
 import { Modal } from '../../../Modal';
-import { FormInputTextArea, FormInputText, usingFormValidator } from '../../../Forms';
+import { FormInputTextArea, FormInputText, useFormValidator } from '../../../Forms';
 import CreateStudyValidations from './validations';
 import { CreateStudyReq } from '../../../../global/hooks/useStudiesSvcData/types';
 
@@ -47,7 +47,7 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
     validateForm,
     validateField,
     clearFieldError,
-  } = usingFormValidator<CreateStudyReq>(EMPTY_FORM, CreateStudyValidations);
+  } = useFormValidator<CreateStudyReq>(EMPTY_FORM, CreateStudyValidations);
 
   const handleSubmit = () => {
     validateForm()
@@ -63,12 +63,14 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
       .catch((err) => console.error(err));
   };
 
-  const buildOnChangeFunc = (key: keyof CreateStudyReq): ChangeEventHandler => (event) => {
-    event.preventDefault();
-    const target = event.target as InputHTMLAttributes<typeof event>;
-    setFormData({ ...formData, [key]: target.value || '' });
-    clearFieldError(key);
-  };
+  const buildOnChangeFunc =
+    (key: keyof CreateStudyReq): ChangeEventHandler =>
+    (event) => {
+      event.preventDefault();
+      const target = event.target as InputHTMLAttributes<typeof event>;
+      setFormData({ ...formData, [key]: target.value || '' });
+      clearFieldError(key);
+    };
 
   const buildOnBlurFunc = (key: keyof CreateStudyReq) => () => validateField(key);
 

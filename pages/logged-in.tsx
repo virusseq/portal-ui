@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -28,7 +28,7 @@ import Loader from '../components/Loader';
 import PageLayout from '../components/PageLayout';
 import { getConfig } from '../global/config';
 import useTrackingContext from '../global/hooks/useTrackingContext';
-import { EGO_JWT_KEY, SUBMISSION_PATH, LOGIN_PATH } from '../global/utils/constants';
+import { EGO_JWT_KEY, INTERNAL_PATHS } from '../global/utils/constants';
 import getInternalLink from '../global/utils/getInternalLink';
 import { isValidJwt } from '../global/utils/egoTokenUtils';
 import { createPage } from '../global/utils/pages';
@@ -56,7 +56,7 @@ const fetchEgoToken = (logEvent: (action: string) => void) => {
       if (isValidJwt(jwt)) {
         localStorage.setItem(EGO_JWT_KEY, jwt);
         logEvent('Logged in');
-        setTimeout(() => Router.push(getInternalLink({ path: SUBMISSION_PATH })), 2000);
+        setTimeout(() => Router.push(getInternalLink({ path: INTERNAL_PATHS.SUBMISSION })), 2000);
       } else {
         logEvent('Invalid JWT provided by Ego/Keycloak');
         throw new Error('Invalid jwt, cannot login.');
@@ -66,7 +66,7 @@ const fetchEgoToken = (logEvent: (action: string) => void) => {
       console.warn(err);
       localStorage.removeItem(EGO_JWT_KEY);
       logEvent('Failed to login');
-      Router.push(getInternalLink({ path: LOGIN_PATH }));
+      Router.push(getInternalLink({ path: INTERNAL_PATHS.LOGIN }));
     });
 };
 

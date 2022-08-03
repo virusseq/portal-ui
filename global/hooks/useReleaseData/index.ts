@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -151,18 +151,17 @@ const fetchReleaseData = async (sqon?: RepoFiltersType) => {
 
 const tuneGenomesAggs = async (sqon?: RepoFiltersType, currentReleaseData?: ReleaseDataProps) => {
   const currentGenomesValue = currentReleaseData?.genomesCount?.value;
-  console.log(NEXT_PUBLIC_ARRANGER_MAX_BUCKET_COUNTS);
-  console.log(currentGenomesValue);
+
   if (currentGenomesValue && currentGenomesValue >= NEXT_PUBLIC_ARRANGER_MAX_BUCKET_COUNTS) {
-    // genomesValue is too high to do a bucket_count query so return
+    console.error('genomesValue is too high to do a bucket_count query');
     return Promise.resolve(currentReleaseData);
   }
+
   return fetchArrangerData(GENOMES_COUNT_QUERY, sqon).then(
     ({ data: { file: { aggregations = {} } = {} } }) => {
       if (aggregations && currentReleaseData?.genomesCount) {
-        const {
-          donors__specimens__samples__sample_id: { bucket_count: genomnesCount = 0 } = {},
-        } = aggregations;
+        const { donors__specimens__samples__sample_id: { bucket_count: genomnesCount = 0 } = {} } =
+          aggregations;
 
         currentReleaseData.genomesCount.value = genomnesCount;
         currentReleaseData.genomesCount.type = 'EXACT';

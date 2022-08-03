@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -20,7 +20,7 @@
  */
 
 import { css } from '@emotion/react';
-import { ACKNOWLEDGEMENTS_PATH } from '../../../global/utils/constants';
+import { INTERNAL_PATHS } from '../../../global/utils/constants';
 import StyledLink from '../../Link';
 import defaultTheme from '../../theme/index';
 
@@ -34,10 +34,10 @@ const Policy = () => {
       <b>VirusSeq Data Portal Publication Policy</b>
       <p>
         The CanCOGen VirusSeq project requests that authors who use data from the portal{' '}
-        <StyledLink href={ACKNOWLEDGEMENTS_PATH}>acknowledge</StyledLink> the contributions of
-        Canadian researchers in the acknowledgements section of their work. Authors are encouraged
-        to recognize the contributions of the appropriate specimens and research groups based on the
-        datasets used in their research.
+        <StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the
+        contributions of Canadian researchers in the acknowledgements section of their work. Authors
+        are encouraged to recognize the contributions of the appropriate specimens and research
+        groups based on the datasets used in their research.
       </p>
     </div>
   );

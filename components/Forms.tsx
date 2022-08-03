@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -38,13 +38,13 @@ const inputTextStyle = css`
 `;
 
 export const FormTextBlock = styled('div')`
-      display: flex; 
-      width 100%;
-      justify-content: space-between;
-      font-size: 16px;
-      line-height: 24px;
-      ${defaultTheme.typography.baseFont}
-      `;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  font-size: 16px;
+  line-height: 24px;
+  ${defaultTheme.typography.baseFont}
+`;
 
 const StyledText = ({ text, color = 'black', bold = false, font = 16 }: any) => {
   return (
@@ -266,7 +266,7 @@ export const FormInputTextBin = ({
   );
 };
 
-export function usingFormValidator<T>(
+export function useFormValidator<T>(
   initialForm: T,
   formSchema: yup.BaseSchema<T>,
 ): {

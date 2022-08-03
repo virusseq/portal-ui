@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -45,7 +45,7 @@ const Partners = (): ReactElement => {
         You may use the data from the Canadian VirusSeq Data Portal to
         author results obtained from your analyses of relevant data,
         provided that your published results acknowledge the contribution
-        of VirusSeq and its partners. We suggest using the following
+        of VirusSeq and its partners. We suggest using the following
         acknowledgement sentence: <strong>"The results here are in whole, or in
         part based upon data hosted at the Canadian VirusSeq Data 
         Portal: <StyledLink

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -52,6 +52,7 @@ const ErrorTitle = styled('h1')`
 
 const ErrorNotification = ({
   children,
+  className,
   title,
   size,
   styles = '',
@@ -59,6 +60,7 @@ const ErrorNotification = ({
   dismissible = false,
 }: {
   children: React.ReactNode;
+  className?: string;
   title?: string;
   size: ErrorSize;
   styles?: string;
@@ -66,6 +68,7 @@ const ErrorNotification = ({
   dismissible?: boolean;
 }): ReactElement => (
   <div
+    className={className}
     css={css`
       display: flex;
       flex: 1;
@@ -84,7 +87,7 @@ const ErrorNotification = ({
         <div>
           <ErrorTitle size={size}>
             <ErrorIcon
-              {...getIconSize(size)}
+              size={getIconSize(size)}
               style={css`
                 ${getIconStyle(size)}
               `}
@@ -112,7 +115,7 @@ const ErrorNotification = ({
         >
           <span>
             <ErrorIcon
-              {...getIconSize(size)}
+              size={getIconSize(size)}
               style={css`
                 ${getIconStyle(size)}
               `}

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -56,16 +56,16 @@ function isValidSortField(s: unknown): s is ArchivesSortFields {
 }
 
 function getFirstDefined<T>(...os: T[]): T | undefined {
-  return os.find((o) => o !== undefined && o !== null && Number(o) !== NaN);
+  return os.find((o) => o !== undefined && o !== null && !Number.isNaN(Number(o)));
 }
 
 const columnData = (): Column<Record<string, unknown>>[] => [
   {
     accessor: 'createdAt',
     Header: 'Release Date',
-    Cell: ({ value }: { value: number }) => {
+    Cell: ({ value }: { value: unknown }) => {
       const date = new Date(0);
-      date.setUTCSeconds(value);
+      date.setUTCSeconds(value as number);
 
       return <b>{format(date, 'LLLL d, yyyy h:mm aaaa')}</b>;
     },
@@ -73,17 +73,15 @@ const columnData = (): Column<Record<string, unknown>>[] => [
   {
     accessor: 'id',
     Header: 'Metadata & Consensus Seq Files',
-    Cell: ({ value }: { value: string }) => {
+    Cell: ({ value }: { value: unknown }) => {
       return (
         <StyledLink
           onClick={() => {
-            if (!value || !NEXT_PUBLIC_SINGULARITY_API_URL) {
-              return;
+            if (NEXT_PUBLIC_SINGULARITY_API_URL && value) {
+              window.location.assign(
+                urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/download/archive/', value as string),
+              );
             }
-
-            window.location.assign(
-              urlJoin(NEXT_PUBLIC_SINGULARITY_API_URL, '/download/archive/', value),
-            );
           }}
         >
           <div
@@ -212,7 +210,7 @@ const ArchivesTable = (): ReactElement => {
       size: getFirstDefined(req.size, tableData?.size, 20),
       page: getFirstDefined(req.page, tableData?.number, 0),
     };
-    console.log(mergedReq);
+
     fetchCompletedArchiveAllInfos(mergedReq).then(setTableData);
   };
 
@@ -227,26 +225,22 @@ const ArchivesTable = (): ReactElement => {
   };
 
   const goToFirstPage = () => {
-    console.log(tableData);
     if (tableData?.first) return;
     updateData({ page: 0 });
   };
 
   const goToPrevPage = () => {
-    console.log(tableData);
     if (tableData?.first || tableData?.number === undefined) return;
     updateData({ page: tableData.number - 1 });
   };
 
   const goToNextPage = () => {
-    console.log(tableData);
     if (tableData?.last || tableData?.number === undefined) return;
 
     updateData({ page: tableData.number + 1 });
   };
 
   const goToLastPage = () => {
-    console.log(tableData);
     if (tableData?.last || tableData?.totalPages === undefined) return;
     updateData({ page: tableData.totalPages - 1 });
   };
