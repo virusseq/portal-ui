@@ -35,6 +35,21 @@
         "Oceania": "Oceania",
         "South America": "South America"
       },
+      province_legend: {
+        "British Columbia": "British Columbia",
+        "Alberta": "Alberta",
+        "Saskatchewan": "Saskatchewan",
+        "Manitoba": "Manitoba",
+        "Ontario": "Ontario",
+        "Quebec": "Quebec",
+        "Newfoundland and Labrador": "Newfoundland and Labrador",
+        "New Brunswick": "New Brunswick",
+        "Nova Scotia": "Nova Scotia",
+        "Prince Edward Island": "Prince Edward Island",
+        "Nunavut": "Nunavut",
+        "Yukon": "Yukon",
+        "Northwest Territories": "Northwest Territories"
+      },
       sample_legend: "Sample size (log10)",
       coldate_legend: "Last collection date",
       diverge_legend: "Divergence (strict molecular clock)",
@@ -198,7 +213,7 @@
     <div class="app-right">
       <div class="sticky">
         <div style="top: 0; right: 0; z-index: 10; width: 270px">
-          <a href="https://github.com/PoonLab/covizu/tree/vsportal" target=“_new” class="github-corner" aria-label="View source on GitHub">
+          <a href="https://github.com/PoonLab/covizu/tree/vsportal" target=“_blank” class="github-corner" aria-label="View source on GitHub">
             <!-- https://github.com/tholman/github-corners -->
             <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0; z-index: 21" aria-hidden="true">
               <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
@@ -213,9 +228,7 @@
           </div>
           <div id="covizu-i18n" style="font-size: 8pt;">
             <a href="index.html" id="covizu-18n__en">en</a>
-            <a href="index-es.html" id="covizu-18n__es">es</a>
             <a href="index-fr.html" id="covizu-18n__fr">fr</a>
-            <a href="index-zh.html" id="covizu-18n__zh">zh</a>
           </div>
           <div style="padding-top: 10px; padding-right: 6px;">
             <h3>Near real-time visualization of SARS-CoV-2 (hCoV-19) genomic variation</h3>
@@ -246,15 +259,15 @@
 
   <div id="splash" title="Welcome">
     <p>
-      <b>CoVizu</b> is an <a href="https://github.com/PoonLab/CoVizu" target="_new">open source project</a>
+      <b>CoVizu</b> is an <a href="https://github.com/PoonLab/CoVizu" target="_blank">open source project</a>
       endeavouring to visualize the global diversity of SARS-CoV-2 genomes.
     </p>
     <p>
       This web page provides two interactive visualizations of these data.
-      On the left, it displays a <a href="https://en.wikipedia.org/wiki/Phylogenetic_tree" target="_new">
+      On the left, it displays a <a href="https://en.wikipedia.org/wiki/Phylogenetic_tree" target="_blank">
       phylogenetic tree</a> summarizing the evolutionary relationships among different
-      <a href="https://cov-lineages.org" target="_new">SARS-CoV-2 lineages</a> (groupings of viruses with
-      similar genomes, useful for linking outbreaks in different places; <a href="https://www.nature.com/articles/s41564-020-0770-5" target="_new">Rambaut
+      <a href="https://cov-lineages.org" target="_blank">SARS-CoV-2 lineages</a> (groupings of viruses with
+      similar genomes, useful for linking outbreaks in different places; <a href="https://www.nature.com/articles/s41564-020-0770-5" target="_blank">Rambaut
       <i>et al.</i> 2020</a>).
       You can navigate between different lineages by clicking on their respective boxes.
       Selecting a lineage displays a "beadplot" visualization in the centre of the page.
@@ -264,17 +277,18 @@
     </p>
     <p>
       The results here are in whole or part based upon data hosted at the
-      <a href="https://virusseq-dataportal.ca/">Canadian VirusSeq Data Portal</a> and the
-      <a href="https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote_inputs.html">Nextstrain Open Data</a> build assets.
-      We wish to acknowledge the <a href="https://virusseq-dataportal.ca/acknowledgements">contributing laboratories</a>,
-      <a href="https://nccid.ca/cphln/">Canadian Public Health Laboratory Network</a> (CPHLN) and
-      <a href="https://www.genomecanada.ca/en/cancogen/cancogen-virusseq">CanCOGGeN VirusSeq</a>.
-      Computational support provided by the <a href="https://mcarthurbioinformatics.ca/">McArthur Lab</a> (Michael G. DeGroote Institute for Infectious Disease Research, McMaster University).
-      This <a href="https://github.com/PoonLab/covizu/tree/vsportal">version</a> of the front-end is hosted by the <a href="https://oicr.on.ca/">Ontario Institute for Cancer Research</a>.
+      <a href="https://virusseq-dataportal.ca/" target="_blank">Canadian VirusSeq Data Portal</a> and the
+      <a href="https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote_inputs.html" target="_blank">Nextstrain Open Data</a> build assets. 
+      PANGO lineage classifications were retrieved from the <a href="https://viral.ai/collections" target="_blank">Viral AI</a> database.
+      We wish to acknowledge the <a href="https://virusseq-dataportal.ca/acknowledgements" target="_blank">contributing laboratories</a>,
+      <a href="https://nccid.ca/cphln/" target="_blank">Canadian Public Health Laboratory Network</a> (CPHLN) and
+      <a href="https://www.genomecanada.ca/en/cancogen/cancogen-virusseq" target="_blank">CanCOGGeN VirusSeq</a>.
+      Computational support provided by the <a href="https://mcarthurbioinformatics.ca/" target="_blank">McArthur Lab</a> (Michael G. DeGroote Institute for Infectious Disease Research, McMaster University).
+      This <a href="https://github.com/PoonLab/covizu/tree/vsportal" target="_blank">version</a> of the front-end is hosted by the <a href="https://oicr.on.ca/" target="_blank">Ontario Institute for Cancer Research</a>.
     </p>
     <p>
       For more help, click on the
-      <a style="text-decoration: none;" href="https://en.wikipedia.org/wiki/Shoshinsha_mark" target="_new">
+      <a style="text-decoration: none;" href="https://en.wikipedia.org/wiki/Shoshinsha_mark" target="_blank">
         &#128304;</a>icons.
     </p>
   </div>
@@ -282,18 +296,18 @@
   <div id="help-timetree" title="Help: Time-scaled tree interface">
     <p>
       A phylogenetic tree is a model of how different populations are related by common ancestors.
-      The tree displayed here (generated by <a href="https://github.com/neherlab/treetime">
+      The tree displayed here (generated by <a href="https://github.com/neherlab/treetime" target="_blank">
       TreeTime</a> v0.8.0) summarizes the common ancestry of different
-      <a href="https://cov-lineages.org" target="_new">SARS-CoV-2 lineages</a>, which are
+      <a href="https://cov-lineages.org" target="_blank">SARS-CoV-2 lineages</a>, which are
       pre-defined groupings of viruses based on genome similarity.
     </p>
     <p>
       A time scale is drawn above the tree marked with
-      <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_new">dates</a>.
+      <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank">dates</a>.
       The earliest ancestor (root) is drawn on the left, and the most recent observed descendants are
       on the right.
       We estimate the dates of common ancestors by comparing the sampled genomes and assuming
-      a <a href="http://virological.org/t/phylodynamic-analysis-176-genomes-6-mar-2020/356" target="_new">constant rate</a> of evolution.
+      a <a href="http://virological.org/t/phylodynamic-analysis-176-genomes-6-mar-2020/356" target="_blank">constant rate</a> of evolution.
     </p>
     <p>
       For each lineage, we draw a rectangle to summarize the range of sample collection
@@ -306,7 +320,7 @@
   <div id="help-beadplot" title="Help: Beadplot interface">
     <p>
       We use beadplots to visualize the different variants of SARS-CoV-2 within a
-      <a href="https://cov-lineages.org" target="_new">lineage</a>, where and when
+      <a href="https://cov-lineages.org" target="_blank">lineage</a>, where and when
       they have been sampled, and how they are related to each other.
       Every object in the beadplot has additional info in a tooltip (which you view by hovering
       over that object with your mouse pointer).
@@ -331,8 +345,8 @@
     <p>
       We draw vertical line segments to connects variants to their
       <span class="hint" title="The direction of ancestor-descendant relationships is, in effect, determined by degree size.  This is a crude estimate, so be cautious about interpreting the directionality of these relationships.">common ancestors</span>.
-      These relationships are estimated by the <a href="https://en.wikipedia.org/wiki/Neighbor_joining">neighbor-joining method</a> using
-      <a href="https://birc.au.dk/software/rapidnj/">RapidNJ</a>.
+      These relationships are estimated by the <a href="https://en.wikipedia.org/wiki/Neighbor_joining" target="_blank">neighbor-joining method</a> using
+      <a href="https://birc.au.dk/software/rapidnj/" target="_blank">RapidNJ</a>.
       Tooltips for each edge report the number of genetic differences (mutations)
       between ancestor and descendant as the "genomic distance".
       Since it's difficult to reconstruct exactly when these mutations occurred,
@@ -360,7 +374,7 @@
     </p>
   </div>
 
-  <!-- options -->
+<!-- options -->
   <script src="js/defaultOptions.js"></script>
   <script src="js/customOptions.js"></script>
 
