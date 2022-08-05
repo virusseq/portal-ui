@@ -22,7 +22,8 @@ $('#covizu-18n__en, #covizu-18n__fr').on('click', function (e) {
   e.preventDefault();
   var lang = e.target.id.split('__')[1];
   var filename = lang === 'en' ? 'index.html' : 'index-' + lang + '.html';
-  var newUrl = filename + '?dataUrl=' + dataUrl + '&covizuVersion=' + covizuVersion + '&dataDate=' + dataDate;
+  var newUrl =
+    filename + '?dataUrl=' + dataUrl + '&covizuVersion=' + covizuVersion + '&dataDate=' + dataDate;
   location.href = newUrl;
 });
 
