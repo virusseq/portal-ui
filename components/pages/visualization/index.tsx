@@ -43,7 +43,11 @@ const dateTest = /\d{4}(-\d{2}){2}/;
 
 const VisualizationPage = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
-  const { NEXT_PUBLIC_COVIZU_DATA_URL, NEXT_PUBLIC_COVIZU_FILE_LIST_URL } = getConfig();
+  const {
+    NEXT_PUBLIC_VIRUSSEQ_API_URL,
+    NEXT_PUBLIC_COVIZU_DATA_URL,
+    NEXT_PUBLIC_COVIZU_FILE_LIST_URL,
+  } = getConfig();
 
   // get list of clusters files to figure out the latest date
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -130,7 +134,7 @@ const VisualizationPage = (): ReactElement => {
                 flex: 1;
                 border: 0;
               `}
-              src={`/static/covizu/index.html?dataUrl=${NEXT_PUBLIC_COVIZU_DATA_URL}&covizuVersion=${covizuVersion}&dataDate=${dataDate}`}
+              src={`/static/covizu/index.html?apiUrl=${NEXT_PUBLIC_VIRUSSEQ_API_URL}&dataUrl=${NEXT_PUBLIC_COVIZU_DATA_URL}&covizuVersion=${covizuVersion}&dataDate=${dataDate}`}
               width="99%"
             />
           </>

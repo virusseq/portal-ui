@@ -26,6 +26,7 @@ module.exports = withPlugins([withTranspileModules], {
     return patchForGlobalCSS(config, options);
   },
   publicRuntimeConfig: {
+    NEXT_PUBLIC_VIRUSSEQ_API_URL: process.env.NEXT_PUBLIC_VIRUSSEQ_API_URL,
     NEXT_PUBLIC_EGO_API_ROOT: process.env.NEXT_PUBLIC_EGO_API_ROOT,
     NEXT_PUBLIC_EGO_CLIENT_ID: process.env.NEXT_PUBLIC_EGO_CLIENT_ID,
     EGO_PUBLIC_KEY: (process.env.EGO_PUBLIC_KEY || '').replace(/\\n/g, '\n'),
