@@ -7,15 +7,20 @@ var dataUrl = urlParams.get('dataUrl') || '';
 var dataDate = urlParams.get('dataDate') || '';
 
 // setup custom options
-var dataUrlWithVersion = dataUrl + covizuVersion + '/';
+// var dataUrlWithVersion = dataUrl + covizuVersion + '/';
+var dataUrlWithVersion = 'ignore/';
 var covizuApiUrl = apiUrl + '/covizu/';
 var customOptions = {
   covizuVersion: covizuVersion,
   dataUrls: {
     clusters: dataUrlWithVersion + ['clusters', dataDate, 'json'].join('.'),
     countries: 'data/countries.json',
-    timetree: dataUrlWithVersion + ['timetree', dataDate, 'nwk'].join('.'),
     dbstats: dataUrlWithVersion + ['dbstats', dataDate, 'json'].join('.'),
+    edgelist: covizuApiUrl + 'edgelist',
+    lineage: covizuApiUrl + 'lineage',
+    points: covizuApiUrl + 'points',
+    timetree: dataUrlWithVersion + ['timetree', dataDate, 'nwk'].join('.'),
+    variants: covizuApiUrl + 'variants',
   },
 };
 
@@ -41,3 +46,7 @@ $('#covizu-18n__en, #covizu-18n__fr').on('click', function (e) {
 i18n_text.loading_json = i18n_text.loading_json
   .replace(' (~10s)', '') // english
   .replace(' (~10 sec)', ''); // french
+
+// to check versions in the console:
+// console.log(covizuOptions.covizuVersion)
+var covizuOptions = $.extend(true, {}, defaultOptions, customOptions);

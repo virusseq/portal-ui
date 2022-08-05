@@ -1,10 +1,3 @@
-var customOptions = customOptions || {};
-
-var covizuOptions = $.extend(true, {}, defaultOptions, customOptions);
-
-// to check versions in the console:
-// console.log(covizuOptions.covizuVersion)
-
 $(function () {
   $('#tabs').tabs();
 

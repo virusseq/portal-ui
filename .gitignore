@@ -38,3 +38,5 @@ yarn-error.log*
 
 # temp
 /public/static/covizu/tempdata
+
+ignore
