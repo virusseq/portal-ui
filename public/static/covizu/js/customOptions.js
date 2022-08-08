@@ -13,12 +13,14 @@ var covizuApiUrl = apiUrl + '/covizu/';
 var customOptions = {
   covizuVersion: covizuVersion,
   dataUrls: {
+    cid: covizuApiUrl + 'cid',
     clusters: dataUrlWithVersion + ['clusters', dataDate, 'json'].join('.'),
     countries: 'data/countries.json',
     dbstats: dataUrlWithVersion + ['dbstats', dataDate, 'json'].join('.'),
     edgelist: covizuApiUrl + 'edgelist',
     lineage: covizuApiUrl + 'lineage',
     points: covizuApiUrl + 'points',
+    searchHits: covizuApiUrl + 'searchHits',
     timetree: dataUrlWithVersion + ['timetree', dataDate, 'nwk'].join('.'),
     variants: covizuApiUrl + 'variants',
   },

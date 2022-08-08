@@ -213,15 +213,15 @@ async function beadplot(cid) {
   if (cindex !== ccid) {
     cindex = cid;
     ccid = cindex;
-    edgelist = await getdata(`${covizuOptions.dataUrls.edgelist}/${cindex}`);
+    edgelist = await getData(`${covizuOptions.dataUrls.edgelist}/${cindex}`);
     edgelist.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
-    points = await getdata(`${covizuOptions.dataUrls.points}/${cindex}`);
+    points = await getData(`${covizuOptions.dataUrls.points}/${cindex}`);
     points.forEach((d) => {
       d.x = utcDate(d.x);
     });
-    variants = await getdata(`${covizuOptions.dataUrls.variants}/${cindex}`);
+    variants = await getData(`${covizuOptions.dataUrls.variants}/${cindex}`);
     variants.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
