@@ -44,13 +44,3 @@ function utcDate(date) {
   const dateObj = new Date(date);
   return new Date(dateObj.getTime() + dateObj.getTimezoneOffset() * 60000);
 }
-
-// Defining async function
-async function getData(url) {
-  // Storing response
-  const response = await fetch(url);
-
-  // Storing data as JSON
-  var data = await response.json();
-  return data;
-}

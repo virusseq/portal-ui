@@ -106,9 +106,10 @@ async function wrap_search() {
  * @param end_data: a date type indicating the search end date.
  */
 async function main_search(all_bead_data, text_query, start_date, end_date) {
-  search_hits = await getData(
-    `${covizuOptions.dataUrls.searchHits}/${text_query}/${start_date}/${end_date}`,
-  );
+  search_hits = await $.ajax({
+    url: `${covizuOptions.dataUrls.searchHits}/${text_query}/${start_date}/${end_date}`,
+    headers: { 'Accept-Version': 'apiVersion=1.0.0;dataVersion=2022-07-10' },
+  });
   search_hits.forEach((d) => {
     d.x = utcDate(d.x);
   });
@@ -240,7 +241,7 @@ async function lineage_search(text_query) {
  * @param {String} text_query
  */
 async function accession_search(text_query) {
-  var cidx = await getData(`${covizuOptions.dataUrls.cid}/${text_query.toUpperCase()}`);
+  var cidx = await $.ajax(`${covizuOptions.dataUrls.cid}/${text_query.toUpperCase()}`);
 
   if (cidx === undefined) {
     $('#error_message').text(`No matches. Please try again.`);

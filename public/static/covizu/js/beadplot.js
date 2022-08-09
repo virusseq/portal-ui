@@ -213,21 +213,19 @@ async function beadplot(cid) {
   if (cindex !== ccid) {
     cindex = cid;
     ccid = cindex;
-    edgelist = await getData(`${covizuOptions.dataUrls.edgelist}/${cindex}`);
+    edgelist = await $.ajax(`${covizuOptions.dataUrls.edgelist}/${cindex}`);
     edgelist.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
-    points = await getData(`${covizuOptions.dataUrls.points}/${cindex}`);
+    points = await $.ajax(`${covizuOptions.dataUrls.points}/${cindex}`);
     points.forEach((d) => {
       d.x = utcDate(d.x);
     });
-    variants = await getData(`${covizuOptions.dataUrls.variants}/${cindex}`);
+    variants = await $.ajax(`${covizuOptions.dataUrls.variants}/${cindex}`);
     variants.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
-    await fetch(`${covizuOptions.dataUrls.lineage}/${cindex}`)
-      .then((response) => response.text())
-      .then((lin) => (lineage = lin));
+    await $.ajax(`${covizuOptions.dataUrls.lineage}/${cindex}`).done((data) => (lineage = data));
   }
 
   // rescale slider

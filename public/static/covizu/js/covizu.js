@@ -103,28 +103,13 @@ $('#ack-open').click(function () {
 
 /*********************** LOAD JSON DATA ***********************/
 
-// Forces the requested files to not be cached by the browser
-$.ajaxSetup({
-  cache: false,
-  crossDomain: true,
-  headers: {
-    accept: 'application/json',
-    'Access-Control-Allow-Origin': '*',
-  },
-  method: 'GET',
-});
-
 // load database statistics
-var dbstats;
+var dbstats, req;
 
-$.ajax({
-  dataType: 'json',
-  success: function (data) {
-    dbstats = data;
-    dbstats.nlineages = Object.keys(dbstats.lineages).length;
-  },
-  url: covizuOptions.dataUrls.dbstats,
-}).done(function () {
+req = $.ajax(covizuOptions.dataUrls.dbstats);
+req.done(function (data) {
+  dbstats = data;
+  dbstats.nlineages = Object.keys(dbstats.lineages).length;
   $('#div-last-update').text(`${i18n_text.last_update}: ${dbstats.lastupdate}`);
   $('#div-number-genomes').text(`${i18n_text.number_genomes}: ${dbstats.noseqs}`);
   $('#div-number-lineages').text(`${i18n_text.number_lineages}: ${dbstats.nlineages}`);
@@ -148,53 +133,61 @@ var province_pal = {
   Ontario: '#DB8433',
   Quebec: '#9E3C2A',
 
-  'Newfoundland and Labrador': '#867570',
-  'New Brunswick': '#867570',
-  'Nova Scotia': '#867570',
-  'Prince Edward Island': '#867570',
+  'Newfoundland and Labrador': '#094074',
+  'New Brunswick': '#441151',
+  'Nova Scotia': '#B10F2E',
+  'Prince Edward Island': '#087E8B',
 
   Nunavut: '#B29F7D',
-  Yukon: '#B29F7D',
-  'Northwest Territories': '#B29F7D',
+  Yukon: '#904C77',
+  'Northwest Territories': '#C98BB9',
 };
 
 // load time-scaled phylogeny from server
 var nwk, df, countries;
-
 $.ajax({
+  url: covizuOptions.dataUrls.timetree,
   success: function (data) {
     nwk = data;
     df = readTree(data);
   },
-  url: covizuOptions.dataUrls.timetree,
+});
+$.ajax(covizuOptions.dataUrls.countries, function (data) {
+  countries = data;
 });
 
-$.ajax({
-  dataType: 'json',
-  success: function (data) {
-    countries = data;
-  },
-  url: covizuOptions.dataUrls.countries,
-});
-
-var clusters, beaddata, tips, accn_to_cid, cindex, lineage_to_cid;
+var clusters, beaddata, tips, accn_to_cid, cindex, lineage_to_cid, lineage;
+var edgelist = [],
+  points = [],
+  variants = [];
 var map_cidx_to_id = [],
   id_to_cidx = [];
 
-// load cluster data from server
+req = $.when(
+  $.ajax(covizuOptions.dataUrls.tips).done((data) => {
+    tips = data;
+    tips.forEach((x) => {
+      x.first_date = new Date(x.first_date);
+      x.last_date = new Date(x.last_date);
+      x.coldate = new Date(x.coldate);
+      x.mcoldate = new Date(x.mcoldate);
+    });
+  }),
+  $.ajax(covizuOptions.dataUrls.df).done((data) => {
+    df = data;
+    df.forEach((x) => {
+      x.first_date = x.first_date ? new Date(x.first_date) : undefined;
+      x.last_date = x.last_date ? new Date(x.last_date) : undefined;
+      x.coldate = x.coldate ? new Date(x.coldate) : undefined;
+      x.mcoldate = x.coldate ? new Date(x.mcoldate) : undefined;
+    });
+  }),
+);
 
-$.ajax({
-  dataType: 'json',
-  success: function (data) {
-    clusters = data;
-  },
-  url: covizuOptions.dataUrls.clusters,
-}).done(function () {
+req.done(async function () {
   $('#splash-button').button('enable');
   $('#splash-extra').html(''); // remove loading animation
 
-  beaddata = parse_clusters(clusters);
-  tips = map_clusters_to_tips(df, clusters);
   drawtree(df);
   //spinner.stop();
   draw_clusters(tips);
@@ -202,16 +195,21 @@ $.ajax({
   var rect = d3.selectAll('#svg-timetree > svg > rect'),
     node = rect.nodes()[rect.size() - 1];
 
+  // Maps lineage to a cidx
+  await $.ajax(covizuOptions.dataUrls.lineagetocid).done((data) => {
+    lineage_to_cid = data;
+  });
+
   // initial display
   // d3.select(node).dispatch("click");
   cindex = node.__data__.cluster_idx;
   d3.select(node).attr('class', 'clicked');
   d3.select('#cidx-' + cindex).attr('class', 'clicked');
-  beadplot(node.__data__.cluster_idx);
+  await beadplot(node.__data__.cluster_idx);
   $('#barplot').text(null);
   gentable(node.__data__);
   draw_region_distribution(node.__data__.allregions);
-  gen_details_table(beaddata[node.__data__.cluster_idx].points); // update details table with all samples
+  gen_details_table(points); // update details table with all samples
   draw_cluster_box(d3.select(node));
 
   /*
@@ -220,13 +218,23 @@ $.ajax({
   d3.select(node).dispatch("click");//.dispatch("mouseover");
    */
 
-  accn_to_cid = index_accessions(clusters);
-
-  // Maps lineage to a cidx
-  lineage_to_cid = index_lineage(clusters);
-
   $('#search-input').autocomplete({
-    source: get_autocomplete_source_fn(accn_to_cid, lineage_to_cid),
+    source: function (req, res) {
+      $.ajax({
+        url: `${covizuOptions.dataUrls.getHits}/${req.term}`,
+        data: {
+          term: req.term,
+        },
+        success: function (data) {
+          res(data);
+        },
+        error: function (xhr) {
+          console.log(xhr.statusText);
+        },
+      });
+    },
+    minLength: 1,
+    delay: 0,
     select: function (event, ui) {
       const accn = ui.item.value;
       //search(accn);
@@ -300,7 +308,7 @@ $.ajax({
     }
   });
 
-  $('#search-input, #start-date, #end-date').on('keydown', function (e) {
+  $('#search-input, #start-date, #end-date').on('keydown', async function (e) {
     $('#error_message').text(``);
     // Only resets search results if the backspace key is pressed
     if (search_results.get().total_points > 0 && e.keyCode == 8) {
@@ -318,12 +326,10 @@ $.ajax({
       $('#error_message').text(``);
       $('#loading').show();
       $('#loading_text').text(i18n_text.loading);
-      setTimeout(function () {
-        wrap_search();
-        enable_buttons();
-        $('#loading').hide();
-        $('#loading_text').text(``);
-      }, 20);
+      await wrap_search();
+      enable_buttons();
+      $('#loading').hide();
+      $('#loading_text').text(``);
     }
   });
 
@@ -393,16 +399,14 @@ $.ajax({
     },
   });
 
-  $('#search-button').click(function () {
+  $('#search-button').click(async function () {
     $('#error_message').text(``);
     $('#loading').show();
     $('#loading_text').text(i18n_text.loading);
-    setTimeout(function () {
-      wrap_search();
-      enable_buttons();
-      $('#loading').hide();
-      $('#loading_text').text(``);
-    }, 20);
+    await wrap_search();
+    enable_buttons();
+    $('#loading').hide();
+    $('#loading_text').text(``);
   });
 
   // Clear search
@@ -416,7 +420,7 @@ $.ajax({
     disable_buttons();
   });
 
-  $('#next_button').click(function () {
+  $('#next_button').click(async function () {
     var curr_bead = search_results.get().current_point;
     var bead_hits = search_results.get().beads;
     var bead_id_to_accession = Object.keys(bead_hits);
@@ -431,25 +435,27 @@ $.ajax({
     ) {
       $('#loading').show();
       $('#loading_text').text(i18n_text.loading);
-      setTimeout(function () {
-        select_next_prev_bead(bead_id_to_accession, curr_bead);
-        select_working_bead(bead_id_to_accession, curr_bead);
-        $('#loading').hide();
-        $('#loading_text').text(``);
-      }, 20);
+      await select_next_prev_bead(bead_id_to_accession, curr_bead);
+      select_working_bead(bead_id_to_accession, curr_bead);
+      $('#loading').hide();
+      $('#loading_text').text(``);
     } else if (curr_bead + 1 < search_results.get().total_points) {
-      if (
-        accn_to_cid[bead_id_to_accession[curr_bead]] !==
-        accn_to_cid[bead_id_to_accession[curr_bead + 1]]
-      ) {
+      var curr_cid, next_cid;
+      await $.ajax(`${covizuOptions.dataUrls.cid}/${bead_id_to_accession[curr_bead]}`).done(
+        (data) => (curr_id = data),
+      );
+
+      await $.ajax(`${covizuOptions.dataUrls.cid}/${bead_id_to_accession[curr_bead + 1]}`).done(
+        (data) => (next_cid = data),
+      );
+
+      if (curr_cid !== next_cid) {
         $('#loading').show();
         $('#loading_text').text(i18n_text.loading);
-        setTimeout(function () {
-          select_next_prev_bead(bead_id_to_accession, curr_bead + 1);
-          select_working_bead(bead_id_to_accession, curr_bead + 1);
-          $('#loading').hide();
-          $('#loading_text').text(``);
-        }, 20);
+        await select_next_prev_bead(bead_id_to_accession, curr_bead + 1);
+        $('#loading').hide();
+        $('#loading_text').text(``);
+        select_working_bead(bead_id_to_accession, curr_bead + 1);
       } else select_working_bead(bead_id_to_accession, curr_bead + 1);
 
       const stats = search_results.update({
@@ -503,7 +509,7 @@ $.ajax({
     $('#beadplot-vscroll').scrollTop($(this).scrollTop());
   });
 
-  $('#previous_button').click(function () {
+  $('#previous_button').click(async function () {
     var curr_bead = search_results.get().current_point;
     var bead_hits = search_results.get().beads;
     var bead_id_to_accession = Object.keys(bead_hits);
@@ -514,27 +520,29 @@ $.ajax({
       if (parseInt(current_selection.id.substring(3)) < hit_ids[hit_ids.length - 1]) {
         $('#loading').show();
         $('#loading_text').text(i18n_text.loading);
-        setTimeout(function () {
-          select_next_prev_bead(bead_id_to_accession, curr_bead);
-          select_working_bead(bead_id_to_accession, curr_bead);
-          $('#loading').hide();
-          $('#loading_text').text(``);
-        }, 20);
+        await select_next_prev_bead(bead_id_to_accession, curr_bead);
+        select_working_bead(bead_id_to_accession, curr_bead);
+        $('#loading').hide();
+        $('#loading_text').text(``);
       }
     } else if (curr_bead - 1 >= 0) {
+      var curr_cid, prev_cid;
+      await $.ajax(`${covizuOptions.dataUrls.cid}/${bead_id_to_accession[curr_bead]}`).done(
+        (data) => (curr_id = data),
+      );
+
+      await $.ajax(`${covizuOptions.dataUrls.cid}/${bead_id_to_accession[curr_bead - 1]}`).done(
+        (data) => (prev_cid = data),
+      );
+
       // If the previous bead is not in the same cluster, selection of cluster needs to be modified
-      if (
-        accn_to_cid[bead_id_to_accession[curr_bead]] !==
-        accn_to_cid[bead_id_to_accession[curr_bead - 1]]
-      ) {
+      if (curr_cid !== prev_cid) {
         $('#loading').show();
         $('#loading_text').text(i18n_text.loading);
-        setTimeout(function () {
-          select_next_prev_bead(bead_id_to_accession, curr_bead - 1);
-          select_working_bead(bead_id_to_accession, curr_bead - 1);
-          $('#loading').hide();
-          $('#loading_text').text(``);
-        }, 20);
+        await select_next_prev_bead(bead_id_to_accession, curr_bead - 1);
+        $('#loading').hide();
+        $('#loading_text').text(``);
+        select_working_bead(bead_id_to_accession, curr_bead - 1);
       } else select_working_bead(bead_id_to_accession, curr_bead - 1);
 
       const stats = search_results.update({
@@ -667,11 +675,11 @@ function save_timetree() {
 
 function save_beadplot() {
   blob = new Blob([serialize_beadplot(cindex)], { type: 'text/plain;charset=utf-8' });
-  saveAs(blob, clusters[cindex].lineage + '.nwk');
+  saveAs(blob, lineage + '.nwk');
 }
 
 function export_svg() {
-  var config = { filename: clusters[cindex].lineage };
+  var config = { filename: lineage };
 
   // Creates a duplicate of the beadplot
   var svg_beadplot = d3.select('#svg-cluster>svg').clone(true);

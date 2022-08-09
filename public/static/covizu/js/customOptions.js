@@ -6,6 +6,13 @@ var apiUrl = urlParams.get('apiUrl') || '';
 var dataUrl = urlParams.get('dataUrl') || '';
 var dataDate = urlParams.get('dataDate') || '';
 
+const isLocal = window && window.location.host.includes('localhost');
+const localDataUrls = {
+  dbstats: 'ignore/dbstats.2022-07-10.json',
+  timetree: 'ignore/timetree.2022-07-10.nwk',
+  countries: 'data/countries.json',
+};
+
 // setup custom options
 // var dataUrlWithVersion = dataUrl + covizuVersion + '/';
 var dataUrlWithVersion = 'ignore/';
@@ -17,12 +24,17 @@ var customOptions = {
     clusters: dataUrlWithVersion + ['clusters', dataDate, 'json'].join('.'),
     countries: 'data/countries.json',
     dbstats: dataUrlWithVersion + ['dbstats', dataDate, 'json'].join('.'),
+    df: covizuApiUrl + 'df',
     edgelist: covizuApiUrl + 'edgelist',
+    getHits: covizuApiUrl + 'getHits',
     lineage: covizuApiUrl + 'lineage',
+    lineagetocid: covizuApiUrl + 'lineagetocid',
     points: covizuApiUrl + 'points',
     searchHits: covizuApiUrl + 'searchHits',
     timetree: dataUrlWithVersion + ['timetree', dataDate, 'nwk'].join('.'),
+    tips: covizuApiUrl + 'tips',
     variants: covizuApiUrl + 'variants',
+    ...(isLocal ? localDataUrls : {}),
   },
 };
 
@@ -52,3 +64,20 @@ i18n_text.loading_json = i18n_text.loading_json
 // to check versions in the console:
 // console.log(covizuOptions.covizuVersion)
 var covizuOptions = $.extend(true, {}, defaultOptions, customOptions);
+
+// setup all ajax requests
+$.ajaxSetup({
+  beforeSend: function (xhr, settings) {
+    if (settings.url.includes(apiUrl)) {
+      xhr.setRequestHeader('Accept-Version', `apiVersion=${covizuVersion};dataVersion=${dataDate}`);
+    }
+  },
+  cache: false,
+  crossDomain: true,
+  headers: { accept: 'application/json', 'Access-Control-Allow-Origin': '*' },
+  type: 'GET',
+});
+
+$(document).ajaxError(function (event, jqxhr, settings, thrownError) {
+  console.error(thrownError);
+});
