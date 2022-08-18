@@ -1,12 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
+    "downlevelIteration": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
@@ -23,12 +20,8 @@
     "strictNullChecks": true /* When type checking, take into account `null` and `undefined`. */,
     "baseUrl": "./",
     "paths": {
-      "@/public": [
-        "./public"
-      ],
-      "@/*": [
-        "./*"
-      ]
+      "@/public": ["./public"],
+      "@/*": ["./*"]
     },
     "plugins": [
       {
@@ -41,13 +34,6 @@
     ],
     "incremental": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "public/static/covizu"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "public/static/covizu"]
 }
