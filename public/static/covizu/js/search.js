@@ -340,7 +340,7 @@ async function select_next_prev_bead(bead_id_to_accession, curr_bead) {
   d3.selectAll('rect[class="not_SelectedCluster clicked"]').attr('class', "not_SelectedCluster");
 
   let curr_cid;
-  await fetch(`/api/cid/${bead_id_to_accession[curr_bead]}`)
+  await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`)
   .then(response => response.text())
   .then(data => curr_cid = data);
 
