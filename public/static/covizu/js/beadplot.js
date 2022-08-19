@@ -235,7 +235,6 @@ async function beadplot(cid) {
     await $.get(`/api/lineage/${cindex}`).then(
       (response) => (lineage = response),
     );
-    console.log({ lineage });
   }
 
   // rescale slider
