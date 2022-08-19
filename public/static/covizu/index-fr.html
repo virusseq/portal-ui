@@ -7,10 +7,7 @@
       name="description"
       content="CoVizu: analyse et visualisation en temps r&eacute;el de la diversit&eacute; globale des g&eacute;nomes du SRAS-CoV-2."
     />
-    <link
-      rel="stylesheet"
-      href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
-    />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/custom.css" />
     <script src="js/jquery.js"></script>
@@ -56,8 +53,7 @@
         },
         sample_legend: "Taille de l'échantillon (log10)",
         coldate_legend: 'Date des échantillons les plus récents',
-        diverge_legend:
-          'Divergence (prédiction par horloge moléculaire stricte)',
+        diverge_legend: 'Divergence (prédiction par horloge moléculaire stricte)',
         total: 'Total',
         sampled: 'Échantillonné',
         displayed: 'Montré',
@@ -96,8 +92,7 @@
         okay: "D'accord!",
         got_it: "J'ai compris!",
         loading: `Chargement en cours.  Un moment, s'il vous plait...`,
-        loading_json:
-          'Chargement les donn&eacute;es JSON depuis le serveur (~10 sec)...',
+        loading_json: 'Chargement les donn&eacute;es JSON depuis le serveur (~10 sec)...',
         country_theaders: ['Région', 'Pays', 'Compte'],
         sample_theaders: ["Num d'ordre", 'Nom', 'Date'],
       };
@@ -113,9 +108,7 @@
             <label for="select-tree-colours">Colorer les branches:</label>
             <select name="tree-colours" id="select-tree-colours">
               <option value="Region">R&eacute;gion</option>
-              <option value="Province (Canada)" selected>
-                Province (Canada)
-              </option>
+              <option value="Province (Canada)" selected>Province (Canada)</option>
               <option value="No. samples">T. de l'&eacute;chantillon</option>
               <option value="Collection date">Date de collecte</option>
               <option value="Divergence">Divergence</option>
@@ -139,9 +132,7 @@
               <input id="start-date" class="dates" placeholder="D&eacute;but" />
               to
               <input id="end-date" class="dates" placeholder="Fin" />
-              <span
-                onclick="$('#help-search').dialog('open');"
-                style="cursor: help"
+              <span onclick="$('#help-search').dialog('open');" style="cursor: help"
                 >&#128304;</span
               >
             </div>
@@ -149,12 +140,8 @@
 
             <div id="navigation" style="padding-top: 5px">
               <button type="button" id="search-button">Rechercher</button>
-              <button type="button" id="clear_button">
-                R&eacute;initialiser
-              </button>
-              <button type="button" id="previous_button">
-                Pr&eacute;c&eacute;dent
-              </button>
+              <button type="button" id="clear_button">R&eacute;initialiser</button>
+              <button type="button" id="previous_button">Pr&eacute;c&eacute;dent</button>
               <button type="button" id="next_button">Suivant</button>
               <div id="search_stats">
                 <span id="curr_hit">0</span>
@@ -197,11 +184,7 @@
                 >&#128304;</span
               >
             </div>
-            <div
-              class="floattitle"
-              id="svg-timetreeaxis"
-              style="top: 58px; z-index: 13"
-            ></div>
+            <div class="floattitle" id="svg-timetreeaxis" style="top: 58px; z-index: 13"></div>
             <div class="tree-container">
               <div
                 class="tree-content"
@@ -221,11 +204,7 @@
               >
                 &nbsp;&nbsp;NWK&nbsp;&nbsp;
               </div>
-              <div
-                class="clicker"
-                title="T&eacute;l&eacute;charger le SVG"
-                onclick="export_svg();"
-              >
+              <div class="clicker" title="T&eacute;l&eacute;charger le SVG" onclick="export_svg();">
                 &nbsp;&nbsp;SVG&nbsp;&nbsp;
               </div>
               <div
@@ -241,17 +220,13 @@
                   >Limite de liens:&nbsp;&nbsp;</label
                 >
                 <div id="left-arrow" class="arrow">
-                  <div style="transform: translateY(-25%)" class="larrow">
-                    &#8249;
-                  </div>
+                  <div style="transform: translateY(-25%)" class="larrow">&#8249;</div>
                 </div>
                 <div id="vedge-slider">
                   <div id="custom-handle" class="ui-slider-handle"></div>
                 </div>
                 <div id="right-arrow" class="arrow">
-                  <div style="transform: translateY(-25%)" class="rarrow">
-                    &#8250;
-                  </div>
+                  <div style="transform: translateY(-25%)" class="rarrow">&#8250;</div>
                 </div>
               </div>
 
@@ -263,11 +238,7 @@
                 <span class="slider round"></span>
               </label>
             </div>
-            <div
-              class="floattitle"
-              id="svg-clusteraxis"
-              style="top: 58px; z-index: 14"
-            ></div>
+            <div class="floattitle" id="svg-clusteraxis" style="top: 58px; z-index: 14"></div>
             <div id="beadplot-hscroll">
               <div id="inner-hscroll"></div>
             </div>
@@ -304,9 +275,7 @@
                 "
                 aria-hidden="true"
               >
-                <path
-                  d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"
-                ></path>
+                <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
                 <path
                   d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
                   fill="currentColor"
@@ -335,8 +304,8 @@
             </div>
             <div style="padding-top: 10px; padding-right: 6px">
               <h3>
-                Visualisation en temps r&eacute;el de la variation
-                g&eacute;nomique du SRAS-CoV-2 (hCoV-19).
+                Visualisation en temps r&eacute;el de la variation g&eacute;nomique du SRAS-CoV-2
+                (hCoV-19).
               </h3>
             </div>
             <div style="margin: 1em 0">
@@ -353,25 +322,17 @@
               <div id="tabs-1">
                 <div class="breaker" id="barplot"></div>
                 <div
-                  style="
-                    overflow-y: auto;
-                    overflow-x: hidden;
-                    max-height: 200px;
-                  "
+                  style="overflow-y: auto; overflow-x: hidden; max-height: 200px"
                   id="country-table"
                 ></div>
               </div>
               <div id="tabs-2">
                 <div id="seqtable-hint" class="hint">
-                  Passer la souris sur les accessions (EPI_ISL_#) pour afficher
-                  le laboratoire et d'autres informations.
+                  Passer la souris sur les accessions (EPI_ISL_#) pour afficher le laboratoire et
+                  d'autres informations.
                 </div>
                 <div
-                  style="
-                    overflow-y: auto;
-                    overflow-x: hidden;
-                    max-height: 200px;
-                  "
+                  style="overflow-y: auto; overflow-x: hidden; max-height: 200px"
                   id="seq-table"
                 ></div>
               </div>
@@ -384,44 +345,33 @@
     <div id="splash" title="Bienvenue">
       <p>
         <b>CoVizu</b> est un
-        <a href="https://github.com/PoonLab/CoVizu" target="_blank"
-          >projet open source</a
-        >
-        permettant de visualiser la diversit&eacute; mondiale des g&eacute;nomes
-        du SRAS-CoV-2.
+        <a href="https://github.com/PoonLab/CoVizu" target="_blank">projet open source</a>
+        permettant de visualiser la diversit&eacute; mondiale des g&eacute;nomes du SRAS-CoV-2.
       </p>
       <p>
-        Cette page web montre deux visualisations interatives de ces
-        donn&eacute;es. Sur la gauche, est affich&eacute; un
-        <a
-          href="https://en.wikipedia.org/wiki/Phylogenetic_tree"
-          target="_blank"
-        >
+        Cette page web montre deux visualisations interatives de ces donn&eacute;es. Sur la gauche,
+        est affich&eacute; un
+        <a href="https://en.wikipedia.org/wiki/Phylogenetic_tree" target="_blank">
           arbre phylog&eacute;n&eacute;tique</a
         >
         des relations &eacute;volutives entre les diff&eacute;rentes
-        <a href="https://cov-lineages.org" target="_blank"
-          >lign&eacute;es du SRAS-CoV-2</a
-        >. Chacune de ces lign&eacute;es regroupe plusieurs milliers des
-        g&eacute;nomes similaires, reliant les &eacute;pid&eacute;mies qui se
-        produisent &agrave; diff&eacute;rents endroits;
-        <a
-          href="https://www.nature.com/articles/s41564-020-0770-5"
-          target="_blank"
+        <a href="https://cov-lineages.org" target="_blank">lign&eacute;es du SRAS-CoV-2</a>. Chacune
+        de ces lign&eacute;es regroupe plusieurs milliers des g&eacute;nomes similaires, reliant les
+        &eacute;pid&eacute;mies qui se produisent &agrave; diff&eacute;rents endroits;
+        <a href="https://www.nature.com/articles/s41564-020-0770-5" target="_blank"
           >Rambaut <i>et al.</i> 2020</a
         >).
       </p>
       <p>
-        En cliquant sur une lign&eacute;e on fait appara&icirc;tre un
-        &laquo;diagramme en perle&raquo; au centre de la page. Sur une
-        m&ecirc;me ligne horizontale sont reproup&eacute;s les
-        &eacute;chantillons partageant le m&ecirc;me g&eacute;nome. Les cercles
+        En cliquant sur une lign&eacute;e on fait appara&icirc;tre un &laquo;diagramme en
+        perle&raquo; au centre de la page. Sur une m&ecirc;me ligne horizontale sont
+        reproup&eacute;s les &eacute;chantillons partageant le m&ecirc;me g&eacute;nome. Les cercles
         repr&eacute;sentent les dates auxquelles le variant a &eacute;t&eacute;
         &eacute;chantillonn&eacute;.
       </p>
       <p>
-        Les r&eacute;sultats ici sont bas&eacute;s en tout ou en partie sur des
-        donn&eacute;es h&eacute;berg&eacute;es par
+        Les r&eacute;sultats ici sont bas&eacute;s en tout ou en partie sur des donn&eacute;es
+        h&eacute;berg&eacute;es par
         <a href="https://virusseq-dataportal.ca/" target="_blank"
           >le Portail Canadien de Donn&eacute;es VirusSeq</a
         >
@@ -431,34 +381,24 @@
           target="_blank"
           >Donn&eacute;es Ouvertes Nextstrain</a
         >
-        construire des actifs. Les classifications de la lign&eacute;es PANGO
-        ont &eacute;t&eacute; extraites de la base de donn&eacute;es
-        <a href="https://viral.ai/collections" target="_blank">Viral AI</a>.
-        Nous souhaitons reconna&icirc;tre les
-        <a
-          href="https://virusseq-dataportal.ca/acknowledgements"
-          target="_blank"
+        construire des actifs. Les classifications de la lign&eacute;es PANGO ont &eacute;t&eacute;
+        extraites de la base de donn&eacute;es
+        <a href="https://viral.ai/collections" target="_blank">Viral AI</a>. Nous souhaitons
+        reconna&icirc;tre les
+        <a href="https://virusseq-dataportal.ca/acknowledgements" target="_blank"
           >laboratoires contributeurs</a
         >, le
         <a href="https://ccnmi.ca/rlspc/" target="_blank"
           >R&eacute;seau des laboratoires de sant&eacute; publique du Canada</a
         >
         (RLSPC) et
-        <a
-          href="https://genomecanada.ca/fr/domaines-defis/rcangeco/virusseq/"
-          target="_blank"
+        <a href="https://genomecanada.ca/fr/domaines-defis/rcangeco/virusseq/" target="_blank"
           >RCanG&eacute;co VirusSeq</a
         >. Support informatique fourni par le
-        <a href="https://mcarthurbioinformatics.ca/" target="_blank"
-          >Laboratoire de McArthur</a
-        >
-        (Institut Michael G. DeGroote pour la Recherche sur les Maladies
-        Infectieuses, Universit&eacute; McMaster). Cette
-        <a
-          href="https://github.com/PoonLab/covizu/tree/vsportal"
-          target="_blank"
-          >version</a
-        >
+        <a href="https://mcarthurbioinformatics.ca/" target="_blank">Laboratoire de McArthur</a>
+        (Institut Michael G. DeGroote pour la Recherche sur les Maladies Infectieuses,
+        Universit&eacute; McMaster). Cette
+        <a href="https://github.com/PoonLab/covizu/tree/vsportal" target="_blank">version</a>
         du front-end est h&eacute;berg&eacute;e par le
         <a href="https://oicr.on.ca/fr/a-propos/" target="_blank"
           >Institu ontarien de recherche sur le cancer</a
@@ -476,29 +416,22 @@
         ic&ocirc;nes.
       </p>
     </div>
-    <div
-      id="help-timetree"
-      title="Aide: Phylog&eacute;nie temporelle des lign&eacute;es"
-    >
+    <div id="help-timetree" title="Aide: Phylog&eacute;nie temporelle des lign&eacute;es">
       <p>
-        Un arbre phylog&eacute;n&eacute;tique est un mod&egrave;le montrant
-        comment diff&eacute;rentes populations ont evolu&eacute; &agrave; partir
-        de leurs anc&ecirc;tres communs. L'arbre represent&eacute; ici
-        (g&eacute;n&eacute;re avec
-        <a href="https://github.com/neherlab/treetime" target="_blank">
-          TreeTime</a
-        >
+        Un arbre phylog&eacute;n&eacute;tique est un mod&egrave;le montrant comment
+        diff&eacute;rentes populations ont evolu&eacute; &agrave; partir de leurs anc&ecirc;tres
+        communs. L'arbre represent&eacute; ici (g&eacute;n&eacute;re avec
+        <a href="https://github.com/neherlab/treetime" target="_blank"> TreeTime</a>
         v0.8.0) r&eacute;sume l'&eacute;volution des diff&eacute;rentes
-        <a href="https://cov-lineages.org" target="_blank"
-          >lign&eacute;es de SRAS-CoV-2</a
-        >, qui sont pr&eacute;-d&eacute;finies en regroupant les virus en
-        fonction de la similarit&eacute; de leurs g&eacute;nomes.
+        <a href="https://cov-lineages.org" target="_blank">lign&eacute;es de SRAS-CoV-2</a>, qui
+        sont pr&eacute;-d&eacute;finies en regroupant les virus en fonction de la similarit&eacute;
+        de leurs g&eacute;nomes.
       </p>
       <p>
-        L'&eacute;chelle temporelle est r&eacute;pr&eacute;sent&eacute;e en haut
-        de l'arbre. L'anc&ecirc;tre le plus ancien (racine) est sur la gauche,
-        les descendants les plus r&eacute;cents sont sur la droite. On estime la
-        date d'emergence en comparant les g&eacute;nomes et en supposant un
+        L'&eacute;chelle temporelle est r&eacute;pr&eacute;sent&eacute;e en haut de l'arbre.
+        L'anc&ecirc;tre le plus ancien (racine) est sur la gauche, les descendants les plus
+        r&eacute;cents sont sur la droite. On estime la date d'emergence en comparant les
+        g&eacute;nomes et en supposant un
         <a
           href="http://virological.org/t/phylodynamic-analysis-176-genomes-6-mar-2020/356"
           target="_blank"
@@ -507,54 +440,48 @@
         >.
       </p>
       <p>
-        Pour chaque lign&eacute;e on dessine un rectangle repr&eacute;sentant
-        l'intervalle de temps pendant lequel la lign&eacute;e a
-        &eacute;t&eacute; &eacute;chantillonn&eacute;e, color&eacute; en
-        fonction de la r&eacute;gion dans laquelle elle a &eacute;t&eacute; le
-        plus souvent observ&eacute;e. Cliquez dessus pour explorer les
-        &eacute;chantillons de chaque lign&eacute;e et afficher un diagramme en
-        perle.
+        Pour chaque lign&eacute;e on dessine un rectangle repr&eacute;sentant l'intervalle de temps
+        pendant lequel la lign&eacute;e a &eacute;t&eacute; &eacute;chantillonn&eacute;e,
+        color&eacute; en fonction de la r&eacute;gion dans laquelle elle a &eacute;t&eacute; le plus
+        souvent observ&eacute;e. Cliquez dessus pour explorer les &eacute;chantillons de chaque
+        lign&eacute;e et afficher un diagramme en perle.
       </p>
     </div>
 
     <div id="help-beadplot" title="Aide: Diagramme en perle">
       <p>
-        On utilise un diagramme en perle pour visualiser les diff&eacute;rents
-        variants de SRAS-CoV-2 d'une m&ecirc;me
-        <a href="https://cov-lineages.org" target="_blank">lign&eacute;e</a>,
-        o&ugrave; et quand ils ont &eacute;t&eacute;
-        &eacute;chantillonn&eacute;s, et comment ils sont li&eacute;s les uns
-        aux autres. Chaque objet dans le diagramme contient des informations
-        suppl&eacute;mentaires visibles en passant avec la souris.
+        On utilise un diagramme en perle pour visualiser les diff&eacute;rents variants de
+        SRAS-CoV-2 d'une m&ecirc;me
+        <a href="https://cov-lineages.org" target="_blank">lign&eacute;e</a>, o&ugrave; et quand ils
+        ont &eacute;t&eacute; &eacute;chantillonn&eacute;s, et comment ils sont li&eacute;s les uns
+        aux autres. Chaque objet dans le diagramme contient des informations suppl&eacute;mentaires
+        visibles en passant avec la souris.
       </p>
       <p>
-        Chaque ligne horizontale repr&eacute;sente un variant &ndash; des virus
-        avec
+        Chaque ligne horizontale repr&eacute;sente un variant &ndash; des virus avec
         <span
           class="hint"
           title="C'est un peu plus compliqu&eacute;. Beaucoup de g&eacute;nomes ont des s&eacute;quences identiques, mais certains ont des s&eacute;quences incompl&egrave;tes, des parties du g&eacute;nome qui n'ont pas &eacute;t&eacute; correctement s&eacute;quenc&eacute;es. Puisqu'on ne peut &ecirc;tre certain &agrave; 100% que deux g&eacute;nomes incompl&ecirc;ts sont identiques, on r&eacute;-&eacute;chantillonne les g&eacute;nomes 100 fois al&eacute;atoirement (bootstrap non-param&eacute;trique) et on &eacute;value la probabilit&eacute; que ces genomes soient li&eacute;s."
           >des g&eacute;nomes identiques</span
-        >. Sur une m&ecirc;me ligne horizontale sont dessin&eacute;es des perles
-        qui indiquent quand le variant a &eacute;t&eacute;
-        &eacute;chantillonn&eacute;. Quand deux ou plus de variants descendent
-        d'un m&ecirc;me variant qui n'a pas &eacute;t&eacute; directement
-        observ&eacute;, alors la ligne est grise et ne contient aucune perle ce
-        qui indique un variant non-&eacute;chantillonn&eacute;.
+        >. Sur une m&ecirc;me ligne horizontale sont dessin&eacute;es des perles qui indiquent quand
+        le variant a &eacute;t&eacute; &eacute;chantillonn&eacute;. Quand deux ou plus de variants
+        descendent d'un m&ecirc;me variant qui n'a pas &eacute;t&eacute; directement observ&eacute;,
+        alors la ligne est grise et ne contient aucune perle ce qui indique un variant
+        non-&eacute;chantillonn&eacute;.
       </p>
       <p>
-        La taille de la perle repr&eacute;sente le nombre de fois que le variant
-        a &eacute;t&eacute; observ&eacute; &agrave; cette date. Regouper ainsi
-        les &eacute;chantillons indentiques (en s&eacute;quence et en date) est
-        n&eacute;cessaire pour ce type d'&eacute;pidemie rapide avec des
-        centaines de milliers de s&eacute;quences, <i>e.g.,</i> la lign&eacute;e
-        D.2 en Australie. Les perles sont
+        La taille de la perle repr&eacute;sente le nombre de fois que le variant a &eacute;t&eacute;
+        observ&eacute; &agrave; cette date. Regouper ainsi les &eacute;chantillons indentiques (en
+        s&eacute;quence et en date) est n&eacute;cessaire pour ce type d'&eacute;pidemie rapide avec
+        des centaines de milliers de s&eacute;quences, <i>e.g.,</i> la lign&eacute;e D.2 en
+        Australie. Les perles sont
         <span
           class="hint"
           title="La l&eacute;gende est visible sur la droite dans le diagramme en boites r&eacute;presentant les r&eacute;gions et pays."
           >color&eacute;es</span
         >
-        en fonction de la r&eacute;gion o&ugrave; les &eacute;chantillons ont
-        &eacute;t&eacute; le plus souvent observ&eacute;s.
+        en fonction de la r&eacute;gion o&ugrave; les &eacute;chantillons ont &eacute;t&eacute; le
+        plus souvent observ&eacute;s.
       </p>
       <p>
         Les lignes verticales repr&eacute;sentent les
@@ -563,47 +490,43 @@
           title="The direction of ancestor-descendant relationships is based on midpoint rooting of the consensus neighbor-joining tree. This is a crude method, so be cautious about over-interpreting the directionality of these relationships."
           >relations d'ancestralit&eacute;</span
         >
-        entre les diff&eacute;rentes lignes horizontales (les variants). Les
-        relations sont estim&eacute;es via
+        entre les diff&eacute;rentes lignes horizontales (les variants). Les relations sont
+        estim&eacute;es via
         <a href="https://en.wikipedia.org/wiki/Neighbor_joining" target="_blank"
           >la methode neighbor-joining</a
         >
         en utilisant
-        <a href="https://birc.au.dk/software/rapidnj/" target="_blank"
-          >RapidNJ</a
-        >. Pour chaque lien le champ "distance genomique" de l'info-bulle
-        indique le nombre de diff&eacute;rences (mutations) entre anc&ecirc;tre
-        et descendant. Puisqu'il est difficile de reconstruire la date exacte où
-        ces mutations ont &eacute;merg&eacute;, on a choisi d'utiliser la date
-        où le premier &eacute;chantillon a &eacute;t&eacute; observ&eacute;.
+        <a href="https://birc.au.dk/software/rapidnj/" target="_blank">RapidNJ</a>. Pour chaque lien
+        le champ "distance genomique" de l'info-bulle indique le nombre de diff&eacute;rences
+        (mutations) entre anc&ecirc;tre et descendant. Puisqu'il est difficile de reconstruire la
+        date exacte où ces mutations ont &eacute;merg&eacute;, on a choisi d'utiliser la date où le
+        premier &eacute;chantillon a &eacute;t&eacute; observ&eacute;.
       </p>
     </div>
 
     <div id="help-search" title="Aide: Interface de recherche">
       <p>
-        Puisqu'il y a un nombre consid&eacute;rable d'&eacute;chantillons
-        s&eacute;quenc&eacute;s qu'on tente ici de visualiser, on a
-        ajout&eacute; en haut de la page une interface permettant de faire des
-        recherches simples.
+        Puisqu'il y a un nombre consid&eacute;rable d'&eacute;chantillons s&eacute;quenc&eacute;s
+        qu'on tente ici de visualiser, on a ajout&eacute; en haut de la page une interface
+        permettant de faire des recherches simples.
       </p>
       <p>
-        Vous pouvez l'utiliser pour rechercher un &eacute;chantillon particulier
-        &agrave; partir de son accession GISAID. Si vous entrez le d&eacute;but
-        de l'accession, le champ proposera un certain de nombre de
-        possibilit&eacute;s (autocompl&eacute;tion). Vous pouvez aussi entrer le
-        d&eacute;but d'un nom de pays, par exemple rechercher "Madaga" vous
-        am&egrave;nera &agrave; la premi&egrave;re lign&eacute;e qui contient
-        des &eacute;chantillons de Madagascar.
+        Vous pouvez l'utiliser pour rechercher un &eacute;chantillon particulier &agrave; partir de
+        son accession GISAID. Si vous entrez le d&eacute;but de l'accession, le champ proposera un
+        certain de nombre de possibilit&eacute;s (autocompl&eacute;tion). Vous pouvez aussi entrer
+        le d&eacute;but d'un nom de pays, par exemple rechercher "Madaga" vous am&egrave;nera
+        &agrave; la premi&egrave;re lign&eacute;e qui contient des &eacute;chantillons de
+        Madagascar.
       </p>
       <p>
-        Utilisez les boutons "Pr&eacute;c&eacute;dent" et "Suivant" pour
-        naviguer entre les r&eacute;sultats de la recherche, et le bouton
-        "R&eacute;initialiser" pour annuler la recherche.
+        Utilisez les boutons "Pr&eacute;c&eacute;dent" et "Suivant" pour naviguer entre les
+        r&eacute;sultats de la recherche, et le bouton "R&eacute;initialiser" pour annuler la
+        recherche.
       </p>
     </div>
 
     <!-- customizations - load before other JS files -->
-    <script src="js/_custom.js"></script>
+    <script src="_custom.js"></script>
 
     <!-- visualization -->
     <script src="js/beadplot.js"></script>

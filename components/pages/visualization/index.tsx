@@ -23,10 +23,7 @@ import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 import defaultTheme from '../../theme';
 import { getConfig } from '../../../global/config';
-import {
-  covizuGithubUrl,
-  INTERNAL_PATHS,
-} from '../../../global/utils/constants';
+import { covizuGithubUrl, INTERNAL_PATHS } from '../../../global/utils/constants';
 import { InternalLink as Link } from '../../Link';
 import PageLayout from '../../PageLayout';
 
@@ -61,8 +58,8 @@ const VisualizationPage = (): ReactElement => {
           >
             Covizu
           </a>{' '}
-          (an open source SARS-CoV-2 genome analysis and visualization system)
-          has been used to visualize{' '}
+          (an open source SARS-CoV-2 genome analysis and visualization system) has been used to
+          visualize{' '}
           <Link path={INTERNAL_PATHS.EXPLORER}>
             <a
               css={css`
@@ -73,9 +70,9 @@ const VisualizationPage = (): ReactElement => {
               Canadian VirusSeq data
             </a>
           </Link>{' '}
-          colocalized with International GenBank data in a time-scaled
-          phylogenetic tree to highlight potential cases of importation from
-          other countries or ongoing community transmission.
+          colocalized with International GenBank data in a time-scaled phylogenetic tree to
+          highlight potential cases of importation from other countries or ongoing community
+          transmission.
         </div>
         <iframe
           css={css`
