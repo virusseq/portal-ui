@@ -1,5 +1,8 @@
 // customizations for virus-seq implementation
 
+const COVIZU_VERSION = '1.1.0';
+console.info('VirusSeq Covizu version', COVIZU_VERSION);
+
 // get API URL from URL query
 var urlParams = new URLSearchParams(window.location.search);
 var apiUrl = urlParams.get('apiUrl') || '';
