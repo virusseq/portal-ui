@@ -341,7 +341,6 @@ async function select_next_prev_bead(bead_id_to_accession, curr_bead) {
 
   let curr_cid;
   await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`)
-  .then(response => response.text())
   .then(data => curr_cid = data);
 
   var next_cluster = d3.selectAll('rect[cidx="cidx-'+curr_cid+'"]');  
