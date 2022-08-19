@@ -2,7 +2,10 @@
  *  Configure SVG to display beadplots
  */
 var marginB = { top: 50, right: 10, bottom: 50, left: 10 },
-  widthB = document.getElementById('svg-cluster').clientWidth - marginB.left - marginB.right,
+  widthB =
+    document.getElementById('svg-cluster').clientWidth -
+    marginB.left -
+    marginB.right,
   heightB = 1000 - marginB.top - marginB.bottom,
   pixelsPerDay = 10,
   ccid = -1;
@@ -163,7 +166,10 @@ function clear_selection() {
   $('#loading_text').text(``);
 
   d3.select('#svg-cluster').selectAll('line').attr('stroke-opacity', 1);
-  d3.selectAll('circle:not(.selectionH):not(.selectionLC)').attr('class', 'default');
+  d3.selectAll('circle:not(.selectionH):not(.selectionLC)').attr(
+    'class',
+    'default',
+  );
   d3.select('#svg-timetree')
     .selectAll('rect:not(.clicked):not(.clickedH)')
     .attr('class', 'default');
@@ -213,19 +219,21 @@ async function beadplot(cid) {
   if (cindex !== ccid) {
     cindex = cid;
     ccid = cindex;
-    edgelist = await $.ajax(`${covizuOptions.dataUrls.edgelist}/${cindex}`);
+    edgelist = await getdata(`/api/edgelist/${cindex}`);
     edgelist.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
-    points = await $.ajax(`${covizuOptions.dataUrls.points}/${cindex}`);
+    points = await getdata(`/api/points/${cindex}`);
     points.forEach((d) => {
       d.x = utcDate(d.x);
     });
-    variants = await $.ajax(`${covizuOptions.dataUrls.variants}/${cindex}`);
+    variants = await getdata(`/api/variants/${cindex}`);
     variants.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
-    await $.ajax(`${covizuOptions.dataUrls.lineage}/${cindex}`).done((data) => (lineage = data));
+    await fetch(`/api/lineage/${cindex}`)
+      .then((response) => response.text())
+      .then((lin) => (lineage = lin));
   }
 
   // rescale slider
@@ -259,7 +267,9 @@ async function beadplot(cid) {
       'margin-top',
       document.getElementById('beadplot-title').clientHeight +
         document.getElementById('svg-clusteraxis').clientHeight +
-        ($('#expand-option').attr('checked') ? $('#inner-hscroll').height() : 0),
+        ($('#expand-option').attr('checked')
+          ? $('#inner-hscroll').height()
+          : 0),
     );
 
     // Don't give the user the option to scroll horizontally if the beadplot cannot expand
@@ -278,7 +288,9 @@ async function beadplot(cid) {
     let currentWidth = null;
     if ($('#expand-option').attr('checked')) {
       currentWidth =
-        (numDays * pixelsPerDay > clientWidth ? numDays * pixelsPerDay : clientWidth) -
+        (numDays * pixelsPerDay > clientWidth
+          ? numDays * pixelsPerDay
+          : clientWidth) -
         marginB.left -
         marginB.right;
     } else {
@@ -287,7 +299,10 @@ async function beadplot(cid) {
 
     // update vertical range for consistent spacing between variants
     heightB = max_y * 10 + 40;
-    $('#svg-cluster > svg').attr('height', heightB + marginB.top + marginB.bottom);
+    $('#svg-cluster > svg').attr(
+      'height',
+      heightB + marginB.top + marginB.bottom,
+    );
     yScaleB = d3.scaleLinear().range([20, heightB]);
     yScaleB.domain([min_y, max_y]);
 
@@ -304,11 +319,20 @@ async function beadplot(cid) {
     visB.selectAll('*').remove();
     visBaxis.selectAll('*').remove();
 
-    $('#svg-cluster > svg').attr('width', currentWidth + marginB.left + marginB.right);
-    $('#inner-hscroll').css('width', currentWidth + marginB.left + marginB.right);
+    $('#svg-cluster > svg').attr(
+      'width',
+      currentWidth + marginB.left + marginB.right,
+    );
+    $('#inner-hscroll').css(
+      'width',
+      currentWidth + marginB.left + marginB.right,
+    );
 
     // Add 15px to account for the scrollbar for the beadplot
-    $('#svg-clusteraxis > svg').attr('width', currentWidth + marginB.left + marginB.right + 15);
+    $('#svg-clusteraxis > svg').attr(
+      'width',
+      currentWidth + marginB.left + marginB.right + 15,
+    );
 
     // draw vertical line segments that represent edges in NJ tree
     visB
@@ -333,7 +357,9 @@ async function beadplot(cid) {
         let parent_variant = d3.select(
             '.lines#' + d.parent.replaceAll('/', '-').replaceAll(' ', '_'),
           ),
-          child_variant = d3.select('.lines#' + d.child.replaceAll('/', '-').replaceAll(' ', '_'));
+          child_variant = d3.select(
+            '.lines#' + d.child.replaceAll('/', '-').replaceAll(' ', '_'),
+          );
 
         if (!parent_variant.empty()) {
           if (parent_variant.datum().count > 0) {
@@ -344,7 +370,8 @@ async function beadplot(cid) {
                 return 1.5;
               })
               .attr('r', function (d) {
-                if (this.classList.contains('selectionH')) return 4 * Math.sqrt(d.count) + 7;
+                if (this.classList.contains('selectionH'))
+                  return 4 * Math.sqrt(d.count) + 7;
                 return 4 * Math.sqrt(d.count) + 3;
               });
           }
@@ -360,7 +387,8 @@ async function beadplot(cid) {
                 return 1.5;
               })
               .attr('r', function (d) {
-                if (this.classList.contains('selectionH')) return 4 * Math.sqrt(d.count) + 7;
+                if (this.classList.contains('selectionH'))
+                  return 4 * Math.sqrt(d.count) + 7;
                 return 4 * Math.sqrt(d.count) + 3;
               });
           }
@@ -371,7 +399,9 @@ async function beadplot(cid) {
         cTooltip.transition().duration(50).style('opacity', 0.75);
 
         let tooltipText = `<b>${i18n_text.vedge_parent}:</b> ${d.parent}<br/><b>${i18n_text.vedge_child}:</b> ${d.child}<br/>`;
-        tooltipText += `<b>${i18n_text.vedge_distance}:</b> ${Math.round(d.dist * 100) / 100}<br/>`;
+        tooltipText += `<b>${i18n_text.vedge_distance}:</b> ${
+          Math.round(d.dist * 100) / 100
+        }<br/>`;
         tooltipText += `<b>${i18n_text.vedge_support}:</b> ${
           d.support === undefined ? 'n/a' : d.support
         }<br/>`;
@@ -381,14 +411,24 @@ async function beadplot(cid) {
           .html(tooltipText)
           .style('left', function () {
             if (d3.event.pageX > window.innerWidth / 2) {
-              return d3.event.pageX - 15 - cTooltip.node().getBoundingClientRect().width + 'px';
+              return (
+                d3.event.pageX -
+                15 -
+                cTooltip.node().getBoundingClientRect().width +
+                'px'
+              );
             } else {
               return d3.event.pageX + 15 + 'px';
             }
           })
           .style('top', function () {
             if (d3.event.pageY > window.innerHeight / 2) {
-              return d3.event.pageY - cTooltip.node().getBoundingClientRect().height - 15 + 'px';
+              return (
+                d3.event.pageY -
+                cTooltip.node().getBoundingClientRect().height -
+                15 +
+                'px'
+              );
             } else {
               return d3.event.pageY + 15 + 'px';
             }
@@ -404,7 +444,9 @@ async function beadplot(cid) {
         let parent_variant = d3.select(
             '.lines#' + d.parent.replaceAll('/', '-').replaceAll(' ', '_'),
           ),
-          child_variant = d3.select('.lines#' + d.child.replaceAll('/', '-').replaceAll(' ', '_'));
+          child_variant = d3.select(
+            '.lines#' + d.child.replaceAll('/', '-').replaceAll(' ', '_'),
+          );
 
         if (!parent_variant.empty()) {
           if (parent_variant.datum().count > 0) {
@@ -416,8 +458,10 @@ async function beadplot(cid) {
                 return 1;
               })
               .attr('r', function (d) {
-                if (this.classList.contains('selectionH')) return 4 * Math.sqrt(d.count) + 4;
-                if (this.classList.contains('selectionLC')) return 4 * Math.sqrt(d.count) + 3;
+                if (this.classList.contains('selectionH'))
+                  return 4 * Math.sqrt(d.count) + 4;
+                if (this.classList.contains('selectionLC'))
+                  return 4 * Math.sqrt(d.count) + 3;
                 return 4 * Math.sqrt(d.count);
               });
           }
@@ -442,8 +486,10 @@ async function beadplot(cid) {
                 return 1;
               })
               .attr('r', function (d) {
-                if (this.classList.contains('selectionH')) return 4 * Math.sqrt(d.count) + 4;
-                if (this.classList.contains('selectionLC')) return 4 * Math.sqrt(d.count) + 3;
+                if (this.classList.contains('selectionH'))
+                  return 4 * Math.sqrt(d.count) + 4;
+                if (this.classList.contains('selectionLC'))
+                  return 4 * Math.sqrt(d.count) + 3;
                 return 4 * Math.sqrt(d.count);
               });
           }
@@ -470,8 +516,12 @@ async function beadplot(cid) {
         var edge = d3.select(this);
         edge.attr('class', 'lines selectionL');
 
-        let parent_variant = d3.select('.lines#' + d.parent.replace('/', '-').replace(' ', '_')),
-          child_variant = d3.select('.lines#' + d.child.replace('/', '-').replace(' ', '_'));
+        let parent_variant = d3.select(
+            '.lines#' + d.parent.replace('/', '-').replace(' ', '_'),
+          ),
+          child_variant = d3.select(
+            '.lines#' + d.child.replace('/', '-').replace(' ', '_'),
+          );
 
         parent_variant.attr('class', 'lines selectionLH');
         child_variant.attr('class', 'lines selectionLH');
@@ -481,7 +531,8 @@ async function beadplot(cid) {
             d3.selectAll('circle')
               .filter((ci) => ci.y === d.y1)
               .attr('class', function () {
-                if (this.classList.contains('selectionH')) return 'selectionH selectionLC';
+                if (this.classList.contains('selectionH'))
+                  return 'selectionH selectionLC';
                 return 'selectionLC';
               });
           }
@@ -492,7 +543,8 @@ async function beadplot(cid) {
             d3.selectAll('circle')
               .filter((ci) => ci.y === d.y2)
               .attr('class', function () {
-                if (this.classList.contains('selectionH')) return 'selectionH selectionLC';
+                if (this.classList.contains('selectionH'))
+                  return 'selectionH selectionLC';
                 return 'selectionLC';
               });
           }
@@ -533,9 +585,11 @@ async function beadplot(cid) {
 
           let tooltipText = '';
           if (d.parent || d.dist) {
-            tooltipText += `<b>${i18n_text.vedge_parent}:</b> ${d.parent}<br/><b>${
-              i18n_text.vedge_distance
-            }:</b> ${Math.round(d.dist * 100) / 100}<br/>`;
+            tooltipText += `<b>${i18n_text.vedge_parent}:</b> ${
+              d.parent
+            }<br/><b>${i18n_text.vedge_distance}:</b> ${
+              Math.round(d.dist * 100) / 100
+            }<br/>`;
           }
           if (!d.unsampled) {
             tooltipText += region_to_string(tabulate(d.region));
@@ -554,7 +608,12 @@ async function beadplot(cid) {
               .html(tooltipText)
               .style('left', function () {
                 if (d3.event.pageX > window.innerWidth / 2) {
-                  return d3.event.pageX - 10 - cTooltip.node().getBoundingClientRect().width + 'px';
+                  return (
+                    d3.event.pageX -
+                    10 -
+                    cTooltip.node().getBoundingClientRect().width +
+                    'px'
+                  );
                 } else {
                   return d3.event.pageX + 10 + 'px';
                 }
@@ -562,7 +621,10 @@ async function beadplot(cid) {
               .style('top', function () {
                 if (d3.event.pageY > window.innerHeight / 2) {
                   return (
-                    d3.event.pageY - cTooltip.node().getBoundingClientRect().height - 10 + 'px'
+                    d3.event.pageY -
+                    cTooltip.node().getBoundingClientRect().height -
+                    10 +
+                    'px'
                   );
                 } else {
                   return d3.event.pageY + 10 + 'px';
@@ -637,7 +699,9 @@ async function beadplot(cid) {
         if (search_results.get().beads.length == 0) {
           return null;
         } else {
-          return search_results.get().beads[d.accessions[0]] === undefined ? false : true;
+          return search_results.get().beads[d.accessions[0]] === undefined
+            ? false
+            : true;
         }
       })
       .attr('fill', function (d) {
@@ -655,9 +719,9 @@ async function beadplot(cid) {
 
         let tooltipText = '';
         if (d.parent || d.dist) {
-          tooltipText += `<b>Parent:</b> ${d.parent}<br/><b>${i18n_text.vedge_distance}:</b> ${
-            Math.round(d.dist * 100) / 100
-          }<br/>`;
+          tooltipText += `<b>Parent:</b> ${d.parent}<br/><b>${
+            i18n_text.vedge_distance
+          }:</b> ${Math.round(d.dist * 100) / 100}<br/>`;
         }
         tooltipText += region_to_string(tabulate(d.region));
         tooltipText += `<b>${i18n_text.vedge_coldate}:</b> ${formatDate(d.x)}`;
@@ -667,14 +731,24 @@ async function beadplot(cid) {
           .html(tooltipText)
           .style('left', function () {
             if (d3.event.pageX > window.innerWidth / 2) {
-              return d3.event.pageX - 15 - cTooltip.node().getBoundingClientRect().width + 'px';
+              return (
+                d3.event.pageX -
+                15 -
+                cTooltip.node().getBoundingClientRect().width +
+                'px'
+              );
             } else {
               return d3.event.pageX + 15 + 'px';
             }
           })
           .style('top', function () {
             if (d3.event.pageY > window.innerHeight / 2) {
-              return d3.event.pageY - cTooltip.node().getBoundingClientRect().height - 15 + 'px';
+              return (
+                d3.event.pageY -
+                cTooltip.node().getBoundingClientRect().height -
+                15 +
+                'px'
+              );
             } else {
               return d3.event.pageY + 15 + 'px';
             }
@@ -734,7 +808,12 @@ async function beadplot(cid) {
       .append('g')
       .attr('class', 'treeaxis')
       .attr('transform', 'translate(0,20)')
-      .call(d3.axisTop(xAxis).ticks(tickCount).tickFormat(d3.timeFormat('%Y-%m-%d')));
+      .call(
+        d3
+          .axisTop(xAxis)
+          .ticks(tickCount)
+          .tickFormat(d3.timeFormat('%Y-%m-%d')),
+      );
 
     // Sets the height of the vertical scrollbar element to have the same height as the beadplot
     $('#inner-vscroll').css('height', $('.beadplot-content > svg').height());
@@ -751,16 +830,20 @@ async function beadplot(cid) {
     listeners.slide.pop();
   }
 
-  slider.on(edgelist.length < 200 ? 'slide' : 'slidechange', function (event, ui) {
-    if (ui.valueOf().value !== 2.0) {
-      // avoid drawing beadplot twice on load
+  slider.on(
+    edgelist.length < 200 ? 'slide' : 'slidechange',
+    function (event, ui) {
+      if (ui.valueOf().value !== 2.0) {
+        // avoid drawing beadplot twice on load
 
-      // Update slider value before redrawing beadplot
-      if (event.handleObj.type === 'slide') slider.slider('value', ui.valueOf().value);
+        // Update slider value before redrawing beadplot
+        if (event.handleObj.type === 'slide')
+          slider.slider('value', ui.valueOf().value);
 
-      redraw();
-    }
-  });
+        redraw();
+      }
+    },
+  );
 }
 
 /**
@@ -811,7 +894,12 @@ function gen_details_table(obj) {
   } else {
     // "zip" the sequence details of each sample
     for (let i = 0; i < obj.accessions.length; i++) {
-      let sample_details = [obj.accessions[i], obj.labels[i], formatDate(obj.x), obj.accessions[0]];
+      let sample_details = [
+        obj.accessions[i],
+        obj.labels[i],
+        formatDate(obj.x),
+        obj.accessions[0],
+      ];
       details.push(sample_details);
     }
   }
@@ -900,10 +988,15 @@ function gen_details_table(obj) {
           // Tooltip appears 10 pixels left of the cursor
           cTooltip
             .html(tooltipText)
-            .style('left', gttx - cTooltip.node().getBoundingClientRect().width - 20 + 'px')
+            .style(
+              'left',
+              gttx - cTooltip.node().getBoundingClientRect().width - 20 + 'px',
+            )
             .style('top', function () {
               if (gtty > window.innerHeight / 2) {
-                return gtty - cTooltip.node().getBoundingClientRect().height + 'px';
+                return (
+                  gtty - cTooltip.node().getBoundingClientRect().height + 'px'
+                );
               } else {
                 return gtty + 'px';
               }
@@ -997,7 +1090,10 @@ function gentable(obj) {
     .append('th')
     .on('click', function (x, i) {
       // Reset sorting arrows
-      country_table.select('thead').selectAll('a').classed('hide-before', false);
+      country_table
+        .select('thead')
+        .selectAll('a')
+        .classed('hide-before', false);
       country_table.select('thead').selectAll('a').classed('hide-after', false);
 
       // Sort columns
@@ -1029,7 +1125,14 @@ function gentable(obj) {
  * @param {{}} my_regions: associative list of region and case count pairs
  */
 function draw_region_distribution(my_regions) {
-  const regions = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America'];
+  const regions = [
+    'Africa',
+    'Asia',
+    'Europe',
+    'North America',
+    'Oceania',
+    'South America',
+  ];
   var counts = [],
     count;
 
@@ -1045,9 +1148,16 @@ function draw_region_distribution(my_regions) {
     height = 200 - margin.top - margin.bottom;
 
   // Create the barchart
-  const svg = d3.select('#barplot').html('').append('svg').attr('width', 250).attr('height', 200);
+  const svg = d3
+    .select('#barplot')
+    .html('')
+    .append('svg')
+    .attr('width', 250)
+    .attr('height', 200);
 
-  const chart = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
+  const chart = svg
+    .append('g')
+    .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
   // Set the scale of the x-axis
   const xScale = d3
@@ -1164,7 +1274,10 @@ function select_next_bead(next_node) {
   working_bead.scrollIntoView({ block: 'center' });
   update_table_individual_bead_front(d3.select(working_bead).datum());
 
-  if (next_node.classList.contains('SelectedBead') && search_results.get().total_points > 0) {
+  if (
+    next_node.classList.contains('SelectedBead') &&
+    search_results.get().total_points > 0
+  ) {
     var search_index = search_results.get().beads[next_node.id];
     if (search_index !== undefined) {
       const stats = search_results.update({

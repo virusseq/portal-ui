@@ -103,16 +103,25 @@ $('#ack-open').click(function () {
 
 /*********************** LOAD JSON DATA ***********************/
 
+// Forces the requested files to not be cached by the browser
+$.ajaxSetup({
+  cache: false,
+});
+
 // load database statistics
 var dbstats, req;
-
-req = $.ajax(covizuOptions.dataUrls.dbstats);
-req.done(function (data) {
+req = $.getJSON('data/dbstats.json', function (data) {
   dbstats = data;
   dbstats.nlineages = Object.keys(dbstats.lineages).length;
+});
+req.done(function () {
   $('#div-last-update').text(`${i18n_text.last_update}: ${dbstats.lastupdate}`);
-  $('#div-number-genomes').text(`${i18n_text.number_genomes}: ${dbstats.noseqs}`);
-  $('#div-number-lineages').text(`${i18n_text.number_lineages}: ${dbstats.nlineages}`);
+  $('#div-number-genomes').text(
+    `${i18n_text.number_genomes}: ${dbstats.noseqs}`,
+  );
+  $('#div-number-lineages').text(
+    `${i18n_text.number_lineages}: ${dbstats.nlineages}`,
+  );
 });
 
 var country_pal = {
@@ -146,13 +155,13 @@ var province_pal = {
 // load time-scaled phylogeny from server
 var nwk, df, countries;
 $.ajax({
-  url: covizuOptions.dataUrls.timetree,
+  url: 'data/timetree.nwk',
   success: function (data) {
     nwk = data;
     df = readTree(data);
   },
 });
-$.ajax(covizuOptions.dataUrls.countries, function (data) {
+$.getJSON('data/countries.json', function (data) {
   countries = data;
 });
 
@@ -164,7 +173,7 @@ var map_cidx_to_id = [],
   id_to_cidx = [];
 
 req = $.when(
-  $.ajax(covizuOptions.dataUrls.tips).done((data) => {
+  $.getJSON('/api/tips', function (data) {
     tips = data;
     tips.forEach((x) => {
       x.first_date = new Date(x.first_date);
@@ -173,7 +182,7 @@ req = $.when(
       x.mcoldate = new Date(x.mcoldate);
     });
   }),
-  $.ajax(covizuOptions.dataUrls.df).done((data) => {
+  $.getJSON('/api/df', function (data) {
     df = data;
     df.forEach((x) => {
       x.first_date = x.first_date ? new Date(x.first_date) : undefined;
@@ -196,9 +205,9 @@ req.done(async function () {
     node = rect.nodes()[rect.size() - 1];
 
   // Maps lineage to a cidx
-  await $.ajax(covizuOptions.dataUrls.lineagetocid).done((data) => {
-    lineage_to_cid = data;
-  });
+  await fetch(`/api/lineagetocid`)
+    .then((response) => response.json())
+    .then((data) => (lineage_to_cid = data));
 
   // initial display
   // d3.select(node).dispatch("click");
@@ -221,7 +230,9 @@ req.done(async function () {
   $('#search-input').autocomplete({
     source: function (req, res) {
       $.ajax({
-        url: `${covizuOptions.dataUrls.getHits}/${req.term}`,
+        url: `/api/getHits/${req.term}`,
+        dataType: 'json',
+        type: 'GET',
         data: {
           term: req.term,
         },
@@ -251,7 +262,10 @@ req.done(async function () {
 
   // Maps id to a cidx
   const reverseMapping = (o) =>
-    Object.keys(o).reduce((r, k) => Object.assign(r, { [o[k]]: (r[o[k]] || []).concat(k) }), {});
+    Object.keys(o).reduce(
+      (r, k) => Object.assign(r, { [o[k]]: (r[o[k]] || []).concat(k) }),
+      {},
+    );
   id_to_cidx = reverseMapping(map_cidx_to_id);
 
   /***********************  SEARCH INTERFACE ***********************/
@@ -282,8 +296,15 @@ req.done(async function () {
     var slider = $('#vedge-slider');
 
     if (direction === 'LEFT')
-      slider.slider('value', slider.slider('value') - slider.slider('option', 'step'));
-    else slider.slider('value', slider.slider('value') + slider.slider('option', 'step'));
+      slider.slider(
+        'value',
+        slider.slider('value') - slider.slider('option', 'step'),
+      );
+    else
+      slider.slider(
+        'value',
+        slider.slider('value') + slider.slider('option', 'step'),
+      );
 
     $('#custom-handle').text(slider.slider('value'));
     move_arrow();
@@ -441,13 +462,13 @@ req.done(async function () {
       $('#loading_text').text(``);
     } else if (curr_bead + 1 < search_results.get().total_points) {
       var curr_cid, next_cid;
-      await $.ajax(`${covizuOptions.dataUrls.cid}/${bead_id_to_accession[curr_bead]}`).done(
-        (data) => (curr_id = data),
-      );
+      await fetch(`/api/cid/${bead_id_to_accession[curr_bead]}`)
+        .then((response) => response.text())
+        .then((data) => (curr_cid = data));
 
-      await $.ajax(`${covizuOptions.dataUrls.cid}/${bead_id_to_accession[curr_bead + 1]}`).done(
-        (data) => (next_cid = data),
-      );
+      await fetch(`/api/cid/${bead_id_to_accession[curr_bead + 1]}`)
+        .then((response) => response.text())
+        .then((data) => (next_cid = data));
 
       if (curr_cid !== next_cid) {
         $('#loading').show();
@@ -517,7 +538,10 @@ req.done(async function () {
 
     var current_selection = d3.selectAll('rect.clicked').nodes()[0];
     if (current_selection.className.baseVal !== 'SelectedCluster clicked') {
-      if (parseInt(current_selection.id.substring(3)) < hit_ids[hit_ids.length - 1]) {
+      if (
+        parseInt(current_selection.id.substring(3)) <
+        hit_ids[hit_ids.length - 1]
+      ) {
         $('#loading').show();
         $('#loading_text').text(i18n_text.loading);
         await select_next_prev_bead(bead_id_to_accession, curr_bead);
@@ -527,13 +551,13 @@ req.done(async function () {
       }
     } else if (curr_bead - 1 >= 0) {
       var curr_cid, prev_cid;
-      await $.ajax(`${covizuOptions.dataUrls.cid}/${bead_id_to_accession[curr_bead]}`).done(
-        (data) => (curr_id = data),
-      );
+      await fetch(`/api/cid/${bead_id_to_accession[curr_bead]}`)
+        .then((response) => response.text())
+        .then((data) => (curr_cid = data));
 
-      await $.ajax(`${covizuOptions.dataUrls.cid}/${bead_id_to_accession[curr_bead - 1]}`).done(
-        (data) => (prev_cid = data),
-      );
+      await fetch(`/api/cid/${bead_id_to_accession[curr_bead - 1]}`)
+        .then((response) => response.text())
+        .then((data) => (prev_cid = data));
 
       // If the previous bead is not in the same cluster, selection of cluster needs to be modified
       if (curr_cid !== prev_cid) {
@@ -616,8 +640,12 @@ req.done(async function () {
       var selected_bead = d3.selectAll('.selectionH').nodes();
 
       if (selected_bead.length == 0) {
-        var points_ui = d3.selectAll('#svg-cluster > svg > g > circle').nodes()[0];
-        var selected_bead = d3.selectAll('circle[id="' + points_ui.__data__.accessions[0] + '"]');
+        var points_ui = d3
+          .selectAll('#svg-cluster > svg > g > circle')
+          .nodes()[0];
+        var selected_bead = d3.selectAll(
+          'circle[id="' + points_ui.__data__.accessions[0] + '"]',
+        );
         selected_bead.raise();
         var working_bead = selected_bead.nodes()[0];
         working_bead.scrollIntoView({ block: 'center' });
@@ -626,7 +654,9 @@ req.done(async function () {
         var selected_accession = selected_bead[0].attributes.bead.nodeValue;
         var bead_node = d3.selectAll('circle[id="' + selected_accession + '"]');
         var bead_id = parseInt(bead_node.nodes()[0].attributes.idx.nodeValue);
-        var total_nodes = d3.selectAll('#svg-cluster > svg > g > circle').nodes().length;
+        var total_nodes = d3
+          .selectAll('#svg-cluster > svg > g > circle')
+          .nodes().length;
 
         if (e.keyCode == 37) {
           if (bead_id - 1 >= 0) {
@@ -674,7 +704,9 @@ function save_timetree() {
 }
 
 function save_beadplot() {
-  blob = new Blob([serialize_beadplot(cindex)], { type: 'text/plain;charset=utf-8' });
+  blob = new Blob([serialize_beadplot(cindex)], {
+    type: 'text/plain;charset=utf-8',
+  });
   saveAs(blob, lineage + '.nwk');
 }
 
@@ -702,9 +734,9 @@ function export_csv() {
     lineage_info.push([
       `${tip.thisLabel},${Math.round(100 * tip.mean_ndiffs) / 100},${
         Math.round(100 * tip.residual) / 100
-      },${tip.nsamples},${tip.varcount},${formatDate(tip.first_date)},${formatDate(
-        tip.last_date,
-      )},${formatDate(tip.mcoldate)}`,
+      },${tip.nsamples},${tip.varcount},${formatDate(
+        tip.first_date,
+      )},${formatDate(tip.last_date)},${formatDate(tip.mcoldate)}`,
     ]);
   }
   csvFile = csvFile + '\n' + lineage_info.join('\n');

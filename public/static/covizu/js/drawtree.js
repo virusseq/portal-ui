@@ -245,7 +245,9 @@ function draw_clusters(tips) {
     let ctooltipText = `<b>${i18n_text.tip_diffs}:</b> ${
       Math.round(100 * d.mean_ndiffs) / 100
     }<br/>`;
-    ctooltipText += `<b>${i18n_text.tip_residual}:</b> ${Math.round(100 * d.residual) / 100}<br>`;
+    ctooltipText += `<b>${i18n_text.tip_residual}:</b> ${
+      Math.round(100 * d.residual) / 100
+    }<br>`;
     ctooltipText += mutations_to_string(d.mutations);
     ctooltipText += region_to_string(d.allregions);
     ctooltipText += `<b>${i18n_text.tip_varcount}:</b><br>`;
@@ -262,7 +264,12 @@ function draw_clusters(tips) {
       .style('left', d3.event.pageX + 15 + 'px')
       .style('top', function () {
         if (d3.event.pageY > window.innerHeight / 2) {
-          return d3.event.pageY - cTooltip.node().getBoundingClientRect().height - 15 + 'px';
+          return (
+            d3.event.pageY -
+            cTooltip.node().getBoundingClientRect().height -
+            15 +
+            'px'
+          );
         } else {
           return d3.event.pageY + 15 + 'px';
         }
@@ -434,14 +441,19 @@ function legend({
     .style('overflow', 'visible')
     .style('display', 'block');
 
-  let tickAdjust = (g) => g.selectAll('.tick line').attr('y1', marginTop + marginBottom - height);
+  let tickAdjust = (g) =>
+    g.selectAll('.tick line').attr('y1', marginTop + marginBottom - height);
   let x;
 
   // Continuous
   if (color.interpolate) {
     const n = Math.min(color.domain().length, color.range().length);
 
-    x = color.copy().rangeRound(d3.quantize(d3.interpolate(marginLeft, width - marginRight), n));
+    x = color
+      .copy()
+      .rangeRound(
+        d3.quantize(d3.interpolate(marginLeft, width - marginRight), n),
+      );
 
     svg
       .append('image')
@@ -452,14 +464,18 @@ function legend({
       .attr('preserveAspectRatio', 'none')
       .attr(
         'xlink:href',
-        ramp(color.copy().domain(d3.quantize(d3.interpolate(0, 1), n))).toDataURL(),
+        ramp(
+          color.copy().domain(d3.quantize(d3.interpolate(0, 1), n)),
+        ).toDataURL(),
       );
   }
 
   // Sequential
   else if (color.interpolator) {
     x = Object.assign(
-      color.copy().interpolator(d3.interpolateRound(marginLeft, width - marginRight)),
+      color
+        .copy()
+        .interpolator(d3.interpolateRound(marginLeft, width - marginRight)),
       {
         range() {
           return [marginLeft, width - marginRight];
@@ -480,7 +496,9 @@ function legend({
     if (!x.ticks) {
       if (tickValues === undefined) {
         const n = Math.round(ticks + 1);
-        tickValues = d3.range(n).map((i) => d3.quantile(color.domain(), i / (n - 1)));
+        tickValues = d3
+          .range(n)
+          .map((i) => d3.quantile(color.domain(), i / (n - 1)));
       }
       if (typeof tickFormat !== 'function') {
         tickFormat = d3.format(tickFormat === undefined ? ',f' : tickFormat);
@@ -650,7 +668,10 @@ async function click_cluster(d, cluster_info) {
   d3.selectAll('rect.clickedH').remove();
 
   // Remove "clicked" class to ensure that the previous cluster doesn't remain highligted
-  if (search_results.get().total_points > 0 || isLineage($('#search-input').val())) {
+  if (
+    search_results.get().total_points > 0 ||
+    isLineage($('#search-input').val())
+  ) {
     d3.selectAll('.SelectedCluster.clicked').attr('class', 'SelectedCluster');
     d3.selectAll('rect.clicked').attr('class', 'not_SelectedCluster');
     d3.selectAll('text.clicked').attr('class', null);
@@ -679,17 +700,27 @@ async function click_cluster(d, cluster_info) {
   } else if (cluster_info.className.baseVal !== 'SelectedCluster') {
     if (search_results.get().total_points > 0) {
       var hit_ids = search_results.get().hit_ids;
-      var closest_cluster = previous_closest_match('cidx-' + d.cluster_idx, hit_ids);
+      var closest_cluster = previous_closest_match(
+        'cidx-' + d.cluster_idx,
+        hit_ids,
+      );
       var bead_id;
 
       if (
         hit_ids[0] == hit_ids[hit_ids.length - 1] &&
         map_cidx_to_id['cidx-' + cindex] < hit_ids[0]
       )
-        bead_id = search_results.get().clusters_last_bead[id_to_cidx[closest_cluster]];
+        bead_id = search_results.get().clusters_last_bead[
+          id_to_cidx[closest_cluster]
+        ];
       else if (map_cidx_to_id['cidx-' + cindex] > hit_ids[hit_ids.length - 1])
-        bead_id = search_results.get().clusters_first_bead[id_to_cidx[closest_cluster]];
-      else bead_id = search_results.get().clusters_last_bead[id_to_cidx[closest_cluster]];
+        bead_id = search_results.get().clusters_first_bead[
+          id_to_cidx[closest_cluster]
+        ];
+      else
+        bead_id = search_results.get().clusters_last_bead[
+          id_to_cidx[closest_cluster]
+        ];
 
       deselect_all_beads();
 
@@ -710,22 +741,28 @@ async function click_cluster(d, cluster_info) {
     gen_details_table(points); // update details table with all samples
 
     // FIXME: this is the same div used for making barplot SVG
-    $('#text-node').html(`Number of cases: ${d.count}<br/>Number of variants: ${d.varcount}<br/>`);
+    $('#text-node').html(
+      `Number of cases: ${d.count}<br/>Number of variants: ${d.varcount}<br/>`,
+    );
   } else {
     // If the selected cluster is a SelectedCluster, then the search_results need to be updated to point to the first bead in the cluster
     d3.select(cluster_info).attr('class', 'SelectedCluster clicked');
     d3.select('#cidx-' + cindex).attr('class', 'clicked');
     var bead_hits = search_results.get().beads;
-    var current_id = search_results.get().clusters_first_bead['cidx-' + d.cluster_idx];
+    var current_id = search_results.get().clusters_first_bead[
+      'cidx-' + d.cluster_idx
+    ];
     var bead_id_to_accession = Object.keys(bead_hits);
     var stats = search_results.update({
       current_point: bead_hits[current_id],
     });
     update_search_stats(stats);
     // Beads in Cluster
-    points_ui = d3.selectAll('#svg-cluster > svg > g > circle').filter(function (d) {
-      return bead_id_to_accession.includes(d.accessions[0]);
-    });
+    points_ui = d3
+      .selectAll('#svg-cluster > svg > g > circle')
+      .filter(function (d) {
+        return bead_id_to_accession.includes(d.accessions[0]);
+      });
 
     selected = points_ui.nodes();
     deselect_all_beads();

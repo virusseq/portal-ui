@@ -106,10 +106,9 @@ async function wrap_search() {
  * @param end_data: a date type indicating the search end date.
  */
 async function main_search(all_bead_data, text_query, start_date, end_date) {
-  search_hits = await $.ajax({
-    url: `${covizuOptions.dataUrls.searchHits}/${text_query}/${start_date}/${end_date}`,
-    headers: { 'Accept-Version': 'apiVersion=1.0.0;dataVersion=2022-07-10' },
-  });
+  search_hits = await getdata(
+    `/api/searchHits/${text_query}/${start_date}/${end_date}`,
+  );
   search_hits.forEach((d) => {
     d.x = utcDate(d.x);
   });
@@ -123,7 +122,9 @@ async function main_search(all_bead_data, text_query, start_date, end_date) {
   // Order the search results by cluster id, y cord, x cord
   search_hits.sort(function (x, y) {
     return (
-      map_cidx_to_id['cidx-' + y.cidx] - map_cidx_to_id['cidx-' + x.cidx] || x.y - x.y || x.x - y.y
+      map_cidx_to_id['cidx-' + y.cidx] - map_cidx_to_id['cidx-' + x.cidx] ||
+      x.y - x.y ||
+      x.x - y.y
     );
   });
 
@@ -149,7 +150,8 @@ async function main_search(all_bead_data, text_query, start_date, end_date) {
 
   var hit_id = [];
   for (var i = 0; i < hit_keys.length; i++) {
-    if (map_cidx_to_id[hit_keys[i]] === undefined) console.log('undefined: ' + hit_keys[i]);
+    if (map_cidx_to_id[hit_keys[i]] === undefined)
+      console.log('undefined: ' + hit_keys[i]);
     hit_id[i] = map_cidx_to_id[hit_keys[i]];
   }
 
@@ -158,12 +160,15 @@ async function main_search(all_bead_data, text_query, start_date, end_date) {
   });
 
   // Keeps track of the clicked cluster
-  var curr_cluster = d3.selectAll('.clicked').nodes()[0].attributes.cidx.nodeValue;
+  var curr_cluster = d3.selectAll('.clicked').nodes()[0].attributes.cidx
+    .nodeValue;
   var selected_cidx = id_to_cidx[closest_match(curr_cluster, hit_id)];
 
-  var selections = d3.selectAll('#svg-timetree > svg > rect:not(.clickedH)').filter(function () {
-    return hit_id.includes(parseInt(this.id.substring(3)));
-  });
+  var selections = d3
+    .selectAll('#svg-timetree > svg > rect:not(.clickedH)')
+    .filter(function () {
+      return hit_id.includes(parseInt(this.id.substring(3)));
+    });
 
   var cluster = select_cluster(selected_cidx);
 
@@ -185,9 +190,11 @@ async function main_search(all_bead_data, text_query, start_date, end_date) {
   await beadplot(cluster.datum().cluster_idx);
 
   // Beads in Cluster
-  points_ui = d3.selectAll('#svg-cluster > svg > g > circle').filter(function (d) {
-    return bead_id_to_accession.includes(d.accessions[0]);
-  });
+  points_ui = d3
+    .selectAll('#svg-cluster > svg > g > circle')
+    .filter(function (d) {
+      return bead_id_to_accession.includes(d.accessions[0]);
+    });
 
   // Selects all the beads with hits in the cluster and generates the table for the first hit
   select_beads(points_ui);
@@ -241,7 +248,7 @@ async function lineage_search(text_query) {
  * @param {String} text_query
  */
 async function accession_search(text_query) {
-  var cidx = await $.ajax(`${covizuOptions.dataUrls.cid}/${text_query.toUpperCase()}`);
+  var cidx = await getdata(`/api/cid/${text_query.toUpperCase()}`);
 
   if (cidx === undefined) {
     $('#error_message').text(`No matches. Please try again.`);
@@ -326,10 +333,13 @@ function update_table_individual_bead_front(bead) {
  */
 async function select_next_prev_bead(bead_id_to_accession, curr_bead) {
   d3.selectAll('rect[class="clicked"]').attr('class', 'not_SelectedCluster');
-  d3.selectAll('rect[class="not_SelectedCluster clicked"]').attr('class', 'not_SelectedCluster');
+  d3.selectAll('rect[class="not_SelectedCluster clicked"]').attr(
+    'class',
+    'not_SelectedCluster',
+  );
 
   let curr_cid;
-  await fetch(`${covizuOptions.dataUrls.cid}/${bead_id_to_accession[curr_bead]}`)
+  await fetch(`/api/cid/${bead_id_to_accession[curr_bead]}`)
     .then((response) => response.text())
     .then((data) => (curr_cid = data));
 
@@ -346,9 +356,11 @@ async function select_next_prev_bead(bead_id_to_accession, curr_bead) {
   await beadplot(next_cluster.datum().cluster_idx);
 
   // Beads in Cluster
-  points_ui = d3.selectAll('#svg-cluster > svg > g > circle').filter(function (d) {
-    return bead_id_to_accession.includes(d.accessions[0]);
-  });
+  points_ui = d3
+    .selectAll('#svg-cluster > svg > g > circle')
+    .filter(function (d) {
+      return bead_id_to_accession.includes(d.accessions[0]);
+    });
   selected = points_ui.nodes();
   deselect_all_beads();
   for (const node of selected) {
@@ -408,7 +420,9 @@ function deselect_all_beads() {
 }
 
 function select_working_bead(bead_id_to_accession, curr_bead) {
-  var current_bead = d3.selectAll('circle[id="' + bead_id_to_accession[curr_bead] + '"]');
+  var current_bead = d3.selectAll(
+    'circle[id="' + bead_id_to_accession[curr_bead] + '"]',
+  );
   var working_bead = current_bead.nodes()[0];
   current_bead.raise();
   working_bead.scrollIntoView({ block: 'center' });
@@ -469,20 +483,24 @@ function select_beads_by_substring(substr) {
     end_date = utcDate(end);
   }
 
-  rects = d3.selectAll('#svg-timetree > svg > rect:not(.clickedH)').filter(function (d) {
-    return (
-      d.searchtext.match(substr) !== null
-      //&& d.first_date <= end_date && d.last_date >= start_date
-    );
-  });
+  rects = d3
+    .selectAll('#svg-timetree > svg > rect:not(.clickedH)')
+    .filter(function (d) {
+      return (
+        d.searchtext.match(substr) !== null
+        //&& d.first_date <= end_date && d.last_date >= start_date
+      );
+    });
 
   select_clusters(rects);
 
   // preceding function switches view to beadplot with matching samples, if any
-  points_ui = d3.selectAll('#svg-cluster > svg > g > circle').filter(function (d) {
-    return d.labels.some((x) => x.includes(substr));
-    //&& d.x >= start_date && d.x <= end_date
-  });
+  points_ui = d3
+    .selectAll('#svg-cluster > svg > g > circle')
+    .filter(function (d) {
+      return d.labels.some((x) => x.includes(substr));
+      //&& d.x >= start_date && d.x <= end_date
+    });
   select_beads(points_ui);
 }
 
@@ -500,8 +518,10 @@ function select_by_points(points) {
 
   const labels = new Set(points.map((point) => point.labels).flat());
   const cidx = new Set(points.map((point) => point.cidx));
-  const clusters_fn = (cluster) => cluster.cluster_idx && cidx.has(cluster.cluster_idx);
-  const points_fn = (point) => point && point.labels.some((label) => labels.has(label));
+  const clusters_fn = (cluster) =>
+    cluster.cluster_idx && cidx.has(cluster.cluster_idx);
+  const points_fn = (point) =>
+    point && point.labels.some((label) => labels.has(label));
   select_beads_by_comparators(clusters_fn, points_fn);
 }
 
@@ -564,7 +584,8 @@ function closest_match(non_hit_cluster_index, hit_ids) {
 
   if (target_index <= hit_ids[0]) return hit_ids[0];
 
-  if (target_index >= hit_ids[hit_ids.length - 1]) return hit_ids[hit_ids.length - 1];
+  if (target_index >= hit_ids[hit_ids.length - 1])
+    return hit_ids[hit_ids.length - 1];
 
   var i = 0,
     j = hit_ids.length,
@@ -600,7 +621,8 @@ function previous_closest_match(non_hit_cluster_index, hit_ids) {
 
   if (target_index <= hit_ids[0]) return hit_ids[0];
 
-  if (target_index >= hit_ids[hit_ids.length - 1]) return hit_ids[hit_ids.length - 1];
+  if (target_index >= hit_ids[hit_ids.length - 1])
+    return hit_ids[hit_ids.length - 1];
 
   var i = 0,
     j = hit_ids.length,
@@ -613,7 +635,8 @@ function previous_closest_match(non_hit_cluster_index, hit_ids) {
       if (mid > 0 && target_index > hit_ids[mid - 1]) return hit_ids[mid];
       j = mid;
     } else {
-      if (mid < hit_ids.length - 1 && target_index < hit_ids[mid + 1]) return hit_ids[mid + 1];
+      if (mid < hit_ids.length - 1 && target_index < hit_ids[mid + 1])
+        return hit_ids[mid + 1];
       i = mid + 1;
     }
   }
@@ -650,7 +673,9 @@ function get_autocomplete_source_fn(accn_to_cid, lineage_to_cid) {
         response([]);
       }
     } else {
-      const result = data.filter((array) => array[0].indexOf(normalize(term)) > -1);
+      const result = data.filter(
+        (array) => array[0].indexOf(normalize(term)) > -1,
+      );
       response(result.slice(0, MIN_RESULTS).map(as_label));
     }
   };
@@ -666,7 +691,9 @@ function search() {
   //const points = find_beads_points(beaddata)
   //.filter(point => point.labels.some(label => label.includes(query)));
   // TODO: Make select_bead_by_* use find_beads_points result
-  isAccn(query) ? select_bead_by_accession(query) : select_beads_by_substring(query);
+  isAccn(query)
+    ? select_bead_by_accession(query)
+    : select_beads_by_substring(query);
   //const stats = search_stats.update({
   //query,
   //current_point: 0,
@@ -678,15 +705,19 @@ function search() {
 }
 
 function search_by_dates(start, end) {
-  var rects = d3.selectAll('#svg-timetree > svg > rect:not(.clickedH)').filter(function (d) {
-    return d.first_date <= end && d.last_date >= start;
-  });
+  var rects = d3
+    .selectAll('#svg-timetree > svg > rect:not(.clickedH)')
+    .filter(function (d) {
+      return d.first_date <= end && d.last_date >= start;
+    });
   select_clusters(rects);
 
   // preceding function switches view to beadplot with matching samples, if any
-  var points_ui = d3.selectAll('#svg-cluster > svg > g > circle').filter(function (d) {
-    return d.x >= start && d.x <= end;
-  });
+  var points_ui = d3
+    .selectAll('#svg-cluster > svg > g > circle')
+    .filter(function (d) {
+      return d.x >= start && d.x <= end;
+    });
   select_beads(points_ui);
 
   /*
