@@ -5,7 +5,7 @@ var urlParams = new URLSearchParams(window.location.search);
 var apiUrl = urlParams.get('apiUrl') || '';
 
 // add API URL to i18n links
-$('#__en, #covizu-18n__fr').on('click', function (e) {
+$('#covizu-18n__en, #covizu-18n__fr').on('click', function (e) {
   e.preventDefault();
   var lang = e.target.id.split('__')[1];
   var filename = lang === 'en' ? 'index.html' : 'index-' + lang + '.html';

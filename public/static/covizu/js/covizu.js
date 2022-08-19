@@ -110,7 +110,7 @@ $.ajaxSetup({
 
 // load database statistics
 var dbstats, req;
-req = $.getJSON('data/dbstats.json', function (data) {
+req = $.get('data/dbstats.json', function (data) {
   dbstats = data;
   dbstats.nlineages = Object.keys(dbstats.lineages).length;
 });
@@ -161,7 +161,7 @@ $.ajax({
     df = readTree(data);
   },
 });
-$.getJSON('data/countries.json', function (data) {
+$.get('data/countries.json', function (data) {
   countries = data;
 });
 
@@ -173,7 +173,7 @@ var map_cidx_to_id = [],
   id_to_cidx = [];
 
 req = $.when(
-  $.getJSON('/api/tips', function (data) {
+  $.get('/api/tips', function (data) {
     tips = data;
     tips.forEach((x) => {
       x.first_date = new Date(x.first_date);
@@ -182,7 +182,7 @@ req = $.when(
       x.mcoldate = new Date(x.mcoldate);
     });
   }),
-  $.getJSON('/api/df', function (data) {
+  $.get('/api/df', function (data) {
     df = data;
     df.forEach((x) => {
       x.first_date = x.first_date ? new Date(x.first_date) : undefined;
@@ -205,7 +205,7 @@ req.done(async function () {
     node = rect.nodes()[rect.size() - 1];
 
   // Maps lineage to a cidx
-  await $.getJSON(`/api/lineagetocid`).then((data) => (lineage_to_cid = data));
+  await $.get(`/api/lineagetocid`).then((data) => (lineage_to_cid = data));
 
   // initial display
   // d3.select(node).dispatch("click");
@@ -460,13 +460,13 @@ req.done(async function () {
       $('#loading_text').text(``);
     } else if (curr_bead + 1 < search_results.get().total_points) {
       var curr_cid, next_cid;
-      await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`)
-        .then((response) => response.responseText)
-        .then((data) => (curr_cid = data));
+      await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`).then(
+        (data) => (curr_cid = data),
+      );
 
-      await $.get(`/api/cid/${bead_id_to_accession[curr_bead + 1]}`)
-        .then((response) => response.responseText)
-        .then((data) => (next_cid = data));
+      await $.get(`/api/cid/${bead_id_to_accession[curr_bead + 1]}`).then(
+        (data) => (next_cid = data),
+      );
 
       if (curr_cid !== next_cid) {
         $('#loading').show();
@@ -549,13 +549,13 @@ req.done(async function () {
       }
     } else if (curr_bead - 1 >= 0) {
       var curr_cid, prev_cid;
-      await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`)
-        .then((response) => response.responseText)
-        .then((data) => (curr_cid = data));
+      await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`).then(
+        (data) => (curr_cid = data),
+      );
 
-      await $.get(`/api/cid/${bead_id_to_accession[curr_bead - 1]}`)
-        .then((response) => response.responseText)
-        .then((data) => (prev_cid = data));
+      await $.get(`/api/cid/${bead_id_to_accession[curr_bead - 1]}`).then(
+        (data) => (prev_cid = data),
+      );
 
       // If the previous bead is not in the same cluster, selection of cluster needs to be modified
       if (curr_cid !== prev_cid) {
@@ -705,6 +705,7 @@ function save_beadplot() {
   blob = new Blob([serialize_beadplot(cindex)], {
     type: 'text/plain;charset=utf-8',
   });
+  console.log(lineage, blob);
   saveAs(blob, lineage + '.nwk');
 }
 

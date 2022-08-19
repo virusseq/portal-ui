@@ -219,21 +219,23 @@ async function beadplot(cid) {
   if (cindex !== ccid) {
     cindex = cid;
     ccid = cindex;
-    edgelist = await $.getJSON(`/api/edgelist/${cindex}`);
+    edgelist = await $.get(`/api/edgelist/${cindex}`);
+    console.log(edgelist);
     edgelist.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
-    points = await $.getJSON(`/api/points/${cindex}`);
+    points = await $.get(`/api/points/${cindex}`);
     points.forEach((d) => {
       d.x = utcDate(d.x);
     });
-    variants = await $.getJSON(`/api/variants/${cindex}`);
+    variants = await $.get(`/api/variants/${cindex}`);
     variants.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
-    await $.get(`/api/lineage/${cindex}`)
-      .then((response) => response.responseText)
-      .then((lin) => (lineage = lin));
+    await $.get(`/api/lineage/${cindex}`).then(
+      (response) => (lineage = response),
+    );
+    console.log({ lineage });
   }
 
   // rescale slider
@@ -1260,6 +1262,7 @@ function serialize_branch(parent, edgelist) {
 }
 
 function serialize_beadplot(cidx) {
+  console.log(edgelist);
   var root = edgelist[0].parent;
   return serialize_branch(root, edgelist) + ';';
 }
