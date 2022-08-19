@@ -192,7 +192,6 @@ req.done(async function() {
 
   // Maps lineage to a cidx
   await $.get(`/api/lineagetocid`)
-  .then(response => response.json())
   .then(data => lineage_to_cid = data)
 
   // initial display
