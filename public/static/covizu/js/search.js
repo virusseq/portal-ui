@@ -106,7 +106,7 @@ async function wrap_search() {
  * @param end_data: a date type indicating the search end date.
  */
 async function main_search(all_bead_data, text_query, start_date, end_date) {
-  search_hits = await getdata(
+  search_hits = await $.getJSON(
     `/api/searchHits/${text_query}/${start_date}/${end_date}`,
   );
   search_hits.forEach((d) => {
@@ -248,7 +248,7 @@ async function lineage_search(text_query) {
  * @param {String} text_query
  */
 async function accession_search(text_query) {
-  var cidx = await getdata(`/api/cid/${text_query.toUpperCase()}`);
+  var cidx = await $.getJSON(`/api/cid/${text_query.toUpperCase()}`);
 
   if (cidx === undefined) {
     $('#error_message').text(`No matches. Please try again.`);
@@ -339,8 +339,8 @@ async function select_next_prev_bead(bead_id_to_accession, curr_bead) {
   );
 
   let curr_cid;
-  await fetch(`/api/cid/${bead_id_to_accession[curr_bead]}`)
-    .then((response) => response.text())
+  await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`)
+    .then((response) => response.responseText)
     .then((data) => (curr_cid = data));
 
   var next_cluster = d3.selectAll('rect[cidx="cidx-' + curr_cid + '"]');

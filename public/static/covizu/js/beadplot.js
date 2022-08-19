@@ -219,20 +219,20 @@ async function beadplot(cid) {
   if (cindex !== ccid) {
     cindex = cid;
     ccid = cindex;
-    edgelist = await getdata(`/api/edgelist/${cindex}`);
+    edgelist = await $.getJSON(`/api/edgelist/${cindex}`);
     edgelist.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
-    points = await getdata(`/api/points/${cindex}`);
+    points = await $.getJSON(`/api/points/${cindex}`);
     points.forEach((d) => {
       d.x = utcDate(d.x);
     });
-    variants = await getdata(`/api/variants/${cindex}`);
+    variants = await $.getJSON(`/api/variants/${cindex}`);
     variants.forEach((x) => {
       (x.x1 = utcDate(x.x1)), (x.x2 = utcDate(x.x2));
     });
-    await fetch(`/api/lineage/${cindex}`)
-      .then((response) => response.text())
+    await $.get(`/api/lineage/${cindex}`)
+      .then((response) => response.responseText)
       .then((lin) => (lineage = lin));
   }
 

@@ -205,9 +205,7 @@ req.done(async function () {
     node = rect.nodes()[rect.size() - 1];
 
   // Maps lineage to a cidx
-  await fetch(`/api/lineagetocid`)
-    .then((response) => response.json())
-    .then((data) => (lineage_to_cid = data));
+  await $.getJSON(`/api/lineagetocid`).then((data) => (lineage_to_cid = data));
 
   // initial display
   // d3.select(node).dispatch("click");
@@ -462,12 +460,12 @@ req.done(async function () {
       $('#loading_text').text(``);
     } else if (curr_bead + 1 < search_results.get().total_points) {
       var curr_cid, next_cid;
-      await fetch(`/api/cid/${bead_id_to_accession[curr_bead]}`)
-        .then((response) => response.text())
+      await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`)
+        .then((response) => response.responseText)
         .then((data) => (curr_cid = data));
 
-      await fetch(`/api/cid/${bead_id_to_accession[curr_bead + 1]}`)
-        .then((response) => response.text())
+      await $.get(`/api/cid/${bead_id_to_accession[curr_bead + 1]}`)
+        .then((response) => response.responseText)
         .then((data) => (next_cid = data));
 
       if (curr_cid !== next_cid) {
@@ -551,12 +549,12 @@ req.done(async function () {
       }
     } else if (curr_bead - 1 >= 0) {
       var curr_cid, prev_cid;
-      await fetch(`/api/cid/${bead_id_to_accession[curr_bead]}`)
-        .then((response) => response.text())
+      await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`)
+        .then((response) => response.responseText)
         .then((data) => (curr_cid = data));
 
-      await fetch(`/api/cid/${bead_id_to_accession[curr_bead - 1]}`)
-        .then((response) => response.text())
+      await $.get(`/api/cid/${bead_id_to_accession[curr_bead - 1]}`)
+        .then((response) => response.responseText)
         .then((data) => (prev_cid = data));
 
       // If the previous bead is not in the same cluster, selection of cluster needs to be modified
