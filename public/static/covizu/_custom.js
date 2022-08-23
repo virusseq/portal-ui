@@ -1,6 +1,8 @@
 // customizations for virus-seq implementation
 
-const COVIZU_VERSION = '1.1.0';
+// Increment the version here & in API only when there are breaking changes
+// to the data shape. This version number determines which data is loaded.
+const COVIZU_VERSION = '1.0.0';
 console.info('VirusSeq Covizu version', COVIZU_VERSION);
 
 // get API URL from URL query
