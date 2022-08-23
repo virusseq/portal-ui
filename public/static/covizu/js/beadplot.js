@@ -191,21 +191,22 @@ async function beadplot(cid) {
   if (cindex !== ccid) {
     cindex = cid;
     ccid = cindex
-    edgelist = await $.get(`/api/edgelist/${cindex}`);
+    const testList = await $.memoizedAjax({ url: `/api/edgelist/${cindex}` })
+    edgelist = await $.memoizedAjax({ url: `/api/edgelist/${cindex}` });
     edgelist.forEach(x => {
       x.x1 = utcDate(x.x1),
       x.x2 = utcDate(x.x2)
     });
-    points = await $.get(`/api/points/${cindex}`);
+    points = await $.memoizedAjax({ url: `/api/points/${cindex}` });
     points.forEach(d => {
       d.x = utcDate(d.x)
     });
-    variants = await $.get(`/api/variants/${cindex}`);
+    variants = await $.memoizedAjax({ url: `/api/variants/${cindex}` });
     variants.forEach(x => {
       x.x1 = utcDate(x.x1),
       x.x2 = utcDate(x.x2)
     });
-    await $.get(`/api/lineage/${cindex}`)
+    await $.memoizedAjax({ url: `/api/lineage/${cindex}` })
     .then(lin => lineage=lin)
   } 
 

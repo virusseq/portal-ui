@@ -101,14 +101,15 @@ $.ajaxSetup({
 
 // load database statistics
 var dbstats, req;
-req = $.get("data/dbstats.json", function(data) {
-  dbstats = data;
-  dbstats.nlineages = Object.keys(dbstats.lineages).length;
-});
-req.done(function() {
-  $("#div-last-update").text(`${i18n_text.last_update}: ${dbstats.lastupdate}`);
-  $("#div-number-genomes").text(`${i18n_text.number_genomes}: ${dbstats.noseqs}`);
-  $("#div-number-lineages").text(`${i18n_text.number_lineages}: ${dbstats.nlineages}`);
+req = $.memoizedAjax({ url: "data/dbstats.json" })
+  .then(function (data) {
+    dbstats = data;
+    dbstats.nlineages = Object.keys(dbstats.lineages).length;
+  })
+  .done(function () {
+    $("#div-last-update").text(`${i18n_text.last_update}: ${dbstats.lastupdate}`);
+    $("#div-number-genomes").text(`${i18n_text.number_genomes}: ${dbstats.noseqs}`);
+    $("#div-number-lineages").text(`${i18n_text.number_lineages}: ${dbstats.nlineages}`);
 });
 
 var country_pal = {
@@ -141,14 +142,14 @@ var province_pal = {
 
 // load time-scaled phylogeny from server
 var nwk, df, countries;
-$.ajax({
+$.memoizedAjax({
   url: "data/timetree.nwk",
   success: function(data) {
     nwk = data;
     df = readTree(data);
   }
 });
-$.get("data/countries.json", function(data) {
+$.memoizedAjax({ url: "data/countries.json" }, function(data) {
   countries = data;
 });
 
@@ -159,23 +160,27 @@ var edgelist = [], points = [], variants = [];
 var map_cidx_to_id = [], id_to_cidx = [];
 
 req = $.when(
-  $.get("/api/tips", function(data) {
-    tips = data;
-    tips.forEach(x => {
-      x.first_date = new Date(x.first_date)
-      x.last_date = new Date(x.last_date)
-      x.coldate = new Date(x.coldate)
-      x.mcoldate = new Date(x.mcoldate)
-    });
+  $.memoizedAjax({
+    url: "/api/tips", success: function (data) {
+      tips = data;
+      tips.forEach(x => {
+        x.first_date = new Date(x.first_date)
+        x.last_date = new Date(x.last_date)
+        x.coldate = new Date(x.coldate)
+        x.mcoldate = new Date(x.mcoldate)
+      });
+    }
   }),
-  $.get("/api/df", function(data) {
-    df = data;
-    df.forEach(x => {
-      x.first_date = x.first_date ? new Date(x.first_date) : undefined
-      x.last_date = x.last_date ? new Date(x.last_date) : undefined
-      x.coldate = x.coldate ? new Date(x.coldate) : undefined
-      x.mcoldate = x.coldate ? new Date(x.mcoldate) : undefined
-    });
+  $.memoizedAjax({
+    url: "/api/df", success: function (data) {
+      df = data;
+      df.forEach(x => {
+        x.first_date = x.first_date ? new Date(x.first_date) : undefined
+        x.last_date = x.last_date ? new Date(x.last_date) : undefined
+        x.coldate = x.coldate ? new Date(x.coldate) : undefined
+        x.mcoldate = x.coldate ? new Date(x.mcoldate) : undefined
+      });
+    }
   }),
 );
 
@@ -191,7 +196,7 @@ req.done(async function() {
       node = rect.nodes()[rect.size()-1];
 
   // Maps lineage to a cidx
-  await $.get(`/api/lineagetocid`)
+  await $.memoizedAjax({ url: `/api/lineagetocid` })
   .then(data => lineage_to_cid = data)
 
   // initial display
@@ -214,7 +219,7 @@ req.done(async function() {
 
   $('#search-input').autocomplete({
     source: function(req, res) {
-      $.ajax({
+      $.memoizedAjax({
         url: `/api/getHits/${req.term}`,
         dataType: "json",
         type: "GET",
@@ -427,10 +432,10 @@ req.done(async function() {
     }
     else if (curr_bead + 1 < search_results.get().total_points) {
       var curr_cid, next_cid;
-      await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`)
+      await $.memoizedAjax({ url: `/api/cid/${bead_id_to_accession[curr_bead]}` })
       .then(data => curr_cid = data);
 
-      await $.get(`/api/cid/${bead_id_to_accession[curr_bead + 1]}`)
+      await $.memoizedAjax({ url: `/api/cid/${bead_id_to_accession[curr_bead + 1]}` })
       .then(data => next_cid = data);
 
       if (curr_cid !== next_cid) {
@@ -515,10 +520,10 @@ req.done(async function() {
     }
     else if (curr_bead - 1 >= 0) {
       var curr_cid, prev_cid;
-      await $.get(`/api/cid/${bead_id_to_accession[curr_bead]}`)
+      await $.memoizedAjax({ url: `/api/cid/${bead_id_to_accession[curr_bead]}` })
       .then(data => curr_cid = data);
 
-      await $.get(`/api/cid/${bead_id_to_accession[curr_bead - 1]}`)
+      await $.memoizedAjax({ url: `/api/cid/${bead_id_to_accession[curr_bead - 1]}` })
       .then(data => prev_cid = data);
       
       // If the previous bead is not in the same cluster, selection of cluster needs to be modified

@@ -43,5 +43,5 @@ $.ajaxSetup({
 });
 
 $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
-  console.error(thrownError);
+  console.error(thrownError, settings);
 });
