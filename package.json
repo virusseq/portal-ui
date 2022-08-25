@@ -11,7 +11,7 @@
     "test": "npm run build && jest"
   },
   "dependencies": {
-    "@arranger/components": "^2.19.1",
+    "@arranger/components": "^2.19.2",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
