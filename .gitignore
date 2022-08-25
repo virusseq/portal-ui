@@ -34,6 +34,7 @@ yarn-error.log*
 .vercel
 
 # vscode
+.vscode/*.log
 *.code-workspace
 
 # temp

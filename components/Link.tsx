@@ -36,6 +36,10 @@ const StyledLink = styled('a')`
       ? `
       cursor: not-allowed;
       color: ${theme?.colors.grey_5};
+
+      svg g {
+        fill: ${theme?.colors.grey_5};
+      }
     `
       : `
       color: ${theme?.colors.primary};
