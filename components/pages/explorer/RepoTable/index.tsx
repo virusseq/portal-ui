@@ -363,6 +363,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
     NEXT_PUBLIC_ARRANGER_API,
     NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS,
     NEXT_PUBLIC_ARRANGER_PROJECT_ID,
+    NEXT_PUBLIC_ENABLE_DOWNLOADS,
     NEXT_PUBLIC_SINGULARITY_API_URL,
   } = getConfig();
 
@@ -423,8 +424,9 @@ const RepoTable = (props: PageContentProps): ReactElement => {
   const tsvExportColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',').map((column) => {
     const fieldName = column.trim();
     return {
-      fieldName,
-      displayName: ({ displayName, Header }: { displayName?: string; Header: string }) => {
+      displayFormat: ({ displayFormat = '', displayType = '', type = '' }) =>
+        displayFormat || ([displayType, type].includes('date') && 'yyyy-MM-dd'),
+      displayName: ({ displayName = '', Header = '' }) => {
         switch (fieldName) {
           case 'study_id':
             return fieldName;
@@ -437,6 +439,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
               .replace(/(\s*)gisaid(\s*)/g, '$1GISAID$2');
         }
       },
+      fieldName,
     };
   });
 
@@ -446,6 +449,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
       fileName: `virusseq-metadata-export-${today}.tsv`,
       function: 'saveTSV',
       label: 'Metadata only',
+      valueWhenEmpty: '',
     },
     { function: handleBundleDownload, label: 'Metadata & Fasta files' },
   ];
@@ -455,7 +459,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
       <div css={getTableStyle(theme)}>
         <Table
           {...props}
-          allowTSVExport
+          allowTSVExport={NEXT_PUBLIC_ENABLE_DOWNLOADS}
           columnDropdownText="Columns"
           downloadUrl={urlJoin(
             NEXT_PUBLIC_ARRANGER_API,
@@ -463,7 +467,7 @@ const RepoTable = (props: PageContentProps): ReactElement => {
             'download',
           )}
           enableSelectedTableRowsExporterFilter
-          exporter={customExporters}
+          exporter={NEXT_PUBLIC_ENABLE_DOWNLOADS ? customExporters : []}
           exporterLabel="Download Dataset"
           showFilterInput={false}
         />

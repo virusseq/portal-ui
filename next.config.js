@@ -61,6 +61,10 @@ module.exports = withPlugins([withTranspileModules], {
     NEXT_PUBLIC_APP_COMMIT: process.env.APP_COMMIT,
     NEXT_PUBLIC_COVIZU_DATA_URL: process.env.NEXT_PUBLIC_COVIZU_DATA_URL,
     NEXT_PUBLIC_COVIZU_FILE_LIST_URL: process.env.NEXT_PUBLIC_COVIZU_FILE_LIST_URL,
+    // Optional features/functionalities
+    NEXT_PUBLIC_ENABLE_DOWNLOADS: process.env.NEXT_PUBLIC_ENABLE_DOWNLOADS,
+    NEXT_PUBLIC_ENABLE_LOGIN: process.env.NEXT_PUBLIC_ENABLE_LOGIN,
+    NEXT_PUBLIC_ENABLE_REGISTRATION: process.env.NEXT_PUBLIC_ENABLE_REGISTRATION,
   },
   assetPrefix: process.env.ASSET_PREFIX || '',
   redirects: async () => [
