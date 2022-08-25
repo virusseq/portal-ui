@@ -29,7 +29,13 @@ import defaultTheme from '../../theme';
 const PageContent = (): ReactElement => {
   const [origin, setOrigin] = useState('');
   const theme: typeof defaultTheme = useTheme();
-  const { NEXT_PUBLIC_EGO_API_ROOT, NEXT_PUBLIC_EGO_CLIENT_ID, NEXT_PUBLIC_KEYCLOAK } = getConfig();
+  const {
+    NEXT_PUBLIC_EGO_API_ROOT,
+    NEXT_PUBLIC_EGO_CLIENT_ID,
+    NEXT_PUBLIC_ENABLE_LOGIN,
+    NEXT_PUBLIC_ENABLE_REGISTRATION,
+    NEXT_PUBLIC_KEYCLOAK,
+  } = getConfig();
 
   useEffect(() => {
     window && setOrigin(window.location.origin);
@@ -105,50 +111,55 @@ const PageContent = (): ReactElement => {
             }
           `}
         >
-          <li>
-            <p>
-              To be granted a data submission account for your organization, please contact{' '}
-              <StyledLink
-                href="mailto:info@virusseq-dataportal.ca"
+          {NEXT_PUBLIC_ENABLE_REGISTRATION && (
+            <li>
+              <p>
+                To be granted a data submission account for your organization, please contact{' '}
+                <StyledLink
+                  href="mailto:info@virusseq-dataportal.ca"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  info@virusseq-dataportal.ca
+                </StyledLink>{' '}
+                with an account request.
+              </p>
+              <StyledLinkAsButton
+                css={css`
+                  ${theme.typography.button};
+                  background-color: ${theme.colors.primary_dark};
+                  border-color: ${theme.colors.primary_dark};
+                  line-height: 20px;
+                  padding: 8px 20px;
+                  width: fit-content;
+                `}
+                href={`${NEXT_PUBLIC_KEYCLOAK}registrations?client_id=ego&response_type=code&redirect_uri=${origin}`}
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                info@virusseq-dataportal.ca
-              </StyledLink>{' '}
-              with an account request.
-            </p>
-            <StyledLinkAsButton
-              css={css`
-                ${theme.typography.button};
-                background-color: ${theme.colors.primary_dark};
-                border-color: ${theme.colors.primary_dark};
-                line-height: 20px;
-                padding: 8px 20px;
-                width: fit-content;
-              `}
-              href={`${NEXT_PUBLIC_KEYCLOAK}registrations?client_id=ego&response_type=code&redirect_uri=${origin}`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Request an Account
-            </StyledLinkAsButton>
-          </li>
-          <li>
-            <p>If you already have an authorized account, please log in to submit your data.</p>
-            <StyledLinkAsButton
-              css={css`
-                ${theme.typography.button};
-                background-color: ${theme.colors.primary_dark};
-                border-color: ${theme.colors.primary_dark};
-                line-height: 20px;
-                padding: 8px 20px;
-                width: fit-content;
-              `}
-              href={`${NEXT_PUBLIC_EGO_API_ROOT}/oauth/login/keycloak?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`}
-            >
-              Log in to Submit Data
-            </StyledLinkAsButton>
-          </li>
+                Request an Account
+              </StyledLinkAsButton>
+            </li>
+          )}
+
+          {NEXT_PUBLIC_ENABLE_LOGIN && (
+            <li>
+              <p>If you already have an authorized account, please log in to submit your data.</p>
+              <StyledLinkAsButton
+                css={css`
+                  ${theme.typography.button};
+                  background-color: ${theme.colors.primary_dark};
+                  border-color: ${theme.colors.primary_dark};
+                  line-height: 20px;
+                  padding: 8px 20px;
+                  width: fit-content;
+                `}
+                href={`${NEXT_PUBLIC_EGO_API_ROOT}/oauth/login/keycloak?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`}
+              >
+                Log in to Submit Data
+              </StyledLinkAsButton>
+            </li>
+          )}
         </ul>
       </article>
 

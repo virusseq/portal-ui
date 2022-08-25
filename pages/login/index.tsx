@@ -22,6 +22,7 @@
 import React from 'react';
 import Router from 'next/router';
 
+import { getConfig } from '../../global/config';
 import Login from '../../components/pages/login';
 import { ROOT_PATH } from '../../global/utils/constants';
 import getInternalLink from '../../global/utils/getInternalLink';
@@ -34,9 +35,11 @@ const LoginPage = createPage({
   },
   isPublic: true,
 })(() => {
+  const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();
   const { token } = useAuthContext();
 
-  return token ? ( // logged in, so it shouldn't give you a login page
+  return token || // logged in, so it shouldn't give you a login page
+    !(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) ? (
     (Router.push({
       pathname: getInternalLink({ path: ROOT_PATH }),
     }),

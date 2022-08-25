@@ -52,6 +52,9 @@ type Config = {
   NEXT_PUBLIC_COVIZU_FILE_LIST_URL: string;
   NEXT_PUBLIC_APP_VERSION: string;
   NEXT_PUBLIC_APP_COMMIT: string;
+  NEXT_PUBLIC_ENABLE_DOWNLOADS: boolean;
+  NEXT_PUBLIC_ENABLE_LOGIN: boolean;
+  NEXT_PUBLIC_ENABLE_REGISTRATION: boolean;
 };
 
 export const getConfig = (): Config => {
@@ -94,5 +97,12 @@ export const getConfig = (): Config => {
     NEXT_PUBLIC_COVIZU_FILE_LIST_URL: publicConfig.NEXT_PUBLIC_COVIZU_FILE_LIST_URL || '',
     NEXT_PUBLIC_APP_VERSION: publicConfig.NEXT_PUBLIC_APP_VERSION || '',
     NEXT_PUBLIC_APP_COMMIT: publicConfig.NEXT_PUBLIC_APP_COMMIT || '',
+    // Optional features/functionalities
+    NEXT_PUBLIC_ENABLE_DOWNLOADS:
+      (publicConfig.NEXT_PUBLIC_ENABLE_DOWNLOADS || '').toLowerCase() === 'true',
+    NEXT_PUBLIC_ENABLE_LOGIN:
+      (publicConfig.NEXT_PUBLIC_ENABLE_LOGIN || '').toLowerCase() === 'true',
+    NEXT_PUBLIC_ENABLE_REGISTRATION:
+      (publicConfig.NEXT_PUBLIC_ENABLE_REGISTRATION || '').toLowerCase() === 'true',
   };
 };
