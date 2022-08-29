@@ -5,7 +5,7 @@
   "scripts": {
     "clearNextTemp": "rm -rf ./.next",
     "build": "npm run clearNextTemp && next build",
-    "dev": "npm run clearNextTemp && next dev -p 8084",
+    "dev": "npm run clearNextTemp && next dev -p 80",
     "lint": "eslint --ext .ts,.tsx '.'",
     "start": "next start",
     "test": "npm run build && jest"
