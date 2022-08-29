@@ -191,7 +191,6 @@ async function beadplot(cid) {
   if (cindex !== ccid) {
     cindex = cid;
     ccid = cindex
-    const testList = await $.memoizedAjax({ url: `/api/edgelist/${cindex}` })
     edgelist = await $.memoizedAjax({ url: `/api/edgelist/${cindex}` });
     edgelist.forEach(x => {
       x.x1 = utcDate(x.x1),
