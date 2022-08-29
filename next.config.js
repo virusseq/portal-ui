@@ -60,6 +60,10 @@ module.exports = withPlugins([withTranspileModules], {
       process.env.NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE,
     NEXT_PUBLIC_APP_VERSION: process.env.APP_VERSION,
     NEXT_PUBLIC_APP_COMMIT: process.env.APP_COMMIT,
+    // Optional features/functionalities
+    NEXT_PUBLIC_ENABLE_DOWNLOADS: process.env.NEXT_PUBLIC_ENABLE_DOWNLOADS,
+    NEXT_PUBLIC_ENABLE_LOGIN: process.env.NEXT_PUBLIC_ENABLE_LOGIN,
+    NEXT_PUBLIC_ENABLE_REGISTRATION: process.env.NEXT_PUBLIC_ENABLE_REGISTRATION,
   },
   assetPrefix: process.env.ASSET_PREFIX || '',
   redirects: async () => [

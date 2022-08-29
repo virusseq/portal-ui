@@ -25,11 +25,13 @@ import { css, useTheme } from '@emotion/react';
 import defaultTheme from './theme';
 import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
 
+import { getConfig } from '../global/config';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { INTERNAL_PATHS } from '../global/utils/constants';
 import StyledLink, { InternalLink } from './Link';
 
 const Footer = (): ReactElement => {
+  const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();
   const theme: typeof defaultTheme = useTheme();
   const { token } = useAuthContext();
 
@@ -134,7 +136,7 @@ const Footer = (): ReactElement => {
             </StyledLink>
           </li>
 
-          {!token && (
+          {(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) && !token && (
             <li>
               <InternalLink path={INTERNAL_PATHS.LOGIN}>
                 <StyledLink>Submitter Login</StyledLink>

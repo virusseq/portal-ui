@@ -19,34 +19,50 @@
  *
  */
 
-import React from 'react';
-import Router from 'next/router';
+export type ArrayFieldKeys = 'in' | 'is' | 'filter';
 
-import { getConfig } from '../../global/config';
-import Login from '../../components/pages/login';
-import { ROOT_PATH } from '../../global/utils/constants';
-import getInternalLink from '../../global/utils/getInternalLink';
-import { createPage } from '../../global/utils/pages';
-import useAuthContext from '../../global/hooks/useAuthContext';
+export type ScalarFieldKeys = '>=' | '<=' | '>' | '<';
 
-const LoginPage = createPage({
-  getInitialProps: async () => {
-    // console.log('nada');
-  },
-  isPublic: true,
-})(() => {
-  const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();
-  const { token } = useAuthContext();
+export type CombinationKeys = 'and' | 'or' | 'not';
 
-  return token || // logged in, so it shouldn't give you a login page
-    !(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) ? (
-    (Router.push({
-      pathname: getInternalLink({ path: ROOT_PATH }),
-    }),
-    (<></>)) // shows nothing, while passing TypeScript validations
-  ) : (
-    <Login />
-  );
-});
+export type ArrayFieldValue = Array<string | number> | string;
+export type ScalarFieldValue = number;
 
-export default LoginPage;
+export interface FilterField {
+  fields: string[];
+  value: ArrayFieldValue;
+}
+
+export interface FilterFieldOperator {
+  op: ArrayFieldKeys;
+  content: FilterField;
+}
+
+export interface ArrayField {
+  field: string;
+  value: ArrayFieldValue;
+}
+
+export interface ArrayFieldOperator {
+  op: ArrayFieldKeys;
+  content: ArrayField;
+}
+
+export interface ScalarField {
+  field: string;
+  value: ScalarFieldValue;
+}
+
+export interface ScalarFieldOperator {
+  op: ScalarFieldKeys;
+  content: ScalarField;
+}
+
+export type Field = FilterField | ArrayField | ScalarField;
+
+export type FieldOperator = ArrayFieldOperator | ScalarFieldOperator;
+
+export type RepoFiltersType = {
+  op: 'and';
+  content: FieldOperator[];
+};
