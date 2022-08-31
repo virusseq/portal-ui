@@ -26,6 +26,7 @@ module.exports = withPlugins([withTranspileModules], {
     return patchForGlobalCSS(config, options);
   },
   publicRuntimeConfig: {
+    NEXT_PUBLIC_VIRUSSEQ_API_ROOT: process.env.NEXT_PUBLIC_VIRUSSEQ_API_ROOT,
     NEXT_PUBLIC_EGO_API_ROOT: process.env.NEXT_PUBLIC_EGO_API_ROOT,
     NEXT_PUBLIC_EGO_CLIENT_ID: process.env.NEXT_PUBLIC_EGO_CLIENT_ID,
     EGO_PUBLIC_KEY: (process.env.EGO_PUBLIC_KEY || '').replace(/\\n/g, '\n'),
@@ -59,8 +60,6 @@ module.exports = withPlugins([withTranspileModules], {
       process.env.NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE,
     NEXT_PUBLIC_APP_VERSION: process.env.APP_VERSION,
     NEXT_PUBLIC_APP_COMMIT: process.env.APP_COMMIT,
-    NEXT_PUBLIC_COVIZU_DATA_URL: process.env.NEXT_PUBLIC_COVIZU_DATA_URL,
-    NEXT_PUBLIC_COVIZU_FILE_LIST_URL: process.env.NEXT_PUBLIC_COVIZU_FILE_LIST_URL,
     // Optional features/functionalities
     NEXT_PUBLIC_ENABLE_DOWNLOADS: process.env.NEXT_PUBLIC_ENABLE_DOWNLOADS,
     NEXT_PUBLIC_ENABLE_LOGIN: process.env.NEXT_PUBLIC_ENABLE_LOGIN,
