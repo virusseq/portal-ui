@@ -19,62 +19,17 @@
  *
  */
 
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
-import axios from 'axios';
 import defaultTheme from '../../theme';
 import { getConfig } from '../../../global/config';
 import { covizuGithubUrl, INTERNAL_PATHS } from '../../../global/utils/constants';
 import { InternalLink as Link } from '../../Link';
 import PageLayout from '../../PageLayout';
 
-type ClusterData = {
-  bytes: number;
-  content_type: string;
-  hash: string;
-  last_modified: string;
-  name: string;
-};
-
-const covizuVersion = '1.0.0';
-const filesPath = '?format=json&prefix=' + covizuVersion + '/clusters.20';
-const clustersFilenameTest = /^(\d+\.){2}\d+\/(clusters\.)\d{4}(-\d{2}){2}(\.json)$/;
-const dateTest = /\d{4}(-\d{2}){2}/;
-
 const VisualizationPage = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
-  const { NEXT_PUBLIC_COVIZU_DATA_URL, NEXT_PUBLIC_COVIZU_FILE_LIST_URL } = getConfig();
-
-  // get list of clusters files to figure out the latest date
-  const [isLoading, setLoading] = useState<boolean>(true);
-  const [dataDate, setDataDate] = useState<string>('');
-  const [hasError, setError] = useState(false);
-  useEffect(() => {
-    const filesUrlComplete = NEXT_PUBLIC_COVIZU_FILE_LIST_URL + filesPath;
-    axios
-      .get(filesUrlComplete, {
-        headers: {
-          'Cache-Control': 'no-cache',
-          Expires: '0',
-          Pragma: 'no-cache',
-        },
-      })
-      .then((res) => {
-        const clusters = res.data;
-        const clusterNames = clusters
-          .map((cluster: ClusterData) => cluster.name)
-          .filter((clusterName: string) => clustersFilenameTest.test(clusterName))
-          .sort();
-        const latestDate = clusterNames[clusterNames.length - 1].match(dateTest)[0] || '';
-        setDataDate(latestDate);
-      })
-      .catch(() => {
-        setError(true);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  const { NEXT_PUBLIC_VIRUSSEQ_API_ROOT } = getConfig();
 
   return (
     <PageLayout subtitle="Visualize Data">
@@ -84,57 +39,49 @@ const VisualizationPage = (): ReactElement => {
           flex-direction: column;
         `}
       >
-        {isLoading ? (
-          'Loading'
-        ) : !dataDate || hasError ? (
-          'Something went wrong.'
-        ) : (
-          <>
-            <div
+        <div
+          css={css`
+            background: ${theme.colors.grey_2};
+            border: ${theme.colors.grey_3} 1px solid;
+            padding: 15px 20px;
+            margin: 15px;
+            border-radius: 10px;
+          `}
+        >
+          <a
+            css={css`
+              color: ${theme.colors.primary_dark};
+              font-weight: bold;
+            `}
+            href={covizuGithubUrl}
+            target="_blank"
+          >
+            Covizu
+          </a>{' '}
+          (an open source SARS-CoV-2 genome analysis and visualization system) has been used to
+          visualize{' '}
+          <Link path={INTERNAL_PATHS.EXPLORER}>
+            <a
               css={css`
-                background: ${theme.colors.grey_2};
-                border: ${theme.colors.grey_3} 1px solid;
-                padding: 15px 20px;
-                margin: 15px;
-                border-radius: 10px;
+                color: ${theme.colors.primary_dark};
+                font-weight: bold;
               `}
             >
-              <a
-                css={css`
-                  color: ${theme.colors.primary_dark};
-                  font-weight: bold;
-                `}
-                href={covizuGithubUrl}
-                target="_blank"
-              >
-                Covizu
-              </a>{' '}
-              (an open source SARS-CoV-2 genome analysis and visualization system) has been used to
-              visualize{' '}
-              <Link path={INTERNAL_PATHS.EXPLORER}>
-                <a
-                  css={css`
-                    color: ${theme.colors.primary_dark};
-                    font-weight: bold;
-                  `}
-                >
-                  Canadian VirusSeq data
-                </a>
-              </Link>{' '}
-              colocalized with International GenBank data in a time-scaled phylogenetic tree to
-              highlight potential cases of importation from other countries or ongoing community
-              transmission.
-            </div>
-            <iframe
-              css={css`
-                flex: 1;
-                border: 0;
-              `}
-              src={`/static/covizu/index.html?dataUrl=${NEXT_PUBLIC_COVIZU_DATA_URL}&covizuVersion=${covizuVersion}&dataDate=${dataDate}`}
-              width="99%"
-            />
-          </>
-        )}
+              Canadian VirusSeq data
+            </a>
+          </Link>{' '}
+          colocalized with International GenBank data in a time-scaled phylogenetic tree to
+          highlight potential cases of importation from other countries or ongoing community
+          transmission.
+        </div>
+        <iframe
+          css={css`
+            flex: 1;
+            border: 0;
+          `}
+          src={`/static/covizu/index.html?apiUrl=${NEXT_PUBLIC_VIRUSSEQ_API_ROOT}`}
+          width="99%"
+        />
       </div>
     </PageLayout>
   );

@@ -22,6 +22,7 @@
 import getNextConfig from 'next/config';
 
 type Config = {
+  NEXT_PUBLIC_VIRUSSEQ_API_ROOT: string;
   NEXT_PUBLIC_EGO_API_ROOT: string;
   NEXT_PUBLIC_EGO_CLIENT_ID: string;
   NEXT_PUBLIC_EGO_PUBLIC_KEY: string;
@@ -48,8 +49,6 @@ type Config = {
   NEXT_PUBLIC_STUDIES_SVC_URL: string;
   NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE: string;
   NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE: string;
-  NEXT_PUBLIC_COVIZU_DATA_URL: string;
-  NEXT_PUBLIC_COVIZU_FILE_LIST_URL: string;
   NEXT_PUBLIC_APP_VERSION: string;
   NEXT_PUBLIC_APP_COMMIT: string;
   NEXT_PUBLIC_ENABLE_DOWNLOADS: boolean;
@@ -61,6 +60,7 @@ export const getConfig = (): Config => {
   const publicConfig: { [k: string]: string } = getNextConfig()?.publicRuntimeConfig || {};
 
   return {
+    NEXT_PUBLIC_VIRUSSEQ_API_ROOT: publicConfig.NEXT_PUBLIC_VIRUSSEQ_API_ROOT || '',
     NEXT_PUBLIC_EGO_API_ROOT: publicConfig.NEXT_PUBLIC_EGO_API_ROOT || 'http://localhost:8088',
     NEXT_PUBLIC_EGO_CLIENT_ID: publicConfig.NEXT_PUBLIC_EGO_CLIENT_ID || '',
     NEXT_PUBLIC_EGO_PUBLIC_KEY:
@@ -93,8 +93,6 @@ export const getConfig = (): Config => {
       publicConfig.NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE || 'STUDY-SVC.WRITE',
     NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE:
       publicConfig.NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE || 'MUSE.WRITE',
-    NEXT_PUBLIC_COVIZU_DATA_URL: publicConfig.NEXT_PUBLIC_COVIZU_DATA_URL || '',
-    NEXT_PUBLIC_COVIZU_FILE_LIST_URL: publicConfig.NEXT_PUBLIC_COVIZU_FILE_LIST_URL || '',
     NEXT_PUBLIC_APP_VERSION: publicConfig.NEXT_PUBLIC_APP_VERSION || '',
     NEXT_PUBLIC_APP_COMMIT: publicConfig.NEXT_PUBLIC_APP_COMMIT || '',
     // Optional features/functionalities

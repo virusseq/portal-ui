@@ -208,4 +208,3 @@ function edges(df, rectangular=false) {
     }
     return(result);
 }
-
