@@ -88,8 +88,7 @@ pipeline {
         anyOf {
           branch 'develop'
           branch 'main'
-          branch 'upgrades'
-          branch 'test'
+          // branch 'test'
         }
       }
       steps {
@@ -102,7 +101,7 @@ pipeline {
             sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
 
             script {
-              if (env.BRANCH_NAME ==~ /(develop|upgrades|test)/) { //push edge and commit tags
+              if (env.BRANCH_NAME ==~ /(develop|test)/) { //push edge and commit tags
                 sh "docker tag portal:${commit} ${dockerImgRepo}:${commit}"
                 sh "docker push ${dockerImgRepo}:${commit}"
 
@@ -145,16 +144,23 @@ pipeline {
       when {
         anyOf {
           branch 'develop'
-          branch 'upgrades'
+          // branch 'test'
         }
       }
       steps {
-        build(job: 'virusseq/update-app-version', parameters: [
-          [$class: 'StringParameterValue', name: 'CANCOGEN_ENV', value: 'dev' ],
-          [$class: 'StringParameterValue', name: 'TARGET_RELEASE', value: 'portal'],
-          [$class: 'StringParameterValue', name: 'NEW_APP_VERSION', value: "${commit}" ],
-          [$class: 'StringParameterValue', name: 'BUILD_BRANCH', value: env.BRANCH_NAME ]
-        ])
+        script {
+          // we don't want the build to be tagged as failed because it could not be deployed.
+          try {
+            build(job: 'virusseq/update-app-version', parameters: [
+              [$class: 'StringParameterValue', name: 'CANCOGEN_ENV', value: 'dev' ],
+              [$class: 'StringParameterValue', name: 'TARGET_RELEASE', value: 'portal'],
+              [$class: 'StringParameterValue', name: 'NEW_APP_VERSION', value: "${commit}" ],
+              [$class: 'StringParameterValue', name: 'BUILD_BRANCH', value: env.BRANCH_NAME ]
+            ])
+          } catch (err) {
+            echo 'The app built successfully, but could not be deployed'
+          }
+        }
       }
     }
   }
