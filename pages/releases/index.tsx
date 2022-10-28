@@ -19,9 +19,8 @@
  *
  */
 
-import React from 'react';
-import Releases from '../../components/pages/releases';
-import { createPage } from '../../global/utils/pages';
+import Releases from '@/components/pages/releases';
+import { createPage } from '@/global/utils/pages';
 
 const ReleasesPage = createPage({
   getInitialProps: async ({ query, egoJwt }) => {

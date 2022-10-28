@@ -22,12 +22,13 @@
 import { useState } from 'react';
 import urlJoin from 'url-join';
 
-import { getConfig } from '../../config';
-import processStream from '../../utils/processStream';
+import { getConfig } from '@/global/config';
+import processStream from '@/global/utils/processStream';
+
 import {
   Archive,
-  ArchivesFetchRes,
   ArchivesFetchReq,
+  ArchivesFetchRes,
   ContributorsResponse,
   SingularityErrorResponse,
   TotalCounts,

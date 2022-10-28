@@ -83,6 +83,25 @@ pipeline {
       }
     }
 
+    // attempt to publish github tag before images to prevent overwriting existing ones.
+    stage('Publish Git Version Tag') {
+      when {
+        branch 'main'
+      }
+      steps {
+        container('docker') {
+          withCredentials([usernamePassword(
+            credentialsId: 'argoGithub',
+            passwordVariable: 'GIT_PASSWORD',
+            usernameVariable: 'GIT_USERNAME'
+          )]) {
+            sh "git tag ${version}"
+            sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${githubRepo} --tags"
+          }
+        }
+      }
+    }
+
     stage('Publish images') {
       when {
         anyOf {
@@ -101,40 +120,22 @@ pipeline {
             sh 'docker login ghcr.io -u $USERNAME -p $PASSWORD'
 
             script {
-              if (env.BRANCH_NAME ==~ /(develop|test)/) { //push edge and commit tags
-                sh "docker tag portal:${commit} ${dockerImgRepo}:${commit}"
-                sh "docker push ${dockerImgRepo}:${commit}"
-
-                sh "docker tag portal:${commit} ${dockerImgRepo}:edge"
-                sh "docker push ${dockerImgRepo}:edge"
-              }
-
               if (env.BRANCH_NAME ==~ /(main)/) { // push latest and version tags
                 sh "docker tag portal:${commit} ${dockerImgRepo}:${version}"
                 sh "docker push ${dockerImgRepo}:${version}"
 
                 sh "docker tag portal:${commit} ${dockerImgRepo}:latest"
                 sh "docker push ${dockerImgRepo}:latest"
+              } else { // push commit tags
+                sh "docker tag portal:${commit} ${dockerImgRepo}:${commit}"
+                sh "docker push ${dockerImgRepo}:${commit}"
+              }
+
+              if (env.BRANCH_NAME ==~ /(develop)/) { // push edge tag
+                sh "docker tag portal:${commit} ${dockerImgRepo}:edge"
+                sh "docker push ${dockerImgRepo}:edge"
               }
             }
-          }
-        }
-      }
-    }
-
-    stage('Publish Git Version Tag') {
-      when {
-        branch 'main'
-      }
-      steps {
-        container('docker') {
-          withCredentials([usernamePassword(
-            credentialsId: 'argoGithub',
-            passwordVariable: 'GIT_PASSWORD',
-            usernameVariable: 'GIT_USERNAME'
-          )]) {
-            sh "git tag ${version}"
-            sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${githubRepo} --tags"
           }
         }
       }
