@@ -23,14 +23,23 @@ import { INTERNAL_PATHS } from '../../../global/utils/constants';
 import StyledLink from '../../Link';
 
 const Description = () => {
-  return (
-    <div>
-      The VirusSeq Data Portal regularly releases submitted data. Each release bundle contains 2
-      files: a <b>TSV file containing all submitted metadata</b> as of that release date-time, as
-      well as a <b>FASTA file containing all the corresponding sequences</b>. The latest release is
-      available in the <StyledLink href={INTERNAL_PATHS.EXPLORER}>data explorer</StyledLink>.
-    </div>
-  );
+	return (
+		<>
+			<p>
+				The VirusSeq Data Portal regularly releases submitted data. Each release bundle contains 2
+				files: a <b>TSV file containing all submitted metadata</b> as of that release date-time, as
+				well as a <b>FASTA file containing all the corresponding sequences</b>. The latest release
+				is available in the <StyledLink href={INTERNAL_PATHS.EXPLORER}>data explorer</StyledLink>.
+			</p>
+			<p>
+				The counts for changes (e.g. "# Updated") are dynamically calculated to indicate how the
+				data evolves over time. While they're are generally accurate, they may be slightly off in
+				rare scenarios, such as when changes happen while a new release archive is being created.
+				Furthermore, in the event of a data schema update, these numbers will reflect the total
+				sample count (or most of it).
+			</p>
+		</>
+	);
 };
 
 export default Description;

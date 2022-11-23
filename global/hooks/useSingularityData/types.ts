@@ -20,62 +20,62 @@
  */
 
 export type ContributorsResponse = {
-  data: string[];
+	data: string[];
 };
 
 export type SingularityErrorResponse = {
-  errorInfo: Record<string, unknown>;
-  message: string;
-  status: string;
+	errorInfo: Record<string, unknown>;
+	message: string;
+	status: string;
 };
 
 export type Archive = {
-  id: string;
-  status: 'COMPLETE' | 'BUILDING' | 'FAILED';
-  type: 'SET_QUERY' | 'ALL';
-  hashInfo: string;
-  hash: string;
-  object_id: string;
-  created_at: number;
-  numOfSamples: number;
-  numOfDownloads: number;
+	id: string;
+	status: 'COMPLETE' | 'BUILDING' | 'FAILED';
+	type: 'SET_QUERY' | 'ALL';
+	hashInfo: string;
+	hash: string;
+	object_id: string;
+	created_at: number;
+	numOfSamples: number;
+	numOfDownloads: number;
 };
 
 export type Pageable = {
-  totalPages: number;
-  totalElements: number;
+	totalPages: number;
+	totalElements: number;
 };
 
 export type ArchivesFetchRes = PagedResponse<Archive>;
 
 export type ArchivesFetchReq = {
-  createdAfterEpochSec?: number;
-  createdBeforeEpochSec?: number;
-  size?: number;
-  page?: number;
-  sortDirection?: 'ASC' | 'DESC';
-  sortField?: ArchivesSortFields;
-  status?: 'COMPLETE' | 'BUILDING' | 'FAILED';
+	createdAfterEpochSec?: number;
+	createdBeforeEpochSec?: number;
+	size?: number;
+	page?: number;
+	sortDirection?: 'ASC' | 'DESC';
+	sortField?: ArchivesSortFields;
+	status?: 'COMPLETE' | 'BUILDING' | 'FAILED';
 };
 
 export type ArchivesSortFields = 'createdAt' | 'numOfSamples';
 
 export type PagedResponse<T> = {
-  content: Array<T>;
-  totalPages: number;
-  totalElements: number;
-  first: boolean; // is this the first page
-  last: boolean; // is this the last page
-  size: number;
-  number: number; // current page number (zero indexed)
-  numberOfElements: number; // number of elements in current page
+	content: Array<T>;
+	totalPages: number;
+	totalElements: number;
+	first: boolean; // is this the first page
+	last: boolean; // is this the last page
+	size: number;
+	number: number; // current page number (zero indexed)
+	numberOfElements: number; // number of elements in current page
 };
 
 export type TotalCounts = {
-  files: number;
-  samples: number;
-  studies: number;
-  fileSizeBytes: number;
-  fileSizeHumanReadable: string;
-  timestamp: number;
+	files: number;
+	samples: number;
+	studies: number;
+	fileSizeBytes: number;
+	fileSizeHumanReadable: string;
+	timestamp: number;
 };

@@ -19,53 +19,61 @@
  *
  */
 
-import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
+import { css, useTheme } from '@emotion/react';
+
+import defaultTheme from '@/components/theme';
+
 import ReleasesTable from './ReleasesTable';
 import Description from './Description';
 import Policy from './Policy';
 
-import defaultTheme from '../../theme';
 const PageContent = (): ReactElement => {
-  const theme: typeof defaultTheme = useTheme();
-  return (
-    <main
-      css={css`
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        padding-bottom: ${theme.dimensions.footer.height}px;
-        ${theme.typography.baseFont};
-      `}
-    >
-      <article
-        css={css`
-          box-sizing: border-box;
-          display: flex;
-          flex-direction: column;
-          margin: 30px 0;
-          max-width: 800px;
-          padding: 40px;
-          width: 100%;
-          row-gap: 25px;
-          ${theme.shadow.default};
-        `}
-      >
-        <div
-          css={css`
-            font-size: 28px;
-            color: ${theme.colors.primary};
-            ${theme.typography.baseFont};
-          `}
-        >
-          Data Releases
-        </div>
-        <Description />
-        <ReleasesTable />
-        <Policy />
-      </article>
-    </main>
-  );
+	const theme: typeof defaultTheme = useTheme();
+	return (
+		<main
+			css={css`
+				align-items: center;
+				display: flex;
+				flex-direction: column;
+				padding-bottom: ${theme.dimensions.footer.height}px;
+				${theme.typography.baseFont};
+			`}
+		>
+			<article
+				css={css`
+					box-sizing: border-box;
+					display: flex;
+					flex-direction: column;
+					margin: 30px 0;
+					max-width: 800px;
+					padding: 40px;
+					width: 100%;
+					row-gap: 25px;
+					${theme.shadow.default};
+
+					& > p {
+						margin: 0;
+					}
+				`}
+			>
+				<h1
+					css={css`
+						${theme.typography.baseFont};
+						color: ${theme.colors.primary};
+						font-size: 28px;
+						font-weight: normal;
+						margin: 0;
+					`}
+				>
+					Data Releases
+				</h1>
+				<Description />
+				<ReleasesTable />
+				<Policy />
+			</article>
+		</main>
+	);
 };
 
 export default PageContent;

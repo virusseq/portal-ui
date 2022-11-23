@@ -20,7 +20,7 @@
  */
 
 import { ReactElement, useEffect, useMemo } from 'react';
-import { Column, useSortBy, useTable, SortingRule } from 'react-table';
+import { Column, useSortBy, useTable, SortingRule, TableOptions } from 'react-table';
 import { css, useTheme, SerializedStyles } from '@emotion/react';
 import cx from 'classnames';
 
@@ -32,6 +32,8 @@ type GenericTableProps = {
   data: Record<string, unknown>[];
   loader?: React.ReactNode;
   loading?: boolean;
+  onSortsChange?: (s: Array<SortingRule<unknown>>) => void;
+  options?: Partial<TableOptions<Record<string, unknown>>>;
   pageable?: boolean;
   sortable?:
     | {
@@ -44,7 +46,6 @@ type GenericTableProps = {
         sortType?: string;
       }
     | boolean;
-  onSortsChange?: (s: Array<SortingRule<unknown>>) => void;
   style?: SerializedStyles;
 };
 
@@ -52,10 +53,11 @@ const GenericTable = ({
   caption,
   columns,
   data,
+  onSortsChange,
+  options,
   pageable,
   sortable,
   style,
-  onSortsChange,
 }: GenericTableProps): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
   const memoisedColumns = useMemo(() => columns, []);
@@ -80,6 +82,7 @@ const GenericTable = ({
         ...sortBy,
       },
       manualSortBy: typeof onSortsChange === 'function' ? true : false,
+      ...options,
     },
     useSortBy,
     // usePagination,

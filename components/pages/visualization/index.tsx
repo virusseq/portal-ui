@@ -29,7 +29,7 @@ import PageLayout from '../../PageLayout';
 
 const VisualizationPage = (): ReactElement => {
   const theme: typeof defaultTheme = useTheme();
-  const { NEXT_PUBLIC_VIRUSSEQ_API_ROOT } = getConfig();
+  const { NEXT_PUBLIC_VIRUSSEQ_API_URL } = getConfig();
 
   return (
     <PageLayout subtitle="Visualize Data">
@@ -79,7 +79,7 @@ const VisualizationPage = (): ReactElement => {
             flex: 1;
             border: 0;
           `}
-          src={`/static/covizu/index.html?apiUrl=${NEXT_PUBLIC_VIRUSSEQ_API_ROOT}`}
+          src={`/static/covizu/index.html?apiUrl=${NEXT_PUBLIC_VIRUSSEQ_API_URL}`}
           width="99%"
         />
       </div>
