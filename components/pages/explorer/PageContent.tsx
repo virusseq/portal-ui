@@ -21,6 +21,8 @@
 
 import { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { useArrangerData } from '@overture-stack/arranger-components';
+import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
 import stringify from 'fast-json-stable-stringify';
 import { isEqual } from 'lodash';
 
@@ -29,94 +31,93 @@ import useUrlParamState from '@/global/hooks/useUrlParamsState';
 
 import DataAnalysis from './DataAnalysis';
 import Facets from './Facets';
-import { PageContentProps } from './index';
 import QueryBar from './QueryBar';
 import RepoTable from './RepoTable';
-import { RepoFiltersType } from './sqonTypes';
 
-const defaultFilters: RepoFiltersType = {
-  op: 'and',
-  content: [],
-};
+// const defaultFilters = {
+//   op: 'and',
+//   content: [],
+// };
 
-const PageContent = (props: PageContentProps): ReactElement => {
-  const theme: typeof defaultTheme = useTheme();
-  const [firstRender, setFirstRender] = useState<boolean>(true);
-  const [currentFilters, setCurrentFilters] = useUrlParamState<RepoFiltersType | null>(
-    'filters',
-    null,
-    {
-      deSerialize: (v) => (v ? JSON.parse(v) : null),
-      serialize: (v) => (v ? stringify(v) : ''),
-    },
-  );
+const PageContent = (): ReactElement => {
+	const theme: typeof defaultTheme = useTheme();
+	const { sqon, setSQON } = useArrangerData({ callerName: 'Explorer-PageContent' });
+	const [firstRender, setFirstRender] = useState<boolean>(true);
+	const [currentFilters, setCurrentFilters] = useUrlParamState<SQONType | null>('filters', null, {
+		prepare: (v) => v.replace('"field"', '"fieldName"'),
+		deSerialize: (v) => {
+			return v ? JSON.parse(v) : null;
+		},
+		serialize: (v) => (v ? stringify(v) : ''),
+	});
 
-  // TODO: abstract these effects into an Arranger integration
-  useEffect(() => {
-    currentFilters && props.setSQON(currentFilters);
-    setFirstRender(false);
-  }, []);
+	// // TODO: abstract these effects into an Arranger integration
+	useEffect(() => {
+		if (firstRender) {
+			currentFilters && setSQON(currentFilters);
+			setFirstRender(false);
+		}
+	}, [currentFilters, firstRender, setSQON]);
 
-  useEffect(() => {
-    const { sqon } = props;
-    firstRender || isEqual(sqon, currentFilters) || setCurrentFilters(sqon);
-  }, [props.sqon]);
+	useEffect(() => {
+		firstRender || isEqual(sqon, currentFilters) || setCurrentFilters(sqon);
+	}, [currentFilters, firstRender, setCurrentFilters, sqon]);
 
-  return (
-    <div
-      css={css`
-        flex: 1;
-        width: 100vw;
-      `}
-    >
-      <div
-        css={css`
-          display: flex;
-          flex-direction: row;
-          margin-left: 0;
-        `}
-      >
-        <div
-          css={css`
-            flex: 0 0 ${theme.dimensions.facets.width}px;
-            flex-direction: column;
-            background-color: ${theme.colors.white};
-            z-index: 1;
-            ${theme.shadow.right};
-            height: calc(
-              100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px
-            );
-            overflow-y: scroll;
-          `}
-        >
-          <Facets {...props} />
-        </div>
-        <div
-          css={css`
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: calc(
-              100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px
-            );
-            overflow-y: scroll;
-          `}
-        >
-          <div
-            css={css`
-              flex: 8.5;
-              margin: 0 15px 0 15px;
-              max-width: calc(100vw - ${theme.dimensions.facets.width + 10}px);
-            `}
-          >
-            <QueryBar {...props} />
-            <DataAnalysis {...props} />
-            <RepoTable {...props} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+	return (
+		<div
+			css={css`
+				flex: 1;
+				width: 100vw;
+			`}
+		>
+			<div
+				css={css`
+					display: flex;
+					flex-direction: row;
+					margin-left: 0;
+				`}
+			>
+				<div
+					css={css`
+						flex: 0 0 ${theme.dimensions.facets.width}px;
+						flex-direction: column;
+						background-color: ${theme.colors.white};
+						z-index: 1;
+						${theme.shadow.right};
+						height: calc(
+							100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px
+						);
+						overflow-y: scroll;
+					`}
+				>
+					<Facets />
+				</div>
+				<div
+					css={css`
+						display: flex;
+						flex-direction: column;
+						width: 100%;
+						height: calc(
+							100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px
+						);
+						overflow-y: scroll;
+					`}
+				>
+					<div
+						css={css`
+							flex: 8.5;
+							margin: 0 15px 0 15px;
+							max-width: calc(100vw - ${theme.dimensions.facets.width + 10}px);
+						`}
+					>
+						<QueryBar />
+						<DataAnalysis />
+						<RepoTable />
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default PageContent;
