@@ -19,18 +19,12 @@
  *
  */
 
+import { useEffect } from 'react';
 import { css } from '@emotion/react';
-import dynamic from 'next/dynamic';
+import { SQONViewer, useArrangerTheme } from '@overture-stack/arranger-components';
 import { Row } from 'react-grid-system';
 
 import defaultTheme from '../../theme';
-import { PageContentProps } from '.';
-import { useEffect } from 'react';
-
-const CurrentSQON = dynamic(
-  import('@arranger/components/dist/Arranger').then((comp) => comp.CurrentSQON),
-  { ssr: false },
-) as any;
 
 const getCss = (theme: typeof defaultTheme) => css`
   ${theme.shadow.default};
@@ -75,7 +69,7 @@ const getCss = (theme: typeof defaultTheme) => css`
       cursor: pointer;
       border-radius: 5px;
     }
-    & .sqon-field {
+    & .sqon-fieldName {
       text-transform: uppercase;
       font-weight: normal;
     }
@@ -150,14 +144,16 @@ const getCss = (theme: typeof defaultTheme) => css`
   }
 `;
 
-const QueryBar = (props: PageContentProps) => {
-  useEffect(() => {
-    // This useEffect overwrites the `Clear` button to say `Reset`.
-    // Done this way becuase CurrenSQON doesn't have a arg to pass this value.
-    const clearBubble = document.getElementsByClassName('sqon-clear')[0];
-    if (clearBubble) {
-      clearBubble.innerHTML = 'Reset';
-    }
+const QueryBar = () => {
+  useArrangerTheme({
+    callerName: 'QueryBar',
+    components: {
+      SQONViewer: {
+        SQONClear: {
+          label: 'Reset',
+        },
+      },
+    },
   });
 
   return (
@@ -171,13 +167,7 @@ const QueryBar = (props: PageContentProps) => {
         ${getCss(theme)}
       `}
     >
-      <CurrentSQON
-        onClear={() => {
-          // Clearing sqon filters will also clear any selected rows.
-          props.setSelectedTableRows([]);
-        }}
-        {...props}
-      />
+      <SQONViewer />
     </Row>
   );
 };

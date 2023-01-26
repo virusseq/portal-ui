@@ -1,17 +1,4 @@
 module.exports = {
-  presets: [
-    [
-      'next/babel',
-      {
-        'preset-react': {
-          development: process.env.BABEL_ENV === 'development',
-          runtime: 'automatic',
-          importSource: '@emotion/react',
-        },
-      },
-    ],
-    '@babel/preset-typescript',
-  ],
   plugins: [
     [
       'module-resolver',
@@ -26,5 +13,18 @@ module.exports = {
       },
     ],
     '@emotion/babel-plugin',
+  ],
+  presets: [
+    [
+      'next/babel',
+      {
+        'preset-react': {
+          development: process.env.BABEL_ENV === 'development',
+          runtime: 'automatic',
+          importSource: '@emotion/react',
+        },
+      },
+    ],
+    '@babel/preset-typescript',
   ],
 };

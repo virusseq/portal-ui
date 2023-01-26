@@ -22,7 +22,7 @@
 import '@emotion/react';
 
 declare module '@emotion/react' {
-  export interface Theme {
+  export interface Theme extends DMSThemeInterface {
     colors: {
       accent2: string;
       accent2_dark: string;

@@ -19,26 +19,40 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { isEqual } from 'lodash';
+
+const entriesToObj = (entriesArr: [string, string][], cb = (val: string, param: string) => val) =>
+  entriesArr.length
+    ? entriesArr.reduce(
+        (acc: any, [param, val]: [string, string]) => ({
+          ...acc,
+          [param]: cb(val, param),
+        }),
+        {},
+      )
+    : {};
 
 export const getParamsObj = (
   queryString: string | URLSearchParams = '',
 ): Record<string, string> => {
   const currentQueryEntries = [...new URLSearchParams(queryString).entries()];
-  return currentQueryEntries.length
-    ? currentQueryEntries.reduce((acc, [key, val]) => ({ ...acc, [key]: val }), {})
-    : {};
+  return entriesToObj(currentQueryEntries);
 };
 
 const getSanitizedValue = (v: string): null | undefined | string => (v ? v : null);
 
-export const useHook = <T,>(
+const noopFn = (v: any) => v;
+
+export const useUrlParamsState = <T,>(
   key: string,
   initialValue: T,
   {
+    prepare = noopFn,
     pushNavigation = false,
-    serialize,
-    deSerialize,
+    serialize = noopFn,
+    deSerialize = noopFn,
   }: {
+    prepare?: (val: string) => string;
     pushNavigation?: boolean;
     serialize: (val: T) => string;
     deSerialize: (val: string | null | undefined) => T;
@@ -58,12 +72,16 @@ export const useHook = <T,>(
       ...currentQuery,
     };
 
+    const preparedQuery = entriesToObj(Object.entries(query), (val, param) =>
+      param === key ? prepare(val) : val,
+    );
+
     setPreviousQuery(query);
 
     const urlParams = new window.URLSearchParams(previousValue ? previousValue : query).toString();
     const newPath = urlParams ? `${pathName}?${urlParams}` : pathName;
 
-    if (previousValue) {
+    if (previousValue || !isEqual(query, preparedQuery)) {
       router.replace(router.pathname, newPath);
     }
   }, [router.asPath]);
@@ -94,4 +112,4 @@ export const useHook = <T,>(
   ] as [T, typeof setUrlState];
 };
 
-export default useHook;
+export default useUrlParamsState;

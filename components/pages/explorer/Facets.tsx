@@ -19,17 +19,11 @@
  *
  */
 
-import { FunctionComponent, ReactElement } from 'react';
-import dynamic from 'next/dynamic';
+import { ReactElement } from 'react';
+import { Aggregations, useArrangerTheme } from '@overture-stack/arranger-components';
 import { css } from '@emotion/react';
 
 import defaultTheme from '../../theme';
-import { PageContentProps } from '.';
-
-const Aggregations = dynamic(
-  import('@arranger/components/dist/Arranger').then((comp) => comp.Aggregations),
-  { ssr: false },
-) as FunctionComponent<Record<string, unknown>>;
 
 const getFacetStyles = (theme: typeof defaultTheme) => css`
   padding-bottom: 2rem;
@@ -58,7 +52,7 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
         margin-top: 0;
       }
 
-      &[data-field='analysis.host.host_age'] .unit-wrapper {
+      &[data-fieldName='analysis.host.host_age'] .unit-wrapper {
         display: none;
       }
 
@@ -272,7 +266,7 @@ const getFacetStyles = (theme: typeof defaultTheme) => css`
   }
 `;
 
-const Facets = (props: PageContentProps): ReactElement => {
+const Facets = (): ReactElement => {
   return (
     <div css={(theme) => getFacetStyles(theme)}>
       <h2
@@ -285,7 +279,8 @@ const Facets = (props: PageContentProps): ReactElement => {
       >
         Filters
       </h2>
-      <Aggregations {...props} />
+
+      <Aggregations />
     </div>
   );
 };

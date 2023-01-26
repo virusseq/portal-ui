@@ -24,9 +24,12 @@ import typography from './typography';
 import shadow from './shadow';
 import dimensions from './dimensions';
 
-export default {
+const defaultTheme = {
   colors,
   typography,
   shadow,
   dimensions,
 };
+
+export default defaultTheme;
+export type DMSThemInterface = typeof defaultTheme;
