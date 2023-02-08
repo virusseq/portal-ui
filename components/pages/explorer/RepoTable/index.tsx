@@ -503,6 +503,7 @@ const RepoTable = (): ReactElement => {
 					enableSelectedTableRowsExporterFilter
 					exporter={NEXT_PUBLIC_ENABLE_DOWNLOADS ? customExporters : []}
 					exporterLabel="Download Dataset"
+					enableSelectColumnDropdownTextFilter={true}
 					showFilterInput={false}
 				/>
 			</div>
