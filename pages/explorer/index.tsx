@@ -22,14 +22,15 @@
 import React from 'react';
 import Explorer from '../../components/pages/explorer';
 import { createPage } from '../../global/utils/pages';
+import Error404 from '../../components/pages/404';
 
 const ExplorerPage = createPage({
-  getInitialProps: async ({ query, egoJwt }) => {
-    return { query, egoJwt };
-  },
-  isPublic: true,
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: true,
 })(() => {
-  return <Explorer />;
+	return <Error404 />;
 });
 
 export default ExplorerPage;

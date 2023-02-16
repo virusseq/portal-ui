@@ -19,16 +19,17 @@
  *
  */
 
-import Releases from '@/components/pages/releases';
+// import Releases from '@/components/pages/releases';
+import Error404 from '@/components/pages/404';
 import { createPage } from '@/global/utils/pages';
 
 const ReleasesPage = createPage({
-  getInitialProps: async ({ query, egoJwt }) => {
-    return { query, egoJwt };
-  },
-  isPublic: true,
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: true,
 })(() => {
-  return <Releases />;
+	return <Error404 />;
 });
 
 export default ReleasesPage;
