@@ -22,14 +22,15 @@
 import React from 'react';
 import Submission from '../../components/pages/submission';
 import { createPage } from '../../global/utils/pages';
+import Error404 from '@/components/pages/404';
 
 const SubmissionPage = createPage({
-  getInitialProps: async ({ query, egoJwt }) => {
-    return { query, egoJwt };
-  },
-  isPublic: false,
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: false,
 })(() => {
-  return <Submission />;
+	return <Error404 />;
 });
 
 export default SubmissionPage;
