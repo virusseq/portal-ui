@@ -73,10 +73,7 @@ export const AuthProvider = ({
       category: 'User',
       action: 'Logged out using dropdown',
     });
-    setTimeout(
-      () => router.push(`${NEXT_PUBLIC_KEYCLOAK}logout?redirect_uri=${window.location.origin}`),
-      2000,
-    );
+    setTimeout(() => router.push(`${NEXT_PUBLIC_KEYCLOAK}logout?post_logout_redirect_uri=${window.location.origin}`), 2000);
   };
 
   if (!token) {

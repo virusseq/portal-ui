@@ -108,6 +108,7 @@ pipeline {
           branch 'develop'
           branch 'main'
           // branch 'test'
+          branch 'keycloak_updates'
         }
       }
       steps {
@@ -146,6 +147,7 @@ pipeline {
         anyOf {
           branch 'develop'
           // branch 'test'
+          branch 'keycloak_updates'
         }
       }
       steps {
