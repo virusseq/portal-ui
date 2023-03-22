@@ -20,7 +20,7 @@
  */
 
 import { ReactElement } from 'react';
-import { Aggregations, useArrangerTheme } from '@overture-stack/arranger-components';
+import { Aggregations, QuickSearch, useArrangerTheme } from '@overture-stack/arranger-components';
 import { css, useTheme } from '@emotion/react';
 
 import { ThemeInterface } from '../../theme';
@@ -163,6 +163,63 @@ const getAggregationsStyles = (theme: ThemeInterface) => ({
 				transition: 'all 0s',
 			},
 		},
+		QuickSearch: {
+			QuickSearchWrapper: {
+				css: css`
+					.title {
+						${theme.typography.subheading2}
+						line-height: 20px;
+					}
+				`,
+				headerTitle: 'Specimen Collector Sample ID',
+			},
+			TreeJointIcon: {
+				fill: theme.colors.canada,
+				line: 4,
+				size: 8,
+				transition: 'all 0s',
+			},
+			FilterInput: {
+				css: css`
+					border-radius: 5px;
+					border: 1px solid ${theme.colors.secondary};
+					margin: 6px 5px 7px 0;
+
+					&.focused {
+						box-shadow: inset 0 0 2px 1px ${theme.colors.accent};
+					}
+
+					& input {
+						${theme.typography.data}
+						&::placeholder {
+							color: ${theme.colors.black};
+						}
+					}
+
+					input[type='text' i] {
+						margin-left: 5px;
+						margin-top: 2px;
+					}
+				`,
+				placeholder: 'Search',
+			},
+			PinnedValues: {
+				background: theme.colors.primary_dark,
+				css: css`
+					margin-left: 0;
+					${theme.typography.label}
+
+					&::after {
+						content: url(data:image/svg+xml,%3Csvg%20width%3D%228%22%20height%3D%228%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%228%22%20y2%3D%228%22%20/%3E%0A%20%20%3Cline%20x1%3D%228%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%228%22%20/%3E%0A%3C/svg%3E);
+						margin: 0 0 0 0.5rem;
+					}
+				`,
+				fontColor: theme.colors.white,
+				hoverBackground: theme.colors.primary,
+				margin: '0.1rem 0.4rem',
+				padding: '0 0.5rem',
+			},
+		},
 	},
 });
 
@@ -186,6 +243,8 @@ const Facets = (): ReactElement => {
 			>
 				Filters
 			</h2>
+
+			<QuickSearch />
 
 			<Aggregations />
 		</article>
