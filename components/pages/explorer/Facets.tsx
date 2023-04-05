@@ -26,6 +26,7 @@ import { css, useTheme } from '@emotion/react';
 import { ThemeInterface } from '../../theme';
 
 const getAggregationsStyles = (theme: ThemeInterface) => ({
+	callerName: 'Facets',
 	components: {
 		Aggregations: {
 			ActionIcon: {
@@ -234,7 +235,7 @@ const Facets = (): ReactElement => {
 			`}
 		>
 			<h2
-				css={(theme) => css`
+				css={css`
 					${theme.typography.subheading}
 					padding: 6px 0 2px 8px;
 					margin: 0;

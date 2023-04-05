@@ -26,7 +26,7 @@ import { Row } from 'react-grid-system';
 import { ThemeInterface } from '../../theme';
 
 const getThemeCustomisations = (theme: ThemeInterface) => ({
-	callerName: 'QueryBar',
+	callerName: 'Explorer-QueryBar',
 	components: {
 		SQONViewer: {
 			EmptyMessage: {
