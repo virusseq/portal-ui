@@ -36,7 +36,7 @@ const grey = {
 };
 
 const primary = {
-  primary: '#28519d',
+  primary: '#0274be',
   primary_dark: '#113877',
   primary_light: '#6885ba',
 };
@@ -65,7 +65,7 @@ const accent2 = {
 };
 
 const accent3 = {
-  accent3: '#33aabb',
+  accent3: '#0274be',
   accent3_dark: '#1c8292',
   accent3_alternate: '#4da3ab',
 };

@@ -27,7 +27,7 @@ import cx from 'classnames';
 import useAuthContext from '../../global/hooks/useAuthContext';
 import useTrackingContext from '../../global/hooks/useTrackingContext';
 import { INTERNAL_PATHS, ROOT_PATH } from '../../global/utils/constants';
-import { InternalLink } from '../Link';
+import { InternalLink, StyledLinkAsButton } from '../Link';
 import defaultTheme from '../theme';
 import { Avatar } from '../theme/icons';
 
@@ -55,7 +55,7 @@ const NavBar = (): ReactElement => {
         display: flex;
         justify-content: flex-start;
         height: ${theme.dimensions.navbar.height}px;
-        background: ${theme.colors.primary} url(/images/navbar-bg.png) no-repeat;
+        background: ${theme.colors.white};
         background-size: 281px;
         ${theme.shadow.default};
         position: sticky;
@@ -82,7 +82,7 @@ const NavBar = (): ReactElement => {
               text-decoration: none;
             `}
           >
-            <img src="/images/navbar-logo.png" alt="VirusSeq logo" width="182" />
+            <img src="/images/new-navbar-logo.png" alt="VirusSeq logo" width="182" />
           </a>
         </InternalLink>
       </div>
@@ -176,6 +176,29 @@ const NavBar = (): ReactElement => {
             >
               Data Releases
             </StyledLink>
+          </InternalLink>
+          
+        </div>
+        <div>
+        <InternalLink path={INTERNAL_PATHS.LOGIN}>
+            <StyledLinkAsButton
+              css={css`
+                ${theme.typography.button};
+                background-color: ${theme.colors.accent3};
+                border-color: ${theme.colors.accent3};
+                line-height: 20px;
+                margin-right: 15px;
+                padding: 8px 20px;
+                width: fit-content;
+
+                &:hover {
+                  color: ${theme.colors.white};
+                  background-color: ${theme.colors.accent3_dark};
+                }
+              `}
+            >
+              Login
+            </StyledLinkAsButton>
           </InternalLink>
         </div>
 

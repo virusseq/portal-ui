@@ -42,7 +42,7 @@ const StyledLink = styled('a')`
       }
     `
       : `
-      color: ${theme?.colors.primary};
+      color: '#101828';
       cursor: pointer;
 
       &:hover {
