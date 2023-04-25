@@ -65,10 +65,7 @@ const Footer = (): ReactElement => {
         `}
       >
         <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
-          <GenomeCanadaLogo width={85} />
-        </a>
-        <a href="https://www.genomecanada.ca/en/cancogen" rel="noopener noreferrer" target="_blank">
-          <img src="/images/cancogen-logo.png" alt="Cancogen logo" width="132" />
+          <img src="/images/sanbi-logo.png" alt="SANBI logo" />
         </a>
       </section>
 
@@ -146,7 +143,7 @@ const Footer = (): ReactElement => {
         </ul>
         <span>
           &#169;
-          {` ${new Date().toISOString().slice(0, 4)} Canadian VirusSeq Data Portal`}
+          {` ${new Date().toISOString().slice(0, 4)} African Pathogen Archive Portal`}
         </span>
       </section>
 

@@ -29,7 +29,7 @@ export type ArrayFieldValue = Array<string | number> | string;
 export type ScalarFieldValue = number;
 
 export interface FilterField {
-  fields: string[];
+  fieldNames: string[];
   value: ArrayFieldValue;
 }
 
@@ -39,12 +39,12 @@ export interface FilterFieldOperator {
 }
 
 export interface ArrayField {
-  field: string;
+  fieldName: string;
   value: ArrayFieldValue;
 }
 
 export interface ScalarField {
-  field: string;
+  fieldName: string;
   value: ScalarFieldValue;
 }
 

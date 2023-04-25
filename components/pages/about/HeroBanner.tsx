@@ -39,7 +39,7 @@ const HeroBanner = (): ReactElement => {
   return (
     <article
       css={css`
-        background-color: ${theme.colors.primary_dark};
+        background-color: #EAECF0;
         box-sizing: border-box;
         color: ${theme.colors.white};
         display: flex;
@@ -47,7 +47,7 @@ const HeroBanner = (): ReactElement => {
         width: 100%;
 
         @media (min-width: 1270px) {
-          background-image: url('/images/about-hero.png');
+          background-image: url('/images/new-about-hero.jpg');
           background-repeat: no-repeat;
           background-size: 589px;
           height: 400px;
@@ -89,25 +89,21 @@ const HeroBanner = (): ReactElement => {
             font-size: 30px;
             font-weight: normal;
             position: relative;
+            color: #101828;
 
             @media (min-width: 1345px) {
               font-size: 34px;
             }
           `}
         >
-          <MapleLeaf
-            style={css`
-              left: -42px;
-              position: absolute;
-            `}
-          />
-          Canadian VirusSeq Data Portal
+          African Pathogen Archive Portal
         </h1>
 
         <p
           css={css`
             ${theme.typography.subheading}
             font-weight: normal;
+            color: #101828;
           `}
         >
           The goal of the CanCOGeN VirusSeq project was to sequence up to 150,000 viral samples from

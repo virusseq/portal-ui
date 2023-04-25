@@ -60,7 +60,7 @@ const Partners = (): ReactElement => {
         contribution to the Portal, see supplementary file for detailed
         information"</strong> (supplementary file must be submitted as an addendum to
         your publication). You may redistribute the data available on the
-        Canadian VirusSeq Data Portal under the same terms and conditions as
+        African Pathogen Archive Portal under the same terms and conditions as
         specified in this policy. You should not impose any additional or
         different terms or conditions on, or apply any effective
         technological measures to the data, if doing so restricts the use

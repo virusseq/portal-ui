@@ -128,6 +128,7 @@ const ReleaseData = (): ReactElement => {
             padding: 10px;
             width: 100%;
             justify-content: space-around;
+            color: #101828;
 
             li {
               align-items: center;
@@ -135,6 +136,7 @@ const ReleaseData = (): ReactElement => {
               padding-left: 25px;
               position: relative;
               white-space: nowrap;
+              color: #101828;
 
               /* &:not(:first-of-type) {
                 margin-top: 10px;
@@ -149,6 +151,7 @@ const ReleaseData = (): ReactElement => {
             span {
               font-weight: bold;
               margin-right: 5px;
+              color: #101828;
             }
           `}
         >

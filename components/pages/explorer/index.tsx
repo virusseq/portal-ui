@@ -20,148 +20,138 @@
  */
 
 import { ReactElement, useEffect, useState } from 'react';
-import { css } from '@emotion/react';
-import dynamic from 'next/dynamic';
-import urlJoin from 'url-join';
+import { css, useTheme } from '@emotion/react';
+import { ArrangerDataProvider } from '@overture-stack/arranger-components';
 
-import PageContent from './PageContent';
-import PageLayout from '../../PageLayout';
+import ErrorNotification from '@/components/ErrorNotification';
+import Loader from '@/components/Loader';
+import PageLayout from '@/components/PageLayout';
+import createArrangerFetcher from '@/components/utils/arrangerFetcher';
+import sleep from '@/components/utils/sleep';
+import { getConfig } from '@/global/config';
+import { RepoFiltersType } from '@/global/types/sqon';
 
-import { RepoFiltersType } from '../../../global/types/sqon';
-import { getConfig } from '../../../global/config';
-import createArrangerFetcher from '../../utils/arrangerFetcher';
-import ErrorNotification from '../../ErrorNotification';
 import getConfigError from './getConfigError';
-import Loader from '../../Loader';
-import sleep from '../../utils/sleep';
-
-const Arranger = dynamic(
-  () => import('@arranger/components/dist/Arranger').then((comp) => comp.Arranger),
-  { ssr: false },
-) as any;
+import PageContent from './PageContent';
 
 export interface PageContentProps {
-  sqon: RepoFiltersType;
-  selectedTableRows: string[];
-  setSelectedTableRows: (ids: []) => void;
-  projectId: string;
-  index: string;
-  api: ({
-    endpoint,
-    body,
-    headers,
-    method,
-  }: {
-    endpoint: string;
-    body: string;
-    headers: any;
-    method: string;
-  }) => Promise<any>;
-  setSQON: (sqon: RepoFiltersType) => void;
-  fetchData?: (projectId: string) => Promise<any>;
+	sqon: RepoFiltersType;
+	selectedTableRows: string[];
+	setSelectedTableRows: (ids: []) => void;
+	index: string;
+	api: ({
+		endpoint,
+		body,
+		headers,
+		method,
+	}: {
+		endpoint: string;
+		body: string;
+		headers: any;
+		method: string;
+	}) => Promise<any>;
+	setSQON: (sqon: RepoFiltersType) => void;
+	fetchData?: () => Promise<any>;
 }
-
-export type Project = {
-  id: string;
-  active: boolean;
-  indices: [{ id: string; esIndex: string; graphqlField: string }];
-};
 
 const arrangerFetcher = createArrangerFetcher({});
 
-const projectsQuery = `
-  query {
-    projects {
-      id
-      active
-      indices {
-        id
-        esIndex
-        graphqlField
-      }
-    }
+const configsQuery = `
+  query ($documentType: String!, $index: String!) {
+    hasValidConfig (documentType: $documentType, index: $index)
   }
 `;
 
 const RepositoryPage = (): ReactElement => {
-  const {
-    NEXT_PUBLIC_ARRANGER_PROJECT_ID,
-    NEXT_PUBLIC_ARRANGER_GRAPHQL_FIELD,
-    NEXT_PUBLIC_ARRANGER_INDEX,
-  } = getConfig();
+	const theme = useTheme();
+	const {
+		NEXT_PUBLIC_ARRANGER_API,
+		NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE,
+		NEXT_PUBLIC_ARRANGER_INDEX,
+	} = getConfig();
+	const [arrangerHasConfig, setArrangerHasConfig] = useState<boolean>(false);
+	const [loadingArrangerConfig, setLoadingArrangerConfig] = useState<boolean>(true);
 
-  const [availableProjects, setAvailableProjects] = useState<Project[]>([]);
-  const [loadingProjects, setLoadingProjects] = useState<boolean>(true);
-  useEffect(() => {
-    const { NEXT_PUBLIC_ARRANGER_API } = getConfig();
-    fetch(urlJoin(NEXT_PUBLIC_ARRANGER_API, 'admin/graphql'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        variables: {},
-        query: projectsQuery,
-      }),
-    })
-      .then((res) => {
-        if (res.status !== 200) {
-          throw new Error('Could not retrieve available projects from Arranger server!');
-        }
-        return res.json();
-      })
-      .then(async ({ data: { projects } }: { data: { projects: Project[] } }) => {
-        await setAvailableProjects(projects);
-        // 1s delay so loader doesn't flicker on and off too quickly
-        await sleep(1000);
-        setLoadingProjects(false);
-      })
-      .catch(async (err) => {
-        console.warn(err);
-        // same as above comment
-        await sleep(1000);
-        setLoadingProjects(false);
-      });
-  }, []);
+	useEffect(() => {
+		arrangerFetcher({
+			endpoint: 'graphql/hasValidConfig',
+			body: JSON.stringify({
+				variables: {
+					documentType: NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE,
+					index: NEXT_PUBLIC_ARRANGER_INDEX,
+				},
+				query: configsQuery,
+			}),
+		})
+			.then(async ({ data } = {}) => {
+				if (data?.hasValidConfig) {
+					await setArrangerHasConfig(data.hasValidConfig);
+					// 1s delay so loader doesn't flicker on and off too quickly
+					await sleep(1000);
 
-  const ConfigError = getConfigError({
-    availableProjects,
-    projectId: NEXT_PUBLIC_ARRANGER_PROJECT_ID,
-    index: NEXT_PUBLIC_ARRANGER_INDEX,
-    graphqlField: NEXT_PUBLIC_ARRANGER_GRAPHQL_FIELD,
-  });
+					return setLoadingArrangerConfig(false);
+				}
 
-  return (
-    <PageLayout subtitle="Data Explorer">
-      {loadingProjects ? (
-        <div
-          css={(theme) =>
-            css`
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              background-color: ${theme.colors.grey_2};
-            `
-          }
-        >
-          <Loader />
-        </div>
-      ) : ConfigError ? (
-        <ErrorNotification title={'DMS Configuration Error'} size="lg">
-          {ConfigError}
-        </ErrorNotification>
-      ) : (
-        <Arranger
-          api={arrangerFetcher}
-          projectId={NEXT_PUBLIC_ARRANGER_PROJECT_ID}
-          graphqlField={NEXT_PUBLIC_ARRANGER_GRAPHQL_FIELD}
-          index={NEXT_PUBLIC_ARRANGER_INDEX}
-          render={(props: PageContentProps) => {
-            return <PageContent {...props} />;
-          }}
-        />
-      )}
-    </PageLayout>
-  );
+				throw new Error('Could not validate Arranger server configuration!');
+			})
+			.catch(async (err) => {
+				console.warn(err);
+				// same as above comment
+				await sleep(1000);
+				setLoadingArrangerConfig(false);
+			});
+	}, [NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE, NEXT_PUBLIC_ARRANGER_INDEX]);
+
+	const ConfigError = getConfigError({
+		hasConfig: arrangerHasConfig,
+		index: NEXT_PUBLIC_ARRANGER_INDEX,
+		documentType: NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE,
+	});
+
+	return (
+		<PageLayout subtitle="Data Explorer">
+			{loadingArrangerConfig ? (
+				<div
+					css={css`
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+						background-color: ${theme.colors.grey_2};
+					`}
+				>
+					<Loader />
+				</div>
+			) : ConfigError ? (
+				<ErrorNotification
+					title={'DMS Configuration Error'}
+					size="lg"
+					css={css`
+						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+					`}
+				>
+					{ConfigError}
+				</ErrorNotification>
+			) : (
+				<ArrangerDataProvider
+					apiUrl={NEXT_PUBLIC_ARRANGER_API}
+					customFetcher={arrangerFetcher}
+					documentType={NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE}
+					theme={{
+						colors: {
+							common: {
+								black: theme.colors.black,
+							},
+						},
+					}}
+				>
+					<PageContent />
+				</ArrangerDataProvider>
+			)}
+		</PageLayout>
+	);
 };
 
 export default RepositoryPage;

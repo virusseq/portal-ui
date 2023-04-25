@@ -54,7 +54,7 @@ const Impact = (): ReactElement => {
           position: relative;
         `}
       >
-        Impact on Canadians
+        Impact on Africa
       </h2>
 
       <p>
@@ -80,11 +80,11 @@ const Impact = (): ReactElement => {
           padding: 8px 20px;
           width: fit-content;
         `}
-        href="https://www.genomecanada.ca/en/cancogen"
+        href="https://www.sanbi.ac.za"
         rel="noopener noreferrer"
         target="_blank"
       >
-        Learn more about CanCOGeN
+        Learn more about SANBI
       </StyledLinkAsButton>
     </section>
   );
