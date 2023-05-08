@@ -179,7 +179,7 @@ const NavBar = (): ReactElement => {
           </InternalLink>
           
         </div>
-        <div>
+        {(token === undefined) && <div>
         <InternalLink path={INTERNAL_PATHS.LOGIN}>
             <StyledLinkAsButton
               css={css`
@@ -200,7 +200,7 @@ const NavBar = (): ReactElement => {
               Login
             </StyledLinkAsButton>
           </InternalLink>
-        </div>
+        </div>}
 
         {token && (
           <div
