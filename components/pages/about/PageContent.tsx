@@ -55,7 +55,7 @@ const PageContent = (): ReactElement => {
         <WhySequence />
       </article>
 
-      <CovidCloudPane />
+      {/*<CovidCloudPane />*/}
     </main>
   );
 };
