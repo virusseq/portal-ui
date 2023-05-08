@@ -23,8 +23,9 @@ import { createContext, ReactElement, useContext, useEffect, useState } from 're
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
 
-import useAuthContext from '../useAuthContext';
-import { getConfig } from '../../config';
+import { getConfig } from '@/global/config';
+import useAuthContext from '@/global/hooks/useAuthContext';
+
 import { LogEventFunctionType, TrackingContextType, TrackingStateType } from './types';
 
 const TrackingContext = createContext<TrackingContextType>({
@@ -34,7 +35,7 @@ const TrackingContext = createContext<TrackingContextType>({
 });
 
 export const TrackingProvider = (props: { children: ReactElement }): ReactElement => {
-  const { NEXT_PUBLIC_GOOGLE_ANALYTICS_ID } = getConfig();
+  const { NEXT_PUBLIC_DEBUG, NEXT_PUBLIC_GOOGLE_ANALYTICS_ID } = getConfig();
   const { user } = useAuthContext();
   const router = useRouter();
 
@@ -43,11 +44,6 @@ export const TrackingProvider = (props: { children: ReactElement }): ReactElemen
     hasUser: false,
     trackers: [],
   });
-
-  const handleRouteChange = (url: string) => {
-    ReactGA.set({ page: url }, analytics.trackers);
-    ReactGA.pageview(url, analytics.trackers);
-  };
 
   const logEvent: LogEventFunctionType = ({ category, action, label, value }) => {
     if (analytics.isInitialized) {
@@ -93,15 +89,23 @@ export const TrackingProvider = (props: { children: ReactElement }): ReactElemen
   useEffect(() => {
     const { isInitialized, hasUser, trackers } = analytics;
 
+    const handleRouteChange = (url: string) => {
+      ReactGA.set({ page: url }, trackers);
+      ReactGA.pageview(url, trackers);
+    };
+
     if (!isInitialized) {
+      NEXT_PUBLIC_DEBUG && console.log('Initializing Google Analytics');
+
       ReactGA.initialize(NEXT_PUBLIC_GOOGLE_ANALYTICS_ID, {
-        debug: true,
+        debug: NEXT_PUBLIC_DEBUG,
         gaOptions: {
           ...(user?.id && { userId: user?.id }),
         },
       });
 
-      console.log('setting up event listener');
+      NEXT_PUBLIC_DEBUG && console.log('Setting up event listener');
+
       router.events.on('routeChangeComplete', handleRouteChange);
 
       setAnalytics((prev) => ({
@@ -119,7 +123,7 @@ export const TrackingProvider = (props: { children: ReactElement }): ReactElemen
     }
 
     return () => router.events.off('routeChangeComplete', handleRouteChange);
-  }, [router.events, user]);
+  }, [NEXT_PUBLIC_DEBUG, NEXT_PUBLIC_GOOGLE_ANALYTICS_ID, analytics, router.events, user]);
 
   return <TrackingContext.Provider value={{ addTracker, logEvent, removeTracker }} {...props} />;
 };

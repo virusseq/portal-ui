@@ -24,7 +24,7 @@ import { css } from '@emotion/react';
 
 import NavBar from './NavBar';
 import Footer from './Footer';
-import { PageHead } from './Head';
+import PageHead from './Head';
 import ErrorNotification from './ErrorNotification';
 
 const PageLayout = ({

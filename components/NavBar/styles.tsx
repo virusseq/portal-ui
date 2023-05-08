@@ -28,7 +28,7 @@ export const linkStyles = (theme?: typeof defaultTheme): SerializedStyles => css
   align-items: center;
   border-bottom: 5px solid transparent;
   box-sizing: border-box;
-  color: ${theme?.colors.white};
+  color: ${theme?.colors.primary};
   cursor: pointer;
   display: flex;
   flex: 0;

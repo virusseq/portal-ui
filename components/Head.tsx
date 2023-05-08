@@ -19,20 +19,7 @@
  *
  */
 
-import { ReactElement } from 'react';
-import urlJoin from 'url-join';
 import NextHead from 'next/head';
-
-import { getConfig } from '../global/config';
-
-const Head = (): ReactElement => {
-  const { NEXT_PUBLIC_BASE_PATH } = getConfig();
-  return (
-    <NextHead>
-      <link rel="shortcut icon" href={urlJoin(NEXT_PUBLIC_BASE_PATH, '/images/favicon.ico')} />
-    </NextHead>
-  );
-};
 
 export const PageHead = ({ subtitle }: { subtitle?: string }) => {
   return (
@@ -42,4 +29,4 @@ export const PageHead = ({ subtitle }: { subtitle?: string }) => {
   );
 };
 
-export default Head;
+export default PageHead;

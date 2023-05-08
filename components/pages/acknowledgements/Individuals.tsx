@@ -242,7 +242,7 @@ Gordon P, Lam LG, Pabbaraju K, Wong A, Ma R, Li V, Melin A, Tipples G, Berenger 
       </p>
 
       <p>
-        <em>Canadian VirusSeq Data Portal (CVDP) Team</em><br />
+        <em>African Pathogen Archive (CVDP) Team</em><br />
         Guillaume Bourque, Lincoln Stein, Christina Yung, Hanshi Liu, Yann Joly, Adrielle Houweling, William Hsiao, Marc Fiume, David Bujold, Erin Gill, Fiona Brinkman, Nithu John, Rosita Bajari, Linda Xiang, Alexandru Lepsa, Jaser Uddin, Justin Richardson
       </p>
       
