@@ -106,7 +106,7 @@ const NavBar = (): ReactElement => {
             <StyledLink
               className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.EXPLORER) })}
             >
-              Explore VirusSeq Data
+              Explore African Data
             </StyledLink>
           </InternalLink>
 

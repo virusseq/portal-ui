@@ -49,7 +49,7 @@ const WhySequence = (): ReactElement => (
         position: relative;
       `}
     >
-      Why Sequence this Virus?
+      Why Sequence Pathogens?
     </h2>
 
     <figure
@@ -77,7 +77,7 @@ const WhySequence = (): ReactElement => (
         international scales.
       </figcaption>
       <figcaption>Aid detection of new clusters of cases/outbreaks.</figcaption>
-      <figcaption>Discover evolving viral characteristics that might impact.</figcaption>
+      <figcaption>Discover evolving pathogen characteristics that may impact impact public health.</figcaption>
     </figure>
   </section>
 );
