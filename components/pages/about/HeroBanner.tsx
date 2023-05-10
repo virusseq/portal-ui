@@ -109,19 +109,7 @@ const HeroBanner = (): ReactElement => {
           The Africa CDC’s Institute for Pathogen Genomics (IPG) has, since 2020, been developing a Bill 
           and Melinda Gates Foundation funded project called the African Pathogen Genomics Initiative (PGI). 
           One component of the PGI is support for regional data management and exchange platform for a 
-          seamless pathogen genomic data analysis, visualization, reporting, sharing, and archiving, 
-          between African Union member states and their associated National Public Health Institutions. 
-          The African Pathogen Archive pilot programme (the Pilot) aims to provide a proof of concept 
-          implementation of such a data sharing platform as a first step towards further development and 
-          adoption. The primary goal is to develop a comprehensive digital solution for pathogen genomics 
-          data management and exchange and pilot in selected Member States across the Africa PGI laboratory 
-          network. The aim is to have highly secured, robustly performing and a user-friendly solution 
-          from the end-user perspective.
-          {/* The goal of the CanCOGeN VirusSeq project was to sequence up to 150,000 viral samples from
-          Canadians testing positive for COVID-19. The VirusSeq Data Portal is an open-source and
-          open-access data portal for all Canadian SARS-CoV-2 sequences and associated non-personal
-          contextual data. It harmonizes, validates and automates submission to international
-          databases. */}
+          seamless pathogen genomic data analysis, visualization, reporting, sharing and archiving between African Union member states and their associated National Public Health Institutions. 
         </p>
 
         <ReleaseData />
