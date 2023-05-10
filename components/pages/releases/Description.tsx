@@ -26,10 +26,11 @@ const Description = () => {
 	return (
 		<>
 			<p>
-				The VirusSeq Data Portal regularly releases submitted data. Each release bundle contains 2
-				files: a <b>TSV file containing all submitted metadata</b> as of that release date-time, as
-				well as a <b>FASTA file containing all the corresponding sequences</b>. The latest release
-				is available in the <StyledLink href={INTERNAL_PATHS.EXPLORER}>data explorer</StyledLink>.
+				The African Pathogen Archive and Data Sharing Portal regularly releases submitted data
+				Each release bundle contains 2 files: a <b>TSV file containing all submitted metadata</b>
+				as of that release date-time, as well as a <b>FASTA file containing all the corresponding
+				sequences</b>. The latest release is available in
+				the <StyledLink href={INTERNAL_PATHS.EXPLORER}>data explorer</StyledLink>.
 			</p>
 			<p>
 				The counts for changes (e.g. "# Updated") are dynamically calculated to indicate how the
