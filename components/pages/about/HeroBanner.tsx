@@ -109,8 +109,7 @@ const HeroBanner = (): ReactElement => {
           The Africa CDC’s Institute for Pathogen Genomics (IPG) has, since 2020, been developing a Bill 
           and Melinda Gates Foundation funded project called the African Pathogen Genomics Initiative (PGI). 
           One component of the PGI is support for regional data management and exchange platform for a 
-          seamless pathogen genomic data analysis, visualization, reporting, sharing, and archiving, 
-          between African Union member states and their associated National Public Health Institutions. 
+          seamless pathogen genomic data analysis, visualization, reporting, sharing and archiving between African Union member states and their associated National Public Health Institutions. 
         </p>
 
         <ReleaseData />
