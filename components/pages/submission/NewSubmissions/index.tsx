@@ -134,14 +134,14 @@ const NewSubmissions = (): ReactElement => {
       <h1 className="view-title">Start a New Submission</h1>
 
       <p>
-        Virus metadata is submitted as a <span className="code">.tsv</span> file. Viral genome data
+        Pathogen metadata is submitted as a <span className="code">.tsv</span> file. Pathogen genome data
         must be submitted as a <span className="code">.fasta</span> file. Up to 5000 samples can be
         submitted in a single submission, but note that the larger the file the longer the
         submission will take. FASTA files are accepted individually, or as a single concatenated
         FASTA containing all samples in one file.
       </p>
 
-      <h2>To format your viral sequence metadata:</h2>
+      <h2>To format your pathogen sequence metadata:</h2>
 
       <ol>
         <li>
@@ -153,7 +153,7 @@ const NewSubmissions = (): ReactElement => {
           >
             metadata TSV Template
           </StyledLink>{' '}
-          for the viral sequence metadata and populate it with accepted values for each field. A
+          for the pathogen sequence metadata and populate it with accepted values for each field. A
           reference of the accepted values can be found{' '}
           <StyledLink
             href="https://github.com/Public-Health-Bioinformatics/DataHarmonizer/blob/master/template/canada_covid19/SOP.pdf"
@@ -181,7 +181,7 @@ const NewSubmissions = (): ReactElement => {
         </li>
       </ol>
 
-      <h2>To format your viral sequence files:</h2>
+      <h2>To format your pathogen sequence files:</h2>
 
       <ol>
         <li>

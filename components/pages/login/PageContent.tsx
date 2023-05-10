@@ -77,7 +77,7 @@ const PageContent = (): ReactElement => {
             margin-bottom: 25px;
           `}
         >
-          Viral genomes are submitted to this portal by approved users.
+          Pathogen genomes are submitted to this portal by approved users.
         </p>
         <ul
           css={css`
@@ -116,11 +116,11 @@ const PageContent = (): ReactElement => {
               <p>
                 To be granted a data submission account for your organization, please contact{' '}
                 <StyledLink
-                  href="mailto:info@virusseq-dataportal.ca"
+                  href="mailto:apads@african-union.org"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  info@virusseq-dataportal.ca
+                  apads@african-union.org
                 </StyledLink>{' '}
                 with an account request.
               </p>
