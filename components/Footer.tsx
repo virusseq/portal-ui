@@ -113,7 +113,7 @@ const Footer = (): ReactElement => {
               rel="noopener noreferrer"
               target="_blank"
             >
-              About CanCOGeN
+              About SANBI
             </StyledLink>
           </li>
 
@@ -133,17 +133,10 @@ const Footer = (): ReactElement => {
             </StyledLink>
           </li>
 
-          {(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) && !token && (
-            <li>
-              <InternalLink path={INTERNAL_PATHS.LOGIN}>
-                <StyledLink>Submitter Login</StyledLink>
-              </InternalLink>
-            </li>
-          )}
         </ul>
         <span>
           &#169;
-          {` ${new Date().toISOString().slice(0, 4)} African Pathogen Archive Portal`}
+          {` ${new Date().toISOString().slice(0, 4)} African Pathogen Archive and Data Sharing Portal`}
         </span>
       </section>
 
@@ -191,7 +184,8 @@ const Footer = (): ReactElement => {
             margin-left: 1rem;
             text-decoration: none;
           `}
-          href="https://github.com/cancogen-virus-seq"
+          // href="https://github.com/cancogen-virus-seq"
+          href="https://github.com/african-pathogen-archive"
           rel="noopener noreferrer"
           target="_blank"
         >
@@ -201,7 +195,7 @@ const Footer = (): ReactElement => {
               margin-left: 5px;
             `}
           >
-            VirusSeq Github
+            APA Github
           </span>
         </a>
       </section>

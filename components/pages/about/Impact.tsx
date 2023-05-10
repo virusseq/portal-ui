@@ -58,14 +58,14 @@ const Impact = (): ReactElement => {
       </h2>
 
       <p>
-        Genomic-based tracking and analysis of the evolving traits of the SARS-CoV-2 virus across
-        Canada provides critical information for:
+        Genomic-based tracking and analysis of the evolving traits of pathogens across
+        Africa that provides critical information for:
       </p>
 
       <ul>
         <li>Public health and policy decisions</li>
         <li>Testing and tracing strategies</li>
-        <li>Virus detection and surveillance methods</li>
+        <li>Pathogen detection and surveillance methods</li>
         <li>Vaccine development and effectiveness</li>
         <li>Drug discovery and effectiveness of treatment</li>
         <li>Understanding susceptibility, disease severity and clinical outcomes</li>
