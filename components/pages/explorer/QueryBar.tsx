@@ -21,11 +21,12 @@
 
 import { css, useTheme } from '@emotion/react';
 import { SQONViewer, useArrangerTheme } from '@overture-stack/arranger-components';
+import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/types';
 import { Row } from 'react-grid-system';
 
 import { ThemeInterface } from '../../theme';
 
-const getThemeCustomisations = (theme: ThemeInterface) => ({
+const getThemeCustomisations = (theme: ThemeInterface): UseThemeContextProps => ({
 	callerName: 'Explorer-QueryBar',
 	components: {
 		SQONViewer: {

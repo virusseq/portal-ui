@@ -21,7 +21,7 @@
 
 import { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
-import { useArrangerData } from '@overture-stack/arranger-components';
+import { MatchBox, useArrangerData } from '@overture-stack/arranger-components';
 import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
 import stringify from 'fast-json-stable-stringify';
 import { isEqual } from 'lodash';
