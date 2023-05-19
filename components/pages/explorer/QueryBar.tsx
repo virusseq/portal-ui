@@ -19,167 +19,106 @@
  *
  */
 
-import { css } from '@emotion/react';
-import dynamic from 'next/dynamic';
+import { css, useTheme } from '@emotion/react';
+import { SQONViewer, useArrangerTheme } from '@overture-stack/arranger-components';
+import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/types';
 import { Row } from 'react-grid-system';
 
-import defaultTheme from '../../theme';
-import { PageContentProps } from '.';
-import { useEffect } from 'react';
+import { ThemeInterface } from '../../theme';
 
-const CurrentSQON = dynamic(
-  import('@arranger/components/dist/Arranger').then((comp) => comp.CurrentSQON),
-  { ssr: false },
-) as any;
+const getThemeCustomisations = (theme: ThemeInterface): UseThemeContextProps => ({
+	callerName: 'Explorer-QueryBar',
+	components: {
+		SQONViewer: {
+			EmptyMessage: {
+				arrowColor: theme.colors.canada,
+			},
+			SQONBubble: {
+				borderRadius: '8px',
+				fontSize: '13px',
+				fontWeight: 300,
+				height: '1.6rem',
+				letterSpacing: '0.2px',
+			},
+			SQONClear: {
+				label: 'Reset',
+				borderColor: theme.colors.grey_5,
+				borderRadius: '5px',
+				background: theme.colors.primary_dark,
+				cursor: 'pointer',
+				fontColor: theme.colors.white,
+				fontSize: '0.88rem',
+				fontWeight: 600,
+				hoverBackground: theme.colors.primary,
+				padding: '0 12px',
+			},
+			SQONFieldName: {
+				fontWeight: 'normal',
+				textTransform: 'uppercase',
+			},
+			SQONGroup: {
+				fontColor: theme.colors.grey_6,
+				margin: '0.1rem 0 0',
+			},
+			SQONLessOrMore: {
+				background: theme.colors.primary_light,
+				css: css`
+					${theme.typography.label};
+				`,
+				fontColor: theme.colors.white,
+				hoverBackground: theme.colors.primary,
+				lineHeight: '1.4rem !important',
+				margin: '0 0.4rem 0 0',
+				padding: '0 0.4rem',
+				textTransform: 'uppercase',
+			},
+			SQONValue: {
+				background: theme.colors.primary_dark,
+				css: css`
+					margin-left: 0;
+					${theme.typography.label}
 
-const getCss = (theme: typeof defaultTheme) => css`
-  ${theme.shadow.default};
-  & .sqon-view {
-    ${theme.typography.baseFont}
-    background-color: transparent;
-    display: flex;
-    flex: 1;
-    align-items: center;
-    padding: 12px 0 12px 12px;
-    margin: 0;
-    color: ${theme.colors.accent_dark};
-    min-height: 30px;
+					&::after {
+						content: url(data:image/svg+xml,%3Csvg%20width%3D%228%22%20height%3D%228%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%228%22%20y2%3D%228%22%20/%3E%0A%20%20%3Cline%20x1%3D%228%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%228%22%20/%3E%0A%3C/svg%3E);
+						margin: 0 0 0 0.5rem;
+					}
+				`,
+				fontColor: theme.colors.white,
+				hoverBackground: theme.colors.primary,
+				margin: '0.1rem 0.4rem',
+				padding: '0 0.5rem',
+			},
+			SQONValueGroup: {
+				css: css`
+					&:last-of-type {
+						margin-left: 0;
+					}
+				`,
+				fontSize: '1.4rem',
+				margin: '-0.2rem 0.4rem 0',
+			},
+		},
+	},
+});
 
-    & .sqon-group {
-      flex-wrap: wrap;
-      margin-top: 3px;
-      margin-bottom: 3px;
-    }
-    & .sqon-view-empty {
-      display: none;
-    }
-    & .sqon-bubble {
-      display: flex;
-      align-items: center;
-      height: 22px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 300;
-      letter-spacing: 0.2px;
-      margin-right: 7px;
-      flex: none;
-    }
-    & .sqon-bubble.sqon-clear {
-      border: solid 1px ${theme.colors.grey_5};
-      background-color: ${theme.colors.primary_dark};
-      color: ${theme.colors.white};
-      padding: 0 12px;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    & .sqon-field {
-      text-transform: uppercase;
-      font-weight: normal;
-    }
-    & .sqon-op {
-      color: inherit;
-      font-weight: normal;
-      margin-right: 7px;
-    }
-    & .sqon-value {
-      background-color: ${theme.colors.primary_dark};
-      color: ${theme.colors.white};
-      padding: 0 7px 0 12px;
-      margin-right: 4px;
-      cursor: pointer;
-      padding: 0 7px;
-      margin-right: 6px;
-      ${css(theme.typography.label)};
-      cursor: pointer;
-    }
-    & .sqon-less,
-    .sqon-more {
-      background-color: ${theme.colors.primary_light};
-      color: ${theme.colors.white};
-      padding: 0 12px;
-      text-transform: uppercase;
-      cursor: pointer;
-      margin-right: 6px;
-      cursor: pointer;
-      justify-content: center;
-      display: flex;
-      align-items: center;
-      height: 22px;
-      border-radius: 8px;
-      flex: none;
-      ${css(theme.typography.label)};
-    }
-    & .sqon-more {
-      width: 20px;
-      padding: 0 5px;
-      justify-content: center;
-    }
-    & .sqon-less {
-      padding: 0 10px;
-    }
-    & .sqon-value-group {
-      font-size: 22px;
-      line-height: 22px;
-      color: ${theme.colors.grey_6};
-    }
-    & .sqon-value-group-start {
-      margin-right: 6px;
-      margin-left: 2px;
-    }
-    & .sqon-value-group-end {
-      margin-right: 10px;
-    }
-    & .sqon-value:after {
-      content: url(data:image/svg+xml,%3Csvg%20width%3D%228%22%20height%3D%228%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%0A%20%20%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%228%22%20y2%3D%228%22%20/%3E%0A%20%20%3Cline%20x1%3D%228%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%228%22%20/%3E%0A%3C/svg%3E);
-      margin-left: 9px;
-    }
+const QueryBar = () => {
+	const theme = useTheme();
+	useArrangerTheme(getThemeCustomisations(theme));
 
-    & .sqon-value-single {
-      margin-right: 10px;
-    }
-    & .sqon-empty-message {
-      font-weight: normal;
-
-      span.sqon-empty-message-arrow {
-        color: ${theme.colors.canada};
-      }
-    }
-  }
-`;
-
-const QueryBar = (props: PageContentProps) => {
-  useEffect(() => {
-    // This useEffect overwrites the `Clear` button to say `Reset`.
-    // Done this way becuase CurrenSQON doesn't have a arg to pass this value.
-    const clearBubble = document.getElementsByClassName('sqon-clear')[0];
-    if (clearBubble) {
-      clearBubble.innerHTML = 'Reset';
-    }
-  });
-
-  return (
-    <Row
-      gutterWidth={2}
-      css={(theme) => css`
-        min-height: 48px;
-        margin: 10px 0;
-        background-color: ${theme.colors.white};
-        border-radius: 5px;
-        ${getCss(theme)}
-      `}
-    >
-      <CurrentSQON
-        onClear={() => {
-          // Clearing sqon filters will also clear any selected rows.
-          props.setSelectedTableRows([]);
-        }}
-        {...props}
-      />
-    </Row>
-  );
+	return (
+		<Row
+			gutterWidth={2}
+			css={(theme) => css`
+				min-height: 48px;
+				margin: 10px 0;
+				background-color: ${theme.colors.white};
+				border-radius: 5px;
+				${theme.shadow.default};
+			`}
+		>
+			<SQONViewer />
+		</Row>
+	);
 };
 
 export default QueryBar;

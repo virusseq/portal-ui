@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2023 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -19,50 +19,15 @@
  *
  */
 
-export type ArrayFieldKeys = 'in' | 'is' | 'filter';
+import colors from '@/components/theme/colors';
 
-export type ScalarFieldKeys = '>=' | '<=' | '>' | '<';
+type Colors = typeof colors;
 
-export type CombinationKeys = 'and' | 'or' | 'not';
+const components = (colors: Colors) => ({
+	Input: {
+		borderColor: colors.secondary,
+		boxShadow: `inset 0 0 4px 0 ${colors.accent}`,
+	},
+});
 
-export type ArrayFieldValue = Array<string | number> | string;
-export type ScalarFieldValue = number;
-
-export interface FilterField {
-  fields: string[];
-  value: ArrayFieldValue;
-}
-
-export interface FilterFieldOperator {
-  op: ArrayFieldKeys;
-  content: FilterField;
-}
-
-export interface ArrayField {
-  field: string;
-  value: ArrayFieldValue;
-}
-
-export interface ArrayFieldOperator {
-  op: ArrayFieldKeys;
-  content: ArrayField;
-}
-
-export interface ScalarField {
-  field: string;
-  value: ScalarFieldValue;
-}
-
-export interface ScalarFieldOperator {
-  op: ScalarFieldKeys;
-  content: ScalarField;
-}
-
-export type Field = FilterField | ArrayField | ScalarField;
-
-export type FieldOperator = ArrayFieldOperator | ScalarFieldOperator;
-
-export type RepoFiltersType = {
-  op: 'and';
-  content: FieldOperator[];
-};
+export default components;

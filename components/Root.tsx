@@ -26,7 +26,7 @@ import { AuthProvider } from '../global/hooks/useAuthContext';
 import { PageContext } from '../global/hooks/usePageContext';
 import { TrackingProvider } from '../global/hooks/useTrackingContext';
 import { ClientSideGetInitialPropsContext } from '../global/utils/pages/types';
-import Head from './Head';
+
 import defaultTheme from './theme';
 import SystemAlerts from './SystemAlerts';
 import { getConfig } from '../global/config';
@@ -80,7 +80,7 @@ const Root = ({
           }
         `}
       </style>
-      <Head />
+
       <AuthProvider egoJwt={egoJwt}>
         <PageContext.Provider value={pageContext}>
           <TrackingProvider>

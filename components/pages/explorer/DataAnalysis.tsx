@@ -28,10 +28,9 @@ import HighchartsReact from 'highcharts-react-official';
 import useReleaseData from '../../../global/hooks/useReleaseData';
 import Loader from '../../Loader';
 import { CoronaVirus, CrossHairs, File, Storage } from '../../theme/icons';
-import { PageContentProps } from '.';
 
-const DataAnalysis = ({ sqon }: PageContentProps): ReactElement => {
-  const [releaseData, isFetchingData] = useReleaseData(sqon);
+const DataAnalysis = (): ReactElement => {
+  const [releaseData, isFetchingData] = useReleaseData();
 
   const {
     fileCount = 0,

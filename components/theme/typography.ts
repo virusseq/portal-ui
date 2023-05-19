@@ -23,7 +23,7 @@ import { css } from '@emotion/react';
 import './sourcesanspro.css';
 
 const baseFont = css`
-  font-family: Source Sans Pro, sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 `;
 
 const regular = css`

@@ -68,7 +68,7 @@ const columns = [
 	},
 	{
 		accessor: 'totalSupressed',
-		Header: '# Supressed',
+		Header: '# Suppressed',
 		Cell: ChangeCell,
 	},
 	{

@@ -20,17 +20,20 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useArrangerData } from '@overture-stack/arranger-components';
+import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
 
 import createArrangerFetcher from '../../../components/utils/arrangerFetcher';
 import { getProvince } from '../../utils/constants';
 import formatFileSize from '../../utils/formatFileSize';
 import { RepoFiltersType } from '../../types/sqon';
-import { Count, FilesByVariantType, ReleaseDataProps } from './types';
 import { getConfig } from '../../config';
 
+import { Count, FilesByVariantType, ReleaseDataProps } from './types';
+
 const {
-  NEXT_PUBLIC_ARRANGER_CARDINALITY_PRECISION_THRESHOLD,
-  NEXT_PUBLIC_ARRANGER_MAX_BUCKET_COUNTS,
+	NEXT_PUBLIC_ARRANGER_CARDINALITY_PRECISION_THRESHOLD,
+	NEXT_PUBLIC_ARRANGER_MAX_BUCKET_COUNTS,
 } = getConfig();
 
 const RELEASE_DATA_QUERY = `
@@ -88,110 +91,125 @@ query genomesCount ($sqon: JSON) {
 
 const arrangerFetcher = createArrangerFetcher({});
 
-const fetchArrangerData = (query: string, sqon?: RepoFiltersType) => {
-  return arrangerFetcher({
-    body: {
-      query: query,
-      variables: { sqon },
-    },
-  });
+const fetchArrangerData = ({
+	endpointTag,
+	query,
+	sqon,
+}: {
+	endpointTag?: string;
+	query: string;
+	sqon?: SQONType;
+}) => {
+	return arrangerFetcher({
+		body: {
+			query: query,
+			variables: { sqon },
+		},
+		endpointTag,
+	});
 };
 
 function roundToSignificantDigits(a: number, sigDigs: number) {
-  const digitsToKeep = a.toString().length - sigDigs;
-  return Math.floor(a / Math.pow(10, digitsToKeep)) * Math.pow(10, digitsToKeep);
+	const digitsToKeep = a.toString().length - sigDigs;
+	return Math.floor(a / Math.pow(10, digitsToKeep)) * Math.pow(10, digitsToKeep);
 }
 
-const fetchReleaseData = async (sqon?: RepoFiltersType) => {
-  return fetchArrangerData(RELEASE_DATA_QUERY, sqon).then(
-    ({ data: { file: { aggregations = {} } = {} } }) => {
-      // aggregations will be null if there's an error in the response
-      if (aggregations) {
-        const {
-          analysis__host__host_gender: { buckets: hostGenders = [] } = {},
-          analysis__sample_collection__geo_loc_province: { buckets: provinces = [] } = {},
-          donors__specimens__samples__sample_id: { cardinality: genomesCardinality = 0 } = {},
-          file__size: { stats: { count: fileCount = 0, sum: fileSize = 0 } = {} } = {},
-          study_id: { bucket_count: studyCount = 0 } = {},
-        } = aggregations;
+const fetchReleaseData = async (sqon?: SQONType) => {
+	return fetchArrangerData({
+		endpointTag: 'FetchReleaseData',
+		query: RELEASE_DATA_QUERY,
+		sqon,
+	}).then(({ data: { file: { aggregations = {} } = {} } }) => {
+		// aggregations will be null if there's an error in the response
+		if (aggregations) {
+			const {
+				analysis__host__host_gender: { buckets: hostGenders = [] } = {},
+				analysis__sample_collection__geo_loc_province: { buckets: provinces = [] } = {},
+				donors__specimens__samples__sample_id: { cardinality: genomesCardinality = 0 } = {},
+				file__size: { stats: { count: fileCount = 0, sum: fileSize = 0 } = {} } = {},
+				study_id: { bucket_count: studyCount = 0 } = {},
+			} = aggregations;
 
-        const [value, unit] = formatFileSize(fileSize).split(' ');
-        const filesByVariant: FilesByVariantType[] = provinces
-          .map(({ doc_count, key }: { doc_count: number; key: string }) => {
-            const { abbreviation, name } = getProvince({ long: key });
+			const [value, unit] = formatFileSize(fileSize).split(' ');
+			const filesByVariant: FilesByVariantType[] = provinces
+				.map(({ doc_count, key }: { doc_count: number; key: string }) => {
+					const { abbreviation, name } = getProvince({ long: key });
 
-            return {
-              abbreviation,
-              count: doc_count,
-              name,
-            };
-          })
-          .filter((fv: FilesByVariantType) => fv.abbreviation !== '');
+					return {
+						abbreviation,
+						count: doc_count,
+						name,
+					};
+				})
+				.filter((fv: FilesByVariantType) => fv.abbreviation !== '');
 
-        const genomesCount: Count = {
-          value: roundToSignificantDigits(genomesCardinality, 2),
-          type: 'APPROXIMATE',
-        };
+			const genomesCount: Count = {
+				value: roundToSignificantDigits(genomesCardinality, 2),
+				type: 'APPROXIMATE',
+			};
 
-        return {
-          fileCount,
-          fileSize: {
-            unit,
-            value,
-          },
-          filesByVariant,
-          hostGenders,
-          studyCount,
-          genomesCount,
-        };
-      }
-    },
-  );
+			return {
+				fileCount,
+				fileSize: {
+					unit,
+					value,
+				},
+				filesByVariant,
+				hostGenders,
+				studyCount,
+				genomesCount,
+			};
+		}
+	});
 };
 
-const tuneGenomesAggs = async (sqon?: RepoFiltersType, currentReleaseData?: ReleaseDataProps) => {
-  const currentGenomesValue = currentReleaseData?.genomesCount?.value;
+const tuneGenomesAggs = async (sqon?: SQONType, currentReleaseData?: ReleaseDataProps) => {
+	const currentGenomesValue = currentReleaseData?.genomesCount?.value;
 
-  if (currentGenomesValue && currentGenomesValue >= NEXT_PUBLIC_ARRANGER_MAX_BUCKET_COUNTS) {
-    console.error('genomesValue is too high to do a bucket_count query');
-    return Promise.resolve(currentReleaseData);
-  }
+	if (currentGenomesValue && currentGenomesValue >= NEXT_PUBLIC_ARRANGER_MAX_BUCKET_COUNTS) {
+		console.error('genomesValue is too high to do a bucket_count query');
+		return Promise.resolve(currentReleaseData);
+	}
 
-  return fetchArrangerData(GENOMES_COUNT_QUERY, sqon).then(
-    ({ data: { file: { aggregations = {} } = {} } }) => {
-      if (aggregations && currentReleaseData?.genomesCount) {
-        const { donors__specimens__samples__sample_id: { bucket_count: genomnesCount = 0 } = {} } =
-          aggregations;
+	return fetchArrangerData({
+		endpointTag: 'TuneGenomesAggs',
+		query: GENOMES_COUNT_QUERY,
+		sqon,
+	}).then(({ data: { file: { aggregations = {} } = {} } }) => {
+		if (aggregations && currentReleaseData?.genomesCount) {
+			const { donors__specimens__samples__sample_id: { bucket_count: genomnesCount = 0 } = {} } =
+				aggregations;
 
-        currentReleaseData.genomesCount.value = genomnesCount;
-        currentReleaseData.genomesCount.type = 'EXACT';
-      }
-      return { ...currentReleaseData };
-    },
-  );
+			currentReleaseData.genomesCount.value = genomnesCount;
+			currentReleaseData.genomesCount.type = 'EXACT';
+		}
+		return { ...currentReleaseData };
+	});
 };
 
-const useReleaseData = (sqon?: RepoFiltersType): [ReleaseDataProps, boolean] => {
-  const [releaseData, setReleaseData] = useState<ReleaseDataProps>();
-  const [isFetchingData, setIsFetchingData] = useState(true);
+const useReleaseData = (): [ReleaseDataProps, boolean] => {
+	const { sqon } = useArrangerData();
+	const [releaseData, setReleaseData] = useState<ReleaseDataProps>();
+	const [isFetchingData, setIsFetchingData] = useState(true);
 
-  useEffect(() => {
-    if (!isFetchingData || !releaseData) {
-      setIsFetchingData(true);
-      fetchReleaseData(sqon)
-        .then((data) => tuneGenomesAggs(sqon, data))
-        .then((data) => {
-          setReleaseData(data);
-          setIsFetchingData(false);
-        })
-        .catch(async (err) => {
-          console.warn(err);
-          setIsFetchingData(false);
-        });
-    }
-  }, [sqon]);
+	useEffect(() => {
+		if (!(isFetchingData && releaseData)) {
+			setIsFetchingData(true);
+			fetchReleaseData(sqon)
+				.then((data) => tuneGenomesAggs(sqon, data))
+				.then((data) => {
+					setReleaseData(data);
+				})
+				.catch(async (err) => {
+					console.warn(err);
+				})
+				.finally(() => {
+					setIsFetchingData(false);
+				});
+		}
+	}, [sqon]);
 
-  return [{ ...releaseData }, isFetchingData];
+	return [{ ...releaseData }, isFetchingData];
 };
 
 export default useReleaseData;
