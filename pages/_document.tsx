@@ -1,23 +1,35 @@
 import { Html, Head, Main, NextScript } from 'next/document';
+import { Global, css } from '@emotion/react';
 import urlJoin from 'url-join';
 
 import { getConfig } from '../global/config';
 
 const Document = () => {
-  const { NEXT_PUBLIC_BASE_PATH } = getConfig();
+	const { NEXT_PUBLIC_BASE_PATH } = getConfig();
 
-  return (
-    <Html>
-      <Head>
-        <link rel="shortcut icon" href={urlJoin(NEXT_PUBLIC_BASE_PATH, '/images/favicon.ico')} />
-      </Head>
+	return (
+		<Html>
+			<Head>
+				<link rel="shortcut icon" href={urlJoin(NEXT_PUBLIC_BASE_PATH, '/images/favicon.ico')} />
 
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+				<Global
+					styles={css`
+						body,
+						html {
+							font-size: 16px;
+							margin: 0;
+							padding: 0;
+						}
+					`}
+				/>
+			</Head>
+
+			<body>
+				<Main />
+				<NextScript />
+			</body>
+		</Html>
+	);
 };
 
 export default Document;

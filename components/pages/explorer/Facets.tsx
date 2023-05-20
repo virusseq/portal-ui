@@ -203,7 +203,6 @@ const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => (
 				size: 8,
 				transition: 'all 0s',
 			},
-			FilterInput: theme.components.Input, //shared style, for consistency,
 			PinnedValues: {
 				background: theme.colors.primary_dark,
 				css: css`

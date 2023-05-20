@@ -145,6 +145,9 @@ const RepositoryPage = (): ReactElement => {
 								black: theme.colors.black,
 							},
 						},
+						components: {
+							Input: theme.components.Input, //shared style, for consistency,
+						},
 					}}
 				>
 					<PageContent />

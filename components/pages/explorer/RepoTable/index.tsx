@@ -101,8 +101,6 @@ const getTableConfigs = ({
 				hoverBackground: theme.colors.secondary_light,
 				tooltipAlign: 'top left',
 				tooltipText: COLUMNS_DROPDOWN_TOOLTIP,
-
-				TextFilter: theme.components.Input,
 			},
 			DropDown: {
 				arrowTransition: 'all 0s',
