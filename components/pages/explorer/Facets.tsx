@@ -229,7 +229,9 @@ const Facets = (): ReactElement => {
 	return (
 		<article
 			css={css`
-				padding-bottom: 0.5rem;
+				display: flex;
+				flex-direction: column;
+				height: 100%;
 			`}
 		>
 			<h2

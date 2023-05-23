@@ -71,7 +71,11 @@ const getTableConfigs = ({
 			// 	},
 			// },
 
-			// Other Components
+			// Components
+			Cell: {
+				hoverBackground: theme.colors.secondary_1,
+				verticalBorderColor: theme.colors.grey_3,
+			},
 			CountDisplay: {
 				fontColor: 'inherit',
 			},
@@ -132,9 +136,7 @@ const getTableConfigs = ({
 					}
 				`,
 				hoverBackground: theme.colors.grey_3,
-				hoverVerticalBorderColor: theme.colors.grey_6,
 				selectedBackground: theme.colors.secondary_1,
-				verticalBorderColor: theme.colors.grey_3,
 			},
 			MaxRowsSelector: {
 				fontColor: 'inherit',
@@ -145,14 +147,13 @@ const getTableConfigs = ({
 			TableWrapper: {
 				margin: '0.5rem 0',
 			},
-			// TODO: update Arranger Components version to have this here instead of inline
-			// Toolbar: {
-			// 	css: css`
-			// 		.buttons {
-			// 			flex-direction: row-reverse;
-			// 		}
-			// 	`,
-			// },
+			Toolbar: {
+				css: css`
+					.buttons {
+						flex-direction: row-reverse;
+					}
+				`,
+			},
 		},
 	},
 });
@@ -276,13 +277,7 @@ const RepoTable = (): ReactElement => {
 			`}
 		>
 			<TableContextProvider>
-				<Toolbar
-					css={css`
-						.buttons {
-							flex-direction: row-reverse;
-						}
-					`}
-				/>
+				<Toolbar />
 				<Table />
 				<Pagination />
 			</TableContextProvider>

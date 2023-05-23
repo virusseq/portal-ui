@@ -147,6 +147,10 @@ const RepositoryPage = (): ReactElement => {
 						},
 						components: {
 							Input: theme.components.Input, //shared style, for consistency,
+							Loader: {
+								Component: Loader,
+								size: '20px',
+							},
 						},
 					}}
 				>
