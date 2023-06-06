@@ -77,6 +77,11 @@ const ALERT_VARIANTS: Record<AlertLevel, AlertVariant> = {
 };
 
 export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onClose }) => {
+
+  function createMarkup(msg: string) {
+    return { __html: msg };
+  }
+
   const { backgroundColor, textColor, icon } = ALERT_VARIANTS[alert.level];
   return (
     <div
@@ -117,8 +122,8 @@ export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onCl
                 margin-bottom: 8px;
                 ${defaultTheme.typography.regular};
               `}
+              dangerouslySetInnerHTML={createMarkup(alert.message)}
             >
-              {alert.message}
             </div>
           )}
         </div>
