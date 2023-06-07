@@ -8,12 +8,12 @@ name: Docker
 on:
   push:
     branches:
-      - develop
+      - 'develop'
+      # - '*/*'
+      # - '**' 
   pull_request:
     types:
       - closed
-    branches:
-      - develop
       
 env:
   # Use docker.io for Docker Hub if empty
