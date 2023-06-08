@@ -155,7 +155,7 @@ const PageContent = (): ReactElement => {
                   padding: 8px 20px;
                   width: fit-content;
                 `}
-                href={urlJoin(NEXT_PUBLIC_EGO_API_URL, `/oauth/login/keycloak?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`)}
+                href={urlJoin(NEXT_PUBLIC_EGO_API_URL, `/oauth/login/passport?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`)}
               >
                 Log in to Submit Data
               </StyledLinkAsButton>
