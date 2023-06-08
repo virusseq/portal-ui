@@ -24,7 +24,8 @@ import { Aggregations, QuickSearch, useArrangerTheme } from '@overture-stack/arr
 import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/types';
 import { css, useTheme } from '@emotion/react';
 
-import { ThemeInterface } from '../../theme';
+import { ThemeInterface } from '@/components/theme';
+import { getConfig } from '@/global/config';
 
 const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => ({
 	callerName: 'Facets',
@@ -223,6 +224,7 @@ const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => (
 });
 
 const Facets = (): ReactElement => {
+	const { NEXT_PUBLIC_ENABLE_QUICKSEARCH } = getConfig();
 	const theme = useTheme();
 	useArrangerTheme(getAggregationsStyles(theme));
 
@@ -245,7 +247,7 @@ const Facets = (): ReactElement => {
 				Filters
 			</h2>
 
-			<QuickSearch />
+			{NEXT_PUBLIC_ENABLE_QUICKSEARCH && <QuickSearch />}
 
 			<Aggregations />
 		</article>

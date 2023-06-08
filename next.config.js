@@ -80,6 +80,7 @@ module.exports = withPlugins([withTranspileModules], {
 		NEXT_PUBLIC_ENABLE_DOWNLOADS: process.env.NEXT_PUBLIC_ENABLE_DOWNLOADS,
 		NEXT_PUBLIC_ENABLE_LOGIN: process.env.NEXT_PUBLIC_ENABLE_LOGIN,
 		NEXT_PUBLIC_ENABLE_REGISTRATION: process.env.NEXT_PUBLIC_ENABLE_REGISTRATION,
+		NEXT_PUBLIC_ENABLE_QUICKSEARCH: process.env.NEXT_PUBLIC_ENABLE_QUICKSEARCH,
 	},
 	assetPrefix: process.env.ASSET_PREFIX || '',
 	redirects: async () => [

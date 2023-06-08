@@ -55,6 +55,7 @@ type Config = {
 	NEXT_PUBLIC_ENABLE_DOWNLOADS: boolean;
 	NEXT_PUBLIC_ENABLE_LOGIN: boolean;
 	NEXT_PUBLIC_ENABLE_REGISTRATION: boolean;
+	NEXT_PUBLIC_ENABLE_QUICKSEARCH: boolean;
 };
 
 export const getConfig = (): Config => {
@@ -105,5 +106,7 @@ export const getConfig = (): Config => {
 			(publicConfig.NEXT_PUBLIC_ENABLE_LOGIN || '').toLowerCase() === 'true',
 		NEXT_PUBLIC_ENABLE_REGISTRATION:
 			(publicConfig.NEXT_PUBLIC_ENABLE_REGISTRATION || '').toLowerCase() === 'true',
+		NEXT_PUBLIC_ENABLE_QUICKSEARCH:
+			(publicConfig.NEXT_PUBLIC_ENABLE_QUICKSEARCH || '').toLowerCase() === 'true',
 	};
 };
