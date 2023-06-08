@@ -22,6 +22,7 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import { format } from 'date-fns';
+import urlJoin from 'url-join';
 
 import useAuthContext from '../../../../global/hooks/useAuthContext';
 import useMuseData, { SubmissionDataType } from '../../../../global/hooks/useMuseData';
@@ -44,7 +45,7 @@ const Overview = ({ ID, setTotalUploads }: SubmissionDetailsProps): ReactElement
   useEffect(() => {
     if (token) {
       !submissionData?.submissionId &&
-        fetchMuseData(`submissions/${ID}`).then((thisSubmission) => {
+        fetchMuseData(urlJoin('submissions', ID)).then((thisSubmission) => {
           thisSubmission?.submissionId === ID
             ? (setSubmissionData({
                 ...thisSubmission,

@@ -21,6 +21,7 @@
 
 import { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
+import urlJoin from 'url-join';
 
 import { getConfig } from '../../../global/config';
 import StyledLink, { StyledLinkAsButton } from '../../Link';
@@ -30,7 +31,7 @@ const PageContent = (): ReactElement => {
   const [origin, setOrigin] = useState('');
   const theme: typeof defaultTheme = useTheme();
   const {
-    NEXT_PUBLIC_EGO_API_ROOT,
+    NEXT_PUBLIC_EGO_API_URL,
     NEXT_PUBLIC_EGO_CLIENT_ID,
     NEXT_PUBLIC_ENABLE_LOGIN,
     NEXT_PUBLIC_ENABLE_REGISTRATION,
@@ -154,7 +155,7 @@ const PageContent = (): ReactElement => {
                   padding: 8px 20px;
                   width: fit-content;
                 `}
-                href={`${NEXT_PUBLIC_EGO_API_ROOT}/oauth/login/keycloak?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`}
+                href={urlJoin(NEXT_PUBLIC_EGO_API_URL, `/oauth/login/keycloak?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`)}
               >
                 Log in to Submit Data
               </StyledLinkAsButton>

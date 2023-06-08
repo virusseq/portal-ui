@@ -20,6 +20,7 @@
  */
 
 import { useState } from 'react';
+import urlJoin from 'url-join';
 
 import { getConfig } from '../../config';
 import processStream from '../../utils/processStream';
@@ -37,7 +38,7 @@ const useMuseData = (origin: string) => {
   ) => {
     setAwaitingResponse(true);
 
-    return fetchWithAuth(`${NEXT_PUBLIC_MUSE_API}${endpoint}`, {
+    return fetchWithAuth(urlJoin(NEXT_PUBLIC_MUSE_API,endpoint), {
       method,
       body,
     })
@@ -74,13 +75,13 @@ const useMuseData = (origin: string) => {
     onMessage?: Function,
   ): EventSource => {
     const eventSource = new EventSource(
-      `${NEXT_PUBLIC_MUSE_API}${endpoint}?access_token=${token}${
-        submissionId ? `&submissionId=${submissionId}` : ''
-      }`,
-      {
-        withCredentials: true,
-      },
-    );
+			`${urlJoin(NEXT_PUBLIC_MUSE_API, endpoint)}?access_token=${token}${
+				submissionId ? `&submissionId=${submissionId}` : ''
+			}`,
+			{
+				withCredentials: true,
+			},
+		);
 
     eventSource.onmessage = function (event: MessageEvent) {
       console.log('New message', event);

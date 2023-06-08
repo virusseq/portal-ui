@@ -23,10 +23,10 @@ import urlJoin from 'url-join';
 
 import { getConfig } from '../config';
 
-const { NEXT_PUBLIC_EGO_API_ROOT } = getConfig();
+const { NEXT_PUBLIC_EGO_API_URL } = getConfig();
 
 export const EGO_JWT_KEY = 'EGO_JWT';
-export const EGO_API_KEY_ENDPOINT = `${NEXT_PUBLIC_EGO_API_ROOT}/o/api_key`;
+export const EGO_API_KEY_ENDPOINT = urlJoin(NEXT_PUBLIC_EGO_API_URL, '/o/api_key');
 
 export const ROOT_PATH = '/';
 
@@ -44,9 +44,9 @@ export enum INTERNAL_PATHS {
 }
 
 // external docs links
-const OVERTURE_DMS_DOCS_ROOT = 'https://overture.bio/documentation/dms/';
-export const DMS_HELP_URL = urlJoin(OVERTURE_DMS_DOCS_ROOT, 'user-guide');
-export const DMS_INSTALLATION_URL = urlJoin(OVERTURE_DMS_DOCS_ROOT, 'installation');
+const OVERTURE_DMS_DOCS_URL = 'https://overture.bio/documentation/dms/';
+export const DMS_HELP_URL = urlJoin(OVERTURE_DMS_DOCS_URL, 'user-guide');
+export const DMS_INSTALLATION_URL = urlJoin(OVERTURE_DMS_DOCS_URL, 'installation');
 export const DMS_EMAIL_SETTING_URL = urlJoin(DMS_INSTALLATION_URL, 'configuration/prereq/emails');
 
 export const CANADA_PROVINCES = [

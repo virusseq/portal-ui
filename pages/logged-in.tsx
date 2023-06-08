@@ -34,9 +34,9 @@ import { isValidJwt } from '../global/utils/egoTokenUtils';
 import { createPage } from '../global/utils/pages';
 
 const fetchEgoToken = (logEvent: (action: string) => void) => {
-  const { NEXT_PUBLIC_EGO_API_ROOT, NEXT_PUBLIC_EGO_CLIENT_ID } = getConfig();
+  const { NEXT_PUBLIC_EGO_API_URL, NEXT_PUBLIC_EGO_CLIENT_ID } = getConfig();
   const egoLoginUrl = urlJoin(
-    NEXT_PUBLIC_EGO_API_ROOT,
+    NEXT_PUBLIC_EGO_API_URL,
     `/oauth/ego-token?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`,
   );
 
