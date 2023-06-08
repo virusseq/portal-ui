@@ -153,10 +153,10 @@ pipeline {
           // we don't want the build to be tagged as failed because it could not be deployed.
           try {
             build(job: 'virusseq/update-app-version', parameters: [
-              [$class: 'StringParameterValue', name: 'CANCOGEN_ENV', value: 'dev' ],
-              [$class: 'StringParameterValue', name: 'TARGET_RELEASE', value: 'portal'],
-              [$class: 'StringParameterValue', name: 'NEW_APP_VERSION', value: "${commit}" ],
-              [$class: 'StringParameterValue', name: 'BUILD_BRANCH', value: env.BRANCH_NAME ]
+              string(name: 'BUILD_BRANCH', value: env.BRANCH_NAME),
+              string(name: 'CANCOGEN_ENV', value: 'dev'),
+              string(name: 'NEW_APP_VERSION', value: "${commit}"),
+              string(name: 'TARGET_RELEASE', value: 'portal'),
             ])
           } catch (err) {
             echo 'The app built successfully, but could not be deployed'
