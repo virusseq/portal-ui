@@ -24,13 +24,13 @@ import { event } from 'react-ga';
 export type LogEventFunctionType = typeof event;
 
 export type TrackingContextType = {
-  addTracker: (trackerId: string, trackerName: string) => void;
-  logEvent: LogEventFunctionType;
-  removeTracker: (trackerName: string) => void;
+	addTracker: (trackerId: string, trackerName: string) => void;
+	logEvent: LogEventFunctionType;
+	removeTracker: (trackerName: string) => void;
 };
 
 export type TrackingStateType = {
-  isInitialized: boolean;
-  hasUser: boolean;
-  trackers: string[];
+	isInitialized: boolean;
+	hasUser: boolean;
+	trackers: string[];
 };

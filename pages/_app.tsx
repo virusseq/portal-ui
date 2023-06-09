@@ -30,50 +30,50 @@ import getInternalLink from '../global/utils/getInternalLink';
 import { isValidJwt } from '../global/utils/egoTokenUtils';
 
 const DMSApp = ({
-  Component,
-  pageProps,
-  ctx,
+	Component,
+	pageProps,
+	ctx,
 }: {
-  Component: PageWithConfig;
-  pageProps: { [k: string]: any };
-  ctx: any;
+	Component: PageWithConfig;
+	pageProps: { [k: string]: any };
+	ctx: any;
 }): ReactElement => {
-  const [initialToken, setInitialToken] = useState<string>();
+	const [initialToken, setInitialToken] = useState<string>();
 
-  useEffect(() => {
-    const egoJwt = localStorage.getItem(EGO_JWT_KEY) || undefined;
+	useEffect(() => {
+		const egoJwt = localStorage.getItem(EGO_JWT_KEY) || undefined;
 
-    if (egoJwt && isValidJwt(egoJwt)) {
-      setInitialToken(egoJwt);
-    } else {
-      egoJwt && setInitialToken(undefined);
-      // redirect to logout when token is expired/missing only if user is on a non-public page
-      if (!Component.isPublic) {
-        Router.push({
-          pathname: getInternalLink({ path: INTERNAL_PATHS.LOGIN }),
-          query: { session_expired: true },
-        });
-      }
-    }
-  }, [Component.isPublic]);
+		if (egoJwt && isValidJwt(egoJwt)) {
+			setInitialToken(egoJwt);
+		} else {
+			egoJwt && setInitialToken(undefined);
+			// redirect to logout when token is expired/missing only if user is on a non-public page
+			if (!Component.isPublic) {
+				Router.push({
+					pathname: getInternalLink({ path: INTERNAL_PATHS.LOGIN }),
+					query: { session_expired: true },
+				});
+			}
+		}
+	}, [Component.isPublic]);
 
-  return (
-    <Root pageContext={ctx} egoJwt={initialToken}>
-      <Component {...pageProps} />
-    </Root>
-  );
+	return (
+		<Root pageContext={ctx} egoJwt={initialToken}>
+			<Component {...pageProps} />
+		</Root>
+	);
 };
 
 DMSApp.getInitialProps = async ({ ctx, Component }: AppContext & { Component: PageWithConfig }) => {
-  const pageProps = await Component.getInitialProps({ ...ctx });
-  return {
-    ctx: {
-      pathname: ctx.pathname,
-      query: ctx.query,
-      asPath: ctx.asPath,
-    },
-    pageProps,
-  };
+	const pageProps = await Component.getInitialProps({ ...ctx });
+	return {
+		ctx: {
+			pathname: ctx.pathname,
+			query: ctx.query,
+			asPath: ctx.asPath,
+		},
+		pageProps,
+	};
 };
 
 export default DMSApp;

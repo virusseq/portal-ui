@@ -28,6 +28,6 @@ const rightShadow = `
 `;
 
 export default {
-  default: defaultShadow,
-  right: rightShadow,
+	default: defaultShadow,
+	right: rightShadow,
 };

@@ -21,13 +21,14 @@
 
 import { ReactElement } from 'react';
 
-import PageContent from './PageContent';
 import PageLayout from '../../PageLayout';
 
+import PageContent from './PageContent';
+
 const Acknowledgements = (): ReactElement => (
-  <PageLayout subtitle="Acknowledgement of Contributions">
-    <PageContent />
-  </PageLayout>
+	<PageLayout subtitle="Acknowledgement of Contributions">
+		<PageContent />
+	</PageLayout>
 );
 
 export default Acknowledgements;

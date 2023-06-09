@@ -21,43 +21,44 @@
 
 import { css } from '@emotion/react';
 import React from 'react';
+
 import { Modal } from '../../Modal';
 import defaultTheme from '../../theme/index';
 
 type DeleteSubmitterModalProps = {
-  onClose: () => void;
-  onSubmit: () => Promise<void>;
-  submitter: string;
-  studyId: string;
+	onClose: () => void;
+	onSubmit: () => Promise<void>;
+	submitter: string;
+	studyId: string;
 };
 
 const DeleteSubmitterModal = ({
-  onClose,
-  onSubmit,
-  submitter: email,
-  studyId,
+	onClose,
+	onSubmit,
+	submitter: email,
+	studyId,
 }: DeleteSubmitterModalProps) => {
-  return (
-    <Modal
-      showActionButton={true}
-      disableActionButton={false}
-      onCloseClick={onClose}
-      onActionClick={onSubmit}
-      actionText="Remove"
-      closeText="Cancel"
-      title={'Remove Confirmation'}
-    >
-      <p
-        css={css`
-          padding-right: 7px;
-          padding-left: 7px;
-          ${defaultTheme.typography.baseFont}
-        `}
-      >
-        Are you sure you want to remove <b>{email}</b> from <b>{studyId}</b>?
-      </p>
-    </Modal>
-  );
+	return (
+		<Modal
+			showActionButton={true}
+			disableActionButton={false}
+			onCloseClick={onClose}
+			onActionClick={onSubmit}
+			actionText="Remove"
+			closeText="Cancel"
+			title={'Remove Confirmation'}
+		>
+			<p
+				css={css`
+					padding-right: 7px;
+					padding-left: 7px;
+					${defaultTheme.typography.baseFont}
+				`}
+			>
+				Are you sure you want to remove <b>{email}</b> from <b>{studyId}</b>?
+			</p>
+		</Modal>
+	);
 };
 
 export default DeleteSubmitterModal;

@@ -20,16 +20,17 @@
  */
 
 import React from 'react';
+
 import Submission from '../../components/pages/submission';
 import { createPage } from '../../global/utils/pages';
 
 const SubmissionPage = createPage({
-  getInitialProps: async ({ query, egoJwt }) => {
-    return { query, egoJwt };
-  },
-  isPublic: false,
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: false,
 })(() => {
-  return <Submission />;
+	return <Submission />;
 });
 
 export default SubmissionPage;

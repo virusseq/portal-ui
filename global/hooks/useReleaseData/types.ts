@@ -20,29 +20,29 @@
  */
 
 export type FilesByVariantType = {
-  abbreviation: string;
-  count: number;
-  name: string;
+	abbreviation: string;
+	count: number;
+	name: string;
 };
 
 type AggBuckets = {
-  doc_count?: number;
-  key?: number;
+	doc_count?: number;
+	key?: number;
 };
 
 export type Count = {
-  value: number;
-  type: 'APPROXIMATE' | 'EXACT';
+	value: number;
+	type: 'APPROXIMATE' | 'EXACT';
 };
 
 export type ReleaseDataProps = {
-  fileCount?: number;
-  filesByVariant?: Array<FilesByVariantType>;
-  fileSize?: {
-    unit: string;
-    value: string;
-  };
-  hostGenders?: Array<AggBuckets>;
-  studyCount?: number;
-  genomesCount?: Count;
+	fileCount?: number;
+	filesByVariant?: Array<FilesByVariantType>;
+	fileSize?: {
+		unit: string;
+		value: string;
+	};
+	hostGenders?: Array<AggBuckets>;
+	studyCount?: number;
+	genomesCount?: Count;
 };

@@ -20,10 +20,10 @@
  */
 
 const sleep = (time = 2000): Promise<string> =>
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve('');
-    }, time);
-  });
+	new Promise((resolve) => {
+		setTimeout(() => {
+			resolve('');
+		}, time);
+	});
 
 export default sleep;

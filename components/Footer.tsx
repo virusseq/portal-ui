@@ -22,185 +22,186 @@
 import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 
-import defaultTheme from './theme';
-import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
-
 import { getConfig } from '../global/config';
 import useAuthContext from '../global/hooks/useAuthContext';
 import { INTERNAL_PATHS } from '../global/utils/constants';
+
+import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
+import defaultTheme from './theme';
 import StyledLink, { InternalLink } from './Link';
 
 const Footer = (): ReactElement => {
-  const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();
-  const theme: typeof defaultTheme = useTheme();
-  const { token } = useAuthContext();
+	const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();
+	const theme: typeof defaultTheme = useTheme();
+	const { token } = useAuthContext();
 
-  return (
-    <div
-      css={css`
-        height: ${theme.dimensions.footer.height}px;
-        background-color: ${theme.colors.white};
-        border-top: 1px solid ${theme.colors.grey_3};
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-        ${theme.shadow.default};
-        z-index: 10;
-        overflow: hidden;
-        position: fixed;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-      `}
-    >
-      <section
-        css={css`
-          align-items: center;
-          display: flex;
+	return (
+		<div
+			css={css`
+				height: ${theme.dimensions.footer.height}px;
+				background-color: ${theme.colors.white};
+				border-top: 1px solid ${theme.colors.grey_3};
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 0 20px;
+				${theme.shadow.default};
+				z-index: 10;
+				overflow: hidden;
+				position: fixed;
+				bottom: 0px;
+				left: 0px;
+				right: 0px;
+			`}
+		>
+			<section
+				css={css`
+					align-items: center;
+					display: flex;
 
-          > :not(:last-of-type) {
-            margin-right: 1rem;
-          }
-        `}
-      >
-        <a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
-          <img src="/images/sanbi-logo.png" alt="SANBI logo" />
-        </a>
-      </section>
+					> :not(:last-of-type) {
+						margin-right: 1rem;
+					}
+				`}
+			>
+				<a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
+					<img src="/images/sanbi-logo.png" alt="SANBI logo" />
+				</a>
+			</section>
 
-      <section
-        css={css`
-          display: flex;
-          flex-direction: column;
-          height: 60%;
-          justify-content: space-between;
-          align-items: center;
+			<section
+				css={css`
+					display: flex;
+					flex-direction: column;
+					height: 60%;
+					justify-content: space-between;
+					align-items: center;
 
-          & a,
-          & span {
-            ${theme.typography.subheading2};
-            font-weight: normal;
-          }
-        `}
-      >
-        <ul
-          css={css`
-            display: flex;
-            margin: 0;
-            padding: 0;
+					& a,
+					& span {
+						${theme.typography.subheading2};
+						font-weight: normal;
+					}
+				`}
+			>
+				<ul
+					css={css`
+						display: flex;
+						margin: 0;
+						padding: 0;
 
-            & li {
-              display: inline;
-              padding: 0 20px;
-              position: relative;
-              text-align: center;
+						& li {
+							display: inline;
+							padding: 0 20px;
+							position: relative;
+							text-align: center;
 
-              &:not(:first-of-type)::before {
-                color: ${theme.colors.accent};
-                content: '•';
-                font-size: 10px;
-                left: -3px;
-                position: absolute;
-                top: 5px;
-              }
-            }
-          `}
-        >
-          <li>
-            <StyledLink
-              href="https://www.genomecanada.ca/en/cancogen"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              About SANBI
-            </StyledLink>
-          </li>
+							&:not(:first-of-type)::before {
+								color: ${theme.colors.accent};
+								content: '•';
+								font-size: 10px;
+								left: -3px;
+								position: absolute;
+								top: 5px;
+							}
+						}
+					`}
+				>
+					<li>
+						<StyledLink
+							href="https://www.genomecanada.ca/en/cancogen"
+							rel="noopener noreferrer"
+							target="_blank"
+						>
+							About SANBI
+						</StyledLink>
+					</li>
 
-          <li>
-            <InternalLink path={INTERNAL_PATHS.POLICIES}>
-              <StyledLink>Policies</StyledLink>
-            </InternalLink>
-          </li>
+					<li>
+						<InternalLink path={INTERNAL_PATHS.POLICIES}>
+							<StyledLink>Policies</StyledLink>
+						</InternalLink>
+					</li>
 
-          <li>
-            <StyledLink
-              href="mailto:info@virusseq-dataportal.ca"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Contact Us
-            </StyledLink>
-          </li>
+					<li>
+						<StyledLink
+							href="mailto:info@virusseq-dataportal.ca"
+							rel="noopener noreferrer"
+							target="_blank"
+						>
+							Contact Us
+						</StyledLink>
+					</li>
+				</ul>
+				<span>
+					&#169;
+					{` ${new Date()
+						.toISOString()
+						.slice(0, 4)} African Pathogen Archive and Data Sharing Portal`}
+				</span>
+			</section>
 
-        </ul>
-        <span>
-          &#169;
-          {` ${new Date().toISOString().slice(0, 4)} African Pathogen Archive and Data Sharing Portal`}
-        </span>
-      </section>
+			<section
+				css={css`
+					display: flex;
+				`}
+			>
+				<span
+					css={css`
+						display: flex;
+						justify-content: center;
+						align-items: center;
+					`}
+				>
+					<span
+						css={css`
+							color: ${theme.colors.accent_dark};
+							${theme.typography.subheading2}
+							font-weight: normal;
+							padding-right: 10px;
+						`}
+					>
+						Powered by:
+					</span>
+					<a
+						css={css`
+							margin-top: 5px;
+						`}
+						href="https://www.overture.bio/"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						<OvertureLogoWithText width={100} height={18} />
+					</a>
+				</span>
 
-      <section
-        css={css`
-          display: flex;
-        `}
-      >
-        <span
-          css={css`
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          `}
-        >
-          <span
-            css={css`
-              color: ${theme.colors.accent_dark};
-              ${theme.typography.subheading2}
-              font-weight: normal;
-              padding-right: 10px;
-            `}
-          >
-            Powered by:
-          </span>
-          <a
-            css={css`
-              margin-top: 5px;
-            `}
-            href="https://www.overture.bio/"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <OvertureLogoWithText width={100} height={18} />
-          </a>
-        </span>
-
-        <a
-          css={css`
-            align-items: center;
-            color: ${theme.colors.primary};
-            display: flex;
-            font-weight: bold;
-            justify-content: center;
-            margin-left: 1rem;
-            text-decoration: none;
-          `}
-          // href="https://github.com/cancogen-virus-seq"
-          href="https://github.com/african-pathogen-archive"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <GitHubLogo height={20} width={20} />
-          <span
-            css={css`
-              margin-left: 5px;
-            `}
-          >
-            APA Github
-          </span>
-        </a>
-      </section>
-    </div>
-  );
+				<a
+					css={css`
+						align-items: center;
+						color: ${theme.colors.primary};
+						display: flex;
+						font-weight: bold;
+						justify-content: center;
+						margin-left: 1rem;
+						text-decoration: none;
+					`}
+					// href="https://github.com/cancogen-virus-seq"
+					href="https://github.com/african-pathogen-archive"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					<GitHubLogo height={20} width={20} />
+					<span
+						css={css`
+							margin-left: 5px;
+						`}
+					>
+						APA Github
+					</span>
+				</a>
+			</section>
+		</div>
+	);
 };
 
 export default Footer;

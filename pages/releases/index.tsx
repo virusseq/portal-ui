@@ -23,12 +23,12 @@ import Releases from '@/components/pages/releases';
 import { createPage } from '@/global/utils/pages';
 
 const ReleasesPage = createPage({
-  getInitialProps: async ({ query, egoJwt }) => {
-    return { query, egoJwt };
-  },
-  isPublic: true,
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: true,
 })(() => {
-  return <Releases />;
+	return <Releases />;
 });
 
 export default ReleasesPage;

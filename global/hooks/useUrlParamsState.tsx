@@ -22,21 +22,21 @@ import { useRouter } from 'next/router';
 import { isEqual } from 'lodash';
 
 const entriesToObj = (entriesArr: [string, string][], cb = (val: string, param: string) => val) =>
-  entriesArr.length
-    ? entriesArr.reduce(
-        (acc: any, [param, val]: [string, string]) => ({
-          ...acc,
-          [param]: cb(val, param),
-        }),
-        {},
-      )
-    : {};
+	entriesArr.length
+		? entriesArr.reduce(
+				(acc: any, [param, val]: [string, string]) => ({
+					...acc,
+					[param]: cb(val, param),
+				}),
+				{},
+		  )
+		: {};
 
 export const getParamsObj = (
-  queryString: string | URLSearchParams = '',
+	queryString: string | URLSearchParams = '',
 ): Record<string, string> => {
-  const currentQueryEntries = [...new URLSearchParams(queryString).entries()];
-  return entriesToObj(currentQueryEntries);
+	const currentQueryEntries = [...new URLSearchParams(queryString).entries()];
+	return entriesToObj(currentQueryEntries);
 };
 
 const getSanitizedValue = (v: string): null | undefined | string => (v ? v : null);
@@ -44,72 +44,72 @@ const getSanitizedValue = (v: string): null | undefined | string => (v ? v : nul
 const noopFn = (v: any) => v;
 
 export const useUrlParamsState = <T,>(
-  key: string,
-  initialValue: T,
-  {
-    prepare = noopFn,
-    pushNavigation = false,
-    serialize = noopFn,
-    deSerialize = noopFn,
-  }: {
-    prepare?: (val: string) => string;
-    pushNavigation?: boolean;
-    serialize: (val: T) => string;
-    deSerialize: (val: string | null | undefined) => T;
-  },
+	key: string,
+	initialValue: T,
+	{
+		prepare = noopFn,
+		pushNavigation = false,
+		serialize = noopFn,
+		deSerialize = noopFn,
+	}: {
+		prepare?: (val: string) => string;
+		pushNavigation?: boolean;
+		serialize: (val: T) => string;
+		deSerialize: (val: string | null | undefined) => T;
+	},
 ) => {
-  const router = useRouter();
-  const [pathName, queryParams] = router.asPath.split('?');
-  const [previousQuery, setPreviousQuery] = useState<Record<string, string>>();
-  const currentQuery = getParamsObj(queryParams);
+	const router = useRouter();
+	const [pathName, queryParams] = router.asPath.split('?');
+	const [previousQuery, setPreviousQuery] = useState<Record<string, string>>();
+	const currentQuery = getParamsObj(queryParams);
 
-  const hasQueryParams = !!queryParams;
-  const previousValue = !hasQueryParams && previousQuery;
+	const hasQueryParams = !!queryParams;
+	const previousValue = !hasQueryParams && previousQuery;
 
-  useEffect(() => {
-    const query = {
-      ...(initialValue && { [key]: serialize(initialValue) }),
-      ...currentQuery,
-    };
+	useEffect(() => {
+		const query = {
+			...(initialValue && { [key]: serialize(initialValue) }),
+			...currentQuery,
+		};
 
-    const preparedQuery = entriesToObj(Object.entries(query), (val, param) =>
-      param === key ? prepare(val) : val,
-    );
+		const preparedQuery = entriesToObj(Object.entries(query), (val, param) =>
+			param === key ? prepare(val) : val,
+		);
 
-    setPreviousQuery(query);
+		setPreviousQuery(query);
 
-    const urlParams = new window.URLSearchParams(previousValue ? previousValue : query).toString();
-    const newPath = urlParams ? `${pathName}?${urlParams}` : pathName;
+		const urlParams = new window.URLSearchParams(previousValue ? previousValue : query).toString();
+		const newPath = urlParams ? `${pathName}?${urlParams}` : pathName;
 
-    if (previousValue || !isEqual(query, preparedQuery)) {
-      router.replace(router.pathname, newPath);
-    }
-  }, [router.asPath]);
+		if (previousValue || !isEqual(query, preparedQuery)) {
+			router.replace(router.pathname, newPath);
+		}
+	}, [router.asPath]);
 
-  const setUrlState = (value: T) => {
-    const newParams = new window.URLSearchParams({
-      ...currentQuery,
-      [key]: serialize(value),
-    });
+	const setUrlState = (value: T) => {
+		const newParams = new window.URLSearchParams({
+			...currentQuery,
+			[key]: serialize(value),
+		});
 
-    const newPath = `${pathName}?${newParams.toString()}`;
+		const newPath = `${pathName}?${newParams.toString()}`;
 
-    if (pushNavigation) {
-      router.push(router.pathname, newPath);
-    } else {
-      router.replace(router.pathname, newPath);
-    }
-  };
+		if (pushNavigation) {
+			router.push(router.pathname, newPath);
+		} else {
+			router.replace(router.pathname, newPath);
+		}
+	};
 
-  const deserializeValue = (v: string) => {
-    const sanitized = getSanitizedValue(v);
-    return deSerialize(sanitized);
-  };
+	const deserializeValue = (v: string) => {
+		const sanitized = getSanitizedValue(v);
+		return deSerialize(sanitized);
+	};
 
-  return [
-    previousValue ? deserializeValue(previousValue[key]) : deserializeValue(currentQuery[key]),
-    setUrlState,
-  ] as [T, typeof setUrlState];
+	return [
+		previousValue ? deserializeValue(previousValue[key]) : deserializeValue(currentQuery[key]),
+		setUrlState,
+	] as [T, typeof setUrlState];
 };
 
 export default useUrlParamsState;

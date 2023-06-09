@@ -21,13 +21,14 @@
 
 import { ReactElement } from 'react';
 
-import PageContent from './PageContent';
 import PageLayout from '../../PageLayout';
 
+import PageContent from './PageContent';
+
 const AboutPage = (): ReactElement => (
-  <PageLayout>
-    <PageContent />
-  </PageLayout>
+	<PageLayout>
+		<PageContent />
+	</PageLayout>
 );
 
 export default AboutPage;

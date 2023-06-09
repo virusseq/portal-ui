@@ -25,78 +25,78 @@ import styled from '@emotion/styled';
 import defaultTheme from '../theme';
 
 export const linkStyles = (theme?: typeof defaultTheme): SerializedStyles => css`
-  align-items: center;
-  border-bottom: 5px solid transparent;
-  box-sizing: border-box;
-  color: ${theme?.colors.primary};
-  cursor: pointer;
-  display: flex;
-  flex: 0;
-  font-weight: bold;
-  height: 100%;
-  justify-content: center;
-  padding: 0 1rem;
-  text-decoration: none;
-  white-space: nowrap;
-  width: fit-content;
-  font-size: 14px;
+	align-items: center;
+	border-bottom: 5px solid transparent;
+	box-sizing: border-box;
+	color: ${theme?.colors.primary};
+	cursor: pointer;
+	display: flex;
+	flex: 0;
+	font-weight: bold;
+	height: 100%;
+	justify-content: center;
+	padding: 0 1rem;
+	text-decoration: none;
+	white-space: nowrap;
+	width: fit-content;
+	font-size: 14px;
 
-  svg path {
-    fill: ${theme?.colors.white};
-  }
+	svg path {
+		fill: ${theme?.colors.white};
+	}
 
-  &.active,
-  &:hover {
-    border-bottom-color: ${theme?.colors.accent};
-    color: ${theme?.colors.accent_light};
+	&.active,
+	&:hover {
+		border-bottom-color: ${theme?.colors.accent};
+		color: ${theme?.colors.accent_light};
 
-    svg path {
-      fill: ${theme?.colors.accent_light};
-    }
-  }
+		svg path {
+			fill: ${theme?.colors.accent_light};
+		}
+	}
 `;
 
 export const newBadgeStyle = (theme?: typeof defaultTheme): SerializedStyles => css`
-  background: ${theme?.colors.warning};
-  color: ${theme?.colors.primary_dark};
-  font-size: 10px;
-  line-height: 1;
-  text-transform: uppercase;
-  border-radius: 4px;
-  padding: 2px 4px;
-  font-weight: normal;
-  margin-top: -12px;
-  margin-left: 4px;
+	background: ${theme?.colors.warning};
+	color: ${theme?.colors.primary_dark};
+	font-size: 10px;
+	line-height: 1;
+	text-transform: uppercase;
+	border-radius: 4px;
+	padding: 2px 4px;
+	font-weight: normal;
+	margin-top: -12px;
+	margin-left: 4px;
 `;
 
 export const StyledLink = styled.a`
-  ${({ theme }: { theme?: typeof defaultTheme }) => linkStyles(theme)}
+	${({ theme }: { theme?: typeof defaultTheme }) => linkStyles(theme)}
 `;
 
 export const StyledListLink = styled.a`
-  ${({ theme }: { theme?: typeof defaultTheme }) => css`
-    align-items: center;
-    background-color: ${theme?.colors.white};
-    border: 1px solid ${theme?.colors.grey_3};
-    box-sizing: border-box;
-    color: ${theme?.colors.black};
-    cursor: pointer;
-    display: flex;
-    font-size: 16px;
-    height: 40px;
-    outline: none;
-    padding: 6px 12px;
-    text-decoration: none;
-    width: 100%;
+	${({ theme }: { theme?: typeof defaultTheme }) => css`
+		align-items: center;
+		background-color: ${theme?.colors.white};
+		border: 1px solid ${theme?.colors.grey_3};
+		box-sizing: border-box;
+		color: ${theme?.colors.black};
+		cursor: pointer;
+		display: flex;
+		font-size: 16px;
+		height: 40px;
+		outline: none;
+		padding: 6px 12px;
+		text-decoration: none;
+		width: 100%;
 
-    &:hover {
-      background-color: ${theme?.colors.grey_1};
-    }
+		&:hover {
+			background-color: ${theme?.colors.grey_1};
+		}
 
-    &.active {
-      background-color: ${theme?.colors.grey_2};
-      color: ${theme?.colors.accent};
-      cursor: default;
-    }
-  `}
+		&.active {
+			background-color: ${theme?.colors.grey_2};
+			color: ${theme?.colors.accent};
+			cursor: default;
+		}
+	`}
 `;

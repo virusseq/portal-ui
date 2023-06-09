@@ -27,123 +27,123 @@ import defaultTheme from './theme';
 import { Spinner } from './theme/icons';
 
 export const UnStyledButton = styled('button')`
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  position: relative;
-  width: fit-content;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
+	position: relative;
+	width: fit-content;
 `;
 
 export const ButtonElement = styled(UnStyledButton)`
-  ${({ theme }: { theme?: typeof defaultTheme }) => css`
-    color: ${theme?.colors.white};
-    background-color: ${theme?.colors.primary};
-    ${theme?.typography.subheading2};
-    line-height: 24px;
-    border-radius: 5px;
-    border: 1px solid ${theme?.colors.primary};
-    box-sizing: border-box;
-    padding: 6px 15px;
-    &:hover {
-      background-color: ${theme?.colors.primary_dark};
-    }
-    &:disabled,
-    &:disabled:hover {
-      background-color: ${theme?.colors.grey_4};
-      cursor: not-allowed;
-      color: ${theme?.colors.white};
-      border: 1px solid ${theme?.colors.grey_4};
-    }
-  `}
+	${({ theme }: { theme?: typeof defaultTheme }) => css`
+		color: ${theme?.colors.white};
+		background-color: ${theme?.colors.primary};
+		${theme?.typography.subheading2};
+		line-height: 24px;
+		border-radius: 5px;
+		border: 1px solid ${theme?.colors.primary};
+		box-sizing: border-box;
+		padding: 6px 15px;
+		&:hover {
+			background-color: ${theme?.colors.primary_dark};
+		}
+		&:disabled,
+		&:disabled:hover {
+			background-color: ${theme?.colors.grey_4};
+			cursor: not-allowed;
+			color: ${theme?.colors.white};
+			border: 1px solid ${theme?.colors.grey_4};
+		}
+	`}
 `;
 
 const Button = React.forwardRef<
-  HTMLButtonElement,
-  {
-    children?: ReactNode | ReactNodeArray;
-    disabled?: boolean;
-    onClick?: (
-      e: React.SyntheticEvent<HTMLButtonElement>,
-    ) => any | ((e: React.SyntheticEvent<HTMLButtonElement>) => Promise<any>);
-    isAsync?: boolean;
-    className?: string;
-    isLoading?: boolean;
-    title?: string;
-  }
+	HTMLButtonElement,
+	{
+		children?: ReactNode | ReactNodeArray;
+		disabled?: boolean;
+		onClick?: (
+			e: React.SyntheticEvent<HTMLButtonElement>,
+		) => any | ((e: React.SyntheticEvent<HTMLButtonElement>) => Promise<any>);
+		isAsync?: boolean;
+		className?: string;
+		isLoading?: boolean;
+		title?: string;
+	}
 >(
-  (
-    {
-      children,
-      onClick = (e) => {
-        // console.log('nada');
-      },
-      disabled = false,
-      isAsync = false,
-      className,
-      isLoading: controlledLoadingState,
-      title,
-    },
-    ref = React.createRef(),
-  ) => {
-    const [isLoading, setLoading] = React.useState(false);
+	(
+		{
+			children,
+			onClick = (e) => {
+				// console.log('nada');
+			},
+			disabled = false,
+			isAsync = false,
+			className,
+			isLoading: controlledLoadingState,
+			title,
+		},
+		ref = React.createRef(),
+	) => {
+		const [isLoading, setLoading] = React.useState(false);
 
-    /**
-     * controlledLoadingState will allows consumer to control the loading state.
-     * Else, that is set by the component internally
-     */
-    const shouldShowLoading = !!controlledLoadingState || (isLoading && isAsync);
+		/**
+		 * controlledLoadingState will allows consumer to control the loading state.
+		 * Else, that is set by the component internally
+		 */
+		const shouldShowLoading = !!controlledLoadingState || (isLoading && isAsync);
 
-    const onClickFn = async (event: any) => {
-      setLoading(true);
-      await onClick(event);
-      setLoading(false);
-    };
-    return (
-      <ButtonElement
-        ref={ref}
-        onClick={isAsync ? onClickFn : onClick}
-        disabled={disabled || shouldShowLoading}
-        className={className}
-        title={title}
-      >
-        <span
-          css={css`
-            visibility: ${shouldShowLoading ? 'hidden' : 'visible'};
-          `}
-        >
-          {children}
-        </span>
+		const onClickFn = async (event: any) => {
+			setLoading(true);
+			await onClick(event);
+			setLoading(false);
+		};
+		return (
+			<ButtonElement
+				ref={ref}
+				onClick={isAsync ? onClickFn : onClick}
+				disabled={disabled || shouldShowLoading}
+				className={className}
+				title={title}
+			>
+				<span
+					css={css`
+						visibility: ${shouldShowLoading ? 'hidden' : 'visible'};
+					`}
+				>
+					{children}
+				</span>
 
-        {isAsync && (
-          <span
-            css={css`
-              position: absolute;
-              visibility: ${shouldShowLoading ? 'visible' : 'hidden'};
-              bottom: 1px;
-            `}
-          >
-            <Spinner height={20} width={20} />
-          </span>
-        )}
-      </ButtonElement>
-    );
-  },
+				{isAsync && (
+					<span
+						css={css`
+							position: absolute;
+							visibility: ${shouldShowLoading ? 'visible' : 'hidden'};
+							bottom: 1px;
+						`}
+					>
+						<Spinner height={20} width={20} />
+					</span>
+				)}
+			</ButtonElement>
+		);
+	},
 );
 
 export const TransparentButton = styled(ButtonElement)`
-  background: none;
-  border: none;
-  justify-content: flex-start;
-  text-align: left;
+	background: none;
+	border: none;
+	justify-content: flex-start;
+	text-align: left;
 
-  &:focus,
-  &:hover {
-    background: none;
-  }
+	&:focus,
+	&:hover {
+		background: none;
+	}
 `;
 
 export default Button;

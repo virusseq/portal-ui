@@ -30,20 +30,20 @@ const BYTES_KB_LIMIT = 999500;
 const BYTES_KB = 1000;
 
 const formatFileSize = (value = 0): string => {
-  switch (true) {
-    case value >= BYTES_TB_LIMIT:
-      return `${(value / BYTES_PB).toFixed(2)} PB`;
-    case value >= BYTES_GB_LIMIT:
-      return `${(value / BYTES_TB).toFixed(2)} TB`;
-    case value >= BYTES_MB_LIMIT:
-      return `${(value / BYTES_GB).toFixed(2)} GB`;
-    case value >= BYTES_KB_LIMIT:
-      return `${(value / BYTES_MB).toFixed(0)} MB`;
-    case value >= BYTES_KB:
-      return `${(value / BYTES_KB).toFixed(0)} KB`;
-    default:
-      return `${value} B`;
-  }
+	switch (true) {
+		case value >= BYTES_TB_LIMIT:
+			return `${(value / BYTES_PB).toFixed(2)} PB`;
+		case value >= BYTES_GB_LIMIT:
+			return `${(value / BYTES_TB).toFixed(2)} TB`;
+		case value >= BYTES_MB_LIMIT:
+			return `${(value / BYTES_GB).toFixed(2)} GB`;
+		case value >= BYTES_KB_LIMIT:
+			return `${(value / BYTES_MB).toFixed(0)} MB`;
+		case value >= BYTES_KB:
+			return `${(value / BYTES_KB).toFixed(0)} KB`;
+		default:
+			return `${value} B`;
+	}
 };
 
 export default formatFileSize;

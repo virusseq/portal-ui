@@ -29,38 +29,38 @@ export type ArrayFieldValue = Array<string | number> | string;
 export type ScalarFieldValue = number;
 
 export interface FilterField {
-  fieldNames: string[];
-  value: ArrayFieldValue;
+	fieldNames: string[];
+	value: ArrayFieldValue;
 }
 
 export interface FilterFieldOperator {
-  op: ArrayFieldKeys;
-  content: FilterField;
+	op: ArrayFieldKeys;
+	content: FilterField;
 }
 
 export interface ArrayField {
-  fieldName: string;
-  value: ArrayFieldValue;
+	fieldName: string;
+	value: ArrayFieldValue;
 }
 
 export interface ScalarField {
-  fieldName: string;
-  value: ScalarFieldValue;
+	fieldName: string;
+	value: ScalarFieldValue;
 }
 
 export interface ArrayFieldOperator {
-  op: ArrayFieldKeys;
-  content: ArrayField;
+	op: ArrayFieldKeys;
+	content: ArrayField;
 }
 
 export interface ScalarFieldOperator {
-  op: ScalarFieldKeys;
-  content: ScalarField;
+	op: ScalarFieldKeys;
+	content: ScalarField;
 }
 
 export type FieldOperator = ArrayFieldOperator | ScalarFieldOperator;
 
 export type RepoFiltersType = {
-  op: 'and';
-  content: FieldOperator[];
+	op: 'and';
+	content: FieldOperator[];
 };

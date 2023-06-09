@@ -22,6 +22,7 @@
 import { css } from '@emotion/react';
 import React from 'react';
 import { Column } from 'react-table';
+
 import { RemoveSubmitterReq, Study } from '../../../global/hooks/useStudiesSvcData/types';
 import { UnStyledButton } from '../../Button';
 import GenericTable from '../../GenericTable';
@@ -31,125 +32,125 @@ import defaultTheme from '../../theme/index';
 type RemoveFuncGenerator = (req: RemoveSubmitterReq) => () => void;
 
 const getTableStyle = (theme: typeof defaultTheme) => css`
-  & tbody {
-    tr td {
-      vertical-align: top;
-      text-align: left;
-      border-top: 1px solid ${theme.colors.accent};
-    }
-  }
+	& tbody {
+		tr td {
+			vertical-align: top;
+			text-align: left;
+			border-top: 1px solid ${theme.colors.accent};
+		}
+	}
 `;
 
 type RemovableSubmitterRowProps = {
-  hasBottomBorder: boolean;
-  submitter: string;
-  onDeleteClick: () => void;
+	hasBottomBorder: boolean;
+	submitter: string;
+	onDeleteClick: () => void;
 };
 
 const RemovableSubmitterRow = ({
-  hasBottomBorder,
-  submitter,
-  onDeleteClick,
+	hasBottomBorder,
+	submitter,
+	onDeleteClick,
 }: RemovableSubmitterRowProps) => {
-  return (
-    <div
-      css={css`
-        display: flex;
-        justify-content: space-between;
-        ${hasBottomBorder ? `border-bottom: solid 1px ${defaultTheme.colors.grey_4};` : ''};
-      `}
-    >
-      <div
-        css={css`
-          margin-top: 5px;
-          margin-bottom: 5px;
-          margin-left: 15px;
-        `}
-      >
-        {submitter}
-      </div>
+	return (
+		<div
+			css={css`
+				display: flex;
+				justify-content: space-between;
+				${hasBottomBorder ? `border-bottom: solid 1px ${defaultTheme.colors.grey_4};` : ''};
+			`}
+		>
+			<div
+				css={css`
+					margin-top: 5px;
+					margin-bottom: 5px;
+					margin-left: 15px;
+				`}
+			>
+				{submitter}
+			</div>
 
-      <UnStyledButton
-        onClick={onDeleteClick}
-        css={css`
-          margin-top: 5px;
-          margin-bottom: 5px;
-          margin-right: 15px;
-        `}
-      >
-        <Bin />
-      </UnStyledButton>
-    </div>
-  );
+			<UnStyledButton
+				onClick={onDeleteClick}
+				css={css`
+					margin-top: 5px;
+					margin-bottom: 5px;
+					margin-right: 15px;
+				`}
+			>
+				<Bin />
+			</UnStyledButton>
+		</div>
+	);
 };
 
 const columnData = (
-  removeFuncGenerator: RemoveFuncGenerator,
+	removeFuncGenerator: RemoveFuncGenerator,
 ): Column<Record<string, unknown>>[] => [
-  {
-    accessor: 'studyId',
-    Header: 'Study ID',
-  },
-  {
-    accessor: 'organization',
-    Header: 'Organization',
-  },
-  {
-    accessor: 'name',
-    Header: 'Study Name',
-  },
-  {
-    accessor: 'description',
-    Header: 'Description',
-  },
-  {
-    accessor: (row) => {
-      const studyId = row.studyId;
-      return (row as Study).submitters?.map((s) => ({ studyId, submitter: s }));
-    },
-    Header: 'Data Submitters',
-    Cell: ({ value }: { value: RemoveSubmitterReq[] }) => {
-      return Array.isArray(value) ? (
-        <div
-          css={css`
-            margin-left: -10px;
-            margin-right: -10px;
-          `}
-        >
-          {value.map((v, i) => (
-            <RemovableSubmitterRow
-              key={i}
-              submitter={v.submitter}
-              onDeleteClick={removeFuncGenerator(v)}
-              hasBottomBorder={i < value.length - 1}
-            />
-          ))}
-        </div>
-      ) : null;
-    },
-  },
+	{
+		accessor: 'studyId',
+		Header: 'Study ID',
+	},
+	{
+		accessor: 'organization',
+		Header: 'Organization',
+	},
+	{
+		accessor: 'name',
+		Header: 'Study Name',
+	},
+	{
+		accessor: 'description',
+		Header: 'Description',
+	},
+	{
+		accessor: (row) => {
+			const studyId = row.studyId;
+			return (row as Study).submitters?.map((s) => ({ studyId, submitter: s }));
+		},
+		Header: 'Data Submitters',
+		Cell: ({ value }: { value: RemoveSubmitterReq[] }) => {
+			return Array.isArray(value) ? (
+				<div
+					css={css`
+						margin-left: -10px;
+						margin-right: -10px;
+					`}
+				>
+					{value.map((v, i) => (
+						<RemovableSubmitterRow
+							key={i}
+							submitter={v.submitter}
+							onDeleteClick={removeFuncGenerator(v)}
+							hasBottomBorder={i < value.length - 1}
+						/>
+					))}
+				</div>
+			) : null;
+		},
+	},
 ];
 
 type StudiesTableProp = {
-  tableDeleteButtonFunc: RemoveFuncGenerator;
-  tableData: Study[];
+	tableDeleteButtonFunc: RemoveFuncGenerator;
+	tableData: Study[];
 };
 
 const StudiesTable = ({ tableDeleteButtonFunc, tableData }: StudiesTableProp) => {
-  return (
-    <GenericTable
-      style={getTableStyle(defaultTheme)}
-      columns={columnData(tableDeleteButtonFunc)}
-      data={tableData}
-      sortable={{
-        defaultSortBy: [
-          {
-            id: 'studyId',
-          },
-        ],
-      }}
-    />
-  );
+	return (
+		<GenericTable
+			style={getTableStyle(defaultTheme)}
+			columns={columnData(tableDeleteButtonFunc)}
+			data={tableData}
+			sortable={{
+				defaultSortBy: [
+					{
+						id: 'studyId',
+					},
+				],
+			}}
+		/>
+	);
 };
 
 export default StudiesTable;

@@ -26,6 +26,7 @@ import { INTERNAL_PATHS } from '../../../global/utils/constants';
 import defaultTheme from '../../theme';
 import { StyledLinkAsButton, InternalLink as Link } from '../../Link';
 import { MapleLeaf } from '../../theme/icons';
+
 import ReleaseData from './ReleaseData';
 
 /** Layout notes:
@@ -34,136 +35,138 @@ import ReleaseData from './ReleaseData';
  ** */
 
 const HeroBanner = (): ReactElement => {
-  const theme: typeof defaultTheme = useTheme();
+	const theme: typeof defaultTheme = useTheme();
 
-  return (
-    <article
-      css={css`
-        background-color: #EAECF0;
-        box-sizing: border-box;
-        color: ${theme.colors.white};
-        display: flex;
-        padding: 45px 50px;
-        width: 100%;
+	return (
+		<article
+			css={css`
+				background-color: #eaecf0;
+				box-sizing: border-box;
+				color: ${theme.colors.white};
+				display: flex;
+				padding: 45px 50px;
+				width: 100%;
 
-        @media (min-width: 1270px) {
-          background-image: url('/images/new-about-hero.jpg');
-          background-repeat: no-repeat;
-          background-size: 589px;
-          height: 400px;
-          padding-left: 630px;
-        }
+				@media (min-width: 1270px) {
+					background-image: url('/images/new-about-hero.jpg');
+					background-repeat: no-repeat;
+					background-size: 589px;
+					height: 400px;
+					padding-left: 630px;
+				}
 
-        @media (min-width: 2165px) {
-          padding-left: 50px;
-          justify-content: center;
-        }
+				@media (min-width: 2165px) {
+					padding-left: 50px;
+					justify-content: center;
+				}
 
-        @media (min-width: 2170px) {
-        }
+				@media (min-width: 2170px) {
+				}
 
-        @media (min-width: 2880px) {
-          padding-left: 50px;
-        }
-      `}
-    >
-      <section
-        css={css`
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          max-width: 1550px;
-          width: 100%;
+				@media (min-width: 2880px) {
+					padding-left: 50px;
+				}
+			`}
+		>
+			<section
+				css={css`
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+					max-width: 1550px;
+					width: 100%;
 
-          > * {
-            margin: 0;
+					> * {
+						margin: 0;
 
-            &:not(h1) {
-              margin-top: 20px;
-            }
-          }
-        `}
-      >
-        <h1
-          css={css`
-            font-size: 30px;
-            font-weight: normal;
-            position: relative;
-            color: #101828;
+						&:not(h1) {
+							margin-top: 20px;
+						}
+					}
+				`}
+			>
+				<h1
+					css={css`
+						font-size: 30px;
+						font-weight: normal;
+						position: relative;
+						color: #101828;
 
-            @media (min-width: 1345px) {
-              font-size: 34px;
-            }
-          `}
-        >
-          African Pathogen Archive and Data Sharing Portal
-        </h1>
+						@media (min-width: 1345px) {
+							font-size: 34px;
+						}
+					`}
+				>
+					African Pathogen Archive and Data Sharing Portal
+				</h1>
 
-        <p
-          css={css`
-            ${theme.typography.subheading}
-            font-weight: normal;
-            color: #101828;
-          `}
-        >
-          The Africa CDC’s Institute for Pathogen Genomics (IPG) has, since 2020, been developing a Bill 
-          and Melinda Gates Foundation funded project called the African Pathogen Genomics Initiative (PGI). 
-          One component of the PGI is support for regional data management and exchange platform for a 
-          seamless pathogen genomic data analysis, visualization, reporting, sharing and archiving between African Union member states and their associated National Public Health Institutions. 
-        </p>
+				<p
+					css={css`
+						${theme.typography.subheading}
+						font-weight: normal;
+						color: #101828;
+					`}
+				>
+					The Africa CDC’s Institute for Pathogen Genomics (IPG) has, since 2020, been developing a
+					Bill and Melinda Gates Foundation funded project called the African Pathogen Genomics
+					Initiative (PGI). One component of the PGI is support for regional data management and
+					exchange platform for a seamless pathogen genomic data analysis, visualization, reporting,
+					sharing and archiving between African Union member states and their associated National
+					Public Health Institutions.
+				</p>
 
-        <ReleaseData />
+				<ReleaseData />
 
-        <div
-          css={css`
-            display: flex;
-          `}
-        >
-          <Link path={INTERNAL_PATHS.EXPLORER}>
-            <StyledLinkAsButton
-              css={css`
-                ${theme.typography.button};
-                background-color: ${theme.colors.accent3};
-                border-color: ${theme.colors.accent3};
-                line-height: 20px;
-                margin-right: 15px;
-                padding: 8px 20px;
-                width: fit-content;
+				<div
+					css={css`
+						display: flex;
+					`}
+				>
+					<Link path={INTERNAL_PATHS.EXPLORER}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.accent3};
+								border-color: ${theme.colors.accent3};
+								line-height: 20px;
+								margin-right: 15px;
+								padding: 8px 20px;
+								width: fit-content;
 
-                &:hover {
-                  color: ${theme.colors.white};
-                  background-color: ${theme.colors.accent3_dark};
-                }
-              `}
-            >
-              Explore the Data
-            </StyledLinkAsButton>
-          </Link>
+								&:hover {
+									color: ${theme.colors.white};
+									background-color: ${theme.colors.accent3_dark};
+								}
+							`}
+						>
+							Explore the Data
+						</StyledLinkAsButton>
+					</Link>
 
-          <Link path={INTERNAL_PATHS.RELEASES}>
-            <StyledLinkAsButton
-              css={css`
-                ${theme.typography.button};
-                background-color: ${theme.colors.accent3};
-                border-color: ${theme.colors.accent3};
-                line-height: 20px;
-                margin-right: 15px;
-                padding: 8px 20px;
-                width: fit-content;
+					<Link path={INTERNAL_PATHS.RELEASES}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.accent3};
+								border-color: ${theme.colors.accent3};
+								line-height: 20px;
+								margin-right: 15px;
+								padding: 8px 20px;
+								width: fit-content;
 
-                &:hover {
-                  color: ${theme.colors.white};
-                  background-color: ${theme.colors.accent3_dark};
-                }
-              `}
-            >
-              Download the Data
-            </StyledLinkAsButton>
-          </Link>
-        </div>
-      </section>
-    </article>
-  );
+								&:hover {
+									color: ${theme.colors.white};
+									background-color: ${theme.colors.accent3_dark};
+								}
+							`}
+						>
+							Download the Data
+						</StyledLinkAsButton>
+					</Link>
+				</div>
+			</section>
+		</article>
+	);
 };
 
 export default HeroBanner;

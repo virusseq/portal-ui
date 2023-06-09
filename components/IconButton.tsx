@@ -25,30 +25,30 @@ import { css } from '@emotion/react';
 import { IconProps } from './theme/icons/types';
 
 const IconButton = ({
-  Icon,
-  fill,
-  height,
-  width,
-  onClick = () => {
-    // console.log('nada');
-  },
+	Icon,
+	fill,
+	height,
+	width,
+	onClick = () => {
+		// console.log('nada');
+	},
 }: {
-  Icon: React.ComponentType<IconProps>;
-  fill: string;
-  height: number;
-  width: number;
-  onClick: React.MouseEventHandler;
+	Icon: React.ComponentType<IconProps>;
+	fill: string;
+	height: number;
+	width: number;
+	onClick: React.MouseEventHandler;
 }): ReactElement => {
-  return (
-    <span
-      onClick={onClick}
-      css={css`
-        cursor: pointer;
-      `}
-    >
-      <Icon height={height} width={width} fill={fill} />
-    </span>
-  );
+	return (
+		<span
+			onClick={onClick}
+			css={css`
+				cursor: pointer;
+			`}
+		>
+			<Icon height={height} width={width} fill={fill} />
+		</span>
+	);
 };
 
 export default IconButton;

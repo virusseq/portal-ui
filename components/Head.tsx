@@ -22,11 +22,11 @@
 import NextHead from 'next/head';
 
 export const PageHead = ({ subtitle }: { subtitle?: string }) => {
-  return (
-    <NextHead>
-      <title>VirusSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
-    </NextHead>
-  );
+	return (
+		<NextHead>
+			<title>VirusSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
+		</NextHead>
+	);
 };
 
 export default PageHead;

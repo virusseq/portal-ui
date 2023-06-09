@@ -21,71 +21,73 @@
 
 import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { format } from 'date-fns';
 
 import defaultTheme from '../../theme';
-import Policy from './Policy';
 
+import Policy from './Policy';
+import Individuals from './Individuals';
 /* trying without the contrib section
 import Contributors from './Contributors';
 */
 
-import Individuals from './Individuals';
-import { format } from 'date-fns';
-
 const PageContent = (): ReactElement => {
-  const theme: typeof defaultTheme = useTheme();
+	const theme: typeof defaultTheme = useTheme();
 
-  return (
-    <main
-      css={css`
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        padding-bottom: ${theme.dimensions.footer.height}px;
-      `}
-    >
-      <article
-        css={css`
-          box-sizing: border-box;
-          display: flex;
-          flex-direction: column;
-          margin: 30px 0;
-          max-width: 800px;
-          padding: 40px;
-          width: 100%;
-          ${theme.shadow.default};
-        `}
-      >
-        <h1
-          css={css`
-            color: ${theme.colors.primary};
-            font-size: 26px;
-            font-weight: normal;
-            margin: 0;
-          `}
-        >
-          Acknowledgement of Contributions
-        </h1>
+	return (
+		<main
+			css={css`
+				align-items: center;
+				display: flex;
+				flex-direction: column;
+				padding-bottom: ${theme.dimensions.footer.height}px;
+			`}
+		>
+			<article
+				css={css`
+					box-sizing: border-box;
+					display: flex;
+					flex-direction: column;
+					margin: 30px 0;
+					max-width: 800px;
+					padding: 40px;
+					width: 100%;
+					${theme.shadow.default};
+				`}
+			>
+				<h1
+					css={css`
+						color: ${theme.colors.primary};
+						font-size: 26px;
+						font-weight: normal;
+						margin: 0;
+					`}
+				>
+					Acknowledgement of Contributions
+				</h1>
 
-        <p
-          css={css`
-            font-style: italic;
-            margin-top: 10px 0 0;
-          `}
-        >
-          Updated at {format(Date.parse('29 Mar 2022 12:20:00'), 'MM/dd/yyyy, h:mm:ss aa')}
-        </p>
+				<p
+					css={css`
+						font-style: italic;
+						margin-top: 10px 0 0;
+					`}
+				>
+					Updated at {format(Date.parse('29 Mar 2022 12:20:00'), 'MM/dd/yyyy, h:mm:ss aa')}
+				</p>
 
-        <Policy />
-        {/* Commented out for testing without this section
+				<Policy />
+				{/* Commented out for testing without this section
         <Contributors /> */}
-        <Individuals />
+				<Individuals />
 
-        <p>Funding for the VirusSeq Data Portal is provided by The Canadian COVID Genomics Network (CanCOGeN), and supported by Genome Canada and Innovation, Science and Economic Development Canada (ISED)</p>
-
-      </article>
-    </main>
-  );
+				<p>
+					Funding for the VirusSeq Data Portal is provided by The Canadian COVID Genomics Network
+					(CanCOGeN), and supported by Genome Canada and Innovation, Science and Economic
+					Development Canada (ISED)
+				</p>
+			</article>
+		</main>
+	);
 };
 
 export default PageContent;

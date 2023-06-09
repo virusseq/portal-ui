@@ -21,60 +21,60 @@
 
 import React, { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { format } from 'date-fns';
 
 import defaultTheme from '../../theme';
 import useSingularityData from '../../../global/hooks/useSingularityData';
 import { LoaderWrapper } from '../../Loader';
-import { format } from 'date-fns';
 
 const Contributors = (): ReactElement => {
-  const theme: typeof defaultTheme = useTheme();
-  const currentDatetime = new Date();
+	const theme: typeof defaultTheme = useTheme();
+	const currentDatetime = new Date();
 
-  const { awaitingResponse, fetchContributors } = useSingularityData();
-  const [contributorsList, setContributorsList] = useState([]);
+	const { awaitingResponse, fetchContributors } = useSingularityData();
+	const [contributorsList, setContributorsList] = useState([]);
 
-  useEffect(() => {
-    fetchContributors().then((response) => {
-      response.data && setContributorsList(response.data);
-    });
-  }, []);
+	useEffect(() => {
+		fetchContributors().then((response) => {
+			response.data && setContributorsList(response.data);
+		});
+	}, []);
 
-  return (
-    <section
-      css={css`
-        margin: 0 0 10px;
-      `}
-    >
-      <h2
-        css={css`
-          ${theme.typography.subheading};
-        `}
-      >
-        The following members have contributed data to the Canadian VirusSeq Data Portal:
-      </h2>
+	return (
+		<section
+			css={css`
+				margin: 0 0 10px;
+			`}
+		>
+			<h2
+				css={css`
+					${theme.typography.subheading};
+				`}
+			>
+				The following members have contributed data to the Canadian VirusSeq Data Portal:
+			</h2>
 
-      <p
-        css={css`
-          font-style: italic;
-          margin-top: 10px 0 0;
-        `}
-      >
-        Viewed at {format(currentDatetime, 'MM/dd/yyyy, h:mm:ss aa')}
-      </p>
+			<p
+				css={css`
+					font-style: italic;
+					margin-top: 10px 0 0;
+				`}
+			>
+				Viewed at {format(currentDatetime, 'MM/dd/yyyy, h:mm:ss aa')}
+			</p>
 
-      <LoaderWrapper loading={awaitingResponse} size="10px">
-        <p>
-          {contributorsList.map((contributor) => (
-            <React.Fragment key={contributor}>
-              {contributor}
-              <br />
-            </React.Fragment>
-          ))}
-        </p>
-      </LoaderWrapper>
-    </section>
-  );
+			<LoaderWrapper loading={awaitingResponse} size="10px">
+				<p>
+					{contributorsList.map((contributor) => (
+						<React.Fragment key={contributor}>
+							{contributor}
+							<br />
+						</React.Fragment>
+					))}
+				</p>
+			</LoaderWrapper>
+		</section>
+	);
 };
 
 export default Contributors;

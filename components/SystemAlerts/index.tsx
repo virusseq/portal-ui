@@ -20,61 +20,63 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { SystemAlert, isAlertDefs, AlertDef } from './helper';
+
 import { getConfig } from '../../global/config';
+
+import { SystemAlert, isAlertDefs, AlertDef } from './helper';
 
 const SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY = 'SYSTEM_ALERTS_DISMISSED_IDS';
 
 const SystemAlerts = () => {
-  const getParsedSystemAlerts = () => {
-    try {
-      const { NEXT_PUBLIC_SYSTEM_ALERTS } = getConfig();
-      const systemAlerts = JSON.parse(NEXT_PUBLIC_SYSTEM_ALERTS);
-      if (!isAlertDefs(systemAlerts)) {
-        throw new Error('System Alert types are invalid!');
-      }
-      return systemAlerts;
-    } catch (e) {
-      console.error('Failed to parse systems alerts! Using empty array!', e);
-      return [];
-    }
-  };
-  const systemAlerts = getParsedSystemAlerts();
-  const systemAlertIds = systemAlerts.map((sa) => sa.id);
+	const getParsedSystemAlerts = () => {
+		try {
+			const { NEXT_PUBLIC_SYSTEM_ALERTS } = getConfig();
+			const systemAlerts = JSON.parse(NEXT_PUBLIC_SYSTEM_ALERTS);
+			if (!isAlertDefs(systemAlerts)) {
+				throw new Error('System Alert types are invalid!');
+			}
+			return systemAlerts;
+		} catch (e) {
+			console.error('Failed to parse systems alerts! Using empty array!', e);
+			return [];
+		}
+	};
+	const systemAlerts = getParsedSystemAlerts();
+	const systemAlertIds = systemAlerts.map((sa) => sa.id);
 
-  const [displayAlerts, setDisplayAlerts] = useState<Array<AlertDef>>([]);
-  const [dismissedAlertIds, setDismissedAlertIds] = useState<Array<string>>([]);
+	const [displayAlerts, setDisplayAlerts] = useState<Array<AlertDef>>([]);
+	const [dismissedAlertIds, setDismissedAlertIds] = useState<Array<string>>([]);
 
-  const getLocalStorage = () => {
-    return JSON.parse(localStorage.getItem(SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY) || '[]');
-  };
-  const setLocalStorage = (ids: string[]) => {
-    localStorage.setItem(SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY, JSON.stringify(ids));
-  };
+	const getLocalStorage = () => {
+		return JSON.parse(localStorage.getItem(SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY) || '[]');
+	};
+	const setLocalStorage = (ids: string[]) => {
+		localStorage.setItem(SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY, JSON.stringify(ids));
+	};
 
-  useEffect(() => {
-    const ids = getLocalStorage();
+	useEffect(() => {
+		const ids = getLocalStorage();
 
-    setDisplayAlerts(systemAlerts.filter((alert) => !ids.includes(alert.id)));
-    setDismissedAlertIds(ids);
-  }, []);
+		setDisplayAlerts(systemAlerts.filter((alert) => !ids.includes(alert.id)));
+		setDismissedAlertIds(ids);
+	}, []);
 
-  const handleClose = (id: string) => {
-    // add id to dismissed ones and filter out stale ids
-    const ids = dismissedAlertIds.concat(id).filter((id) => systemAlertIds.includes(id));
+	const handleClose = (id: string) => {
+		// add id to dismissed ones and filter out stale ids
+		const ids = dismissedAlertIds.concat(id).filter((id) => systemAlertIds.includes(id));
 
-    setDisplayAlerts(systemAlerts.filter((alert) => !ids.includes(alert.id)));
-    setDismissedAlertIds(ids);
-    setLocalStorage(ids);
-  };
+		setDisplayAlerts(systemAlerts.filter((alert) => !ids.includes(alert.id)));
+		setDismissedAlertIds(ids);
+		setLocalStorage(ids);
+	};
 
-  return (
-    <>
-      {displayAlerts.map((sa) => (
-        <SystemAlert alert={sa} key={sa.id} onClose={() => handleClose(sa.id)} />
-      ))}
-    </>
-  );
+	return (
+		<>
+			{displayAlerts.map((sa) => (
+				<SystemAlert alert={sa} key={sa.id} onClose={() => handleClose(sa.id)} />
+			))}
+		</>
+	);
 };
 
 export default SystemAlerts;

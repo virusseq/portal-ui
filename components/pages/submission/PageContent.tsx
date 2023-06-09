@@ -24,50 +24,51 @@ import { useRouter } from 'next/router';
 import { css, useTheme } from '@emotion/react';
 
 import defaultTheme from '../../theme';
+
 import NewSubmissions from './NewSubmissions';
 import PreviousSubmissions from './PreviousSubmissions';
 import SubmissionDetails from './SubmissionDetails';
 
 type QueryType = {
-  query: {
-    ID?: string[];
-  };
+	query: {
+		ID?: string[];
+	};
 };
 const PageContent = (): ReactElement => {
-  const {
-    query: { ID: [submissionID] = [] },
-  }: QueryType = useRouter();
-  const theme: typeof defaultTheme = useTheme();
+	const {
+		query: { ID: [submissionID] = [] },
+	}: QueryType = useRouter();
+	const theme: typeof defaultTheme = useTheme();
 
-  return (
-    <main
-      css={css`
-        display: flex;
-        padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
-        position: relative;
+	return (
+		<main
+			css={css`
+				display: flex;
+				padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
+				position: relative;
 
-        > * {
-          ${!submissionID && 'flex-basis: 50%;'}
-          padding: 0 30px;
-        }
+				> * {
+					${!submissionID && 'flex-basis: 50%;'}
+					padding: 0 30px;
+				}
 
-        .view-title {
-          color: ${theme.colors.primary};
-          font-weight: normal;
-          margin: 0 0 40px;
-        }
-      `}
-    >
-      {submissionID ? (
-        <SubmissionDetails ID={submissionID} />
-      ) : (
-        <>
-          <PreviousSubmissions />
-          <NewSubmissions />
-        </>
-      )}
-    </main>
-  );
+				.view-title {
+					color: ${theme.colors.primary};
+					font-weight: normal;
+					margin: 0 0 40px;
+				}
+			`}
+		>
+			{submissionID ? (
+				<SubmissionDetails ID={submissionID} />
+			) : (
+				<>
+					<PreviousSubmissions />
+					<NewSubmissions />
+				</>
+			)}
+		</main>
+	);
 };
 
 export default PageContent;

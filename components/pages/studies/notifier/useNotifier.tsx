@@ -20,62 +20,64 @@
  */
 
 import { useState } from 'react';
+
 import { ErrorType as StudiesSvcErrorType } from '../../../../global/hooks/useStudiesSvcData/types';
+
 import createNotificationDivData from './createNotificationData';
 import NotifactionDiv from './NotificationDiv';
 
 // StudiesSvcSuccessType aren't actually returned from service,
 // just being used here for convenient notification type lookup
 enum StudiesSvcSuccessType {
-  STUDY_CREATED = 'STUDY_CREATED',
-  SUBMITTERS_ADDED = 'SUBMITTERS_ADDED',
-  SUBMITTERS_REMOVED = 'SUBMITTERS_REMOVED',
+	STUDY_CREATED = 'STUDY_CREATED',
+	SUBMITTERS_ADDED = 'SUBMITTERS_ADDED',
+	SUBMITTERS_REMOVED = 'SUBMITTERS_REMOVED',
 }
 
 export const NotificationType = { ...StudiesSvcErrorType, ...StudiesSvcSuccessType };
 export type NotificationType = StudiesSvcSuccessType | StudiesSvcErrorType;
 
 export type NotificationInfo = {
-  success: boolean;
-  type: NotificationType;
-  studyId?: string;
-  submitters?: string[];
+	success: boolean;
+	type: NotificationType;
+	studyId?: string;
+	submitters?: string[];
 };
 
 const useNotification = () => {
-  const [notifications, setNotifications] = useState<NotificationInfo[]>([]);
+	const [notifications, setNotifications] = useState<NotificationInfo[]>([]);
 
-  const addNotification = (n: NotificationInfo) => {
-    // add to start of array so stored in order from latest to oldest
-    const updatedNotification = [n, ...notifications];
-    setNotifications(updatedNotification);
-  };
+	const addNotification = (n: NotificationInfo) => {
+		// add to start of array so stored in order from latest to oldest
+		const updatedNotification = [n, ...notifications];
+		setNotifications(updatedNotification);
+	};
 
-  const buildDismissFunc = (i: number) => () => {
-    const updatedNotifications = [...notifications];
-    updatedNotifications.splice(i, 1);
-    setNotifications(updatedNotifications);
-  };
+	const buildDismissFunc = (i: number) => () => {
+		const updatedNotifications = [...notifications];
+		updatedNotifications.splice(i, 1);
+		setNotifications(updatedNotifications);
+	};
 
-  const NotificationsDiv = (
-    <div>
-      {notifications.map((n, i) => {
-        const { message, success, title } = createNotificationDivData(n);
+	const NotificationsDiv = (
+		<div>
+			{notifications.map((n, i) => {
+				const { message, success, title } = createNotificationDivData(n);
 
-        return (
-          <NotifactionDiv
-            key={i}
-            message={message}
-            title={title}
-            success={success}
-            onDismiss={buildDismissFunc(i)}
-          />
-        );
-      })}
-    </div>
-  );
+				return (
+					<NotifactionDiv
+						key={i}
+						message={message}
+						title={title}
+						success={success}
+						onDismiss={buildDismissFunc(i)}
+					/>
+				);
+			})}
+		</div>
+	);
 
-  return { addNotification, NotificationsDiv };
+	return { addNotification, NotificationsDiv };
 };
 
 export default useNotification;

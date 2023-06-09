@@ -29,45 +29,45 @@ import { numberSort, uuidSort } from '../../../GenericTable/helpers';
 import StyledLink from '../../../Link';
 
 const columnData: Column<Record<string, unknown>>[] = [
-  {
-    accessor: 'submissionId',
-    Cell: ({ value }: { value: unknown }) => (
-      <StyledLink href={getInternalLink({ path: `/submission/${value}` })}>
-        {value as string}
-      </StyledLink>
-    ),
-    Header: 'Submission ID',
-    sortType: uuidSort,
-  },
-  {
-    accessor: 'studyIds',
-    Cell: ({ value }: { value: unknown }) =>
-      value ? (
-        <ul
-          css={css`
-            margin: 0;
-            padding-left: 15px;
-          `}
-        >
-          {(value as string[]).map((id) => (
-            <li key={id}>{id}</li>
-          ))}
-        </ul>
-      ) : null,
-    Header: 'Study IDs',
-  },
-  {
-    accessor: 'createdAt',
-    Cell: ({ value }: { value: unknown }) =>
-      format(new Date(value as number), 'yyyy-MM-dd') as unknown as ReactElement,
-    Header: 'Submission Date',
-    sortType: numberSort,
-  },
-  {
-    accessor: 'totalRecords',
-    Header: '# Viral Genomes',
-    sortType: numberSort,
-  },
+	{
+		accessor: 'submissionId',
+		Cell: ({ value }: { value: unknown }) => (
+			<StyledLink href={getInternalLink({ path: `/submission/${value}` })}>
+				{value as string}
+			</StyledLink>
+		),
+		Header: 'Submission ID',
+		sortType: uuidSort,
+	},
+	{
+		accessor: 'studyIds',
+		Cell: ({ value }: { value: unknown }) =>
+			value ? (
+				<ul
+					css={css`
+						margin: 0;
+						padding-left: 15px;
+					`}
+				>
+					{(value as string[]).map((id) => (
+						<li key={id}>{id}</li>
+					))}
+				</ul>
+			) : null,
+		Header: 'Study IDs',
+	},
+	{
+		accessor: 'createdAt',
+		Cell: ({ value }: { value: unknown }) =>
+			format(new Date(value as number), 'yyyy-MM-dd') as unknown as ReactElement,
+		Header: 'Submission Date',
+		sortType: numberSort,
+	},
+	{
+		accessor: 'totalRecords',
+		Header: '# Viral Genomes',
+		sortType: numberSort,
+	},
 ];
 
 export default columnData;

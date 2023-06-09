@@ -96,7 +96,7 @@ const PageContent = (): ReactElement => {
 					css={css`
 						display: flex;
 						flex-direction: column;
-						width: 100%;
+						width: 80%;
 						height: calc(
 							100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px
 						);

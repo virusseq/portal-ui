@@ -21,13 +21,14 @@
 
 import { ReactElement } from 'react';
 
-import PageContent from './PageContent';
 import PageLayout from '../../PageLayout';
 
+import PageContent from './PageContent';
+
 const TeamPage = (): ReactElement => (
-  <PageLayout subtitle="About the Team">
-    <PageContent />
-  </PageLayout>
+	<PageLayout subtitle="About the Team">
+		<PageContent />
+	</PageLayout>
 );
 
 export default TeamPage;

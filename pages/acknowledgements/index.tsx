@@ -20,16 +20,17 @@
  */
 
 import React from 'react';
+
 import Acknowledgements from '../../components/pages/acknowledgements';
 import { createPage } from '../../global/utils/pages';
 
 const AcknowledgementsPage = createPage({
-  getInitialProps: async ({ query, egoJwt }) => {
-    return { query, egoJwt };
-  },
-  isPublic: true,
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: true,
 })(() => {
-  return <Acknowledgements />;
+	return <Acknowledgements />;
 });
 
 export default AcknowledgementsPage;

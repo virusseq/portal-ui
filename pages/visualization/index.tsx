@@ -20,16 +20,17 @@
  */
 
 import React from 'react';
+
 import Visualization from '../../components/pages/visualization';
 import { createPage } from '../../global/utils/pages';
 
 const VisualizationPage = createPage({
-  getInitialProps: async ({ query, egoJwt }) => {
-    return { query, egoJwt };
-  },
-  isPublic: true,
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: true,
 })(() => {
-  return <Visualization />;
+	return <Visualization />;
 });
 
 export default VisualizationPage;

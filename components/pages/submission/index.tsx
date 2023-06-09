@@ -21,13 +21,14 @@
 
 import { ReactElement } from 'react';
 
-import PageContent from './PageContent';
 import PageLayout from '../../PageLayout';
 
+import PageContent from './PageContent';
+
 const SubmissionPage = (): ReactElement => (
-  <PageLayout subtitle="Submission Dashboard">
-    <PageContent />
-  </PageLayout>
+	<PageLayout subtitle="Submission Dashboard">
+		<PageContent />
+	</PageLayout>
 );
 
 export default SubmissionPage;
