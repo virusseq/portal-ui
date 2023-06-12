@@ -24,7 +24,7 @@ import getNextConfig from 'next/config';
 type Config = {
 	NEXT_PUBLIC_VIRUSSEQ_API_URL: string;
 	NEXT_PUBLIC_CHANGELOG_START_SECONDS: number;
-	NEXT_PUBLIC_EGO_API_ROOT: string;
+	NEXT_PUBLIC_EGO_API_URL: string;
 	NEXT_PUBLIC_EGO_CLIENT_ID: string;
 	NEXT_PUBLIC_EGO_PUBLIC_KEY: string;
 	NEXT_PUBLIC_KEYCLOAK: string;
@@ -65,7 +65,7 @@ export const getConfig = (): Config => {
 		NEXT_PUBLIC_VIRUSSEQ_API_URL: publicConfig.NEXT_PUBLIC_VIRUSSEQ_API_URL || '',
 		NEXT_PUBLIC_CHANGELOG_START_SECONDS:
 			Number(publicConfig.NEXT_PUBLIC_CHANGELOG_START_SECONDS) || 0,
-		NEXT_PUBLIC_EGO_API_ROOT: publicConfig.NEXT_PUBLIC_EGO_API_ROOT || 'http://localhost:8088',
+		NEXT_PUBLIC_EGO_API_URL: publicConfig.NEXT_PUBLIC_EGO_API_URL || 'http://localhost:8088',
 		NEXT_PUBLIC_EGO_CLIENT_ID: publicConfig.NEXT_PUBLIC_EGO_CLIENT_ID || '',
 		NEXT_PUBLIC_EGO_PUBLIC_KEY:
 			publicConfig.EGO_PUBLIC_KEY ||
