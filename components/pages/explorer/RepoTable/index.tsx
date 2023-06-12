@@ -213,7 +213,7 @@ const RepoTable = (): ReactElement => {
 		updateArchiveState();
 	}, [archive]);
 
-	const handleBundleDownload: ExporterFunction = ({ selectedRows }) => {
+	const handleBundleDownload: ExporterFunction = ({ selectedRows, sqon }) => {
 		showModal();
 
 		const sqonToUse = buildSqonWithObjectIds(sqon, selectedRows);
