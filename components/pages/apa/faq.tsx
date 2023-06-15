@@ -84,7 +84,7 @@ const contactCard: React.CSSProperties = {
 	width: '94%',
 	display: 'flex',
 	justifyContent: 'center',
-	// textAlign: 'center',
+	textAlign: 'center',
 	// alignItems: 'center',
 };
 
@@ -174,7 +174,6 @@ const FAQ: React.FC = () => {
 								<Row>
 									<Col span={12}>
 										<div style={{padding: '10px'}}>
-											<a href="">Support</a>
 											<Title level={3}>FAQs</Title>
 											<Paragraph>
 												Need something cleared up?  Here are our most frequently asked questions. 
@@ -229,7 +228,7 @@ const FAQ: React.FC = () => {
 													<Paragraph>
 														Ownership to data remains unchanged, and submitters do not forfeit their rights to the 
 														data they deposit in the APA. All rights are explicitly preserved under the licence 
-														provided through the APA's <span style={{color: 'red'}}>Terms of Use. (must still be defined)</span>
+														provided through the APA's <a href={INTERNAL_PATHS.TERMS}>Terms of Use. (must still be defined)</a>
 													</Paragraph>
 												</Panel>
 												<Panel header="Does the APA release genetic sequences to public-domain archives?" key="genetic_sequence_release">
@@ -307,7 +306,7 @@ const FAQ: React.FC = () => {
 													<Paragraph>
 														The APA is committed to protecting the privacy and security of the personal 
 														information and data of its users to the greatest extent possible subject 
-														in accordance with the Protection of <a href="">Personal Information Act (POPI Act)</a>.
+														in accordance with the <a href="https://popia.co.za/" target='_blank'>Protection of Personal Information Act (POPI Act)</a>.
 														Personal information is defined as information that can reasonably be used 
 														to identify an individual either alone or in combination with other available 
 														information. The APA will only use your personal information for specific 
