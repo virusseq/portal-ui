@@ -25,6 +25,9 @@ import { css } from '@emotion/react';
 
 import { InternalLink } from '@/components/Link';
 
+import { useRouter } from 'next/router';
+import { INTERNAL_PATHS } from '@/global/utils/constants';
+
 import useAuthContext from '../../../global/hooks/useAuthContext';
 import CurrentUser from '../../NavBar/CurrentUser';
 import SideMenu from '../../SideMenu';
@@ -77,6 +80,14 @@ const descriptiveText: React.CSSProperties = {
 	justifyContent: 'space-between',
 };
 
+const contactCard: React.CSSProperties = {
+	width: '94%',
+	display: 'flex',
+	justifyContent: 'center',
+	// textAlign: 'center',
+	// alignItems: 'center',
+};
+
 const siderStyle: React.CSSProperties = {
 	textAlign: 'center',
 	lineHeight: '120px',
@@ -93,6 +104,12 @@ const footerStyle: React.CSSProperties = {
 const { NEXT_PUBLIC_EGO_API_ROOT, NEXT_PUBLIC_EGO_CLIENT_ID, NEXT_PUBLIC_KEYCLOAK } = getConfig();
 
 const FAQ: React.FC = () => {
+	const router = useRouter();
+
+	const navigateToContactPage = () => {
+		router.push(INTERNAL_PATHS.CONTACT)
+	}
+
 	const { logout, token, userHasAccessToStudySvc } = useAuthContext();
 	const [origin, setOrigin] = useState('');
 	useEffect(() => {
@@ -152,10 +169,10 @@ const FAQ: React.FC = () => {
 							<Paragraph style={{ width: '94%' }}>
 								Welcome to our help centre.  We are here to support you with the help you need.
 							</Paragraph>
-							{/* <div style={descriptiveText}> */}
+							
 							<Card style={descriptiveText}>
-								<Row type="flex">
-									<Col span={8}>
+								<Row>
+									<Col span={12}>
 										<div style={{padding: '10px'}}>
 											<a href="">Support</a>
 											<Title level={3}>FAQs</Title>
@@ -164,8 +181,7 @@ const FAQ: React.FC = () => {
 											</Paragraph>
 										</div>
 									</Col>
-									<Col span={2}></Col>
-									<Col span={14}>
+									<Col span={12}>
 										<div style={{padding: '10px'}}>
 											<Collapse accordion>
 												<Panel header="What is the APA Initiative and why was it created?" key="apa_initiative">
@@ -235,7 +251,7 @@ const FAQ: React.FC = () => {
 														Currently, the APA focuses on providing access to data types that do not constitute 
 														"personal data/information". These include:
 														consensus viral sequence<br />
-														<s>aw de-hosted viral sequences????</s><br />
+														raw de-hosted viral sequences????<br />
 														sample collection date<br />
 														specimen collector sample ID<br />
 														geo_loc name (country)<br />
@@ -391,7 +407,17 @@ const FAQ: React.FC = () => {
 									</Col>
 								</Row>
 							</Card>
-							{/* </div> */}
+							<Card style={contactCard}>
+							    <b>Still have questions?</b>
+								<Paragraph>
+									Still cant find the answer you are looking for?<br />
+									Please chat to our friendly team.
+								</Paragraph>
+								<div>									
+									<Button htmlType='button' type="primary" onClick={navigateToContactPage} size="large">Get in touch</Button>
+								</div>
+							</Card>
+							
 						</Content>
 						<Footer style={footerStyle}>
 							<div>
