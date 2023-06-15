@@ -42,6 +42,8 @@ export enum INTERNAL_PATHS {
 	TEAM = '/team',
 	USER = '/user',
 	VISUALIZATION = '/visualization',
+	CONTACT = '/apa/contact',
+	TERMS = '/apa/terms',
 }
 
 // external docs links
