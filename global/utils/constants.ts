@@ -42,6 +42,7 @@ export enum INTERNAL_PATHS {
 	TEAM = '/team',
 	USER = '/user',
 	VISUALIZATION = '/visualization',
+	GUIDELINES = '/apa/guides',
 	CONTACT = '/apa/contact',
 	TERMS = '/apa/terms',
 }
