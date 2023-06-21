@@ -148,7 +148,7 @@ const App: React.FC = () => {
 					</Sider>
 					<Layout>
 						<Content style={contentStyle}>
-							<Title style={{ width: '80%' }}>Welcome to APA</Title>
+							<Title style={{ width: '80%' }}>Welcome to African Data Sharing and Archive Platform</Title>
 							<Paragraph style={{ width: '80%' }}>
 								The Africa CDC’s Institute for Pathogen Genomics (IPG) has, since 2020, been 
 								developing a Bill and Melinda Gates Foundation funded project called the 
