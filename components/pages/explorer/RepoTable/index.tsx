@@ -159,7 +159,6 @@ const getTableConfigs = ({
 });
 
 const RepoTable = (): ReactElement => {
-	const { sqon } = useArrangerData();
 	const { fetchLatestArchiveAllInfo, findArchiveById, startArchiveBuildBySetId } =
 		useSingularityData();
 
