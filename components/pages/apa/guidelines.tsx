@@ -20,7 +20,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Layout, Space, Button, Typography } from 'antd';
+import { Layout, Space, Button, Typography, Card } from 'antd';
 import { css } from '@emotion/react';
 
 import { InternalLink } from '@/components/Link';
@@ -92,7 +92,7 @@ const footerStyle: React.CSSProperties = {
 
 const { NEXT_PUBLIC_EGO_API_ROOT, NEXT_PUBLIC_EGO_CLIENT_ID, NEXT_PUBLIC_KEYCLOAK } = getConfig();
 
-const App: React.FC = () => {
+const Guidelines: React.FC = () => {
 	const { logout, token, userHasAccessToStudySvc } = useAuthContext();
 	const [origin, setOrigin] = useState('');
 	useEffect(() => {
@@ -148,66 +148,51 @@ const App: React.FC = () => {
 					</Sider>
 					<Layout>
 						<Content style={contentStyle}>
-							<Title style={{ width: '80%' }}>Welcome to African Data Sharing and Archive Platform</Title>
-							<Paragraph style={{ width: '80%' }}>
-								The Africa CDC’s Institute for Pathogen Genomics (IPG) has, since 2020, been 
-								developing a Bill and Melinda Gates Foundation funded project called the 
-								African Pathogen Genomics Initiative (PGI). One component of the PGI is 
-								support for regional data management and exchange platform for a seamless 
-								pathogen genomic data analysis, visualization, reporting, sharing, and 
-								archiving, between African Union member states and their associated 
-								National Public Health Institutions.
-							</Paragraph>
-							<Paragraph style={{ width: '80%' }}>
-								The African Pathogen Archive pilot programme (the Pilot) aims to provide a 
-								proof of concept implementation of such a data sharing platform as a first 
-								step towards further development and adoption. The primary goal is to develop 
-								a comprehensive digital solution for pathogen genomics data management and 
-								exchange and pilot in selected Member States across the Africa PGI laboratory 
-								network. The aim is to have highly secured, robustly performing and a user-friendly 
-								solution from the end-user perspective. 
-							</Paragraph>
-							<div style={{ width: '80%' }}>
-								<PartnerLogosBanner />
-							</div>
-							<Title level={4} style={{ width: '80%' }}>
-								Pathogen available
-							</Title>
-							<PathogenTable />
-							<div style={descriptiveText}>
-								<div style={{ width: '45%' }}>
-									<Title level={3}>What the platform does</Title>
-									<Paragraph>
-										The APA pilot implementation is based on the CanCoGen VirusSeq data portal, 
-										developed by the Ontario Institute of Cancer Research (OICR). VirusSeq is a 
-										React / Next.js front-end to a set of services for data upload, metadata 
-										management, bulk data storage, metadata indexing, authorisation and so 
-										forth. As part of the deployment of this platform, SANBI is deploying the 
-										various services of VirusSeq on a Kubenetes cluster hosted on the Ilifu 
-										cloud. Based on user feedback and in line with Africa CDC branding and design 
-										work undertaken by Hominum, we aim to develop a custom front-end that draws 
-										components from the VirusSeq portal while also being visually distinct.
-									</Paragraph>
-									<Paragraph>
-										The APA front-end (the above-mentioned combination of novel development and 
-										existing VirusSeq components) needs to communicate with existing services, 
-										including Arranger for querying data, Muse for uploading data, Song for 
-										managing metadata schemas and Ego for managing users, groups and roles 
-										(access policies). While some elements of this capacity are already present 
-										in the VirusSeq platform, they will need to be enhanced to meet the needs 
-										of the APA platform. 
-									</Paragraph>
-								</div>
-								<div style={{ width: '45%' }}>
-									<Title level={3}>How to use this platform </Title>
-									<Paragraph>
-										Lorem ipsum dolor sit amet consectetur. Dolor dolor vulputate ac at. Mi ipsum
-										augue netus ullamcorper diam vitae id ac morbi. Neque adipiscing faucibus ut
-										proin enim urna nisl suspendisse integer. Lorem nulla malesuada netus magna
-										convallis feugiat fames faucibus pellentesque.
-									</Paragraph>
-								</div>
-							</div>
+							<Title style={{ width: '94%' }}>Guidelines</Title>
+							
+							<Card style={ descriptiveText }>
+								<Title>SARS-COV2 metadata</Title>
+								<Paragraph>
+								The APA uses standardized metadata to ensure harmonization and interoperability. The metadata is derived from work done by the Public Health Alliance for Genomic Epidemiology (PHA4GE), a global coalition that is actively working to establish consensus standards, document and share best practices, improve the availability of critical bioinformatic tools and resources, and advocate for greater openness, interoperability, accessibility and reproducibility in public health microbial bioinformatics.
+								</Paragraph>
+								<Paragraph>
+								The SARS-CoV-2 contextual data specification includes a metadata collection template, reference guides, controlled vocabulary, and mapping to existing standards. 
+								</Paragraph>
+								<Paragraph>
+								For more information and links to the SARS-COV2 contextual metadata template, developed by the PHA4GE consortium, please visit <a href="https://github.com/pha4ge/SARS-CoV-2-Contextual-Data-Specification">https://github.com/pha4ge/SARS-CoV-2-Contextual-Data-Specification</a>
+								</Paragraph>
+							</Card>
+							
+							<Card style={ descriptiveText }>
+								<Title>File formats</Title>
+								<Paragraph>
+								The APA currently allows for the uploading of FASTA files in combination with the associated metadata file, in .tsv format. Note that both files must be uploaded together for each submission.
+								</Paragraph>	
+								<Paragraph>
+								Tab-separated values (TSV) is a simple, text-based file format for storing tabular data. Records are separated by newlines, and values within a record are separated by tab characters. The TSV format is thus a delimiter-separated values format, similar to comma-separated values.
+								</Paragraph>	
+								<Paragraph>
+								Consensus Fasta sequence
+								</Paragraph>	
+								<Paragraph>
+								Besides the vcf file, a consensus file is also generated which represents the nucleotide present at each position of your sample’s genome. That is, a blueprint copy of your sample’s entire genome. However, even this file is QC’d to show only results where the coverage is more than twenty times.
+								</Paragraph>
+								<Paragraph>
+								However, you may want to tailor your parameters so that your files are fit for downstream analyses. For example, recovering a complete genome is important for phylogenetic analysis. Nextstrain will only accept genomes where more than 92% of your genome is covered and if it has at least 27,510 informative bases (A,C,T,G). So, you may want to make sure there are not many stretches of Ns in the consensus genome.
+								</Paragraph>
+								<Paragraph>
+								For more guidance on FASTA file formats <a href="https://www.ncbi.nlm.nih.gov/genbank/fastaformat/" target="_blank">https://www.ncbi.nlm.nih.gov/genbank/fastaformat/</a>
+								</Paragraph>	
+								
+							</Card>
+							<Card style={ descriptiveText }>
+								<Title>Data Submitters Guidelines</Title>
+								Nothing yet, but stay tuned ...
+
+								
+								
+							</Card>
+							
 						</Content>
 						<Footer style={footerStyle}>
 							<div>
@@ -221,4 +206,4 @@ const App: React.FC = () => {
 	);
 };
 
-export default App;
+export default Guidelines;

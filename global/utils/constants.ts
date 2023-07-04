@@ -45,6 +45,9 @@ export enum INTERNAL_PATHS {
 	ONBOARDING_REGISTER = '/onboarding',
 	ONBOARDING_ADMINISTRATOR_DETAILS = '/onboarding/administrator_details',
 	ONBOARDING_REQUEST_SUBMITTED = '/onboarding/request_submitted',	
+	GUIDELINES = '/apa/guides',
+	CONTACT = '/apa/contact',
+	TERMS = '/apa/terms',
 }
 
 // external docs links

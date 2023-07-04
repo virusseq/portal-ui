@@ -19,17 +19,23 @@
  *
  */
 
-import React from 'react';
-
 import { createPage } from '../global/utils/pages';
+import App from '../components/pages/apa';
+import Home from '../components/pages/apa/home';
+import useAuthContext from '../global/hooks/useAuthContext';
 
-import AboutPage from './about';
-
-const HomePage = createPage({
+const ApaHome = createPage({
 	getInitialProps: async () => null,
 	isPublic: true,
 })(() => {
-	return <AboutPage />;
+	const { token } = useAuthContext();
+
+	if (token === undefined) {
+		return <App />;
+	} else {
+		return <Home />;
+	}
 });
 
-export default HomePage;
+export default ApaHome;
+
