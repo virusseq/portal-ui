@@ -186,7 +186,7 @@ const FAQ: React.FC = () => {
 											<Collapse accordion>
 												<Panel header="What is the APA Initiative and why was it created?" key="apa_initiative">
 													<Paragraph>
-														The African Pathogen Archive (APA) Initiative was created as an alternative to 
+														The African Pathogen Data Sharing and Archive Platform was created as an alternative to 
 														traditional public-domain data archives to address concerns such as loss of 
 														ownership over intellectual property rights and lack of proper acknowledgement 
 														for scientific contributions. The APA launched in 2023.
@@ -201,9 +201,9 @@ const FAQ: React.FC = () => {
 												</Panel>
 												<Panel header="When will genetic sequences be accessible to the public?" key="accessible_to_public">
 													<Paragraph>
-														Genetic sequences and associated metadata uploaded to the APA will be made accessible to 
-														all participants immediately after successful submission, unlike many conventional 
-														public-domain archives.
+														Genetic sequences and associated metadata uploaded to the APA will be made accessible 
+														immediately to data owners after successful submission, unlike many conventional 
+														public-domain archives.  Public accessible datasets will be defined by data submitters.
 													</Paragraph>
 												</Panel>
 												<Panel header="Does the APA store restricted sequences and metadata in its database?" key="store_restricted_sequences">
