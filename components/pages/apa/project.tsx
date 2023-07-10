@@ -20,11 +20,14 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Layout, Space, Button, Typography } from 'antd';
+import type { CollapseProps } from 'antd';
+import { Layout, Space, Button, Typography, Input, Breadcrumb, Collapse, Upload } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 import { InternalLink } from '@/components/Link';
 import PathogenTable from '@/components/PathogenTable';
+import ProjectsTable from '@/components/ProjectsTable';
 
 import useAuthContext from '../../../global/hooks/useAuthContext';
 import CurrentUser from '../../NavBar/CurrentUser';
@@ -34,12 +37,14 @@ import { getConfig } from '../../../global/config';
 import PartnerLogosBanner from './PartnerLogosBanner';
 
 const { Header, Footer, Sider, Content } = Layout;
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
+const { Search } = Input;
+const { Dragger } = Upload;
 
 const headerStyle: React.CSSProperties = {
 	textAlign: 'center',
 	color: '#000',
-	height: 68,
+	height: 64,
 	paddingInline: 50,
 	lineHeight: '64px',
 	backgroundColor: '#ffffff',
@@ -68,7 +73,9 @@ const contentStyle: React.CSSProperties = {
 	display: 'flex',
 	flexDirection: 'column',
 	justifyContent: 'start',
-	alignItems: 'center',
+	alignItems: 'left',
+  paddingLeft: '120px',
+  paddingTop: '50px',
 };
 
 const descriptiveText: React.CSSProperties = {
@@ -88,12 +95,20 @@ const footerStyle: React.CSSProperties = {
 	textAlign: 'center',
 	color: '#fff',
 	backgroundColor: '#ffffff',
+	bottom: 0,
+	height: 64,
 };
 
 const { NEXT_PUBLIC_EGO_API_ROOT, NEXT_PUBLIC_EGO_CLIENT_ID, NEXT_PUBLIC_KEYCLOAK } = getConfig();
+const text = `
+  A dog is a type of domesticated animal.
+  Known for its loyalty and faithfulness,
+  it can be found as a welcome guest in many households across the world.
+`;
 
-const App: React.FC = () => {
-	const { logout, token, userHasAccessToStudySvc } = useAuthContext();
+
+const Project: React.FC = () => {
+	const { token } = useAuthContext();
 	const [origin, setOrigin] = useState('');
 	useEffect(() => {
 		window && setOrigin(window.location.origin);
@@ -110,7 +125,7 @@ const App: React.FC = () => {
 						`}
 					>
 						<InternalLink path={''}>
-							<a
+                            <a
 								css={css`
 									align-items: left;
 									text-decoration: none;
@@ -145,70 +160,31 @@ const App: React.FC = () => {
 				</Header>
 				<Layout>
 					<Sider style={siderStyle} width={256}>
-						<SideMenu selectedKey={'home'} />
+						<SideMenu selectedKey={'projects'} />
 					</Sider>
 					<Layout>
 						<Content style={contentStyle}>
-							<Title style={{ width: '80%', color: '#5D4528E0' }}>Welcome to African Data Sharing and Archive Platform</Title>
-							<Paragraph style={{ width: '80%' }}>
-								The Africa CDC’s Institute for Pathogen Genomics (IPG) has, since 2020, been 
-								developing a Bill and Melinda Gates Foundation funded project called the 
-								African Pathogen Genomics Initiative (PGI). One component of the PGI is 
-								support for regional data management and exchange platform for a seamless 
-								pathogen genomic data analysis, visualization, reporting, sharing, and 
-								archiving, between African Union member states and their associated 
-								National Public Health Institutions.
-							</Paragraph>
-							<Paragraph style={{ width: '80%' }}>
-								The African Pathogen Archive pilot programme (the Pilot) aims to provide a 
-								proof of concept implementation of such a data sharing platform as a first 
-								step towards further development and adoption. The primary goal is to develop 
-								a comprehensive digital solution for pathogen genomics data management and 
-								exchange and pilot in selected Member States across the Africa PGI laboratory 
-								network. The aim is to have highly secured, robustly performing and a user-friendly 
-								solution from the end-user perspective. 
-							</Paragraph>
-							<div style={{ width: '80%' }}>
-								<PartnerLogosBanner />
-							</div>
-							<Title level={4} style={{ width: '80%' }}>
-								Pathogen available
-							</Title>
-							<PathogenTable />
-							<div style={descriptiveText}>
-								<div style={{ width: '45%' }}>
-									<Title level={3}>What the platform does</Title>
-									<Paragraph>
-										The APA pilot implementation is based on the CanCoGen VirusSeq data portal, 
-										developed by the Ontario Institute of Cancer Research (OICR). VirusSeq is a 
-										React / Next.js front-end to a set of services for data upload, metadata 
-										management, bulk data storage, metadata indexing, authorisation and so 
-										forth. As part of the deployment of this platform, SANBI is deploying the 
-										various services of VirusSeq on a Kubenetes cluster hosted on the Ilifu 
-										cloud. Based on user feedback and in line with Africa CDC branding and design 
-										work undertaken by Hominum, we aim to develop a custom front-end that draws 
-										components from the VirusSeq portal while also being visually distinct.
-									</Paragraph>
-									<Paragraph>
-										The APA front-end (the above-mentioned combination of novel development and 
-										existing VirusSeq components) needs to communicate with existing services, 
-										including Arranger for querying data, Muse for uploading data, Song for 
-										managing metadata schemas and Ego for managing users, groups and roles 
-										(access policies). While some elements of this capacity are already present 
-										in the VirusSeq platform, they will need to be enhanced to meet the needs 
-										of the APA platform. 
-									</Paragraph>
-								</div>
-								<div style={{ width: '45%' }}>
-									<Title level={3}>How to use this platform </Title>
-									<Paragraph>
-										Lorem ipsum dolor sit amet consectetur. Dolor dolor vulputate ac at. Mi ipsum
-										augue netus ullamcorper diam vitae id ac morbi. Neque adipiscing faucibus ut
-										proin enim urna nisl suspendisse integer. Lorem nulla malesuada netus magna
-										convallis feugiat fames faucibus pellentesque.
-									</Paragraph>
-								</div>
-							</div>
+            <Breadcrumb
+              items={[
+                {
+                  title: 'Projects',
+                },
+                {
+                  title: 'SARS-Cov-2',
+                },
+              ]}
+            />
+            <Title level={4} style={{ width: '80%' }}>Submit your data</Title>
+            <Dragger style={{ width: '80%' }}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">Click or drag file to this area to upload</p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload.
+              </p>
+            </Dragger>
+							<ProjectsTable />
 						</Content>
 						<Footer style={footerStyle}>
 							<div>
@@ -222,4 +198,4 @@ const App: React.FC = () => {
 	);
 };
 
-export default App;
+export default Project;

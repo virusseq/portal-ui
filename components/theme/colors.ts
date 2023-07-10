@@ -36,7 +36,7 @@ const grey = {
 };
 
 const primary = {
-	primary: '#0274be',
+	primary: '#B76142',
 	primary_dark: '#113877',
 	primary_light: '#6885ba',
 };

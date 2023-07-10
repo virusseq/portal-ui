@@ -12,9 +12,12 @@ import {
 import { Menu, MenuProps } from 'antd';
 import { useRouter } from 'next/router';
 
+import useAuthContext from '../../global/hooks/useAuthContext';
+
 const MenuItemUrls = new Map<string, string>([
 	['home', '/apa'],
 	['pathogen', '/apa/pathogens'],
+	['projects', '/apa/projects'],
 	['submission', '/apa/submission'],
 	['resources', '/apa/resources'],
 	['guides', '/apa/guides'],
@@ -43,6 +46,7 @@ function getItem(
 const itemsWhenAuthenticated: MenuProps['items'] = [
 	getItem('Home', 'home', <HomeOutlined />),
 	getItem('Pathogen', 'pathogen', <AlignLeftOutlined />),
+	getItem('Projects', 'projects', <UploadOutlined />),
 	getItem('Submission', 'submission', <UploadOutlined />),
 	getItem('Resources', 'resources', <ReadOutlined />),
 	getItem('Guides', 'guides', <FolderOutlined />),
@@ -64,15 +68,14 @@ const itemsWhenNotAuthenticated: MenuProps['items'] = [
 
 const SideMenu = ({
 	selectedKey,
-	authenticated,
 }: {
 	selectedKey: string;
-	authenticated?: boolean;
 }) => {
 	const router = useRouter();
 	const onClick: MenuProps['onClick'] = (e) => {
 		router.push(MenuItemUrls.get(e.key) as string);
 	};
+	const { token } = useAuthContext();
 
 	return (
 		<Menu
@@ -81,7 +84,7 @@ const SideMenu = ({
 			defaultSelectedKeys={[selectedKey]}
 			defaultOpenKeys={['home']}
 			mode="inline"
-			items={authenticated ? itemsWhenAuthenticated : itemsWhenNotAuthenticated}
+			items={token ? itemsWhenAuthenticated : itemsWhenNotAuthenticated}
 		/>
 	);
 };

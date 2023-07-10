@@ -22,6 +22,7 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { AppContext } from 'next/app';
 import Router from 'next/router';
+import { ConfigProvider } from 'antd';
 
 import Root from '../components/Root';
 import { EGO_JWT_KEY, INTERNAL_PATHS } from '../global/utils/constants';
@@ -59,7 +60,15 @@ const DMSApp = ({
 
 	return (
 		<Root pageContext={ctx} egoJwt={initialToken}>
-			<Component {...pageProps} />
+            <ConfigProvider
+                theme={{
+                    token: {
+                        colorPrimary: '#B76142',
+                    },
+                }}
+            >
+			    <Component {...pageProps} />
+            </ConfigProvider>
 		</Root>
 	);
 };

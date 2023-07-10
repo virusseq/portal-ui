@@ -63,53 +63,13 @@ const columns: ColumnsType<DataType> = [
 		key: 'action',
 		render: (_, record) => (
 			<Space size="middle">
-				<Link href={`/apa/pathogens/${record.key}`}>View</Link>
+				<Link href={`/apa/projects/${record.key}`}>View</Link>
 			</Space>
 		),
 	},
 ];
 
 const data: DataType[] = [
-	{
-		key: 'sars-cov2-kzn',
-		projectId: 'SARS-cov2 KwaZulu-Natal',
-		dateCreated: new Date(),
-		pathogen: 'SARS-cov-2',
-		collaborators: 2,
-		numberOfSamples: { count: 653, new: 50 },
-	},
-	{
-		key: 'sars-cov2-kzn',
-		projectId: 'SARS-cov2 KwaZulu-Natal',
-		dateCreated: new Date(),
-		pathogen: 'SARS-cov-2',
-		collaborators: 2,
-		numberOfSamples: { count: 653, new: 50 },
-	},
-	{
-		key: 'sars-cov2-kzn',
-		projectId: 'SARS-cov2 KwaZulu-Natal',
-		dateCreated: new Date(),
-		pathogen: 'SARS-cov-2',
-		collaborators: 2,
-		numberOfSamples: { count: 653, new: 50 },
-	},
-	{
-		key: 'sars-cov2-kzn',
-		projectId: 'SARS-cov2 KwaZulu-Natal',
-		dateCreated: new Date(),
-		pathogen: 'SARS-cov-2',
-		collaborators: 2,
-		numberOfSamples: { count: 653, new: 50 },
-	},
-	{
-		key: 'sars-cov2-kzn',
-		projectId: 'SARS-cov2 KwaZulu-Natal',
-		dateCreated: new Date(),
-		pathogen: 'SARS-cov-2',
-		collaborators: 2,
-		numberOfSamples: { count: 653, new: 50 },
-	},
 	{
 		key: 'sars-cov2-kzn',
 		projectId: 'SARS-cov2 KwaZulu-Natal',
