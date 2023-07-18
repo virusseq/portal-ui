@@ -20,7 +20,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Layout, Space, Button, Typography } from 'antd';
+import { Layout, Space, Button, Typography, Input } from 'antd';
 import { css } from '@emotion/react';
 
 import { InternalLink } from '@/components/Link';
@@ -36,6 +36,7 @@ import PartnerLogosBanner from '../PartnerLogosBanner';
 
 const { Header, Footer, Sider, Content } = Layout;
 const { Title } = Typography;
+const { Search } = Input;
 
 const headerStyle: React.CSSProperties = {
 	textAlign: 'center',
@@ -89,11 +90,13 @@ const footerStyle: React.CSSProperties = {
 	textAlign: 'center',
 	color: '#fff',
 	backgroundColor: '#ffffff',
+	bottom: 0,
+	height: 64,
 };
 
 const { NEXT_PUBLIC_EGO_API_ROOT, NEXT_PUBLIC_EGO_CLIENT_ID, NEXT_PUBLIC_KEYCLOAK } = getConfig();
 
-const Home: React.FC = () => {
+const Projects: React.FC = () => {
 	const { token } = useAuthContext();
 	const [origin, setOrigin] = useState('');
 	useEffect(() => {
@@ -107,18 +110,19 @@ const Home: React.FC = () => {
 						css={css`
 							display: flex;
 							align-items: center;
-							padding-top: 25px;
 							cursor: pointer;
 						`}
 					>
 						<InternalLink path={''}>
-							<a
+                            <a
 								css={css`
 									align-items: left;
 									text-decoration: none;
+                                    display: flex;
+                                    height: 100%;
 								`}
 							>
-								<img src="/images/new-navbar-logo.png" alt="APA logo" width="182" />
+								<img src="/images/logo.svg" alt="APA logo" width="180" />
 							</a>
 						</InternalLink>
 					</div>
@@ -145,15 +149,11 @@ const Home: React.FC = () => {
 				</Header>
 				<Layout>
 					<Sider style={siderStyle} width={256}>
-						<SideMenu selectedKey={'home'} />
+						<SideMenu selectedKey={'projects'} />
 					</Sider>
 					<Layout>
 						<Content style={contentStyle}>
 							<ProjectsTable />
-							<Title level={4} style={{ width: '80%' }}>
-								Pathogen available
-							</Title>
-							<PathogenTable />
 						</Content>
 						<Footer style={footerStyle}>
 							<div>
@@ -167,4 +167,4 @@ const Home: React.FC = () => {
 	);
 };
 
-export default Home;
+export default Projects;

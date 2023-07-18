@@ -86,3 +86,9 @@ export const getProvince = ({
 
 // external covizu links
 export const covizuGithubUrl = 'https://github.com/PoonLab/CoVizu';
+
+export enum HttpMethods {
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
+}
