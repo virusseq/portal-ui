@@ -58,6 +58,8 @@ const APP_JSON_HEADER = {
   'Content-Type': 'application/json',
 };
 
+const API_PROXY_STUDIES = '/api/studies';
+
 const useStudiesSvcData = () => {
   const { NEXT_PUBLIC_STUDIES_SVC_URL } = getConfig();
   const { fetchWithAuth } = useAuthContext();
@@ -78,7 +80,7 @@ const useStudiesSvcData = () => {
   };
 
   const fetchStudies = (): Promise<StudiesSvcRes<Study[]>> => {
-    const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), {
+    const promise = fetchWithAuth(urlJoin(API_PROXY_STUDIES, '/studies'), {
       method: 'GET',
     });
     return wrapWithHandlers(promise);
@@ -86,7 +88,7 @@ const useStudiesSvcData = () => {
 
   const createStudy = (createStudyReq: CreateStudyReq): Promise<StudiesSvcRes<undefined>> => {
     console.log(createStudyReq);
-    const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), {
+    const promise = fetchWithAuth(urlJoin(API_PROXY_STUDIES, '/studies'), {
       method: 'POST',
       headers: APP_JSON_HEADER,
       body: JSON.stringify(createStudyReq),
@@ -97,7 +99,7 @@ const useStudiesSvcData = () => {
   const addSubmitterToStudy = (
     addSubmitterReq: AddSubmitterReq,
   ): Promise<StudiesSvcRes<undefined>> => {
-    const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies/submitters'), {
+    const promise = fetchWithAuth(urlJoin(API_PROXY_STUDIES, '/studies/submitters'), {
       method: 'POST',
       headers: APP_JSON_HEADER,
       body: JSON.stringify(addSubmitterReq),
@@ -109,7 +111,7 @@ const useStudiesSvcData = () => {
     removeSubmitterReq: RemoveSubmitterReq,
   ): Promise<StudiesSvcRes<undefined>> => {
     const url = urlJoin(
-      NEXT_PUBLIC_STUDIES_SVC_URL,
+      API_PROXY_STUDIES,
       `/studies/submitters?studyId=${removeSubmitterReq.studyId}&submitter=${removeSubmitterReq.submitter}`,
     );
     const promise = fetchWithAuth(url, { method: 'DELETE' });

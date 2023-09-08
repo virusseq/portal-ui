@@ -19,14 +19,16 @@
  *
  */
 
-import { createContext, ReactElement, useContext, useState } from 'react';
+import { createContext, ReactElement, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
+
 import { EGO_JWT_KEY } from '../utils/constants';
-import { decodeToken, extractUser, isValidJwt } from '../utils/egoTokenUtils';
+import { isValidJwt } from '../utils/egoTokenUtils';
 import { getConfig } from '../config';
-import { UserWithId } from '../types';
+import { ProviderType, UserStatus, UserType, UserWithId } from '../types';
 import { LogEventFunctionType } from './useTrackingContext';
+import { useSession } from 'next-auth/react';
 
 type T_AuthContext = {
   token?: string;
@@ -44,7 +46,7 @@ const AuthContext = createContext<T_AuthContext>({
   logout: () => null,
   user: undefined,
   userHasWriteScopes: false,
-  fetchWithAuth: fetch,
+  fetchWithAuth: fetch
 });
 
 export const AuthProvider = ({
@@ -60,6 +62,48 @@ export const AuthProvider = ({
     NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE,
   } = getConfig();
   const [token, setTokenState] = useState(egoJwt);
+  const [user, setUser] = useState<UserWithId>();
+  const [userHasWriteScopes, setUserHasWriteScopes] = useState(false);
+  const [userCanSubmitDataForAllStudy, setUserCanSubmitDataForAllStudy] = useState(false);
+  const [userHasAccessToStudySvc, setUserHasAccessToStudySvc] = useState(false);
+  const [userIsCurator, setUserIsCurator] = useState(false);
+  const { data: session } = useSession()
+
+  useEffect(() => {
+    if(session?.account){
+      setTokenState(session?.account?.accessToken)
+      const newUser: UserWithId = {
+        id: session?.user?.sub,
+        email: session?.user?.email,
+        type: UserType.USER,
+        status: UserStatus.APPROVED,
+        firstName: session?.user?.firstName,
+        lastName: session?.user?.lastName,
+        createdAt: 0,
+        lastLogin: 0,
+        providerType: ProviderType.KEYCLOAK,
+        providerSubjectId: "",
+        scope: session?.scopes
+      }
+      setUser(newUser)
+
+      setUserHasWriteScopes(session?.scopes.some((scope) => scope.toLowerCase().includes('write')) || false);
+
+      setUserCanSubmitDataForAllStudy(session?.scopes.some(
+        (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE.toLowerCase()
+      ) || false);
+    
+      setUserHasAccessToStudySvc(session?.scopes.some(
+        (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE.toLowerCase(),
+      ) || false);
+    
+      setUserIsCurator(userHasAccessToStudySvc && userCanSubmitDataForAllStudy);
+
+    } else {
+      setTokenState("")
+    }
+  }, [session])
+
   const router = useRouter();
 
   const removeToken = () => {
@@ -96,25 +140,10 @@ export const AuthProvider = ({
   const fetchWithAuth: T_AuthContext['fetchWithAuth'] = (url, options = { method: 'GET' }) => {
     return fetch(url, {
       ...options,
-      headers: { ...options?.headers, accept: '*/*', Authorization: `Bearer ${token || ''}` },
+      headers: { ...options?.headers, accept: '*/*' },
       ...(options.method === 'GET' && { body: null }),
     });
   };
-
-  const userInfo = token ? decodeToken(token) : null;
-  const user = userInfo ? extractUser(userInfo) : undefined;
-
-  const userHasWriteScopes = user?.scope.some((scope) => scope.toLowerCase().includes('write'));
-
-  const userCanSubmitDataForAllStudy = user?.scope.some(
-    (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE.toLowerCase(),
-  );
-
-  const userHasAccessToStudySvc = user?.scope.some(
-    (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE.toLowerCase(),
-  );
-
-  const userIsCurator = userHasAccessToStudySvc && userCanSubmitDataForAllStudy;
 
   const authData = {
     token,

@@ -23,7 +23,7 @@ import urlJoin from 'url-join';
 
 import { getConfig } from '../config';
 
-const { NEXT_PUBLIC_EGO_API_URL } = getConfig();
+const { NEXT_PUBLIC_EGO_API_URL, NEXT_PUBLIC_KEYCLOAK_HOST, NEXT_PUBLIC_KEYCLOAK_REALM } = getConfig();
 
 export const EGO_JWT_KEY = 'EGO_JWT';
 export const EGO_API_KEY_ENDPOINT = urlJoin(NEXT_PUBLIC_EGO_API_URL, '/o/api_key');
@@ -48,6 +48,10 @@ const OVERTURE_DMS_DOCS_URL = 'https://overture.bio/documentation/dms/';
 export const DMS_HELP_URL = urlJoin(OVERTURE_DMS_DOCS_URL, 'user-guide');
 export const DMS_INSTALLATION_URL = urlJoin(OVERTURE_DMS_DOCS_URL, 'installation');
 export const DMS_EMAIL_SETTING_URL = urlJoin(DMS_INSTALLATION_URL, 'configuration/prereq/emails');
+
+// keycloak
+export const KEYCLOAK_URL_ISSUER = urlJoin(NEXT_PUBLIC_KEYCLOAK_HOST, 'realms', NEXT_PUBLIC_KEYCLOAK_REALM)
+export const KEYCLOAK_URL_TOKEN = urlJoin(KEYCLOAK_URL_ISSUER, 'protocol/openid-connect/token')
 
 export const CANADA_PROVINCES = [
   { name: 'Alberta', abbreviation: 'AB' },

@@ -21,6 +21,7 @@
 
 import { ReactElement, useEffect, useState } from 'react';
 import { AppContext } from 'next/app';
+import { getSession } from 'next-auth/react'
 import Router from 'next/router';
 
 import Root from '../components/Root';
@@ -28,44 +29,65 @@ import { EGO_JWT_KEY, INTERNAL_PATHS } from '../global/utils/constants';
 import { PageWithConfig } from '../global/utils/pages/types';
 import getInternalLink from '../global/utils/getInternalLink';
 import { isValidJwt } from '../global/utils/egoTokenUtils';
+import { getConfig } from '../global/config';
+import { SessionProvider } from 'next-auth/react';
 
 const DMSApp = ({
   Component,
   pageProps,
   ctx,
+  session,
+  providers
 }: {
   Component: PageWithConfig;
   pageProps: { [k: string]: any };
   ctx: any;
+  session: any;
+  providers: any;
 }): ReactElement => {
   const [initialToken, setInitialToken] = useState<string>();
+  const { NEXT_PUBLIC_AUTH_PROVIDER } = getConfig();
 
   useEffect(() => {
-    const egoJwt = localStorage.getItem(EGO_JWT_KEY) || undefined;
 
-    if (egoJwt && isValidJwt(egoJwt)) {
-      setInitialToken(egoJwt);
-    } else {
-      egoJwt && setInitialToken(undefined);
-      // redirect to logout when token is expired/missing only if user is on a non-public page
-      if (!Component.isPublic) {
-        Router.push({
-          pathname: getInternalLink({ path: INTERNAL_PATHS.LOGIN }),
-          query: { session_expired: true },
-        });
+    if(NEXT_PUBLIC_AUTH_PROVIDER === 'ego'){
+      const egoJwt = localStorage.getItem(EGO_JWT_KEY) || undefined;
+
+      if (egoJwt && isValidJwt(egoJwt)) {
+        setInitialToken(egoJwt);
+      } else {
+        egoJwt && setInitialToken(undefined);
+        // redirect to logout when token is expired/missing only if user is on a non-public page
+        if (!Component.isPublic) {
+          Router.push({
+            pathname: getInternalLink({ path: INTERNAL_PATHS.LOGIN }),
+            query: { session_expired: true },
+          });
+        }
+      }
+    } else if (NEXT_PUBLIC_AUTH_PROVIDER === 'keycloak'){
+      if(!session && !Component.isPublic) {
+          Router.push({
+            pathname: getInternalLink({ path: INTERNAL_PATHS.LOGIN }),
+            query: { session_expired: true },
+          });
       }
     }
-  }, [Component.isPublic]);
+  }, [Component.isPublic, session]);
 
   return (
-    <Root pageContext={ctx} egoJwt={initialToken}>
-      <Component {...pageProps} />
-    </Root>
+    <SessionProvider session={session}>
+      <Root pageContext={ctx} egoJwt={initialToken}>
+        <Component {...pageProps} />
+      </Root>
+    </SessionProvider>
   );
 };
 
 DMSApp.getInitialProps = async ({ ctx, Component }: AppContext & { Component: PageWithConfig }) => {
   const pageProps = await Component.getInitialProps({ ...ctx });
+  const session = await getSession(ctx)
+
   return {
     ctx: {
       pathname: ctx.pathname,
@@ -73,6 +95,7 @@ DMSApp.getInitialProps = async ({ ctx, Component }: AppContext & { Component: Pa
       asPath: ctx.asPath,
     },
     pageProps,
+    session
   };
 };
 

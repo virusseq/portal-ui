@@ -26,6 +26,8 @@ import { getConfig } from '../../config';
 import processStream from '../../utils/processStream';
 import useAuthContext from '../useAuthContext';
 
+const API_PROXY_MUSE = '/api/muse';
+
 const useMuseData = (origin: string) => {
   const { NEXT_PUBLIC_MUSE_API } = getConfig();
   const { fetchWithAuth, token } = useAuthContext();
@@ -38,7 +40,7 @@ const useMuseData = (origin: string) => {
   ) => {
     setAwaitingResponse(true);
 
-    return fetchWithAuth(urlJoin(NEXT_PUBLIC_MUSE_API,endpoint), {
+    return fetchWithAuth(urlJoin(API_PROXY_MUSE,endpoint), {
       method,
       body,
     })
@@ -75,7 +77,7 @@ const useMuseData = (origin: string) => {
     onMessage?: Function,
   ): EventSource => {
     const eventSource = new EventSource(
-			`${urlJoin(NEXT_PUBLIC_MUSE_API, endpoint)}?access_token=${token}${
+			`${urlJoin(API_PROXY_MUSE, endpoint)}?${
 				submissionId ? `&submissionId=${submissionId}` : ''
 			}`,
 			{

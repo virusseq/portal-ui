@@ -22,10 +22,12 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import urlJoin from 'url-join';
+import { signIn } from "next-auth/react";
 
 import { getConfig } from '../../../global/config';
 import StyledLink, { StyledLinkAsButton } from '../../Link';
 import defaultTheme from '../../theme';
+import { INTERNAL_PATHS } from '@/global/utils/constants';
 
 const PageContent = (): ReactElement => {
   const [origin, setOrigin] = useState('');
@@ -33,10 +35,16 @@ const PageContent = (): ReactElement => {
   const {
     NEXT_PUBLIC_EGO_API_URL,
     NEXT_PUBLIC_EGO_CLIENT_ID,
+    NEXT_PUBLIC_AUTH_PROVIDER,
     NEXT_PUBLIC_ENABLE_LOGIN,
     NEXT_PUBLIC_ENABLE_REGISTRATION,
     NEXT_PUBLIC_KEYCLOAK,
   } = getConfig();
+
+  const redirect = (url: string) => {
+    window.location.href = url;
+    return false;
+  }
 
   useEffect(() => {
     window && setOrigin(window.location.origin);
@@ -155,12 +163,15 @@ const PageContent = (): ReactElement => {
                   padding: 8px 20px;
                   width: fit-content;
                 `}
-                href={urlJoin(NEXT_PUBLIC_EGO_API_URL, `/oauth/login/keycloak?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`)}
+                onClick={() => NEXT_PUBLIC_AUTH_PROVIDER === "keycloak" ? 
+                  signIn("keycloak", { callbackUrl: INTERNAL_PATHS.SUBMISSION }) : (NEXT_PUBLIC_AUTH_PROVIDER === "ego") ?
+                  redirect(urlJoin(NEXT_PUBLIC_EGO_API_URL, `/oauth/login/keycloak?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`)) : null
+                }
               >
                 Log in to Submit Data
               </StyledLinkAsButton>
             </li>
-          )}
+          )}  
         </ul>
       </article>
 
