@@ -1,6 +1,6 @@
 {
 	"name": "virusseq-dataportal-ui",
-	"version": "1.14.6",
+	"version": "1.14.7",
 	"private": true,
 	"scripts": {
 		"clearNextTemp": "rm -rf ./.next",
