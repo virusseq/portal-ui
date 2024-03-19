@@ -46,9 +46,10 @@ const Individuals = (): ReactElement => {
 			<p>
 				<em>Genomes with prefix ABPHL</em>
 				<br />
-				Buss, E, Croxen M, Deo A, Dieu P, Gill K, Ferrato C, Khan F, Koleva P, Li V, Lloyd C, Lynch
-				T, Ma R, Murphy S, Pabbaraju K, Shokoples S, Tipples G, Thayer J, Whitehouse M, Wong A, Yu
-				C, Zelyas N
+				Bu J, Croxen M, Deo A, Dieu P, Dong X, Ferrato C, Gavriliuc S, George R, Getachew F, Gill,
+				K, Ie N, Khadka R, Khan F, Koleva P, Lee L, Li V, Lindsay A, Lloyd C, Lynch T, Ma R,
+				McCullough, E, Mohon A, Murphy S, Obasuyi O, Pabbaraju K, Presbitero A, Rotich S, Shokoples
+				S, Thayer J, Tipples G, Trevor H, Whitehouse M, Wong A, Yu C, Zelyas N
 			</p>
 
 			<p>
@@ -65,7 +66,7 @@ const Individuals = (): ReactElement => {
 				<br />
 				Prystajecky Natalie, Linda Hoang, John R. Tyson, Dan Fornika, Shannon Russell, Kim
 				MacDonald, Kimia Kamelian, Ana Pacagnella, Corrinne Ng, Loretta Janz, Richard Harrigan,
-				Robert Azana, Mel Krajden
+				Robert Azana, Tara Newman, Jessica Caleta, Sherrie Wang, Janet Fung, Mel Krajden
 			</p>
 
 			<h3>Manitoba</h3>
@@ -75,43 +76,42 @@ const Individuals = (): ReactElement => {
 					Cadham Provincial Laboratory collected specimens sequenced at the National Microbiology
 					Lab (NML)
 				</em>
-				<br /> Paul Van Caeseele, Jared Bullard, David Alexander, Kerry Dust.
+				<br /> Paul Van Caeseele, Jared Bullard, David Alexander, Kerry Dust
 			</p>
 
 			<p>
 				<em>NML</em>
-				<br />
-				Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich,
-				Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van
-				Domselaar, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kirsten
-				Biggar
 			</p>
 
 			<p>
 				<em>Cadham Provincial Laboratory sequenced specimens</em>
 				<br />
-				David Alexander, Lori Johnson, Janna Holowick, Joanne Sanders, Adam Hedley, Kerry Dust
+				David Alexander, Lori Johnson, Janna Holowick, Joanne Sanders, Adam Hedley, Kerry Dust, Ayo
+				Bolaji, Brooke Cistarelli, Emma Rempel, Paul van Caeseele, Jared Bullard.
 			</p>
 
 			<p>
-				<em>Dynacare sequenced specimens:</em>
+				<em>Dynacare sequenced specimens</em>
 				<br />
 				Hilary Racher, Melissa Desaulnier, Tintu Abraham, Hongbin Li (Impact Genetics, Brampton
 				Ontario)
 			</p>
 
+			<p>
+				<em>NML</em>
+			</p>
+
 			<h3>New Brunswick</h3>
 
 			<p>
-				<em>
-					Centre Hospitalier Universitaire Georges L. Dumont; National Microbiology Laboratory
-				</em>
+				<em>Centre Hospitalier Universitaire Georges L. Dumont</em>
 				<br />
-				Richard Garceau, Guillaume Desnoyers, Nicolas Crapoulet, Pierre Lyons, Woodson Shaw and Simi
-				Chacko, Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon
-				Huzarewich, Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag
-				Graham, Gary Van Domselaar, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison
-				Chapel, Kirsten Biggar.
+				Beauregard AP., Lyons P., Chacko S., Shaw W., Lacroix J., Allain E., Crapoulet N., Garceau
+				R., Desnoyers G.
+			</p>
+
+			<p>
+				<em>NML</em>
 			</p>
 
 			<h3>Newfoundland and Labrador</h3>
@@ -122,24 +122,26 @@ const Individuals = (): ReactElement => {
 					<br /> (previously known as "Newfoundland and Labrador - Eastern Health")
 				</em>
 				<br />
-				Robert Needle, Yang Yu, Laura Gilbert, George Zahariadis, Chris Corkum, Anna Majer, Shari
-				Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich, Russell Mandes,
-				Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van Domselaar,
-				Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kirsten Biggar, Kerri
-				Smith, Phillip Andrews, Matthew Gilmour.
+				Robert Needle, Yang Yu, Laura Gilbert, George Zahariadis, Geoffrey Woodland, Chris Corkum,
+				Kerri Smith, Phillip Andrews, Matthew Gilmour
+			</p>
+
+			<p>
+				<em>NML</em>
 			</p>
 
 			<h3>Nova Scotia</h3>
 
 			<p>
-				<em>QEII Health Sciences Centre*; National Microbiology Laboratory</em>
+				<em>QEII Health Sciences Centre*</em>
 				<br />
-				Todd Hatchette, Jason LeBlanc, Janice Pettipas, Dan Gaston, Greg McCracken, Nathalie
-				Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kirsten Biggar, Anna Majer,
-				Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich, Russell Mandes,
-				Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van Domselaar.
+				Todd Hatchette, Jason LeBlanc, Janice Pettipas, Dan Gaston, Greg McCracken.
 				<br />
 				(*data tagged post September 14th should include Allana Loder)
+			</p>
+
+			<p>
+				<em>NML</em>
 			</p>
 
 			<h3>Ontario</h3>
@@ -147,10 +149,20 @@ const Individuals = (): ReactElement => {
 			<p>
 				<em>Public Health Ontario Laboratory</em>
 				<br />
-				Vanessa G Allen, Philip Banh, Yao Chen, , Alireza Eshaghi, Nahuel Fittipaldi, Christine
-				Frantz, Jonathan B Gubbay, Jennifer L Guthrie, Esha Joshi, Aimin Li, Michael C.Y. Li, Dean
-				Maxwell, Sandeep Nagra, Samir N. Patel, Karthikeyan Sivaraman, Ashleigh Sullivan, Sarah
-				Teatero, Andre Villegas, Matthew Watson, Sandra Zittermann
+				Jacob Afelskie, Vanessa G Allen, Rebecca Azzaro, Doonia Bajovic, Philip Banh, Ilse Belgrave,
+				Tom Braukmann, Ashley Carandang, Yao Chen, Claudia Chu, Shawn Clark, Kirby Cronin, Richard
+				de Borja, Rachelle DiTullio, Carla Duncan, Hadi El Roz, Alireza Eshaghi, Nahuel Fittipaldi,
+				Christine Frantz, Dhiraj Gaglani, Nicole Graham, Jonathan B Gubbay, Jennifer L Guthrie,
+				Lawrence Heisler, Daniel Heydari, Mark Horsman, Hadia Hussain, Jason Iraheta, Grace Jeong,
+				Esha Joshi, Sushma Kavikondala, Lisa Kim, Surendra Kumar, Michael Laszloffy, Aimin Li,
+				Michael C.Y. Li, Alex Marchand-Austin, Maria Mariscal, Dean Maxwell, Lisa McTaggart, Fatima
+				Merza, Anupam Mittal, Naadia Mohammed, Esther Nagai, Sandeep Nagra, Shiva Nassori, Paul
+				Nelson, Rima Palencia, John Palmer, Samir N Patel, Stephen Perusini, Nataliya Potapova, Anna
+				Puzinovici, Zarah Rajaei, Christina Rampertab, Himeshi Samarsinghe, Candice Schreiber,
+				Christine Seah, Fatemeh Shaeri, Kapil Shaeri, Kapil Shah, Narisha Shakuralli, Natasha Singh,
+				Karthikeyan Sivaraman, Brenda Stanghini, Ashleigh Sullivan, Vincent Su Bin Cha, Yogi
+				Sundaravadanam, Sarah Teatero, Semra Tibebu, Nobish Varghese, Andre Villegas, Jesse Wang,
+				Matthew Watson, Sichong Xu, Xiao Xu, Kent Young, Sophie Yu, Farhan Yusuf, Sandra Zittermann
 			</p>
 
 			<p>
@@ -168,6 +180,18 @@ const Individuals = (): ReactElement => {
 				Michael G. Surette, Andrew G. McArthur
 			</p>
 
+			<h3>Prince Edward Island</h3>
+
+			<p>
+				<em>Queen Elizabeth Hospital</em>
+				<br />
+				Xiaofeng Ding, Vanessa Arseneau, Kari-Lyn Young
+			</p>
+
+			<p>
+				<em>NML</em>
+			</p>
+
 			<h3>Québec</h3>
 
 			<p>
@@ -175,13 +199,9 @@ const Individuals = (): ReactElement => {
 					Laboratoire de Santé Publique du Québec, McGill Génome Sciences Centre; CoVSeq Consortium
 				</em>
 				<br />
-				Sandrine Moreira, Jiannis Ragoussis, Guillaume Bourque, Jesse Shapiro, Éric Fournier, Réjean
-				Dion, Hugues Charest, Aurélie Guilbault, Benjamin Delisle, Sarah Reiling, Anne-Marie Roy,
-				Shu-Huang Chen, Corinne Darmond, Sally Lee, Brent Brookes, Pierre Lepage, Jannick St-Cyr,
-				Patrick Willet, Mathieu Bourgey, David Bujold, Hector Galvez, Paul Stretenowich,
-				Pierre-Olivier Quirion, Romain Grégoire, Carmen Lia Murall, Julie Hussin, Raphaël Poujol,
-				Jean-Christophe Grenier, Fatima Mostefai, Sylvie Laboissières, Alexandre Montpetit, Mark
-				Lathrop, Michel Roger
+				Sandrine Moreira, Jiannis Ragoussis, Guillaume Bourque, Éric Fournier, Aurélie Guilbault,
+				Benjamin Delisle, Dihya Baloul, Inès Levade, Sarah Reiling, Hector Galvez, Paul
+				Stretenowich, Alexandre Montpetit, Michel Roger, Judith Fafard
 			</p>
 
 			<h3>Saskatchewan</h3>
@@ -189,19 +209,26 @@ const Individuals = (): ReactElement => {
 			<p>
 				<em>Roy Romanow Provincial Laboratory</em>
 				<br />
-				Ryan McDonald, Keith MacKenzie, Meredith Faires, Kara Loos, Stefani Kary, Rachel DePaulo,
-				Laura Klassen, Alanna Senecal, Amanda Lang, Jessica Minion, Roy Romanow Provincial
-				Laboratory - Molecular Diagnostics.
+				Ryan McDonald, Keith MacKenzie, Kara Loos, Stefani Kary, Meredith Faires, Guruprasad Janga,
+				Rachel DePaulo, Laura Klassen, Alanna Senecal, Amanda Lang, Jessica Minion, Roy Romanow
+				Provincial Laboratory - Molecular Diagnostics.
 			</p>
 
 			<p>
-				<em>National Microbiology Laboratory</em>
-				<br />
+				<em>NML</em>
+			</p>
+
+			<h3>Canada's National Microbiology Laboratory (NML)</h3>
+
+			<p>
 				Anna Majer, Shari Tyson, Grace Seo, Philip Mabon, Elsie Grudeski, Rhiannon Huzarewich,
 				Russell Mandes, Anneliese Landgraff, Jennifer Tanner, Natalie Knox, Morag Graham, Gary Van
-				Domselaar, Nathalie Bastien, Yan Li, Timothy Booth, Darian Hole, Madison Chapel, Kristen
-				Biggar, Emily Haidl, Chanchal Yadav, Jeff Tuff, Connor Chato, Katherine Eaton, and Adrian
-				Zetner.
+				Domselaar, Nathalie Bastien, Ruimin Gao, Cody Buchanan, Jasmine Frost, Ameet Bharaj, Cole
+				Slater, Nikki Toledo, Laura Hart, Yan Li, Timothy Booth, Catherine Yoshida, Genevieve Labbe,
+				Adina Bujold, Kara Loos, Jennifer Beirnes, Michael Przybytkowski, Patrick Bastedo, Debra
+				Sorensen, Andrea Tyler, Ana Duggan, Darian Hole, Madison Chapel, Kristen Biggar, Emily
+				Haidl, Chanchal Yadav, Jeff Tuff, Connor Chato, Katherine Eaton, Kirsten Palmier, Molly
+				Pratt, Amber Papineau and Adrian Zetner.
 			</p>
 
 			<h2
