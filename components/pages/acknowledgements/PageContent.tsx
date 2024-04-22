@@ -82,9 +82,10 @@ const PageContent = (): ReactElement => {
 				<Individuals />
 
 				<p>
-					Funding for the VirusSeq Data Portal is provided by The Canadian COVID Genomics Network
-					(CanCOGeN), and supported by Genome Canada and Innovation, Science and Economic
-					Development Canada (ISED)
+					Funding for the VirusSeq Data Portal has been provided by The Canadian COVID Genomics
+					Network (CanCOGeN), supported by Genome Canada and Innovation, Science and Economic
+					Development Canada (ISED), plus the Canadian Institutes of Health Research(CIHR) -
+					Coronavirus Variants Rapid Response Network (CoVaRR-Net)
 				</p>
 			</article>
 		</main>
