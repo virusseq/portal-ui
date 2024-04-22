@@ -293,7 +293,7 @@ const Individuals = (): ReactElement => {
 				<br />
 				Terrance Snutch, Fiona Brinkman, Marceline Côté, William Hsiao, Yann Joly, Sharmistha
 				Mishra, Sandrine Moreira, Samira Mubareka, Jared Simpson, Megan Smallwood, Gary Van
-				Domselaar
+				Domselaar, Cindy Bell, Catalina López-Correa
 			</p>
 
 			<p>
@@ -307,7 +307,7 @@ const Individuals = (): ReactElement => {
 				<br />
 				Gary Van Domselaar, Fiona Brinkman, Zohaib Anwar, Robert Beiko, Matieu Bourgey, Guillaume
 				Bourque, Richard de Borja, Ahmed Draia, Jun Duan, Marc Fiume, Dan Fornika, Eric Fournier,
-				Erin Gill, Paul Gordon, Emma Griffiths, Jose Hector Galvez Lopez, Darian Hole, William
+				Erin Gill, Paul Gordon, Emma Griffiths, José Héctor Gálvez López, Darian Hole, William
 				Hsiao, Jeffrey Joy, Kimia Kamelian, Natalie Knox, Philip Mabon, Finlay Maguire, Tom
 				Matthews, Andrew McArthur, Samir Mechai, Sandrine Moreira, Art Poon, Amos Raphenya, Claire
 				Sevenhuysen, Jared Simpson, Jennifer Tanner, Lauren Tindale, John Tyson, Geoff Winsor, Nolan
@@ -354,8 +354,8 @@ const Individuals = (): ReactElement => {
 			<p>
 				<em>CanCOGeN Quality Control Working Group</em>
 				<br />
-				Jared Simpson, Mathieu Bourgey, Kodjovi Dodji Mlaga, Nahuel Fittipaldi, Jose Hector Galvez
-				Lopez, Natalie Knox, Genevieve Labbe, Pierre Lyons, Philip Mabon, Finlay Maguire, Anna
+				Jared Simpson, Mathieu Bourgey, Kodjovi Dodji Mlaga, Nahuel Fittipaldi, José Héctor Gálvez
+				López, Natalie Knox, Genevieve Labbe, Pierre Lyons, Philip Mabon, Finlay Maguire, Anna
 				Majer, Andrew McArthur, Ryan McDonald, Sandrine Moreira, Natalie Prystajecky, Karthikeyan
 				Sivaraman, Kerri Smith, Terrance Snutch, Karthikeyan Sivaraman Andrea Tyler, John Tyson,
 				Gary Van Domselaar
