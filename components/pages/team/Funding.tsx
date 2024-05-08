@@ -137,8 +137,19 @@ const Funding = (): ReactElement => {
 			</p>
 			<p>
 				The Canadian VirusSeq Data Portal team gratefully acknowledges funding from the Canadian
-				Institutes of Health Research (CIHR) - Coronavirus Variants Rapid Response Network
-				(CoVaRR-Net), which has enabled ongoing development.
+				Institutes of Health Research (
+				<StyledLink
+					href="https://cihr-irsc.gc.ca/e/193.html"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					CIHR
+				</StyledLink>
+				) - Coronavirus Variants Rapid Response Network (
+				<StyledLink href="https://covarrnet.ca/" rel="noopener noreferrer" target="_blank">
+					CoVaRR-Net
+				</StyledLink>
+				), which has enabled ongoing development.
 			</p>
 			<p>
 				Genome Canada acts as a data custodian with overall responsibility for and oversight of the
