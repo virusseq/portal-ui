@@ -1,2 +1,2 @@
-@Library(value='jenkins-pipeline-library@master', changelog=false) _
-pipelineVIRUSSEQPortal()
+@Library(value='jenkins-pipeline-library@main', changelog=false) _
+pipelineVIRUSSEQPortalUI()
