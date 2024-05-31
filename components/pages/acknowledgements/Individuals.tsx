@@ -64,9 +64,9 @@ const Individuals = (): ReactElement => {
 			<p>
 				<em>BCCDC Public Health Laboratory</em>
 				<br />
-				Prystajecky Natalie, Linda Hoang, John R. Tyson, Dan Fornika, Shannon Russell, Kim
-				MacDonald, Kimia Kamelian, Ana Pacagnella, Corrinne Ng, Loretta Janz, Richard Harrigan,
-				Robert Azana, Tara Newman, Jessica Caleta, Sherrie Wang, Janet Fung, Mel Krajden
+				Prystajecky Natalie, Linda Hoang, John R. Tyson, James Zlosnik, Dan Fornika, Shannon
+				Russell, Kim MacDonald, Kimia Kamelian, Ana Pacagnella, Corrinne Ng, Loretta Janz, Richard
+				Harrigan, Robert Azana, Tara Newman, Jessica Caleta, Sherrie Wang, Janet Fung, Mel Krajden
 			</p>
 
 			<h3>Manitoba</h3>
