@@ -233,15 +233,15 @@ const Usage = (): ReactElement => (
 			You may use the data from the CVDP to author results obtained from your analyses of relevant
 			data, provided that{' '}
 			<span className="bold">
-				your published results acknowledge, as the original source of the data, CanCOGeN-VirusSeq,
-				CPLHN and its members
+				your published results acknowledge, as the original source of the data, VirusSeq, CPLHN and
+				its members
 			</span>
 			.
 		</p>
 
 		<p>
 			Proposed sentence: “The authors of the manuscript would like to acknowledge the original
-			source of the data CanCOGeN-VirusSeq, CPLHN and its members.”
+			source of the data VirusSeq, CPLHN and its members.”
 		</p>
 
 		<p>

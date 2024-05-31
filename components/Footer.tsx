@@ -192,7 +192,7 @@ const Footer = (): ReactElement => {
 						margin-left: 1rem;
 						text-decoration: none;
 					`}
-					href="https://github.com/cancogen-virus-seq"
+					href="https://github.com/virusseq"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
