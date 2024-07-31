@@ -31,16 +31,17 @@ export const EGO_API_KEY_ENDPOINT = `${NEXT_PUBLIC_EGO_API_ROOT}/o/api_key`;
 export const ROOT_PATH = '/';
 
 export enum INTERNAL_PATHS {
-  ACKNOWLEDGEMENTS = '/acknowledgements',
-  EXPLORER = '/explorer',
-  LOGIN = '/login',
-  POLICIES = '/policies',
-  RELEASES = '/releases',
-  SUBMISSION = '/submission',
-  STUDIES = '/studies',
-  TEAM = '/team',
-  USER = '/user',
-  VISUALIZATION = '/visualization',
+	ABOUT_ANALYSIS_TOOLS = '/about-the-analysis-tools',
+	ACKNOWLEDGEMENTS = '/acknowledgements',
+	EXPLORER = '/explorer',
+	LOGIN = '/login',
+	POLICIES = '/policies',
+	RELEASES = '/releases',
+	SUBMISSION = '/submission',
+	STUDIES = '/studies',
+	TEAM = '/team',
+	USER = '/user',
+	VISUALIZATION = '/visualization',
 }
 
 // external docs links
@@ -50,32 +51,32 @@ export const DMS_INSTALLATION_URL = urlJoin(OVERTURE_DMS_DOCS_ROOT, 'installatio
 export const DMS_EMAIL_SETTING_URL = urlJoin(DMS_INSTALLATION_URL, 'configuration/prereq/emails');
 
 export const CANADA_PROVINCES = [
-  { name: 'Alberta', abbreviation: 'AB' },
-  { name: 'British Columbia', abbreviation: 'BC' },
-  { name: 'Manitoba', abbreviation: 'MB' },
-  { name: 'New Brunswick', abbreviation: 'NB' },
-  { name: 'Newfoundland and Labrador', abbreviation: 'NL' },
-  { name: 'Northwest Territories', abbreviation: 'NT' },
-  { name: 'Nova Scotia', abbreviation: 'NS' },
-  { name: 'Nunavut', abbreviation: 'NU' },
-  { name: 'Ontario', abbreviation: 'ON' },
-  { name: 'Prince Edward Island', abbreviation: 'PE' },
-  { name: 'Quebec', abbreviation: 'QC' },
-  { name: 'Saskatchewan', abbreviation: 'SK' },
-  { name: 'Yukon Territory', abbreviation: 'YT' },
+	{ name: 'Alberta', abbreviation: 'AB' },
+	{ name: 'British Columbia', abbreviation: 'BC' },
+	{ name: 'Manitoba', abbreviation: 'MB' },
+	{ name: 'New Brunswick', abbreviation: 'NB' },
+	{ name: 'Newfoundland and Labrador', abbreviation: 'NL' },
+	{ name: 'Northwest Territories', abbreviation: 'NT' },
+	{ name: 'Nova Scotia', abbreviation: 'NS' },
+	{ name: 'Nunavut', abbreviation: 'NU' },
+	{ name: 'Ontario', abbreviation: 'ON' },
+	{ name: 'Prince Edward Island', abbreviation: 'PE' },
+	{ name: 'Quebec', abbreviation: 'QC' },
+	{ name: 'Saskatchewan', abbreviation: 'SK' },
+	{ name: 'Yukon Territory', abbreviation: 'YT' },
 ];
 
 export const getProvince = ({
-  long,
-  short,
+	long,
+	short,
 }: {
-  long?: string;
-  short?: string;
+	long?: string;
+	short?: string;
 }): { abbreviation: string; name: string } =>
-  CANADA_PROVINCES.find(
-    ({ abbreviation, name }) =>
-      short?.toUpperCase() === abbreviation || long?.toLowerCase() === name.toLowerCase(),
-  ) || { abbreviation: '', name: `${long || short} not found` };
+	CANADA_PROVINCES.find(
+		({ abbreviation, name }) =>
+			short?.toUpperCase() === abbreviation || long?.toLowerCase() === name.toLowerCase(),
+	) || { abbreviation: '', name: `${long || short} not found` };
 
 // external covizu links
 export const covizuGithubUrl = 'https://github.com/PoonLab/CoVizu';
