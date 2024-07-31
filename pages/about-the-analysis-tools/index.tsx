@@ -19,51 +19,16 @@
  *
  */
 
-import { ReactElement } from 'react';
-import { css } from '@emotion/react';
+import AboutTheAnalysisTools from '../../components/pages/about-the-analysis-tools';
+import { createPage } from '../../global/utils/pages';
 
-import useAuthContext from '@/global/hooks/useAuthContext';
-import { UserWithId } from '@/global/types';
+const AboutTheAnalysisToolsPage = createPage({
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: true,
+})(() => {
+	return <AboutTheAnalysisTools />;
+});
 
-const getDisplayName = (user?: UserWithId) => {
-	const greeting = 'Hello';
-
-	if (user) {
-		if (user.firstName) {
-			return `${greeting}, ${user.firstName}`;
-		} else if (user.lastName) {
-			return `${greeting}, ${user.lastName}`;
-		} else if (user.email) {
-			return `${greeting}, ${user.email}`;
-		}
-	}
-
-	return greeting;
-};
-
-const CurrentUser = (): ReactElement => {
-	const { user } = useAuthContext();
-	return (
-		<div
-			css={css`
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			`}
-		>
-			<span
-				css={css`
-					padding-left: 5px;
-					white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					max-width: 142px;
-				`}
-			>
-				{getDisplayName(user)}
-			</span>
-		</div>
-	);
-};
-
-export default CurrentUser;
+export default AboutTheAnalysisToolsPage;

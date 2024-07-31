@@ -20,50 +20,15 @@
  */
 
 import { ReactElement } from 'react';
-import { css } from '@emotion/react';
 
-import useAuthContext from '@/global/hooks/useAuthContext';
-import { UserWithId } from '@/global/types';
+import PageLayout from '@/components/PageLayout';
 
-const getDisplayName = (user?: UserWithId) => {
-	const greeting = 'Hello';
+import PageContent from './PageContent';
 
-	if (user) {
-		if (user.firstName) {
-			return `${greeting}, ${user.firstName}`;
-		} else if (user.lastName) {
-			return `${greeting}, ${user.lastName}`;
-		} else if (user.email) {
-			return `${greeting}, ${user.email}`;
-		}
-	}
+const AboutTheAnalysisTools = (): ReactElement => (
+	<PageLayout subtitle="About the Analysis Tools">
+		<PageContent />
+	</PageLayout>
+);
 
-	return greeting;
-};
-
-const CurrentUser = (): ReactElement => {
-	const { user } = useAuthContext();
-	return (
-		<div
-			css={css`
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			`}
-		>
-			<span
-				css={css`
-					padding-left: 5px;
-					white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					max-width: 142px;
-				`}
-			>
-				{getDisplayName(user)}
-			</span>
-		</div>
-	);
-};
-
-export default CurrentUser;
+export default AboutTheAnalysisTools;
