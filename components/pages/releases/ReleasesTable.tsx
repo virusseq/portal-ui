@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -136,7 +136,7 @@ const StyledDatePicker = ({
 };
 
 const ReleasesTable = (): ReactElement => {
-	const { NEXT_PUBLIC_VIRUSSEQ_API_URL } = getConfig();
+	const { NEXT_PUBLIC_PORTAL_API_URL } = getConfig();
 	const [tableData, setTableData] = useState<ArchivesFetchRes>();
 	const [archivesAfter, setArchivesAfter] = useState<Date>(EARLIEST_ARCHIVES_FROM);
 	const [archivesBefore, setArchiveBefore] = useState<Date>(LATEST_ARCHIVES_TO);
@@ -146,7 +146,7 @@ const ReleasesTable = (): ReactElement => {
 	});
 
 	const getReleaseData = async (params: ArchivesFetchReq) => {
-		const { data } = await axios.get(urlJoin(NEXT_PUBLIC_VIRUSSEQ_API_URL, 'changelog'), {
+		const { data } = await axios.get(urlJoin(NEXT_PUBLIC_PORTAL_API_URL, 'changelog'), {
 			params,
 		});
 		const { page = 0, totalPages = 0 } = data;

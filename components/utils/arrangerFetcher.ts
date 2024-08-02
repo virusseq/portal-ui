@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -21,11 +21,10 @@
 
 import urlJoin from 'url-join';
 
-import { getConfig } from '@/global/config';
-
 import ajax from './ajax';
 
 const createArrangerFetcher = ({
+	ARRANGER_API = 'http://noUrlProvided',
 	onError = (err: any) => Promise.reject(err),
 	defaultHeaders = {},
 } = {}) => {
@@ -42,10 +41,8 @@ const createArrangerFetcher = ({
 		if (cache.has(key)) return cache.get(key);
 		// TODO: max cache size
 
-		const { NEXT_PUBLIC_ARRANGER_API } = getConfig();
-
 		const { body = {}, endpoint = '/graphql', endpointTag = '', headers = {} } = args;
-		const uri = urlJoin(NEXT_PUBLIC_ARRANGER_API, endpoint, endpointTag);
+		const uri = urlJoin(ARRANGER_API, endpoint, endpointTag);
 		const response = await ajax
 			.post(uri, body, {
 				headers: {
