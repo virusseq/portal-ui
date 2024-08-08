@@ -25,196 +25,196 @@ import { Col, Row } from 'react-grid-system';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-import useReleaseData from '../../../global/hooks/useReleaseData';
-import Loader from '../../Loader';
-import { CoronaVirus, CrossHairs, File, Storage } from '../../theme/icons';
+import useReleaseData from '@/global/hooks/useReleaseData';
+import Loader from '@/components/Loader';
+import { CoronaVirus, CrossHairs, File, Storage } from '@/components/theme/icons';
 
 const DataAnalysis = (): ReactElement => {
-  const [releaseData, isFetchingData] = useReleaseData();
+	const [releaseData, isFetchingData] = useReleaseData();
 
-  const {
-    fileCount = 0,
-    filesByVariant = [],
-    fileSize = { unit: 'B', value: '0' },
-    hostGenders = [],
-    genomesCount = { value: 0, type: 'APPROXIMATE' },
-    studyCount = 0,
-  } = releaseData;
+	const {
+		fileCount = 0,
+		filesByVariant = [],
+		fileSize = { unit: 'B', value: '0' },
+		hostGenders = [],
+		genomesCount = { value: 0, type: 'APPROXIMATE' },
+		studyCount = 0,
+	} = releaseData;
 
-  return (
-    <>
-      <Row
-        gutterWidth={0}
-        css={(theme) => css`
-          align-items: center !important;
-          min-height: 48px;
-          margin: 10px 0;
-          background-color: ${theme.colors.white};
-          border-radius: 5px;
-          ${theme.shadow.default};
-        `}
-      >
-        {isFetchingData ? (
-          <Loader size="20px" />
-        ) : (
-          <ul
-            css={(theme) => css`
-              align-items: center;
-              display: flex;
-              flex-wrap: wrap;
-              justify-content: space-around;
-              list-style: none;
-              margin: 0;
-              padding: 0 15px;
-              width: 100%;
+	return (
+		<>
+			<Row
+				gutterWidth={0}
+				css={(theme) => css`
+					align-items: center !important;
+					min-height: 48px;
+					margin: 10px 0;
+					background-color: ${theme.colors.white};
+					border-radius: 5px;
+					${theme.shadow.default};
+				`}
+			>
+				{isFetchingData ? (
+					<Loader size="20px" />
+				) : (
+					<ul
+						css={(theme) => css`
+							align-items: center;
+							display: flex;
+							flex-wrap: wrap;
+							justify-content: space-around;
+							list-style: none;
+							margin: 0;
+							padding: 0 15px;
+							width: 100%;
 
-              li {
-                align-items: center;
-                display: flex;
-                font-weight: bold;
-                padding-left: 25px;
-                position: relative;
-                white-space: nowrap;
+							li {
+								align-items: center;
+								display: flex;
+								font-weight: bold;
+								padding-left: 25px;
+								position: relative;
+								white-space: nowrap;
 
-                &:not(:first-of-type) {
-                  margin-left: 10px;
-                }
-              }
+								&:not(:first-of-type) {
+									margin-left: 10px;
+								}
+							}
 
-              svg {
-                left: 0;
-                position: absolute;
-              }
+							svg {
+								left: 0;
+								position: absolute;
+							}
 
-              span {
-                margin-right: 5px;
-              }
-            `}
-          >
-            <li>
-              <File />
-              <span>{fileCount?.toLocaleString('en-CA')}</span>Files
-            </li>
-            <li>
-              <CoronaVirus />
-              <span>{genomesCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
-              <span>{genomesCount?.value?.toLocaleString('en-CA')}</span>Viral Genomes
-            </li>
-            <li>
-              <CrossHairs
-                style={css`
-                  margin-left: -1px;
-                `}
-              />
-              <span>{studyCount?.toLocaleString('en-CA')}</span>Studies
-            </li>
-            <li>
-              <Storage />
-              <span>{fileSize?.value}</span>
-              {fileSize?.unit}
-            </li>
-          </ul>
-        )}
-      </Row>
-      <Row
-        component="ul"
-        gutterWidth={10}
-        css={(theme) => css`
-          margin: 10px 0 0;
-          padding: 0;
-          list-style: none;
+							span {
+								margin-right: 5px;
+							}
+						`}
+					>
+						<li>
+							<File />
+							<span>{fileCount?.toLocaleString('en-CA')}</span>Files
+						</li>
+						<li>
+							<CoronaVirus />
+							<span>{genomesCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
+							<span>{genomesCount?.value?.toLocaleString('en-CA')}</span>Viral Genomes
+						</li>
+						<li>
+							<CrossHairs
+								style={css`
+									margin-left: -1px;
+								`}
+							/>
+							<span>{studyCount?.toLocaleString('en-CA')}</span>Studies
+						</li>
+						<li>
+							<Storage />
+							<span>{fileSize?.value}</span>
+							{fileSize?.unit}
+						</li>
+					</ul>
+				)}
+			</Row>
+			<Row
+				component="ul"
+				gutterWidth={10}
+				css={(theme) => css`
+					margin: 10px 0 0;
+					padding: 0;
+					list-style: none;
 
-          figure {
-            ${isFetchingData && 'display: flex;'}
-            background-color: ${theme.colors.white};
-            border-radius: 5px;
-            margin: 0 0 10px;
-            min-height: 100px;
-            ${theme.shadow.default};
-          }
-        `}
-      >
-        <Col component="li" md={7} lg={8}>
-          <figure>
-            {isFetchingData ? (
-              <Loader size="20px" />
-            ) : (
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={{
-                  chart: {
-                    height: 100,
-                    type: 'column',
-                    spacingBottom: 7,
-                    spacingRight: 15,
-                  },
-                  credits: {
-                    enabled: false,
-                  },
-                  legend: {
-                    enabled: false,
-                    //   align: 'right',
-                    //   x: -30,
-                    //   verticalAlign: 'top',
-                    //   y: 25,
-                    //   floating: true,
-                    //   shadow: false
-                  },
-                  plotOptions: {
-                    column: {
-                      stacking: 'normal',
-                      dataSorting: {
-                        enabled: true,
-                      },
-                      // dataLabels: {
-                      //   enabled: true,
-                      // },
-                    },
-                  },
-                  series: [
-                    {
-                      data: filesByVariant?.map((province) => ({
-                        name: province?.name,
-                        y: province?.count,
-                      })),
-                      name: 'CoViD-19',
-                    },
-                  ],
-                  title: {
-                    align: 'right',
-                    margin: 5,
-                    style: {
-                      fontSize: 13,
-                      fontWeight: 'bold',
-                    },
-                    text: 'Viral Genomes by Province',
-                  },
-                  tooltip: {
-                    formatter(this: Highcharts.TooltipFormatterContextObject): string {
-                      return `<b>${this.key}:</b><br>${this.y} Genome${
-                        this.y > 1 ? 's' : ''
-                      } (${this.percentage?.toLocaleString('en-CA', {
-                        maximumFractionDigits: 2,
-                      })}%)`;
-                    },
-                  },
-                  xAxis: {
-                    categories: filesByVariant?.map((fv) => fv.abbreviation.toUpperCase()),
-                    reversed: true,
-                  },
-                  yAxis: {
-                    min: 0,
-                    title: {
-                      text: '# Viral Genomes',
-                    },
-                  },
-                }}
-              />
-            )}
-          </figure>
-        </Col>
+					figure {
+						${isFetchingData && 'display: flex;'}
+						background-color: ${theme.colors.white};
+						border-radius: 5px;
+						margin: 0 0 10px;
+						min-height: 100px;
+						${theme.shadow.default};
+					}
+				`}
+			>
+				<Col component="li" md={7} lg={8}>
+					<figure>
+						{isFetchingData ? (
+							<Loader size="20px" />
+						) : (
+							<HighchartsReact
+								highcharts={Highcharts}
+								options={{
+									chart: {
+										height: 100,
+										type: 'column',
+										spacingBottom: 7,
+										spacingRight: 15,
+									},
+									credits: {
+										enabled: false,
+									},
+									legend: {
+										enabled: false,
+										//   align: 'right',
+										//   x: -30,
+										//   verticalAlign: 'top',
+										//   y: 25,
+										//   floating: true,
+										//   shadow: false
+									},
+									plotOptions: {
+										column: {
+											stacking: 'normal',
+											dataSorting: {
+												enabled: true,
+											},
+											// dataLabels: {
+											//   enabled: true,
+											// },
+										},
+									},
+									series: [
+										{
+											data: filesByVariant?.map((province) => ({
+												name: province?.name,
+												y: province?.count,
+											})),
+											name: 'CoViD-19',
+										},
+									],
+									title: {
+										align: 'right',
+										margin: 5,
+										style: {
+											fontSize: 13,
+											fontWeight: 'bold',
+										},
+										text: 'Viral Genomes by Province',
+									},
+									tooltip: {
+										formatter(this: Highcharts.TooltipFormatterContextObject): string {
+											return `<b>${this.key}:</b><br>${this.y} Genome${
+												this.y > 1 ? 's' : ''
+											} (${this.percentage?.toLocaleString('en-CA', {
+												maximumFractionDigits: 2,
+											})}%)`;
+										},
+									},
+									xAxis: {
+										categories: filesByVariant?.map((fv) => fv.abbreviation.toUpperCase()),
+										reversed: true,
+									},
+									yAxis: {
+										min: 0,
+										title: {
+											text: '# Viral Genomes',
+										},
+									},
+								}}
+							/>
+						)}
+					</figure>
+				</Col>
 
-        {/* <Col
+				{/* <Col
           component="li"
           md={6}
           lg={4}
@@ -285,18 +285,18 @@ const DataAnalysis = (): ReactElement => {
           </figure>
         </Col>*/}
 
-        <Col component="li" md={5} lg={4}>
-          <figure
-            css={(theme) => css`
-              display: flex;
-              justify-content: space-around;
-            `}
-          >
-            {isFetchingData ? (
-              <Loader size="20px" />
-            ) : (
-              <>
-                {/* <HighchartsReact
+				<Col component="li" md={5} lg={4}>
+					<figure
+						css={(theme) => css`
+							display: flex;
+							justify-content: space-around;
+						`}
+					>
+						{isFetchingData ? (
+							<Loader size="20px" />
+						) : (
+							<>
+								{/* <HighchartsReact
                   highcharts={Highcharts}
                   options={{
                     chart: {
@@ -359,76 +359,76 @@ const DataAnalysis = (): ReactElement => {
                     },
                   }}
                 /> */}
-                <HighchartsReact
-                  highcharts={Highcharts}
-                  options={{
-                    chart: {
-                      height: 100,
-                      width: 120,
-                      spacing: [0, 0, 0, 0],
-                    },
-                    credits: {
-                      enabled: false,
-                    },
-                    legend: {
-                      enabled: false,
-                      //   align: 'right',
-                      //   x: -30,
-                      //   verticalAlign: 'top',
-                      //   y: 25,
-                      //   floating: true,
-                      //   shadow: false
-                    },
-                    plotOptions: {
-                      pie: {
-                        dataLabels: {
-                          enabled: false,
-                          // distance: -50,
-                          // style: {
-                          //   fontWeight: 'bold',
-                          //   color: 'white'
-                          // }
-                        },
-                        center: ['50%', '50%'],
-                        size: '110%',
-                      },
-                    },
-                    series: [
-                      {
-                        data: hostGenders?.map(({ key, doc_count }) => [key, doc_count]),
-                        innerSize: '65%',
-                        name: 'CoViD-19',
-                        type: 'pie',
-                      },
-                    ],
-                    title: {
-                      align: 'center',
-                      floating: true,
-                      style: {
-                        fontSize: 12,
-                      },
-                      text: 'Host<br/>Gender',
-                      verticalAlign: 'middle',
-                      y: 11,
-                    },
-                    tooltip: {
-                      formatter(this: Highcharts.TooltipFormatterContextObject): string {
-                        return `<b>${this.key}:</b><br>${this.y} Genome${
-                          this.y > 1 ? 's' : ''
-                        } (${this.percentage?.toLocaleString('en-CA', {
-                          maximumFractionDigits: 2,
-                        })}%)`;
-                      },
-                    },
-                  }}
-                />
-              </>
-            )}
-          </figure>
-        </Col>
-      </Row>
-    </>
-  );
+								<HighchartsReact
+									highcharts={Highcharts}
+									options={{
+										chart: {
+											height: 100,
+											width: 120,
+											spacing: [0, 0, 0, 0],
+										},
+										credits: {
+											enabled: false,
+										},
+										legend: {
+											enabled: false,
+											//   align: 'right',
+											//   x: -30,
+											//   verticalAlign: 'top',
+											//   y: 25,
+											//   floating: true,
+											//   shadow: false
+										},
+										plotOptions: {
+											pie: {
+												dataLabels: {
+													enabled: false,
+													// distance: -50,
+													// style: {
+													//   fontWeight: 'bold',
+													//   color: 'white'
+													// }
+												},
+												center: ['50%', '50%'],
+												size: '110%',
+											},
+										},
+										series: [
+											{
+												data: hostGenders?.map(({ key, doc_count }) => [key, doc_count]),
+												innerSize: '65%',
+												name: 'CoViD-19',
+												type: 'pie',
+											},
+										],
+										title: {
+											align: 'center',
+											floating: true,
+											style: {
+												fontSize: 12,
+											},
+											text: 'Host<br/>Gender',
+											verticalAlign: 'middle',
+											y: 11,
+										},
+										tooltip: {
+											formatter(this: Highcharts.TooltipFormatterContextObject): string {
+												return `<b>${this.key}:</b><br>${this.y} Genome${
+													this.y > 1 ? 's' : ''
+												} (${this.percentage?.toLocaleString('en-CA', {
+													maximumFractionDigits: 2,
+												})}%)`;
+											},
+										},
+									}}
+								/>
+							</>
+						)}
+					</figure>
+				</Col>
+			</Row>
+		</>
+	);
 };
 
 export default DataAnalysis;

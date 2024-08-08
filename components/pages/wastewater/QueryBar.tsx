@@ -27,7 +27,7 @@ import { Row } from 'react-grid-system';
 import { ThemeInterface } from '@/components/theme';
 
 const getThemeCustomisations = (theme: ThemeInterface): UseThemeContextProps => ({
-	callerName: 'Explorer-QueryBar',
+	callerName: 'Wastewater-QueryBar',
 	components: {
 		SQONViewer: {
 			EmptyMessage: {

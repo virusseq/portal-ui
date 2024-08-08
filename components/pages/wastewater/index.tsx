@@ -55,9 +55,9 @@ export interface PageContentProps {
 }
 
 const {
-	NEXT_PUBLIC_ARRANGER_SEQUENCES_API,
-	NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE,
-	NEXT_PUBLIC_ARRANGER_SEQUENCES_INDEX,
+	NEXT_PUBLIC_ARRANGER_WASTEWATER_API,
+	NEXT_PUBLIC_ARRANGER_WASTEWATER_DOCUMENT_TYPE,
+	NEXT_PUBLIC_ARRANGER_WASTEWATER_INDEX,
 } = getConfig();
 
 const configsQuery = `
@@ -66,7 +66,7 @@ const configsQuery = `
 	}
 `;
 
-const SequencesRepositoryPage = (): ReactElement => {
+const WastewaterRepositoryPage = (): ReactElement => {
 	const theme = useTheme();
 	const [arrangerHasConfig, setArrangerHasConfig] = useState<boolean>(false);
 	const [loadingArrangerConfig, setLoadingArrangerConfig] = useState<boolean>(true);
@@ -76,8 +76,8 @@ const SequencesRepositoryPage = (): ReactElement => {
 			endpoint: 'graphql/hasValidConfig',
 			body: JSON.stringify({
 				variables: {
-					documentType: NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE,
-					index: NEXT_PUBLIC_ARRANGER_SEQUENCES_INDEX,
+					documentType: NEXT_PUBLIC_ARRANGER_WASTEWATER_DOCUMENT_TYPE,
+					index: NEXT_PUBLIC_ARRANGER_WASTEWATER_INDEX,
 				},
 				query: configsQuery,
 			}),
@@ -91,7 +91,7 @@ const SequencesRepositoryPage = (): ReactElement => {
 					return setLoadingArrangerConfig(false);
 				}
 
-				throw new Error('Could not validate Arranger server configuration!');
+				throw new Error('Could not validate Arranger Wastewater server configuration!');
 			})
 			.catch(async (err) => {
 				console.warn(err);
@@ -99,16 +99,16 @@ const SequencesRepositoryPage = (): ReactElement => {
 				await sleep(1000);
 				setLoadingArrangerConfig(false);
 			});
-	}, [NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE, NEXT_PUBLIC_ARRANGER_SEQUENCES_INDEX]);
+	}, []);
 
 	const ConfigError = getConfigError({
 		hasConfig: arrangerHasConfig,
-		index: NEXT_PUBLIC_ARRANGER_SEQUENCES_INDEX,
-		documentType: NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE,
+		index: NEXT_PUBLIC_ARRANGER_WASTEWATER_INDEX,
+		documentType: NEXT_PUBLIC_ARRANGER_WASTEWATER_DOCUMENT_TYPE,
 	});
 
 	return (
-		<PageLayout subtitle="Data Explorer">
+		<PageLayout subtitle="Wastewater Data Explorer">
 			{loadingArrangerConfig ? (
 				<div
 					css={css`
@@ -135,9 +135,9 @@ const SequencesRepositoryPage = (): ReactElement => {
 				</ErrorNotification>
 			) : (
 				<ArrangerDataProvider
-					apiUrl={NEXT_PUBLIC_ARRANGER_SEQUENCES_API}
+					apiUrl={NEXT_PUBLIC_ARRANGER_WASTEWATER_API}
 					customFetcher={arrangerFetcher}
-					documentType={NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE}
+					documentType={NEXT_PUBLIC_ARRANGER_WASTEWATER_DOCUMENT_TYPE}
 					theme={{
 						colors: {
 							common: {
@@ -160,4 +160,4 @@ const SequencesRepositoryPage = (): ReactElement => {
 	);
 };
 
-export default SequencesRepositoryPage;
+export default WastewaterRepositoryPage;

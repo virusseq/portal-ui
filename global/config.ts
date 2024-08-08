@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -62,7 +62,8 @@ type Config = {
 	NEXT_PUBLIC_DEBUG: boolean;
 	NEXT_PUBLIC_ENABLE_DOWNLOADS: boolean;
 	NEXT_PUBLIC_ENABLE_LOGIN: boolean;
-	NEXT_PUBLIC_ENABLE_QUICKSEARCH: boolean;
+	NEXT_PUBLIC_ENABLE_SEQUENCES_QUICKSEARCH: boolean;
+	NEXT_PUBLIC_ENABLE_WASTEWATER_QUICKSEARCH: boolean;
 	NEXT_PUBLIC_ENABLE_REGISTRATION: boolean;
 };
 
@@ -128,9 +129,11 @@ export const getConfig = (): Config => {
 			(publicConfig.NEXT_PUBLIC_ENABLE_DOWNLOADS || '').toLowerCase() === 'true',
 		NEXT_PUBLIC_ENABLE_LOGIN:
 			(publicConfig.NEXT_PUBLIC_ENABLE_LOGIN || '').toLowerCase() === 'true',
-		NEXT_PUBLIC_ENABLE_QUICKSEARCH:
-			(publicConfig.NEXT_PUBLIC_ENABLE_QUICKSEARCH || '').toLowerCase() === 'true',
+		NEXT_PUBLIC_ENABLE_SEQUENCES_QUICKSEARCH:
+			(publicConfig.NEXT_PUBLIC_ENABLE_SEQUENCES_QUICKSEARCH || '').toLowerCase() === 'true',
 		NEXT_PUBLIC_ENABLE_REGISTRATION:
 			(publicConfig.NEXT_PUBLIC_ENABLE_REGISTRATION || '').toLowerCase() === 'true',
+		NEXT_PUBLIC_ENABLE_WASTEWATER_QUICKSEARCH:
+			(publicConfig.NEXT_PUBLIC_ENABLE_WASTEWATER_QUICKSEARCH || '').toLowerCase() === 'true',
 	};
 };

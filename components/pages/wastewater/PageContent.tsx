@@ -29,7 +29,6 @@ import { isEqual } from 'lodash';
 import defaultTheme from '@/components/theme';
 import useUrlParamState from '@/global/hooks/useUrlParamsState';
 
-import DataAnalysis from './DataAnalysis';
 import Facets from './Facets';
 import QueryBar from './QueryBar';
 import RepoTable from './RepoTable';
@@ -41,7 +40,7 @@ import RepoTable from './RepoTable';
 
 const PageContent = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
-	const { sqon, setSQON } = useArrangerData({ callerName: 'Explorer-PageContent' });
+	const { sqon, setSQON } = useArrangerData({ callerName: 'Wastewater-PageContent' });
 	const [firstRender, setFirstRender] = useState<boolean>(true);
 	const [currentFilters, setCurrentFilters] = useUrlParamState<SQONType | null>('filters', null, {
 		prepare: (v) => v.replace('"field"', '"fieldName"'),
@@ -111,7 +110,6 @@ const PageContent = (): ReactElement => {
 						`}
 					>
 						<QueryBar />
-						<DataAnalysis />
 						<RepoTable />
 					</div>
 				</div>

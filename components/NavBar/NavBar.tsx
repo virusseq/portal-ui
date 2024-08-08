@@ -102,13 +102,27 @@ const NavBar = (): ReactElement => {
 						width: 100%;
 					`}
 				>
-					<InternalLink path={INTERNAL_PATHS.EXPLORER}>
-						<StyledLink
-							className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.EXPLORER) })}
-						>
-							Explore VirusSeq Data
-						</StyledLink>
-					</InternalLink>
+					<Dropdown
+						css={linkStyles}
+						data={[
+							<InternalLink path={INTERNAL_PATHS.EXPLORER}>
+								<StyledListLink
+									className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.EXPLORER) })}
+								>
+									Viral Sequences
+								</StyledListLink>
+							</InternalLink>,
+							<InternalLink path={INTERNAL_PATHS.WASTEWATER}>
+								<StyledListLink
+									className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.WASTEWATER) })}
+								>
+									Wastewater
+								</StyledListLink>
+							</InternalLink>,
+						]}
+						label="Explore VirusSeq Data"
+						urls={[INTERNAL_PATHS.VISUALIZATION]}
+					/>
 
 					<Dropdown
 						css={linkStyles}
