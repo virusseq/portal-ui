@@ -19,16 +19,55 @@
  *
  */
 
+import { css } from '@emotion/react';
+import { format } from 'date-fns';
 import { ReactElement } from 'react';
+import { Column } from 'react-table';
 
-import PageLayout from '@/components/PageLayout';
+import { numberSort, uuidSort } from '@/components/GenericTable/helpers';
+import StyledLink from '@/components/Link';
+import getInternalLink from '@/global/utils/getInternalLink';
 
-import PageContent from './PageContent';
+const columnData: Column<Record<string, unknown>>[] = [
+	{
+		accessor: 'submissionId',
+		Cell: ({ value }: { value: unknown }) => (
+			<StyledLink href={getInternalLink({ path: `/submission/${value}` })}>
+				{value as string}
+			</StyledLink>
+		),
+		Header: 'Submission ID',
+		sortType: uuidSort,
+	},
+	{
+		accessor: 'studyIds',
+		Cell: ({ value }: { value: unknown }) =>
+			value ? (
+				<ul
+					css={css`
+						margin: 0;
+						padding-left: 15px;
+					`}
+				>
+					{(value as string[]).map((id) => (
+						<li key={id}>{id}</li>
+					))}
+				</ul>
+			) : null,
+		Header: 'Study IDs',
+	},
+	{
+		accessor: 'createdAt',
+		Cell: ({ value }: { value: unknown }) =>
+			format(new Date(value as number), 'yyyy-MM-dd') as unknown as ReactElement,
+		Header: 'Submission Date',
+		sortType: numberSort,
+	},
+	{
+		accessor: 'totalRecords',
+		Header: '# Viral Genomes',
+		sortType: numberSort,
+	},
+];
 
-const SubmissionPage = (): ReactElement => (
-	<PageLayout subtitle="Submission Dashboard">
-		<PageContent />
-	</PageLayout>
-);
-
-export default SubmissionPage;
+export default columnData;

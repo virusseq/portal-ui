@@ -19,16 +19,44 @@
  *
  */
 
-import { ReactElement } from 'react';
+import { useTheme } from '@emotion/react';
+import { MouseEventHandler, ReactElement } from 'react';
 
-import PageLayout from '@/components/PageLayout';
+import { UnStyledButton } from '@/components/Button';
+import defaultTheme from '@/components/theme';
+import { Bin, File } from '@/components/theme/icons';
 
-import PageContent from './PageContent';
+import { getFileExtension } from './validationHelpers';
 
-const SubmissionPage = (): ReactElement => (
-	<PageLayout subtitle="Submission Dashboard">
-		<PageContent />
-	</PageLayout>
-);
+const FileRow = ({
+	active = false,
+	file: { name = '', type = '' },
+	handleRemove = () => {
+		// console.log('clicked');
+	},
+}: {
+	active: boolean;
+	file: File;
+	handleRemove?: MouseEventHandler<HTMLButtonElement>;
+}): ReactElement => {
+	const theme: typeof defaultTheme = useTheme();
 
-export default SubmissionPage;
+	const iconFill =
+		getFileExtension(name) === 'tsv' ? theme.colors.secondary_dark : theme.colors.accent3_dark;
+
+	return (
+		<tr data-type={getFileExtension(name)} data-upload={active}>
+			<td>
+				<File fill={iconFill} />
+				{` ${name}`}
+			</td>
+			<td>
+				<UnStyledButton onClick={handleRemove}>
+					<Bin />
+				</UnStyledButton>
+			</td>
+		</tr>
+	);
+};
+
+export default FileRow;

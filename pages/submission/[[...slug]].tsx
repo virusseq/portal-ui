@@ -19,16 +19,16 @@
  *
  */
 
-import { ReactElement } from 'react';
+import Submission from '@/components/pages/submission';
+import { createPage } from '@/global/utils/pages';
 
-import PageLayout from '@/components/PageLayout';
-
-import PageContent from './PageContent';
-
-const SubmissionPage = (): ReactElement => (
-	<PageLayout subtitle="Submission Dashboard">
-		<PageContent />
-	</PageLayout>
-);
+const SubmissionPage = createPage({
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: false,
+})(() => {
+	return <Submission />;
+});
 
 export default SubmissionPage;

@@ -19,16 +19,16 @@
  *
  */
 
-import { ReactElement } from 'react';
+import EnvironmentalData from '@/components/pages/environmental';
+import { createPage } from '@/global/utils/pages';
 
-import PageLayout from '@/components/PageLayout';
+const EnvironmentalDataPage = createPage({
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: true,
+})(() => {
+	return <EnvironmentalData />;
+});
 
-import PageContent from './PageContent';
-
-const SubmissionPage = (): ReactElement => (
-	<PageLayout subtitle="Submission Dashboard">
-		<PageContent />
-	</PageLayout>
-);
-
-export default SubmissionPage;
+export default EnvironmentalDataPage;

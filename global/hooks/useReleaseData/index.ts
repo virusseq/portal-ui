@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -19,20 +19,20 @@
  *
  */
 
-import { useState, useEffect } from 'react';
 import { useArrangerData } from '@overture-stack/arranger-components';
 import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
+import { useEffect, useState } from 'react';
 
-import { arrangerFetcher } from '@/components/pages/explorer/RepoTable/helper';
+import { arrangerFetcher } from '@/components/pages/clinical/RepoTable/helper';
+import { getConfig } from '@/global/config';
 import { getProvince } from '@/global/utils/constants';
 import formatFileSize from '@/global/utils/formatFileSize';
-import { getConfig } from '@/global/config';
 
 import { Count, FilesByVariantType, ReleaseDataProps } from './types';
 
 const {
-	NEXT_PUBLIC_ARRANGER_SEQUENCES_CARDINALITY_PRECISION_THRESHOLD,
-	NEXT_PUBLIC_ARRANGER_SEQUENCES_MAX_BUCKET_COUNTS,
+	NEXT_PUBLIC_ARRANGER_CLINICAL_CARDINALITY_PRECISION_THRESHOLD,
+	NEXT_PUBLIC_ARRANGER_CLINICAL_MAX_BUCKET_COUNTS,
 } = getConfig();
 
 const RELEASE_DATA_QUERY = `
@@ -56,7 +56,7 @@ query releaseDataQuery ($sqon: JSON) {
         }
       }
       donors__specimens__samples__sample_id {
-        cardinality (precision_threshold: ${NEXT_PUBLIC_ARRANGER_SEQUENCES_CARDINALITY_PRECISION_THRESHOLD})
+        cardinality (precision_threshold: ${NEXT_PUBLIC_ARRANGER_CLINICAL_CARDINALITY_PRECISION_THRESHOLD})
       }
       file__size {
         stats {
@@ -165,7 +165,7 @@ const tuneGenomesAggs = async (sqon?: SQONType, currentReleaseData?: ReleaseData
 
 	if (
 		currentGenomesValue &&
-		currentGenomesValue >= NEXT_PUBLIC_ARRANGER_SEQUENCES_MAX_BUCKET_COUNTS
+		currentGenomesValue >= NEXT_PUBLIC_ARRANGER_CLINICAL_MAX_BUCKET_COUNTS
 	) {
 		console.error('genomesValue is too high to do a bucket_count query');
 		return Promise.resolve(currentReleaseData);

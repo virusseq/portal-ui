@@ -19,16 +19,22 @@
  *
  */
 
-import { ReactElement } from 'react';
+import { useRouter } from 'next/router';
 
-import PageLayout from '@/components/PageLayout';
+import Explorer from '../../components/pages/clinical';
+import { createPage } from '../../global/utils/pages';
 
-import PageContent from './PageContent';
+const ExplorerPage = createPage({
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: true,
+})(() => {
+	const {
+		query: { slug = [] },
+	} = useRouter();
 
-const SubmissionPage = (): ReactElement => (
-	<PageLayout subtitle="Submission Dashboard">
-		<PageContent />
-	</PageLayout>
-);
+	return <Explorer />;
+});
 
-export default SubmissionPage;
+export default ExplorerPage;

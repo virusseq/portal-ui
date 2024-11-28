@@ -19,16 +19,30 @@
  *
  */
 
-import { ReactElement } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
-import PageLayout from '@/components/PageLayout';
+import { UploadDataType } from '@/global/hooks/useMuseData';
 
-import PageContent from './PageContent';
+export type SubmissionDetailsProps = {
+	ID: string;
+	setTotalUploads?: Dispatch<SetStateAction<number>>;
+};
 
-const SubmissionPage = (): ReactElement => (
-	<PageLayout subtitle="Submission Dashboard">
-		<PageContent />
-	</PageLayout>
-);
+export type UploadStatusType = 'COMPLETE' | 'ERROR' | 'PROCESSING' | 'QUEUED';
 
-export default SubmissionPage;
+export type UploadsStatusDictionaryType = {
+	ERROR: UploadDataType[];
+	PROCESSING: UploadDataType[];
+	COMPLETE: UploadDataType[];
+	QUEUED: UploadDataType[];
+};
+
+export type UploadStatusActionType =
+	| {
+			type: 'initial details';
+			uploads: UploadDataType[];
+	  }
+	| {
+			type: 'new details';
+			upload: UploadDataType;
+	  };

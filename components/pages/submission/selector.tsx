@@ -21,14 +21,27 @@
 
 import { ReactElement } from 'react';
 
-import PageLayout from '@/components/PageLayout';
+import ClinicalCaseSubmission from './Clinical';
+import SubmissionDetails from './Details';
+import EnvironmentalDataSubmission from './Environmental';
 
-import PageContent from './PageContent';
+const SubmissionSubRoute = ({ slug }: { slug: string | string[] }): ReactElement => {
+	console.log('slug', slug);
 
-const SubmissionPage = (): ReactElement => (
-	<PageLayout subtitle="Submission Dashboard">
-		<PageContent />
-	</PageLayout>
-);
+	// this is not elegant but likely sufficient for the foreseeable future
+	const subRoute = Array.isArray(slug) ? slug[0] : slug;
+	const lowerCasedSubRoute = subRoute.toLowerCase();
 
-export default SubmissionPage;
+	switch (lowerCasedSubRoute) {
+		case 'clinical':
+			return <ClinicalCaseSubmission />;
+
+		case 'environmental':
+			return <EnvironmentalDataSubmission />;
+
+		default:
+			return <SubmissionDetails ID={subRoute} />;
+	}
+};
+
+export default SubmissionSubRoute;

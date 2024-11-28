@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -19,55 +19,103 @@
  *
  */
 
-import { ReactElement } from 'react';
-import { useRouter } from 'next/router';
 import { css, useTheme } from '@emotion/react';
+import { useRouter } from 'next/router';
+import { ReactElement } from 'react';
 
-import defaultTheme from '../../theme';
-import NewSubmissions from './NewSubmissions';
-import PreviousSubmissions from './PreviousSubmissions';
-import SubmissionDetails from './SubmissionDetails';
+import { InternalLink as Link, StyledLinkAsButton } from '@/components/Link';
+import defaultTheme from '@/components/theme';
+import { INTERNAL_PATHS } from '@/global/utils/constants';
 
-type QueryType = {
-  query: {
-    ID?: string[];
-  };
-};
+import PreviousClinicalSubmissions from './Clinical/PreviousSubmissions';
+import PreviousEnvironmentalSubmissions from './Environmental/PreviousSubmissions';
+import SubmissionSubRoute from './selector';
+
 const PageContent = (): ReactElement => {
-  const {
-    query: { ID: [submissionID] = [] },
-  }: QueryType = useRouter();
-  const theme: typeof defaultTheme = useTheme();
+	const {
+		query: { slug = [] },
+	} = useRouter();
+	const theme: typeof defaultTheme = useTheme();
 
-  return (
-    <main
-      css={css`
-        display: flex;
-        padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
-        position: relative;
+	return (
+		<main
+			css={css`
+				padding: 40px 30px calc(${theme.dimensions.footer.height}px + 30px);
+				position: relative;
 
-        > * {
-          ${!submissionID && 'flex-basis: 50%;'}
-          padding: 0 30px;
-        }
+				.view-title {
+					color: ${theme.colors.primary};
+					font-weight: normal;
+					margin: 0;
+				}
+			`}
+		>
+			{slug.length ? (
+				<SubmissionSubRoute slug={slug} />
+			) : (
+				<>
+					<h1 className="view-title">Your Data Submissions</h1>
 
-        .view-title {
-          color: ${theme.colors.primary};
-          font-weight: normal;
-          margin: 0 0 40px;
-        }
-      `}
-    >
-      {submissionID ? (
-        <SubmissionDetails ID={submissionID} />
-      ) : (
-        <>
-          <PreviousSubmissions />
-          <NewSubmissions />
-        </>
-      )}
-    </main>
-  );
+					<section
+						css={css`
+							margin: 2rem 0;
+							position: relative;
+						`}
+					>
+						<h2 className="view-title">Clinical Case Submissions</h2>
+
+						<Link path={INTERNAL_PATHS.CLINICAL_SUBMISSION}>
+							<StyledLinkAsButton
+								css={css`
+									${theme.typography.button};
+									background-color: ${theme.colors.primary_dark};
+									border-color: ${theme.colors.primary_dark};
+									line-height: 20px;
+									padding: 8px 20px;
+									position: absolute;
+									right: 0;
+									top: 0;
+									width: fit-content;
+								`}
+							>
+								+ Upload Clinical Cases
+							</StyledLinkAsButton>
+						</Link>
+
+						<PreviousClinicalSubmissions />
+					</section>
+
+					<section
+						css={css`
+							position: relative;
+						`}
+					>
+						<h2 className="view-title">Environmental Data Submissions</h2>
+
+						<Link path={INTERNAL_PATHS.ENVIRONMENTAL_SUBMISSION}>
+							<StyledLinkAsButton
+								css={css`
+									${theme.typography.button};
+									background-color: ${theme.colors.primary_dark};
+									border-color: ${theme.colors.primary_dark};
+									line-height: 20px;
+									padding: 8px 20px;
+									position: absolute;
+									right: 0;
+									top: 0;
+									width: fit-content;
+								`}
+							>
+								+ Upload Environmental Data
+							</StyledLinkAsButton>
+						</Link>
+
+						<PreviousEnvironmentalSubmissions />
+					</section>
+				</>
+			)}
+		</main>
+	);
 };
 
 export default PageContent;

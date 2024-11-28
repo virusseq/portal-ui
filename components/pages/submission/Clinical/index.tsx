@@ -19,16 +19,38 @@
  *
  */
 
+import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import PageLayout from '@/components/PageLayout';
+import defaultTheme from '@/components/theme';
 
-import PageContent from './PageContent';
+import NewSubmissions from './NewSubmissions';
+import PreviousSubmissions from './PreviousSubmissions';
 
-const SubmissionPage = (): ReactElement => (
-	<PageLayout subtitle="Submission Dashboard">
-		<PageContent />
-	</PageLayout>
-);
+const EnvironmentalDataSubmissionPage = (): ReactElement => {
+	const theme: typeof defaultTheme = useTheme();
 
-export default SubmissionPage;
+	return (
+		<>
+			<h1 className="view-title">Clinical Case Submissions</h1>
+
+			<section
+				css={css`
+					display: flex;
+					padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
+					position: relative;
+
+					> * {
+						flex-basis: 50%;
+						padding: 0 30px;
+					}
+				`}
+			>
+				<PreviousSubmissions />
+				<NewSubmissions />
+			</section>
+		</>
+	);
+};
+
+export default EnvironmentalDataSubmissionPage;

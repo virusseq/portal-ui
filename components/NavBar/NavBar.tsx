@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -19,10 +19,10 @@
  *
  */
 
-import { createRef, ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
-import { useRouter } from 'next/router';
 import cx from 'classnames';
+import { useRouter } from 'next/router';
+import { createRef, ReactElement } from 'react';
 
 import useAuthContext from '../../global/hooks/useAuthContext';
 import useTrackingContext from '../../global/hooks/useTrackingContext';
@@ -105,18 +105,22 @@ const NavBar = (): ReactElement => {
 					<Dropdown
 						css={linkStyles}
 						data={[
-							<InternalLink path={INTERNAL_PATHS.EXPLORER}>
+							<InternalLink path={INTERNAL_PATHS.CLINICAL_EXPLORATION}>
 								<StyledListLink
-									className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.EXPLORER) })}
+									className={cx({
+										active: router.asPath.startsWith(INTERNAL_PATHS.CLINICAL_EXPLORATION),
+									})}
 								>
-									Viral Sequences
+									Clinical cases
 								</StyledListLink>
 							</InternalLink>,
-							<InternalLink path={INTERNAL_PATHS.WASTEWATER}>
+							<InternalLink path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
 								<StyledListLink
-									className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.WASTEWATER) })}
+									className={cx({
+										active: router.asPath.startsWith(INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION),
+									})}
 								>
-									Wastewater
+									Environmental
 								</StyledListLink>
 							</InternalLink>,
 						]}
