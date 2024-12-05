@@ -58,7 +58,8 @@ const NewSubmissions = (): ReactElement => {
 			oneOrMoreCsv.forEach((csvFile) => {
 				// TODO: Fine grained permissions. Check if user has permission to upload Environmental data to this organization
 				// Taking the organization name from the filename
-				formData.append('organization', csvFile.name);
+				const organizationName = csvFile.name.split('.')[0].toUpperCase();
+				formData.append('organization', organizationName);
 				// Submission service expects a file with the name of the schema it represents
 				formData.append('files', csvFile, 'sample.csv');
 			});
