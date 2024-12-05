@@ -145,14 +145,11 @@ const NewSubmissions = (): ReactElement => {
 			<h1 className="view-title">Start a New Submission</h1>
 
 			<p>
-				Virus metadata is submitted as a <span className="code">.tsv</span> file. Viral genome data
-				must be submitted as a <span className="code">.fasta</span> file. Up to 5000 samples can be
-				submitted in a single submission, but note that the larger the file the longer the
-				submission will take. FASTA files are accepted individually, or as a single concatenated
-				FASTA containing all samples in one file.
+				Waste water metadata is submitted as a <span className="code">.csv</span> file .The file
+				name must match the Study name for the Submission. Multiple files are accepted.
 			</p>
 
-			<h2>To format your viral sequence metadata:</h2>
+			<h2>To format your waste water sequence metadata:</h2>
 
 			<ol>
 				<li>
@@ -162,17 +159,8 @@ const NewSubmissions = (): ReactElement => {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						metadata TSV Template
+						metadata CSV Template
 					</StyledLink>{' '}
-					for the viral sequence metadata and populate it with accepted values for each field. A
-					reference of the accepted values can be found{' '}
-					<StyledLink
-						href="https://github.com/Public-Health-Bioinformatics/DataHarmonizer/blob/master/template/canada_covid19/SOP.pdf"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						in this resource
-					</StyledLink>
 					.
 				</li>
 				<li>
@@ -184,27 +172,11 @@ const NewSubmissions = (): ReactElement => {
 						DataHarmonizer
 					</StyledLink>{' '}
 					is a tool that can be used to help validate the accepted values for each field in your
-					metadata TSV locally before submitting. Download the tool and follow the instructions on
+					metadata CSV locally before submitting. Download the tool and follow the instructions on
 					the Github repository to pre-validate each field in your metadata before submission.
 				</li>
 				<li>
 					If you are using Excel or Google sheets, make sure all characters are UTF-8 encoded.
-				</li>
-			</ol>
-
-			<h2>To format your viral sequence files:</h2>
-
-			<ol>
-				<li>
-					Make sure they have the file extension <span className="code">.fasta</span>,{' '}
-					<span className="code">.fa</span>, or zipped fastas in <span className="code">.gz</span>{' '}
-					format.
-				</li>
-				<li>
-					Each sequence must be preceded be a description line, beginning with a &gt;. The
-					description line should include &gt;hCoV-19/<span className="code">country</span>/
-					<span className="code">identifier</span>/<span className="code">year</span> sequenced.
-					This identifier must match exactly the "fasta header name" column in the TSV file.
 				</li>
 			</ol>
 
