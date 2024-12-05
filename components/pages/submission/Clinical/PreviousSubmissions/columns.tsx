@@ -23,6 +23,7 @@ import { css } from '@emotion/react';
 import { format } from 'date-fns';
 import { ReactElement } from 'react';
 import { Column } from 'react-table';
+import urljoin from 'url-join';
 
 import { numberSort, uuidSort } from '@/components/GenericTable/helpers';
 import StyledLink from '@/components/Link';
@@ -32,7 +33,9 @@ const columnData: Column<Record<string, unknown>>[] = [
 	{
 		accessor: 'submissionId',
 		Cell: ({ value }: { value: unknown }) => (
-			<StyledLink href={getInternalLink({ path: `/submission/${value}` })}>
+			<StyledLink
+				href={getInternalLink({ path: urljoin('submission', 'clinical', String(value)) })}
+			>
 				{value as string}
 			</StyledLink>
 		),

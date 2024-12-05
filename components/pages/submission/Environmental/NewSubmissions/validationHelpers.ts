@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -24,9 +24,8 @@ import { Dispatch } from 'react';
 import { ReaderCallbackType, ValidationActionType, ValidationParametersType } from './types';
 
 export const validationParameters = {
-	oneTSV: [], // will use only the first one, but display any added
-	oneOrMoreFasta: [],
-	readyToUpload: false, // there's at least one TSV and one fasta
+	oneOrMoreCsv: [],
+	readyToUpload: false, // there's at least one CSV
 };
 
 const overwiteIfExists = (existingFiles: File[], file: File) =>
@@ -37,41 +36,21 @@ export const validationReducer = (
 	action: ValidationActionType,
 ): ValidationParametersType => {
 	switch (action.type) {
-		case 'add tsv': {
-			const oneTSV = overwiteIfExists(state.oneTSV, action.file);
+		case 'add csv': {
+			const oneOrMoreCsv = overwiteIfExists(state.oneOrMoreCsv, action.file);
 			return {
 				...state,
-				oneTSV,
-				readyToUpload: oneTSV.length === 1 && state.oneOrMoreFasta.length > 0,
+				oneOrMoreCsv,
+				readyToUpload: oneOrMoreCsv.length > 0,
 			};
 		}
 
-		case 'remove tsv': {
-			const oneTSV = state.oneTSV.filter((tsv: File) => tsv.name !== action.file);
+		case 'remove csv': {
+			const oneOrMoreCsv = state.oneOrMoreCsv.filter((fasta: File) => fasta.name !== action.file);
 			return {
 				...state,
-				oneTSV,
-				readyToUpload: oneTSV.length === 1 && state.oneOrMoreFasta.length > 0,
-			};
-		}
-
-		case 'add fasta': {
-			const oneOrMoreFasta = overwiteIfExists(state.oneOrMoreFasta, action.file);
-			return {
-				...state,
-				oneOrMoreFasta,
-				readyToUpload: state.oneTSV.length === 1 && oneOrMoreFasta.length > 0,
-			};
-		}
-
-		case 'remove fasta': {
-			const oneOrMoreFasta = state.oneOrMoreFasta.filter(
-				(fasta: File) => fasta.name !== action.file,
-			);
-			return {
-				...state,
-				oneOrMoreFasta,
-				readyToUpload: state.oneTSV.length === 1 && oneOrMoreFasta.length > 0,
+				oneOrMoreCsv,
+				readyToUpload: oneOrMoreCsv.length > 0,
 			};
 		}
 
@@ -97,15 +76,13 @@ const readFile = (file: File, callback: ReaderCallbackType) => {
 export const getFileExtension = (file: File | string = ''): string => {
 	const parsedFileName = (typeof file === 'string' ? file : file.name).toLowerCase().split('.');
 
-	const extension = parsedFileName
+	return parsedFileName
 		.slice(-(parsedFileName?.[parsedFileName.length - 1] === 'gz' ? 2 : 1))
 		.join('.');
-
-	return extension.includes('fa') || extension.includes('fasta') ? 'fasta' : extension;
 };
 
-export const minFiles = ({ oneTSV, oneOrMoreFasta }: ValidationParametersType): boolean =>
-	!!oneTSV && oneOrMoreFasta.length > 0;
+export const minFiles = ({ oneOrMoreCsv }: ValidationParametersType): boolean =>
+	oneOrMoreCsv.length > 0;
 
 export const validator =
 	(state: ValidationParametersType, dispatch: Dispatch<ValidationActionType>) =>
@@ -115,16 +92,9 @@ export const validator =
 		// readFile(file, data => console.log(data));
 
 		switch (getFileExtension(file)) {
-			case 'tsv': {
+			case 'csv': {
 				return dispatch({
-					type: 'add tsv',
-					file: file,
-				});
-			}
-
-			case 'fasta': {
-				return dispatch({
-					type: 'add fasta',
+					type: 'add csv',
 					file: file,
 				});
 			}

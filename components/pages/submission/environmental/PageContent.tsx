@@ -20,17 +20,23 @@
  */
 
 import { css, useTheme } from '@emotion/react';
+import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 
-import { InternalLink as Link, StyledLinkAsButton } from '@/components/Link';
 import defaultTheme from '@/components/theme';
-import { INTERNAL_PATHS } from '@/global/utils/constants';
 
-import PreviousClinicalSubmissions from './clinical/PreviousSubmissions';
-import PreviousEnvironmentalSubmissions from './environmental/PreviousSubmissions';
+import SubmissionDetails from './Details';
+import NewSubmissions from './NewSubmissions';
+import PreviousSubmissions from './PreviousSubmissions';
 
 const PageContent = (): ReactElement => {
+	const {
+		query: { slug = [] },
+	} = useRouter();
 	const theme: typeof defaultTheme = useTheme();
+
+	// Submission ID
+	const submissionId = Array.isArray(slug) ? slug[0] : slug;
 
 	return (
 		<main
@@ -45,64 +51,29 @@ const PageContent = (): ReactElement => {
 				}
 			`}
 		>
-			<h1 className="view-title">Your Data Submissions</h1>
+			{submissionId ? (
+				<SubmissionDetails ID={submissionId} />
+			) : (
+				<>
+					<h1 className="view-title">Environmental Data Submissions</h1>
 
-			<section
-				css={css`
-					margin: 2rem 0;
-					position: relative;
-				`}
-			>
-				<h2 className="view-title">Clinical Case Submissions</h2>
-
-				<Link path={INTERNAL_PATHS.CLINICAL_SUBMISSION}>
-					<StyledLinkAsButton
+					<section
 						css={css`
-							${theme.typography.button};
-							background-color: ${theme.colors.primary_dark};
-							border-color: ${theme.colors.primary_dark};
-							line-height: 20px;
-							padding: 8px 20px;
-							position: absolute;
-							right: 0;
-							top: 0;
-							width: fit-content;
+							display: flex;
+							padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
+							position: relative;
+
+							> * {
+								flex-basis: 50%;
+								padding: 0 30px;
+							}
 						`}
 					>
-						+ Upload Clinical Cases
-					</StyledLinkAsButton>
-				</Link>
-
-				<PreviousClinicalSubmissions />
-			</section>
-
-			<section
-				css={css`
-					position: relative;
-				`}
-			>
-				<h2 className="view-title">Environmental Data Submissions</h2>
-
-				<Link path={INTERNAL_PATHS.ENVIRONMENTAL_SUBMISSION}>
-					<StyledLinkAsButton
-						css={css`
-							${theme.typography.button};
-							background-color: ${theme.colors.primary_dark};
-							border-color: ${theme.colors.primary_dark};
-							line-height: 20px;
-							padding: 8px 20px;
-							position: absolute;
-							right: 0;
-							top: 0;
-							width: fit-content;
-						`}
-					>
-						+ Upload Environmental Data
-					</StyledLinkAsButton>
-				</Link>
-
-				<PreviousEnvironmentalSubmissions />
-			</section>
+						<PreviousSubmissions />
+						<NewSubmissions />
+					</section>
+				</>
+			)}
 		</main>
 	);
 };

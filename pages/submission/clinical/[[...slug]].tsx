@@ -19,16 +19,16 @@
  *
  */
 
-import { ReactElement } from 'react';
+import ClinicalSubmission from '@/components/pages/submission/clinical';
+import { createPage } from '@/global/utils/pages';
 
-import PageLayout from '@/components/PageLayout';
+const ClinicalSubmissionPage = createPage({
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: false,
+})(() => {
+	return <ClinicalSubmission />;
+});
 
-import PageContent from './PageContent';
-
-const EnvironmentalDataSubmissionPage = (): ReactElement => (
-	<PageLayout subtitle="Submission Dashboard">
-		<PageContent />
-	</PageLayout>
-);
-
-export default EnvironmentalDataSubmissionPage;
+export default ClinicalSubmissionPage;
