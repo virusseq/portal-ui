@@ -42,7 +42,7 @@ import { getFileExtension, validationParameters, validationReducer } from './val
 const noUploadError = {} as NoUploadErrorType;
 
 const NewSubmissions = (): ReactElement => {
-	const { token, userHasWriteScopes, user } = useAuthContext();
+	const { token, userHasWriteScopes } = useAuthContext();
 	const theme: typeof defaultTheme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [uploadError, setUploadError] = useState(noUploadError);
@@ -50,16 +50,18 @@ const NewSubmissions = (): ReactElement => {
 	const { oneOrMoreCsv, readyToUpload } = validationState;
 
 	const { awaitingResponse, submitData } = useEnvironmentalData('NewSubmissions');
-	// TODO: get Organization/StudyID from user context
-	// TEST PURPOSE ONLY. REPLACE THIS FROM USER CONTEXT
-	const organization = 'QC-WW';
 
 	const handleSubmit = () => {
 		if (thereAreFiles && token && userHasWriteScopes) {
 			const formData = new FormData();
-			formData.append('organization', organization);
 
-			oneOrMoreCsv.forEach((csvFile) => formData.append('files', csvFile, csvFile.name));
+			oneOrMoreCsv.forEach((csvFile) => {
+				// TODO: Fine grained permissions. Check if user has permission to upload Environmental data to this organization
+				// Taking the organization name from the filename
+				formData.append('organization', csvFile.name);
+				// Submission service expects a file with the name of the schema it represents
+				formData.append('files', csvFile, 'sample.csv');
+			});
 
 			return submitData({ body: formData }).then((response) => {
 				switch (response.status) {
