@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -28,26 +28,23 @@ import NoScopes from '@/components/NoScopes';
 import defaultTheme from '@/components/theme';
 import { CoronaVirus } from '@/components/theme/icons';
 import useAuthContext from '@/global/hooks/useAuthContext';
-import useMuseData from '@/global/hooks/useMuseData';
+import useEnvironmentalData from '@/global/hooks/useEnvironmentalData';
 
 import columns from './columns';
 
 const PreviousSubmissions = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	const { token, userHasWriteScopes } = useAuthContext();
-	const { awaitingResponse, fetchMuseData } = useMuseData('PreviousSubmissions');
+	const { awaitingResponse, fetchPreviousSubmissions } =
+		useEnvironmentalData('PreviousSubmissions');
 	const [previousSubmissions, setPreviousSubmissions] = useState([]);
 
 	useEffect(() => {
 		token &&
 			userHasWriteScopes &&
-			fetchMuseData(
-				`submissions?${new URLSearchParams({
-					page: '0',
-					size: '100000',
-				})}`,
-			).then((response) => {
-				response.data && setPreviousSubmissions(response.data);
+			fetchPreviousSubmissions().then((response) => {
+				// TODO: Fetch list of previous submisions
+				// setPreviousSubmissions();
 			});
 	}, [token]);
 

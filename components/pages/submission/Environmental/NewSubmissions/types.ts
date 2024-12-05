@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -50,11 +50,11 @@ export type ReaderCallbackType = (result: string | ArrayBuffer | null) => void;
 
 export type ValidationActionType =
 	| {
-			type: 'add fasta' | 'add tsv';
+			type: 'add csv';
 			file: File;
 	  }
 	| {
-			type: 'remove fasta' | 'remove tsv';
+			type: 'remove csv';
 			file: string;
 	  }
 	| {
@@ -62,7 +62,6 @@ export type ValidationActionType =
 	  };
 
 export type ValidationParametersType = {
-	oneTSV: File[];
-	oneOrMoreFasta: File[];
+	oneOrMoreCsv: File[];
 	readyToUpload: boolean;
 };

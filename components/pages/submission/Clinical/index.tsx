@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -19,38 +19,16 @@
  *
  */
 
-import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import defaultTheme from '@/components/theme';
+import PageLayout from '@/components/PageLayout';
 
-import NewSubmissions from './NewSubmissions';
-import PreviousSubmissions from './PreviousSubmissions';
+import PageContent from './PageContent';
 
-const EnvironmentalDataSubmissionPage = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+const ClinicalDataSubmissionPage = (): ReactElement => (
+	<PageLayout subtitle="Submission Dashboard">
+		<PageContent />
+	</PageLayout>
+);
 
-	return (
-		<>
-			<h1 className="view-title">Clinical Case Submissions</h1>
-
-			<section
-				css={css`
-					display: flex;
-					padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
-					position: relative;
-
-					> * {
-						flex-basis: 50%;
-						padding: 0 30px;
-					}
-				`}
-			>
-				<PreviousSubmissions />
-				<NewSubmissions />
-			</section>
-		</>
-	);
-};
-
-export default EnvironmentalDataSubmissionPage;
+export default ClinicalDataSubmissionPage;

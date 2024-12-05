@@ -22,6 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import Router from 'next/router';
 import { ReactElement, useEffect, useReducer, useState } from 'react';
+import urlJoin from 'url-join';
 
 import { ButtonElement as Button } from '@/components/Button';
 import ErrorNotification from '@/components/ErrorNotification';
@@ -80,7 +81,11 @@ const NewSubmissions = (): ReactElement => {
 
 					default: {
 						response.submissionId
-							? Router.push(getInternalLink({ path: `submission/${response.submissionId}` }))
+							? Router.push(
+									getInternalLink({
+										path: urlJoin('submission', 'clinical', response.submissionId),
+									}),
+							  )
 							: console.log('Unhandled response:', response);
 						return Promise.resolve();
 					}

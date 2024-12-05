@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -19,29 +19,30 @@
  *
  */
 
-import { ReactElement } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
-import ClinicalCaseSubmission from './Clinical';
-import SubmissionDetails from './Details';
-import EnvironmentalDataSubmission from './Environmental';
+import { UploadDataType } from '@/global/hooks/useEnvironmentalData';
 
-const SubmissionSubRoute = ({ slug }: { slug: string | string[] }): ReactElement => {
-	console.log('slug', slug);
-
-	// this is not elegant but likely sufficient for the foreseeable future
-	const subRoute = Array.isArray(slug) ? slug[0] : slug;
-	const lowerCasedSubRoute = subRoute.toLowerCase();
-
-	switch (lowerCasedSubRoute) {
-		case 'clinical':
-			return <ClinicalCaseSubmission />;
-
-		case 'environmental':
-			return <EnvironmentalDataSubmission />;
-
-		default:
-			return <SubmissionDetails ID={subRoute} />;
-	}
+export type SubmissionDetailsProps = {
+	ID: string;
+	setTotalUploads?: Dispatch<SetStateAction<number>>;
 };
 
-export default SubmissionSubRoute;
+export type UploadStatusType = 'COMPLETE' | 'ERROR' | 'PROCESSING' | 'QUEUED';
+
+export type UploadsStatusDictionaryType = {
+	ERROR: UploadDataType[];
+	PROCESSING: UploadDataType[];
+	COMPLETE: UploadDataType[];
+	QUEUED: UploadDataType[];
+};
+
+export type UploadStatusActionType =
+	| {
+			type: 'initial details';
+			uploads: UploadDataType[];
+	  }
+	| {
+			type: 'new details';
+			upload: UploadDataType;
+	  };

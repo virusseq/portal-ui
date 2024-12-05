@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -22,6 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import Router from 'next/router';
 import { ReactElement, useEffect, useReducer, useState } from 'react';
+import urlJoin from 'url-join';
 
 import { ButtonElement as Button } from '@/components/Button';
 import ErrorNotification from '@/components/ErrorNotification';
@@ -29,7 +30,7 @@ import StyledLink from '@/components/Link';
 import { LoaderWrapper } from '@/components/Loader';
 import defaultTheme from '@/components/theme';
 import useAuthContext from '@/global/hooks/useAuthContext';
-import useMuseData from '@/global/hooks/useMuseData';
+import useEnvironmentalData from '@/global/hooks/useEnvironmentalData';
 import getInternalLink from '@/global/utils/getInternalLink';
 
 import DropZone from './DropZone';
@@ -41,27 +42,31 @@ import { getFileExtension, validationParameters, validationReducer } from './val
 const noUploadError = {} as NoUploadErrorType;
 
 const NewSubmissions = (): ReactElement => {
-	const { token, userHasWriteScopes } = useAuthContext();
+	const { token, userHasWriteScopes, user } = useAuthContext();
 	const theme: typeof defaultTheme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [uploadError, setUploadError] = useState(noUploadError);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
-	const { oneTSV, oneOrMoreFasta, readyToUpload } = validationState;
+	const { oneOrMoreCsv, readyToUpload } = validationState;
 
-	const { awaitingResponse, fetchMuseData } = useMuseData('NewSubmissions');
+	const { awaitingResponse, submitData } = useEnvironmentalData('NewSubmissions');
+	// TODO: get Organization/StudyID from user context
+	// TEST PURPOSE ONLY. REPLACE THIS FROM USER CONTEXT
+	const organization = 'QC-WW';
 
 	const handleSubmit = () => {
 		if (thereAreFiles && token && userHasWriteScopes) {
 			const formData = new FormData();
+			formData.append('organization', organization);
 
-			// if many TSV are available, submit only the first one along with all fastas
-			const selectedTSV = oneTSV.slice(-1)[0];
-			formData.append('files', selectedTSV, selectedTSV.name);
-			oneOrMoreFasta.forEach((fasta) => formData.append('files', fasta, fasta.name));
+			oneOrMoreCsv.forEach((csvFile) => formData.append('files', csvFile, csvFile.name));
 
-			return fetchMuseData('submissions', { body: formData, method: 'POST' }).then((response) => {
+			return submitData({ body: formData }).then((response) => {
 				switch (response.status) {
-					case 'BAD_REQUEST': {
+					case 'INVALID_FILE_EXTENSION':
+					case 'FILE_READ_ERROR':
+					case 'UNRECOGNIZED_HEADER':
+					case 'MISSING_REQUIRED_HEADER': {
 						setUploadError({
 							...response,
 							status: 'Your submission has errors and cannot be processed.',
@@ -69,19 +74,23 @@ const NewSubmissions = (): ReactElement => {
 						return Promise.resolve();
 					}
 
-					case 'INTERNAL_SERVER_ERROR': {
+					case 'PROCESSING': {
+						response.submissionId
+							? Router.push(
+									getInternalLink({
+										path: urlJoin('submission', 'environmental', response.submissionId.toString()),
+									}),
+							  )
+							: console.log('Unhandled response:', response);
+						return Promise.resolve();
+					}
+
+					default: {
 						console.error(response);
 						setUploadError({
 							status: 'Internal server error',
 							message: 'Your upload request has failed. Please try again later.',
 						});
-						return Promise.resolve();
-					}
-
-					default: {
-						response.submissionId
-							? Router.push(getInternalLink({ path: `submission/${response.submissionId}` }))
-							: console.log('Unhandled response:', response);
 						return Promise.resolve();
 					}
 				}
@@ -93,9 +102,7 @@ const NewSubmissions = (): ReactElement => {
 
 	useEffect(() => {
 		setUploadError(noUploadError);
-		setThereAreFiles(
-			validationState.oneTSV.length > 0 || validationState.oneOrMoreFasta.length > 0,
-		);
+		setThereAreFiles(validationState.oneOrMoreCsv.length > 0);
 	}, [validationState]);
 
 	const handleClearAll = () => {
@@ -254,7 +261,7 @@ const NewSubmissions = (): ReactElement => {
 				loading={awaitingResponse}
 				message={
 					<>
-						Currently validating metadata and sequencing files.
+						Currently validating metadata files.
 						<br />
 						Do not navigate away from this browser window.
 					</>
@@ -331,21 +338,12 @@ const NewSubmissions = (): ReactElement => {
 					<tbody>
 						{thereAreFiles ? (
 							<>
-								{oneTSV.map((tsv, index) => (
-									// when more than one, all but the last one will get crossed out on render
-									<FileRow
-										active={index === oneTSV.length - 1}
-										file={tsv}
-										key={tsv.name}
-										handleRemove={handleRemoveThis(tsv)}
-									/>
-								))}
-								{oneOrMoreFasta.map((fasta: File) => (
+								{oneOrMoreCsv.map((csvFile: File) => (
 									<FileRow
 										active={true}
-										file={fasta}
-										key={fasta.name}
-										handleRemove={handleRemoveThis(fasta)}
+										file={csvFile}
+										key={csvFile.name}
+										handleRemove={handleRemoveThis(csvFile)}
 									/>
 								))}
 							</>
@@ -377,7 +375,7 @@ const NewSubmissions = (): ReactElement => {
 											margin-left: 10px;
 										`}
 									>
-										You must submit only one metadata TSV file and at least one FASTA file.
+										You must submit at least one CSV file.
 									</p>
 								)}
 							</td>
