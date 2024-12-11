@@ -26,8 +26,8 @@ import { InternalLink as Link, StyledLinkAsButton } from '@/components/Link';
 import defaultTheme from '@/components/theme';
 import { INTERNAL_PATHS } from '@/global/utils/constants';
 
-import PreviousClinicalSubmissions from './clinical/PreviousSubmissions';
-import PreviousEnvironmentalSubmissions from './environmental/PreviousSubmissions';
+import PreviousClinicalSubmissions from './Clinical/PreviousSubmissions';
+import PreviousEnvironmentalSubmissions from './Environmental/PreviousSubmissions';
 
 const PageContent = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
