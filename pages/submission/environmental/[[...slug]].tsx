@@ -19,7 +19,7 @@
  *
  */
 
-import EnvironmentalSubmission from '@/components/pages/submission/environmental';
+import EnvironmentalSubmission from '@/components/pages/submission/Environmental';
 import { createPage } from '@/global/utils/pages';
 
 const EnvironmentalSubmissionPage = createPage({

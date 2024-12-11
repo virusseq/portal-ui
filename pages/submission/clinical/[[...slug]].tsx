@@ -19,7 +19,7 @@
  *
  */
 
-import ClinicalSubmission from '@/components/pages/submission/clinical';
+import ClinicalSubmission from '@/components/pages/submission/Clinical';
 import { createPage } from '@/global/utils/pages';
 
 const ClinicalSubmissionPage = createPage({
