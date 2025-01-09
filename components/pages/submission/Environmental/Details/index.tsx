@@ -27,22 +27,21 @@ import { LoaderWrapper } from '@/components/Loader';
 import defaultTheme from '@/components/theme';
 import useAuthContext from '@/global/hooks/useAuthContext';
 import useEnvironmentalData, {
-	UploadDataType,
-	type SubmissionDataType,
+	SubmissionStatus,
+	type SubmissionData,
+	type UploadData,
 } from '@/global/hooks/useEnvironmentalData';
 
 import columns from './columns';
 import Overview from './Overview';
 import { uploadsStatusDictionary, uploadsStatusReducer } from './submissionStatusHelpers';
-import { SubmissionDetailsProps } from './types';
+import { SubmissionDetailsProps, UploadStatus } from './types';
 
 const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	const [totalUploads, setTotalUploads] = useState(0);
-	const [submissionData, setSubmissionData] = useState<SubmissionDataType>(
-		{} as SubmissionDataType,
-	);
-	const [submissionStatus, setSubmissionStatus] = useState('');
+	const [submissionData, setSubmissionData] = useState<SubmissionData>();
+	const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>();
 	const [organization, setOrganization] = useState('');
 	const [dataIsPending, setDataIsPending] = useState(false);
 	const [submissionDetails, submissionDetailsDispatch] = useReducer(
@@ -73,6 +72,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				const { organization, createdAt, id, status, data } = submissionResponse;
 				const formattedData = formatUploadData(submissionResponse);
 				const sampleInserts = data.inserts?.sample;
+				const totalRecords = sampleInserts?.records.length || 0;
 
 				// Set organization
 				setOrganization(organization);
@@ -82,7 +82,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					createdAt,
 					originalFileNames: [sampleInserts?.batchName],
 					submissionId: id.toString(),
-					totalRecords: sampleInserts?.records.length || 0,
+					totalRecords: totalRecords,
 				});
 
 				// Data to display in Main Table
@@ -92,14 +92,14 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				});
 
 				// Total amount of records uploading
-				setTotalUploads(sampleInserts?.records.length || 0);
+				setTotalUploads(totalRecords);
 
 				// Submission validity
 				setSubmissionStatus(status);
 
 				// Track update status
 				setDataIsPending(
-					formattedData.some(({ status }: UploadDataType) => status === 'PROCESSING'),
+					formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING),
 				);
 			} catch (error) {
 				console.error('Error fetching submission:', error);
@@ -113,33 +113,46 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 	// get status updates if any are available from Submission Service
 	useEffect(() => {
-		async function processSubmission() {
+		async function commit() {
+			// Commit submission
+			const commitSubmissionResponse = await commitSubmission(ID);
+			if (commitSubmissionResponse.status === UploadStatus.PROCESSING) {
+				setSubmissionStatus(SubmissionStatus.COMMITTED);
+			}
+		}
+
+		async function trackPendingData() {
 			try {
-				// Commit submission
-				const commitSubmissionResponse = await commitSubmission(ID);
+				const analysisIds = await getAnalysisIds(organization, submissionDetails.PROCESSING);
 
-				if (commitSubmissionResponse.status === 'PROCESSING') {
-					const analysisIds = await getAnalysisIds(organization, submissionDetails.PROCESSING);
-
-					analysisIds.forEach((analysis) => {
-						submissionDetailsDispatch({
-							type: 'new details',
-							upload: analysis,
-						});
+				analysisIds.forEach((analysis) => {
+					submissionDetailsDispatch({
+						type: 'new details',
+						upload: analysis,
 					});
+				});
 
-					// Track update status
-					if (submissionDetails.COMPLETE.length === totalUploads) {
-						setSubmissionStatus('COMPLETE');
-						setDataIsPending(false);
-					}
-				}
+				setDataIsPending(
+					Object.values(submissionDetails)
+						.flat()
+						.some(({ status }) => status === UploadStatus.PROCESSING),
+				);
 			} catch (error) {
 				console.error('Error handling submission:', error);
 			}
 		}
-		if (submissionStatus === 'VALID' && dataIsPending) {
-			processSubmission();
+
+		if (dataIsPending) {
+			switch (submissionStatus) {
+				case SubmissionStatus.VALID:
+				case SubmissionStatus.OPEN:
+					commit();
+					break;
+
+				case SubmissionStatus.COMMITTED:
+					trackPendingData();
+					break;
+			}
 		}
 	}, [dataIsPending, submissionStatus, ID]);
 
@@ -150,11 +163,11 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			`}
 		>
 			<Overview
-				createdAt={submissionData.createdAt}
+				createdAt={submissionData?.createdAt}
 				loading={awaitingResponse}
 				totalRecords={totalUploads.toString()}
 				id={ID}
-				originalFileNames={submissionData.originalFileNames}
+				originalFileNames={submissionData?.originalFileNames}
 			/>
 
 			<LoaderWrapper loading={awaitingResponse} size="10px">

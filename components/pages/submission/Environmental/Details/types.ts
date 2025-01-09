@@ -21,28 +21,32 @@
 
 import { Dispatch, SetStateAction } from 'react';
 
-import { UploadDataType } from '@/global/hooks/useEnvironmentalData';
+import { UploadData } from '@/global/hooks/useEnvironmentalData';
 
 export type SubmissionDetailsProps = {
 	ID: string;
 	setTotalUploads?: Dispatch<SetStateAction<number>>;
 };
 
-export type UploadStatusType = 'COMPLETE' | 'ERROR' | 'PROCESSING' | 'QUEUED';
+export const UploadStatus = {
+	COMPLETE: 'COMPLETE',
+	ERROR: 'ERROR',
+	PROCESSING: 'PROCESSING',
+} as const;
+export type UploadStatus = keyof typeof UploadStatus;
 
-export type UploadsStatusDictionaryType = {
-	ERROR: UploadDataType[];
-	PROCESSING: UploadDataType[];
-	COMPLETE: UploadDataType[];
-	QUEUED: UploadDataType[];
+export type UploadsStatusDictionary = {
+	ERROR: UploadData[];
+	PROCESSING: UploadData[];
+	COMPLETE: UploadData[];
 };
 
 export type UploadStatusActionType =
 	| {
 			type: 'initial details';
-			uploads: UploadDataType[];
+			uploads: UploadData[];
 	  }
 	| {
 			type: 'new details';
-			upload: UploadDataType;
+			upload: UploadData;
 	  };

@@ -35,10 +35,10 @@ const Overview = ({
 	originalFileNames,
 	totalRecords,
 }: {
-	createdAt: string;
+	createdAt?: string;
 	id: string;
 	loading: boolean;
-	originalFileNames: string[];
+	originalFileNames?: string[];
 	totalRecords: string;
 }): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
@@ -127,6 +127,7 @@ const Overview = ({
 			{loading ? (
 				<LoaderMessage inline message="Loading data..." size="20px" />
 			) : (
+				originalFileNames &&
 				originalFileNames?.length > 0 && (
 					<ul
 						css={css`

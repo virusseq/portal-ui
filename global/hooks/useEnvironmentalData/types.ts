@@ -19,18 +19,20 @@
  *
  */
 
-export type SubmissionDataType = {
+import type { UploadStatus } from '@/components/pages/submission/Environmental/Details/types';
+
+export type SubmissionData = {
 	createdAt: string;
 	originalFileNames: string[];
 	submissionId: string;
 	totalRecords: number;
 };
 
-export type UploadDataType = {
+export type UploadData = {
 	systemId: string | null;
 	error: string | null;
 	originalFilePair: string[];
-	status: 'COMPLETE' | 'ERROR' | 'PROCESSING' | 'QUEUED';
+	status: UploadStatus;
 	organization: string;
 	submissionId: string;
 	submitterSampleId: string;
@@ -84,7 +86,19 @@ export type ErrorDetails = {
 
 export type SchemaErrors = Record<string, ErrorDetails[]>;
 
-export type SubmissionType = {
+// Status of a Submission retuned by Submission Service
+export const SubmissionStatus = {
+	OPEN: 'OPEN',
+	VALID: 'VALID',
+	INVALID: 'INVALID',
+	CLOSED: 'CLOSED',
+	COMMITTED: 'COMMITTED',
+} as const;
+
+export type SubmissionStatus = keyof typeof SubmissionStatus;
+
+// Submission object returned by Submission Service
+export type Submission = {
 	id: number;
 	data: {
 		inserts: Record<string, SubmissionInsertData>;
@@ -101,7 +115,7 @@ export type SubmissionType = {
 	};
 	errors: Record<string, SchemaErrors>;
 	organization: string;
-	status: 'INVALID' | 'VALID';
+	status: SubmissionStatus;
 	createdAt: string;
 	createdBy: string;
 	updatedAt: string;

@@ -23,28 +23,25 @@ import { css } from '@emotion/react';
 import { ReactElement } from 'react';
 import { Column, Row } from 'react-table';
 
-import { UploadDataType } from '@/components/../global/hooks/useEnvironmentalData';
+import { UploadData } from '@/components/../global/hooks/useEnvironmentalData';
 import { uuidSort } from '@/components/GenericTable/helpers';
 import theme from '@/components/theme';
 import { Checkmark, Ellipsis, Warning } from '@/components/theme/icons';
 
-import { UploadStatusType } from './types';
+import { UploadStatus } from './types';
 
-const statusSortingOrder = ['ERROR', 'PROCESSING', 'COMPLETE', 'QUEUED'];
+const statusSortingOrder = [UploadStatus.ERROR, UploadStatus.PROCESSING, UploadStatus.COMPLETE];
 
-const StatusIcon = ({ status }: { status: UploadStatusType }) => {
+const StatusIcon = ({ status }: { status: UploadStatus }) => {
 	switch (status) {
-		case 'COMPLETE':
+		case UploadStatus.COMPLETE:
 			return <Checkmark size={12} />;
 
-		case 'ERROR':
+		case UploadStatus.ERROR:
 			return <Warning size={13} />;
 
-		case 'PROCESSING':
+		case UploadStatus.PROCESSING:
 			return <Ellipsis size={12} />;
-
-		case 'QUEUED':
-			return <Ellipsis size={12} fill={theme.colors.grey_6} />;
 
 		default:
 			return <Ellipsis size={12} fill={theme.colors.grey_6} />;
@@ -70,18 +67,18 @@ const columnData: Column<Record<string, unknown>>[] = [
 	{
 		accessor: 'status',
 		Cell: ({ row: { original }, value }: { row: Row; value: unknown }): ReactElement => {
-			const { error } = original as UploadDataType;
+			const { error } = original as UploadData;
 
 			return (
 				<>
-					<StatusIcon status={value as UploadStatusType} />
+					<StatusIcon status={value as UploadStatus} />
 
 					<span
 						css={css`
 							display: inline-block;
 							margin-left: 15px;
 							position: absolute;
-							${value === 'ERROR' && `color: ${theme.colors.error_dark}`}
+							${value === UploadStatus.ERROR && `color: ${theme.colors.error_dark}`}
 						`}
 					>
 						{`${value}${error ? ':' : ''}`}
@@ -94,7 +91,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 								margin-left: 60px;
 								white-space: normal;
 
-								${value === 'ERROR' && `color: ${theme.colors.error_dark}`}
+								${value === UploadStatus.ERROR && `color: ${theme.colors.error_dark}`}
 							`}
 						>
 							{error}

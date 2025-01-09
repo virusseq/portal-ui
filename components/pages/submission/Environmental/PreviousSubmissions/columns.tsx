@@ -29,9 +29,22 @@ import { numberSort, uuidSort } from '@/components/GenericTable/helpers';
 import StyledLink from '@/components/Link';
 import getInternalLink from '@/global/utils/getInternalLink';
 
+const getTotalRecordsFromSubmission = (value: any): string =>
+	typeof value === 'object' &&
+	value !== null &&
+	'inserts' in value &&
+	typeof value.inserts === 'object' &&
+	value.inserts !== null &&
+	'sample' in value.inserts &&
+	typeof value.inserts.sample === 'object' &&
+	value.inserts.sample !== null &&
+	'recordsCount' in value.inserts.sample
+		? value.inserts.sample.recordsCount
+		: '';
+
 const columnData: Column<Record<string, unknown>>[] = [
 	{
-		accessor: 'submissionId',
+		accessor: 'id',
 		Cell: ({ value }: { value: unknown }) => (
 			<StyledLink
 				href={getInternalLink({ path: urljoin('submission', 'environmental', String(value)) })}
@@ -43,7 +56,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 		sortType: uuidSort,
 	},
 	{
-		accessor: 'studyIds',
+		accessor: 'organization',
 		Cell: ({ value }: { value: unknown }) =>
 			value ? (
 				<ul
@@ -52,12 +65,10 @@ const columnData: Column<Record<string, unknown>>[] = [
 						padding-left: 15px;
 					`}
 				>
-					{(value as string[]).map((id) => (
-						<li key={id}>{id}</li>
-					))}
+					{<li>{value}</li>}
 				</ul>
 			) : null,
-		Header: 'Study IDs',
+		Header: 'Provinces',
 	},
 	{
 		accessor: 'createdAt',
@@ -67,9 +78,19 @@ const columnData: Column<Record<string, unknown>>[] = [
 		sortType: numberSort,
 	},
 	{
-		accessor: 'totalRecords',
-		Header: '# Viral Genomes',
-		sortType: numberSort,
+		accessor: 'data',
+		Header: '# Samples',
+		Cell: ({ value }: { value: unknown }) =>
+			value ? (
+				<ul
+					css={css`
+						margin: 0;
+						padding-left: 15px;
+					`}
+				>
+					{getTotalRecordsFromSubmission(value)}
+				</ul>
+			) : null,
 	},
 ];
 
