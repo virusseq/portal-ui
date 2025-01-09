@@ -22,18 +22,20 @@
 import { useState } from 'react';
 import urlJoin from 'url-join';
 
+import { UploadStatus } from '@/components/pages/submission/Environmental/Details/types';
+
 import { getConfig } from '../../config';
 import processStream from '../../utils/processStream';
 import useAuthContext from '../useAuthContext';
 
-import { SubmissionType, type ErrorDetails, type UploadDataType } from './types';
+import type { ErrorDetails, Submission, UploadData } from './types';
 
 const useEnvironmentalData = (origin: string) => {
 	const {
 		NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
 		NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
 	} = getConfig();
-	const { fetchWithAuth, token } = useAuthContext();
+	const { fetchWithAuth } = useAuthContext();
 	const [awaitingResponse, setAwaitingResponse] = useState(false);
 	const sampleIdFieldName = 'specimen collector sample ID';
 
@@ -95,30 +97,39 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param id
 	 * @returns
 	 */
-	const fetchSubmissionById = async (id: string): Promise<SubmissionType> => {
+	const fetchSubmissionById = async (id: string): Promise<Submission> => {
 		return handleRequest({
 			url: urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id),
 			method: 'GET',
 		});
 	};
 
-	const fetchPreviousSubmissions = async (): Promise<{ data: object[] }> => {
-		// TODO: Fetch the previous Submissions details
-		return { data: [] };
+	const fetchPreviousSubmissions = async (): Promise<{ data: any }> => {
+		const response = await handleRequest({
+			url: urlJoin(
+				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
+				'submission',
+				'category',
+				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
+			),
+			method: 'GET',
+		});
+
+		return { data: response.records };
 	};
 
 	/**
-	 * Formats the submission data into an array  of`UploadDataType` objects
+	 * Formats the submission data into an array  of`UploadData` objects
 	 * representing the formatted upload data
 	 *
 	 * @param submission
 	 * @returns
 	 */
-	const formatUploadData = (submission: SubmissionType): UploadDataType[] => {
+	const formatUploadData = (submission: Submission): UploadData[] => {
 		const fileName = [submission.data.inserts?.sample.batchName];
 		const organization = submission.organization;
 		const submissionId = submission.id.toString();
-		return submission.data.inserts?.sample.records.reduce<UploadDataType[]>((acc, item, index) => {
+		return submission.data.inserts?.sample.records.reduce<UploadData[]>((acc, item, index) => {
 			// Retrieve the first error and indicate the number of additional errors if any
 			const errors = submission.errors.inserts?.sample || [];
 			const { status, message } = getErrorDetailsMessage(errors, index);
@@ -162,7 +173,7 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param records
 	 * @returns
 	 */
-	const getAnalysisIds = async (organization: string, records: UploadDataType[]) => {
+	const getAnalysisIds = async (organization: string, records: UploadData[]) => {
 		// Construct query parameters
 		const queryParams = new URLSearchParams({
 			entityName: 'sample',
@@ -209,8 +220,10 @@ const useEnvironmentalData = (origin: string) => {
 			const matchingRecord = queryResponse.records.find(
 				(resp: any) => resp.data[sampleIdFieldName] === record.submitterSampleId,
 			);
-			record.status = 'COMPLETE';
-			record.systemId = matchingRecord.systemId;
+			if (matchingRecord) {
+				record.status = UploadStatus.COMPLETE;
+				record.systemId = matchingRecord.systemId;
+			}
 			return record;
 		});
 	};
@@ -224,10 +237,10 @@ const useEnvironmentalData = (origin: string) => {
 	const getErrorDetailsMessage = (
 		errors: ErrorDetails[],
 		index: number,
-	): { status: 'ERROR' | 'PROCESSING' | 'COMPLETE' | 'QUEUED'; message: string } => {
+	): { status: UploadStatus; message: string } => {
 		const errorDetails = errors.filter((error) => error.index === index);
 
-		const status = errorDetails.length > 0 ? 'ERROR' : 'PROCESSING';
+		const status = errorDetails.length > 0 ? UploadStatus.ERROR : UploadStatus.PROCESSING;
 		let message = '';
 
 		if (errorDetails.length > 0) {

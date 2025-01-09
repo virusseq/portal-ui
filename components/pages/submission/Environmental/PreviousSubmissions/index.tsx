@@ -43,8 +43,7 @@ const PreviousSubmissions = (): ReactElement => {
 		token &&
 			userHasWriteScopes &&
 			fetchPreviousSubmissions().then((response) => {
-				// TODO: Fetch list of previous submisions
-				// setPreviousSubmissions();
+				response.data && setPreviousSubmissions(response.data);
 			});
 	}, [token]);
 
@@ -86,13 +85,13 @@ const PreviousSubmissions = (): ReactElement => {
 									vertical-align: top;
 								}
 
-								.tableColumnHeader-submissionId {
+								.tableColumnHeader-id {
 									width: 242px;
 								}
 
 								.tableColumnHeader-createdAt,
-								.tableColumnHeader-totalRecords {
-									width: 60px;
+								.tableColumnHeader-data {
+									width: 115px;
 								}
 							`}
 						/>

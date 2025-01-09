@@ -19,21 +19,20 @@
  *
  */
 
-import { UploadDataType } from '@/global/hooks/useEnvironmentalData';
+import { UploadData } from '@/global/hooks/useEnvironmentalData';
 
-import { UploadsStatusDictionaryType, UploadStatusActionType } from './types';
+import { UploadsStatusDictionary, UploadStatusActionType } from './types';
 
-export const uploadsStatusDictionary = {
+export const uploadsStatusDictionary: UploadsStatusDictionary = {
 	ERROR: [],
 	PROCESSING: [],
 	COMPLETE: [],
-	QUEUED: [],
 };
 
-export const groupUploadsByStatus = (uploads: UploadDataType[]): UploadsStatusDictionaryType =>
+export const groupUploadsByStatus = (uploads: UploadData[]): UploadsStatusDictionary =>
 	uploads.reduce(
 		// start with a dictionary, end with an array
-		(sortedUploads: UploadsStatusDictionaryType, upload: UploadDataType) => {
+		(sortedUploads: UploadsStatusDictionary, upload: UploadData) => {
 			return {
 				...sortedUploads,
 				[upload.status]: sortedUploads[upload.status].concat(upload).sort(),
@@ -43,9 +42,9 @@ export const groupUploadsByStatus = (uploads: UploadDataType[]): UploadsStatusDi
 	);
 
 export const uploadsStatusReducer = (
-	state: UploadsStatusDictionaryType,
+	state: UploadsStatusDictionary,
 	action: UploadStatusActionType,
-): UploadsStatusDictionaryType => {
+): UploadsStatusDictionary => {
 	switch (action.type) {
 		case 'initial details': {
 			return groupUploadsByStatus(action.uploads);
@@ -54,7 +53,7 @@ export const uploadsStatusReducer = (
 		case 'new details': {
 			// remove the upload from its previous status group
 			const newSubmissionDetails = Object.entries(state).reduce(
-				(acc, [status, uploads]): UploadsStatusDictionaryType => ({
+				(acc, [status, uploads]): UploadsStatusDictionary => ({
 					...acc,
 					[status]: uploads.filter(
 						(upload) => action.upload.submitterSampleId !== upload.submitterSampleId,
