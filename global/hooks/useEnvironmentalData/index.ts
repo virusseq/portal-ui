@@ -23,12 +23,19 @@ import { useState } from 'react';
 import urlJoin from 'url-join';
 
 import { UploadStatus } from '@/components/pages/submission/Environmental/Details/types';
+import type { CreateSubmissionResult } from '@/components/pages/submission/Environmental/NewSubmissions/types';
 
 import { getConfig } from '../../config';
 import processStream from '../../utils/processStream';
 import useAuthContext from '../useAuthContext';
 
-import type { ErrorDetails, Submission, UploadData } from './types';
+import type {
+	CommitSubmissionResult,
+	DataRecord,
+	ErrorDetails,
+	Submission,
+	UploadData,
+} from './types';
 
 const useEnvironmentalData = (origin: string) => {
 	const {
@@ -78,7 +85,7 @@ const useEnvironmentalData = (origin: string) => {
 		}
 	};
 
-	const commitSubmission = async (id: string) => {
+	const commitSubmission = async (id: string): Promise<CommitSubmissionResult> => {
 		return handleRequest({
 			url: urlJoin(
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
@@ -104,7 +111,7 @@ const useEnvironmentalData = (origin: string) => {
 		});
 	};
 
-	const fetchPreviousSubmissions = async (): Promise<{ data: any }> => {
+	const fetchPreviousSubmissions = async (): Promise<{ data: DataRecord[] }> => {
 		const response = await handleRequest({
 			url: urlJoin(
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
@@ -132,14 +139,15 @@ const useEnvironmentalData = (origin: string) => {
 		return submission.data.inserts?.sample.records.reduce<UploadData[]>((acc, item, index) => {
 			// Retrieve the first error and indicate the number of additional errors if any
 			const errors = submission.errors.inserts?.sample || [];
-			const { status, message } = getErrorDetailsMessage(errors, index);
+			const errorMessage = getErrorDetailsMessage(errors, index);
+			const recordStatus = errorMessage ? UploadStatus.ERROR : UploadStatus.PROCESSING;
 			acc.push({
 				submitterSampleId: item[sampleIdFieldName]?.toString() || '',
 				submissionId: submissionId,
-				error: message,
+				error: errorMessage || '',
 				organization: organization,
 				originalFilePair: fileName,
-				status: status,
+				status: recordStatus,
 				systemId: '',
 			});
 			return acc;
@@ -164,7 +172,7 @@ const useEnvironmentalData = (origin: string) => {
 			method: 'GET',
 		});
 
-		return responseActiveSubmission.id;
+		return parseInt(responseActiveSubmission.id);
 	};
 
 	/**
@@ -229,34 +237,29 @@ const useEnvironmentalData = (origin: string) => {
 	};
 
 	/**
-	 * Retrieves the status and formatted error message for a specific index from a list of errors
+	 * Retrieves formatted error message for a specific index from a list of errors
 	 * @param errors
 	 * @param index
-	 * @returns
+	 * @returns A formatted error message string or `undefined` if no matching errors are found.
 	 */
-	const getErrorDetailsMessage = (
-		errors: ErrorDetails[],
-		index: number,
-	): { status: UploadStatus; message: string } => {
+	const getErrorDetailsMessage = (errors: ErrorDetails[], index: number): string | undefined => {
 		const errorDetails = errors.filter((error) => error.index === index);
 
-		const status = errorDetails.length > 0 ? UploadStatus.ERROR : UploadStatus.PROCESSING;
-		let message = '';
+		if (errorDetails.length === 0) return undefined;
 
-		if (errorDetails.length > 0) {
-			const [firstError] = errorDetails;
-			const { reason, fieldName, errors: errorMessages } = firstError;
+		const { reason, fieldName, errors: errorMessages } = errorDetails[0];
 
-			message = `${reason} - Field: ${fieldName}`;
-			if (errorMessages?.length) {
-				message += ` - Details: ${errorMessages[0].message.replace(/\.+$/, '')}`;
-			}
-			if (errorDetails.length > 1) {
-				message += `. Found ${errorDetails.length - 1} more errors`;
-			}
+		let message = `${reason} - Field: ${fieldName}`;
+		if (errorMessages?.length) {
+			message += ` - Details: ${errorMessages[0].message.replace(/\.+$/, '')}`;
 		}
 
-		return { status, message };
+		// If there are additional errors, add a note about how many more errors exist
+		if (errorDetails.length > 1) {
+			message += `. Found ${errorDetails.length - 1} more errors`;
+		}
+
+		return message;
 	};
 
 	/**
@@ -265,7 +268,7 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param param0
 	 * @returns
 	 */
-	const submitData = async ({ body }: { body: FormData }) => {
+	const submitData = async ({ body }: { body: FormData }): Promise<CreateSubmissionResult> => {
 		const organization = body.get('organization')?.toString();
 		if (!organization) throw new Error('Organization is required field');
 

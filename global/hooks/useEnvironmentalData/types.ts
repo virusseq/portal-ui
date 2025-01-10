@@ -97,6 +97,12 @@ export const SubmissionStatus = {
 
 export type SubmissionStatus = keyof typeof SubmissionStatus;
 
+export type CommitSubmissionResult = {
+	status: string;
+	dictionary: object;
+	processedEntities: string[];
+};
+
 // Submission object returned by Submission Service
 export type Submission = {
 	id: number;

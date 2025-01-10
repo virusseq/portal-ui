@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2025 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -28,7 +28,7 @@ import NoScopes from '@/components/NoScopes';
 import defaultTheme from '@/components/theme';
 import { CoronaVirus } from '@/components/theme/icons';
 import useAuthContext from '@/global/hooks/useAuthContext';
-import useEnvironmentalData from '@/global/hooks/useEnvironmentalData';
+import useEnvironmentalData, { type DataRecord } from '@/global/hooks/useEnvironmentalData';
 
 import columns from './columns';
 
@@ -37,7 +37,7 @@ const PreviousSubmissions = (): ReactElement => {
 	const { token, userHasWriteScopes } = useAuthContext();
 	const { awaitingResponse, fetchPreviousSubmissions } =
 		useEnvironmentalData('PreviousSubmissions');
-	const [previousSubmissions, setPreviousSubmissions] = useState([]);
+	const [previousSubmissions, setPreviousSubmissions] = useState<DataRecord[]>([]);
 
 	useEffect(() => {
 		token &&
