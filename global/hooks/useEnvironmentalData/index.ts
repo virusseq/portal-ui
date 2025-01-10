@@ -41,10 +41,10 @@ const useEnvironmentalData = (origin: string) => {
 	const {
 		NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
 		NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
+		NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME,
 	} = getConfig();
 	const { fetchWithAuth } = useAuthContext();
 	const [awaitingResponse, setAwaitingResponse] = useState(false);
-	const sampleIdFieldName = 'specimen collector sample ID';
 
 	// For reference: https://submission-service.dev.virusseq-dataportal.ca/api-docs/
 	const handleRequest = async ({
@@ -142,7 +142,7 @@ const useEnvironmentalData = (origin: string) => {
 			const errorMessage = getErrorDetailsMessage(errors, index);
 			const recordStatus = errorMessage ? UploadStatus.ERROR : UploadStatus.PROCESSING;
 			acc.push({
-				submitterSampleId: item[sampleIdFieldName]?.toString() || '',
+				submitterSampleId: item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString() || '',
 				submissionId: submissionId,
 				error: errorMessage || '',
 				organization: organization,
@@ -196,7 +196,7 @@ const useEnvironmentalData = (origin: string) => {
 				{
 					op: 'in',
 					content: {
-						fieldName: sampleIdFieldName,
+						fieldName: NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME,
 						value: sampleIds,
 					},
 				},
@@ -226,7 +226,8 @@ const useEnvironmentalData = (origin: string) => {
 		// Map records to include `systemId` and update status
 		return records.map((record) => {
 			const matchingRecord = queryResponse.records.find(
-				(resp: any) => resp.data[sampleIdFieldName] === record.submitterSampleId,
+				(resp: any) =>
+					resp.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME] === record.submitterSampleId,
 			);
 			if (matchingRecord) {
 				record.status = UploadStatus.COMPLETE;
