@@ -35,7 +35,7 @@ import useEnvironmentalData, {
 import columns from './columns';
 import Overview from './Overview';
 import { uploadsStatusDictionary, uploadsStatusReducer } from './submissionStatusHelpers';
-import { SubmissionDetailsProps, UploadStatus } from './types';
+import { SubmissionDetailsProps, UploadDetailsAction, UploadStatus } from './types';
 
 const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
@@ -87,7 +87,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 				// Data to display in Main Table
 				submissionDetailsDispatch({
-					type: 'initial details',
+					type: UploadDetailsAction.NEW,
 					uploads: formattedData,
 				});
 
@@ -127,7 +127,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 				analysisIds.forEach((analysis) => {
 					submissionDetailsDispatch({
-						type: 'new details',
+						type: UploadDetailsAction.UPDATE,
 						upload: analysis,
 					});
 				});

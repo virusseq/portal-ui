@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2025 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -44,7 +44,7 @@ const noUploadError: NoUploadError = {
 };
 
 const NewSubmissions = (): ReactElement => {
-	const { token, userHasWriteScopes, user } = useAuthContext();
+	const { token, userHasWriteScopes, user, userIsCurator } = useAuthContext();
 	const theme: typeof defaultTheme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
@@ -61,6 +61,7 @@ const NewSubmissions = (): ReactElement => {
 
 		if (thereAreFiles && token && userHasWriteScopes) {
 			const formData = new FormData();
+			const errorMessages: string[] = [];
 
 			oneOrMoreCsv.forEach((csvFile) => {
 				// Using the filename to determine the organization associated with the submission
@@ -68,16 +69,27 @@ const NewSubmissions = (): ReactElement => {
 
 				// Verify if the user's session permissions allow them
 				// to upload environmental data to this organization.
-				if (effectiveScopes.length > 0 && !effectiveScopes.includes(organizationName)) {
+				const hasWriteAccessToOrganization =
+					effectiveScopes.length > 0 && effectiveScopes.includes(organizationName);
+				if (userIsCurator || hasWriteAccessToOrganization) {
 					formData.append('organization', organizationName);
 					// Submission service expects a file with the name of the schema it represents
-					formData.append('files', csvFile, 'sample2.csv');
+					formData.append('files', csvFile, 'sample.csv');
 				} else {
-					console.error(
+					errorMessages.push(
 						`User does not have permission to upload data for organization ${organizationName}`,
 					);
 				}
 			});
+
+			if (errorMessages.length) {
+				console.error(errorMessages);
+				setUploadError({
+					description: errorMessages.join(','),
+					status: 'Your submission has errors and cannot be processed.',
+				});
+				return Promise.resolve();
+			}
 
 			return submitData({ body: formData }).then((response) => {
 				switch (response.status) {
@@ -161,7 +173,8 @@ const NewSubmissions = (): ReactElement => {
 
 			<p>
 				Waste water metadata is submitted as a <span className="code">.csv</span> file .The file
-				name must match the Study name for the Submission. Multiple files are accepted.
+				name must match the Study name for the Submission. (e.g. QC-WW.csv, etc.) Multiple files are
+				accepted.
 			</p>
 
 			<h2>To format your waste water sequence metadata:</h2>

@@ -21,7 +21,7 @@
 
 import { UploadData } from '@/global/hooks/useEnvironmentalData';
 
-import { UploadsStatusDictionary, UploadStatusActionType } from './types';
+import { UploadDetailsAction, UploadsStatusDictionary, UploadStatusAction } from './types';
 
 export const uploadsStatusDictionary: UploadsStatusDictionary = {
 	ERROR: [],
@@ -43,14 +43,14 @@ export const groupUploadsByStatus = (uploads: UploadData[]): UploadsStatusDictio
 
 export const uploadsStatusReducer = (
 	state: UploadsStatusDictionary,
-	action: UploadStatusActionType,
+	action: UploadStatusAction,
 ): UploadsStatusDictionary => {
 	switch (action.type) {
-		case 'initial details': {
+		case UploadDetailsAction.NEW: {
 			return groupUploadsByStatus(action.uploads);
 		}
 
-		case 'new details': {
+		case UploadDetailsAction.UPDATE: {
 			// remove the upload from its previous status group
 			const newSubmissionDetails = Object.entries(state).reduce(
 				(acc, [status, uploads]): UploadsStatusDictionary => ({
@@ -69,10 +69,6 @@ export const uploadsStatusReducer = (
 					.concat(action.upload)
 					.sort(),
 			};
-		}
-
-		default: {
-			return state;
 		}
 	}
 };

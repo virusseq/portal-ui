@@ -38,13 +38,10 @@ const StatusIcon = ({ status }: { status: UploadStatus }) => {
 			return <Checkmark size={12} />;
 
 		case UploadStatus.ERROR:
-			return <Warning size={13} />;
+			return <Warning size={12} />;
 
 		case UploadStatus.PROCESSING:
 			return <Ellipsis size={12} />;
-
-		default:
-			return <Ellipsis size={12} fill={theme.colors.grey_6} />;
 	}
 };
 
@@ -66,12 +63,12 @@ const columnData: Column<Record<string, unknown>>[] = [
 	},
 	{
 		accessor: 'status',
-		Cell: ({ row: { original }, value }: { row: Row; value: unknown }): ReactElement => {
-			const { error } = original as UploadData;
+		Cell: ({ row, value }: { row: Row<UploadData>; value: UploadStatus }): ReactElement => {
+			const { error } = row.original;
 
 			return (
 				<>
-					<StatusIcon status={value as UploadStatus} />
+					<StatusIcon status={value} />
 
 					<span
 						css={css`
