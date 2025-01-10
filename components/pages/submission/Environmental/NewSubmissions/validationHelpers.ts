@@ -21,7 +21,7 @@
 
 import { Dispatch } from 'react';
 
-import { ReaderCallbackType, ValidationActionType, ValidationParametersType } from './types';
+import { ValidationAction, ValidationParameters } from './types';
 
 export const validationParameters = {
 	oneOrMoreCsv: [],
@@ -32,9 +32,9 @@ const overwiteIfExists = (existingFiles: File[], file: File) =>
 	existingFiles.filter((old) => old.name !== file.name).concat(file);
 
 export const validationReducer = (
-	state: ValidationParametersType,
-	action: ValidationActionType,
-): ValidationParametersType => {
+	state: ValidationParameters,
+	action: ValidationAction,
+): ValidationParameters => {
 	switch (action.type) {
 		case 'add csv': {
 			const oneOrMoreCsv = overwiteIfExists(state.oneOrMoreCsv, action.file);
@@ -63,16 +63,6 @@ export const validationReducer = (
 	}
 };
 
-const readFile = (file: File, callback: ReaderCallbackType) => {
-	const reader = new FileReader();
-	reader.onabort = () => console.log('file reading was aborted');
-	reader.onerror = () => console.log('file reading has failed');
-	reader.onload = () => {
-		callback(reader.result);
-	};
-	reader.readAsText(file);
-};
-
 export const getFileExtension = (file: File | string = ''): string => {
 	const parsedFileName = (typeof file === 'string' ? file : file.name).toLowerCase().split('.');
 
@@ -81,16 +71,12 @@ export const getFileExtension = (file: File | string = ''): string => {
 		.join('.');
 };
 
-export const minFiles = ({ oneOrMoreCsv }: ValidationParametersType): boolean =>
+export const minFiles = ({ oneOrMoreCsv }: ValidationParameters): boolean =>
 	oneOrMoreCsv.length > 0;
 
 export const validator =
-	(state: ValidationParametersType, dispatch: Dispatch<ValidationActionType>) =>
+	(state: ValidationParameters, dispatch: Dispatch<ValidationAction>) =>
 	(file: File): void => {
-		// TODO: create dev mode
-		// console.log('validating file', file)
-		// readFile(file, data => console.log(data));
-
 		switch (getFileExtension(file)) {
 			case 'csv': {
 				return dispatch({

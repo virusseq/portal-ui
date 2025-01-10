@@ -27,7 +27,7 @@ import { ButtonElement as Button } from '@/components/Button';
 import defaultTheme from '@/components/theme';
 import DragAndDrop from '@/components/theme/icons/DragAndDrop';
 
-import { ValidationActionType, ValidationParametersType } from './types';
+import { ValidationAction, ValidationParameters } from './types';
 import { validator } from './validationHelpers';
 
 const DropZone = ({
@@ -36,8 +36,8 @@ const DropZone = ({
 	validationDispatch,
 }: {
 	disabled: boolean;
-	validationState: ValidationParametersType;
-	validationDispatch: Dispatch<ValidationActionType>;
+	validationState: ValidationParameters;
+	validationDispatch: Dispatch<ValidationAction>;
 }): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 

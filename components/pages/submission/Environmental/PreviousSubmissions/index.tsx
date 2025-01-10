@@ -42,9 +42,13 @@ const PreviousSubmissions = (): ReactElement => {
 	useEffect(() => {
 		token &&
 			userHasWriteScopes &&
-			fetchPreviousSubmissions().then((response) => {
-				response.data && setPreviousSubmissions(response.data);
-			});
+			fetchPreviousSubmissions()
+				.then((response) => {
+					response.data && setPreviousSubmissions(response.data);
+				})
+				.catch((error) => {
+					console.error('Error fetching previous submissions:', error);
+				});
 	}, [token]);
 
 	return (
