@@ -36,50 +36,62 @@ import getInternalLink from '@/global/utils/getInternalLink';
 import DropZone from './DropZone';
 import ErrorMessage from './ErrorMessage';
 import FileRow from './FileRow';
-import { NoUploadErrorType, ValidationActionType } from './types';
+import { CreateSubmissionStatus, NoUploadError, ValidationAction } from './types';
 import { getFileExtension, validationParameters, validationReducer } from './validationHelpers';
 
-const noUploadError = {} as NoUploadErrorType;
+const noUploadError: NoUploadError = {
+	status: '',
+};
 
 const NewSubmissions = (): ReactElement => {
-	const { token, userHasWriteScopes } = useAuthContext();
+	const { token, userHasWriteScopes, user } = useAuthContext();
 	const theme: typeof defaultTheme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
-	const [uploadError, setUploadError] = useState(noUploadError);
+	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
 	const { oneOrMoreCsv, readyToUpload } = validationState;
 
 	const { awaitingResponse, submitData } = useEnvironmentalData('NewSubmissions');
 
 	const handleSubmit = () => {
+		const effectiveScopes = (user?.scope || [])
+			.filter((scope) => scope.includes('WRITE'))
+			.map((scope) => scope.replace('.WRITE', ''))
+			.map((scope) => scope.toUpperCase());
+
 		if (thereAreFiles && token && userHasWriteScopes) {
 			const formData = new FormData();
 
 			oneOrMoreCsv.forEach((csvFile) => {
-				// TODO: Verify if the user's session permissions allow them
-				// to upload environmental data to this organization.
-
 				// Using the filename to determine the organization associated with the submission
 				const organizationName = csvFile.name.split('.')[0].toUpperCase();
-				formData.append('organization', organizationName);
-				// Submission service expects a file with the name of the schema it represents
-				formData.append('files', csvFile, 'sample.csv');
+
+				// Verify if the user's session permissions allow them
+				// to upload environmental data to this organization.
+				if (effectiveScopes.length > 0 && !effectiveScopes.includes(organizationName)) {
+					formData.append('organization', organizationName);
+					// Submission service expects a file with the name of the schema it represents
+					formData.append('files', csvFile, 'sample2.csv');
+				} else {
+					console.error(
+						`User does not have permission to upload data for organization ${organizationName}`,
+					);
+				}
 			});
 
 			return submitData({ body: formData }).then((response) => {
 				switch (response.status) {
-					case 'INVALID_FILE_EXTENSION':
-					case 'FILE_READ_ERROR':
-					case 'UNRECOGNIZED_HEADER':
-					case 'MISSING_REQUIRED_HEADER': {
+					case CreateSubmissionStatus.PARTIAL_SUBMISSION:
+					case CreateSubmissionStatus.INVALID_SUBMISSION: {
 						setUploadError({
-							...response,
+							batchErrors: response.batchErrors,
+							description: response.description,
 							status: 'Your submission has errors and cannot be processed.',
 						});
 						return Promise.resolve();
 					}
 
-					case 'PROCESSING': {
+					case CreateSubmissionStatus.PROCESSING: {
 						response.submissionId
 							? Router.push(
 									getInternalLink({
@@ -94,7 +106,7 @@ const NewSubmissions = (): ReactElement => {
 						console.error(response);
 						setUploadError({
 							status: 'Internal server error',
-							message: 'Your upload request has failed. Please try again later.',
+							description: 'Your upload request has failed. Please try again later.',
 						});
 						return Promise.resolve();
 					}
@@ -122,7 +134,7 @@ const NewSubmissions = (): ReactElement => {
 			validationDispatch({
 				type: `remove ${getFileExtension(name)}`,
 				file: name,
-			} as ValidationActionType);
+			} as ValidationAction);
 		};
 
 	return (
@@ -189,7 +201,7 @@ const NewSubmissions = (): ReactElement => {
 				validationDispatch={validationDispatch}
 			/>
 
-			{uploadError.message && (
+			{uploadError.description && (
 				<ErrorNotification
 					size="md"
 					title={uploadError.status}
@@ -203,9 +215,9 @@ const NewSubmissions = (): ReactElement => {
             width: 100%;
           `}
 				>
-					{uploadError.message !== 'Found records with invalid fields' && uploadError.message}
+					{uploadError.description}
 
-					{uploadError?.errorInfo && (
+					{uploadError?.batchErrors && (
 						<ul
 							css={css`
 								margin: 10px 0 0;
@@ -225,10 +237,9 @@ const NewSubmissions = (): ReactElement => {
 								}
 							`}
 						>
-							{Object.entries(uploadError?.errorInfo).map(
-								([type = '', values = []]) =>
-									values.length > 0 && <ErrorMessage type={type} values={values} />,
-							)}
+							{uploadError?.batchErrors.map(({ message, type }) => (
+								<ErrorMessage type={type} values={message} />
+							))}
 						</ul>
 					)}
 				</ErrorNotification>
@@ -339,7 +350,7 @@ const NewSubmissions = (): ReactElement => {
 										height: 34px;
 										padding: 0 15px;
 									`}
-									disabled={!(readyToUpload && !uploadError.message)}
+									disabled={!(readyToUpload && !uploadError.description)}
 									onClick={handleSubmit}
 								>
 									Submit Data

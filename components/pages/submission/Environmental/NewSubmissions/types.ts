@@ -19,36 +19,48 @@
  *
  */
 
-export type ErrorTypes =
-	| 'invalidFields'
-	| 'missingHeaders'
-	| 'fastaHeaderInFileMissingInTsv'
-	| 'fastaHeaderInRecordMissingInFile'
-	| 'unknownHeaders'
-	| string; // in case new error types are added, the app won't just crash
+/**
+ * Enum used in the Reponse on Create new Submissions
+ */
+export const CreateSubmissionStatus = {
+	PROCESSING: 'PROCESSING',
+	INVALID_SUBMISSION: 'INVALID_SUBMISSION',
+	PARTIAL_SUBMISSION: 'PARTIAL_SUBMISSION',
+} as const;
+export type CreateSubmissionStatus = keyof typeof CreateSubmissionStatus;
 
-export type InvalidFieldsType = {
-	fieldName: string;
-	index: number;
-	reason: 'EXPECTING_NUMBER_TYPE' | 'NOT_ALLOWED_TO_BE_EMPTY' | 'UNAUTHORIZED_FOR_STUDY_UPLOAD';
-	value: string;
-};
+/**
+ * BatchErrors returned from the submission service
+ */
+export const BatchError = {
+	FILE_READ_ERROR: 'FILE_READ_ERROR',
+	INVALID_FILE_EXTENSION: 'INVALID_FILE_EXTENSION',
+	INVALID_FILE_NAME: 'INVALID_FILE_NAME',
+	MULTIPLE_TYPED_FILES: 'MULTIPLE_TYPED_FILES',
+	UNRECOGNIZED_HEADER: 'UNRECOGNIZED_HEADER',
+	MISSING_REQUIRED_HEADER: 'MISSING_REQUIRED_HEADER',
+	INCORRECT_SECTION: 'INCORRECT_SECTION',
+} as const;
+export type BatchError = keyof typeof BatchError;
 
-export type NoUploadErrorType = {
-	errorInfo?: {
-		invalidFields?: InvalidFieldsType[];
-		missingHeaders?: string[];
-		sampleIdInFileMissingInTsv?: string[];
-		sampleIdInRecordMissingInFile?: string[];
-		unknownHeaders?: string[];
-	};
-	message?: string;
-	status?: string;
+/**
+ * Error Response from the submission service
+ */
+export type NoUploadError = {
+	batchErrors?: [
+		{
+			batchName: string;
+			message: string;
+			type: BatchError;
+		},
+	];
+	description?: string;
+	status: string;
 };
 
 export type ReaderCallbackType = (result: string | ArrayBuffer | null) => void;
 
-export type ValidationActionType =
+export type ValidationAction =
 	| {
 			type: 'add csv';
 			file: File;
@@ -61,7 +73,7 @@ export type ValidationActionType =
 			type: 'clear all' | 'is ready' | 'not ready';
 	  };
 
-export type ValidationParametersType = {
+export type ValidationParameters = {
 	oneOrMoreCsv: File[];
 	readyToUpload: boolean;
 };
