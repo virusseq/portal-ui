@@ -52,11 +52,13 @@ const useEnvironmentalData = (origin: string) => {
 		method = 'GET',
 		headers,
 		body,
+		signal,
 	}: {
 		url: string;
 		headers?: HeadersInit;
 		method: string;
 		body?: BodyInit;
+		signal?: AbortSignal;
 	}) => {
 		setAwaitingResponse(true);
 
@@ -65,6 +67,7 @@ const useEnvironmentalData = (origin: string) => {
 				headers,
 				method,
 				body,
+				signal,
 			});
 			const stream = response?.body;
 			return stream?.constructor?.name === 'ReadableStream'
@@ -85,7 +88,10 @@ const useEnvironmentalData = (origin: string) => {
 		}
 	};
 
-	const commitSubmission = async (id: string): Promise<CommitSubmissionResult> => {
+	const commitSubmission = async (
+		id: string,
+		{ signal }: { signal?: AbortSignal } = {},
+	): Promise<CommitSubmissionResult> => {
 		return handleRequest({
 			url: urlJoin(
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
@@ -96,6 +102,7 @@ const useEnvironmentalData = (origin: string) => {
 				id,
 			),
 			method: 'POST',
+			signal,
 		});
 	};
 
@@ -104,14 +111,20 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param id
 	 * @returns
 	 */
-	const fetchSubmissionById = async (id: string): Promise<Submission> => {
+	const fetchSubmissionById = async (
+		id: string,
+		{ signal }: { signal?: AbortSignal } = {},
+	): Promise<Submission> => {
 		return handleRequest({
 			url: urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id),
 			method: 'GET',
+			signal,
 		});
 	};
 
-	const fetchPreviousSubmissions = async (): Promise<{ data: DataRecord[] }> => {
+	const fetchPreviousSubmissions = async ({ signal }: { signal?: AbortSignal } = {}): Promise<{
+		data: DataRecord[];
+	}> => {
 		const response = await handleRequest({
 			url: urlJoin(
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
@@ -120,6 +133,7 @@ const useEnvironmentalData = (origin: string) => {
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
 			),
 			method: 'GET',
+			signal,
 		});
 
 		return { data: response.records };
@@ -181,7 +195,11 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param records
 	 * @returns
 	 */
-	const getAnalysisIds = async (organization: string, records: UploadData[]) => {
+	const getAnalysisIds = async (
+		organization: string,
+		records: UploadData[],
+		{ signal }: { signal?: AbortSignal } = {},
+	) => {
 		// Construct query parameters
 		const queryParams = new URLSearchParams({
 			entityName: 'sample',
@@ -217,6 +235,7 @@ const useEnvironmentalData = (origin: string) => {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(sqonFilter),
+			signal,
 		});
 
 		if (!queryResponse.records) {

@@ -60,9 +60,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 	// gets the initial status for all the uploads
 	useEffect(() => {
+		const controller = new AbortController();
 		async function getDetailsSubmission() {
 			try {
-				const submissionResponse = await fetchSubmissionById(ID);
+				const submissionResponse = await fetchSubmissionById(ID, { signal: controller.signal });
 
 				if (!submissionResponse?.data || !('inserts' in submissionResponse.data)) {
 					console.error('Unexpected response getting submission details', submissionResponse);
@@ -109,13 +110,18 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		if (token && totalUploads === 0) {
 			getDetailsSubmission();
 		}
+		return () => {
+			// Abort the request when the component unmounts or when a dependency changes
+			controller.abort();
+		};
 	}, [token, ID]);
 
 	// get status updates if any are available from Submission Service
 	useEffect(() => {
+		const controller = new AbortController();
 		async function commit() {
 			// Commit submission
-			const commitSubmissionResponse = await commitSubmission(ID);
+			const commitSubmissionResponse = await commitSubmission(ID, { signal: controller.signal });
 			if (commitSubmissionResponse.status === UploadStatus.PROCESSING) {
 				setSubmissionStatus(SubmissionStatus.COMMITTED);
 			}
@@ -123,7 +129,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 		async function trackPendingData() {
 			try {
-				const analysisIds = await getAnalysisIds(organization, submissionDetails.PROCESSING);
+				const analysisIds = await getAnalysisIds(organization, submissionDetails.PROCESSING, {
+					signal: controller.signal,
+				});
 
 				analysisIds.forEach((analysis) => {
 					submissionDetailsDispatch({
@@ -154,6 +162,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					break;
 			}
 		}
+		return () => {
+			// Abort the request when the component unmounts or when a dependency changes
+			controller.abort();
+		};
 	}, [dataIsPending, submissionStatus, ID]);
 
 	return (
