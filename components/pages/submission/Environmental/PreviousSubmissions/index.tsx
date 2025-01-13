@@ -40,15 +40,21 @@ const PreviousSubmissions = (): ReactElement => {
 	const [previousSubmissions, setPreviousSubmissions] = useState<DataRecord[]>([]);
 
 	useEffect(() => {
+		const controller = new AbortController();
 		token &&
 			userHasWriteScopes &&
-			fetchPreviousSubmissions()
+			fetchPreviousSubmissions({ signal: controller.signal })
 				.then((response) => {
 					response.data && setPreviousSubmissions(response.data);
 				})
 				.catch((error) => {
 					console.error('Error fetching previous submissions:', error);
 				});
+
+		return () => {
+			// Abort the request when the component unmounts or when a dependency changes
+			controller.abort();
+		};
 	}, [token]);
 
 	return (
