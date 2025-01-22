@@ -19,73 +19,106 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { format } from 'date-fns';
+import { ReactElement } from 'react';
 
+import StyledLink from '../../Link';
 import defaultTheme from '../../theme';
+
+import Individuals from './Individuals';
 import Policy from './Policy';
 
 /* trying without the contrib section
 import Contributors from './Contributors';
 */
 
-import Individuals from './Individuals';
-import { format } from 'date-fns';
-
 const PageContent = (): ReactElement => {
-  const theme: typeof defaultTheme = useTheme();
+	const theme: typeof defaultTheme = useTheme();
 
-  return (
-    <main
-      css={css`
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        padding-bottom: ${theme.dimensions.footer.height}px;
-      `}
-    >
-      <article
-        css={css`
-          box-sizing: border-box;
-          display: flex;
-          flex-direction: column;
-          margin: 30px 0;
-          max-width: 800px;
-          padding: 40px;
-          width: 100%;
-          ${theme.shadow.default};
-        `}
-      >
-        <h1
-          css={css`
-            color: ${theme.colors.primary};
-            font-size: 26px;
-            font-weight: normal;
-            margin: 0;
-          `}
-        >
-          Acknowledgement of Contributions
-        </h1>
+	return (
+		<main
+			css={css`
+				align-items: center;
+				display: flex;
+				flex-direction: column;
+				padding-bottom: ${theme.dimensions.footer.height}px;
+			`}
+		>
+			<article
+				css={css`
+					box-sizing: border-box;
+					display: flex;
+					flex-direction: column;
+					margin: 30px 0;
+					max-width: 800px;
+					padding: 40px;
+					width: 100%;
+					${theme.shadow.default};
+				`}
+			>
+				<h1
+					css={css`
+						color: ${theme.colors.primary};
+						font-size: 26px;
+						font-weight: normal;
+						margin: 0;
+					`}
+				>
+					Acknowledgement of Contributions
+				</h1>
 
-        <p
-          css={css`
-            font-style: italic;
-            margin-top: 10px 0 0;
-          `}
-        >
-          Updated at {format(Date.parse('29 Mar 2022 12:20:00'), 'MM/dd/yyyy, h:mm:ss aa')}
-        </p>
+				<p
+					css={css`
+						font-style: italic;
+						margin-top: 10px 0 0;
+					`}
+				>
+					Updated at {format(Date.parse('19 Mar 2024 18:45:00'), 'MM/dd/yyyy, h:mm:ss aa')}
+				</p>
 
-        <Policy />
-        {/* Commented out for testing without this section
+				<section>
+					<h2
+						css={css`
+							${theme.typography.subheading};
+						`}
+					>
+						How to cite
+					</h2>
+					<p>
+						If you use the VirusSeq Data Portal, please cite{' '}
+						<span
+							css={css`
+								display: inline;
+								font-style: italic;
+							`}
+						>
+							Gill et al 2024. The Canadian VirusSeq Data Portal and Duotang: open resources for
+							SARS-CoV-2 viral sequences and genomic epidemiology. Microbial Genomics.{' '}
+							<StyledLink
+								href="https://doi.org/10.1099/mgen.0.001293"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								doi.org/10.1099/mgen.0.001293
+							</StyledLink>
+						</span>
+					</p>
+				</section>
+				<Policy />
+				{/* Commented out for testing without this section
         <Contributors /> */}
-        <Individuals />
+				<Individuals />
 
-        <p>Funding for the VirusSeq Data Portal is provided by The Canadian COVID Genomics Network (CanCOGeN), and supported by Genome Canada and Innovation, Science and Economic Development Canada (ISED)</p>
-
-      </article>
-    </main>
-  );
+				<p>
+					Funding for the VirusSeq Data Portal has been provided by The Canadian COVID Genomics
+					Network (CanCOGeN), supported by Genome Canada and Innovation, Science and Economic
+					Development Canada (ISED), plus the Canadian Institutes of Health Research(CIHR) -
+					Coronavirus Variants Rapid Response Network (CoVaRR-Net)
+				</p>
+			</article>
+		</main>
+	);
 };
 
 export default PageContent;
