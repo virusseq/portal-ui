@@ -64,11 +64,27 @@ const getTableConfigs = ({
 		Table: {
 			borderColor: theme.colors.grey_3,
 			padding: '0.4rem',
-			// columnTypes: {
-			// 	list: {
-			// 		listStyle: 'roman',
-			// 	},
-			// },
+			columnTypes: {
+				// list: {
+				// 	listStyle: 'roman',
+				// },
+				// all: {
+				// 	cellValue: ({ getValue }) => {
+				// 		const value = getValue();
+				// 		return ['', null, 'null', undefined, 'undefined'].includes(value) ? (
+				// 			<span
+				// 				css={css`
+				// 					color: #9c9c9c;
+				// 				`}
+				// 			>
+				// 				beep
+				// 			</span>
+				// 		) : (
+				// 			value
+				// 		);
+				// 	},
+				// },
+			},
 
 			// Components
 			Cell: {

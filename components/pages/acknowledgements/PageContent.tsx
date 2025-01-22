@@ -19,18 +19,19 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { format } from 'date-fns';
+import { ReactElement } from 'react';
 
+import StyledLink from '../../Link';
 import defaultTheme from '../../theme';
+
+import Individuals from './Individuals';
 import Policy from './Policy';
 
 /* trying without the contrib section
 import Contributors from './Contributors';
 */
-
-import Individuals from './Individuals';
-import { format } from 'date-fns';
 
 const PageContent = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
@@ -76,6 +77,34 @@ const PageContent = (): ReactElement => {
 					Updated at {format(Date.parse('19 Mar 2024 18:45:00'), 'MM/dd/yyyy, h:mm:ss aa')}
 				</p>
 
+				<section>
+					<h2
+						css={css`
+							${theme.typography.subheading};
+						`}
+					>
+						How to cite
+					</h2>
+					<p>
+						If you use the VirusSeq Data Portal, please cite{' '}
+						<span
+							css={css`
+								display: inline;
+								font-style: italic;
+							`}
+						>
+							Gill et al 2024. The Canadian VirusSeq Data Portal and Duotang: open resources for
+							SARS-CoV-2 viral sequences and genomic epidemiology. Microbial Genomics.{' '}
+							<StyledLink
+								href="https://doi.org/10.1099/mgen.0.001293"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								doi.org/10.1099/mgen.0.001293
+							</StyledLink>
+						</span>
+					</p>
+				</section>
 				<Policy />
 				{/* Commented out for testing without this section
         <Contributors /> */}

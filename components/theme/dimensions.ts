@@ -20,15 +20,15 @@
  */
 
 const dimensions = {
-  navbar: {
-    height: 64,
-  },
-  footer: {
-    height: 72,
-  },
-  facets: {
-    width: 250,
-  },
+	navbar: {
+		height: 64,
+	},
+	footer: {
+		height: 75,
+	},
+	facets: {
+		width: 250,
+	},
 };
 
 export default dimensions;
