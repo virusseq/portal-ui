@@ -37,6 +37,10 @@ import Overview from './Overview';
 import { uploadsStatusDictionary, uploadsStatusReducer } from './submissionStatusHelpers';
 import { SubmissionDetailsProps, UploadDetailsAction, UploadStatus } from './types';
 
+const wait = (delay: number) => {
+	return new Promise((resolve) => setTimeout(resolve, delay));
+};
+
 const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	const [totalUploads, setTotalUploads] = useState(0);
@@ -63,12 +67,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		const controller = new AbortController();
 		async function getDetailsSubmission() {
 			try {
-				const submissionResponse = await fetchSubmissionById(ID, { signal: controller.signal });
-
-				if (!submissionResponse?.data || !('inserts' in submissionResponse.data)) {
-					console.error('Unexpected response getting submission details', submissionResponse);
-					return;
-				}
+				const submissionResponse = await fetchSubmissionById(ID, {
+					signal: controller.signal,
+					tries: 3,
+				});
 
 				const { organization, createdAt, id, status, data } = submissionResponse;
 				const formattedData = formatUploadData(submissionResponse);
@@ -127,7 +129,13 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			}
 		}
 
-		async function trackPendingData() {
+		async function trackPendingData({
+			tries = 1,
+			delay = 1000,
+		}: {
+			tries?: number;
+			delay?: number;
+		}) {
 			try {
 				const analysisIds = await getAnalysisIds(organization, submissionDetails.PROCESSING, {
 					signal: controller.signal,
@@ -139,14 +147,22 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 						upload: analysis,
 					});
 				});
-
-				setDataIsPending(
-					Object.values(submissionDetails)
-						.flat()
-						.some(({ status }) => status === UploadStatus.PROCESSING),
-				);
 			} catch (error) {
 				console.error('Error handling submission:', error);
+			}
+
+			const recordsProcessing = Object.values(submissionDetails)
+				.flat()
+				.some(({ status }) => status === UploadStatus.PROCESSING);
+
+			setDataIsPending(recordsProcessing);
+
+			if (recordsProcessing) {
+				const triesLeft = tries - 1;
+				if (triesLeft) {
+					await wait(delay);
+					trackPendingData({ tries: triesLeft, delay });
+				}
 			}
 		}
 
@@ -158,7 +174,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					break;
 
 				case SubmissionStatus.COMMITTED:
-					trackPendingData();
+					trackPendingData({ tries: 3 });
 					break;
 			}
 		}

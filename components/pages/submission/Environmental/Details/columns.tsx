@@ -42,6 +42,9 @@ const StatusIcon = ({ status }: { status: UploadStatus }) => {
 
 		case UploadStatus.PROCESSING:
 			return <Ellipsis size={12} />;
+
+		case UploadStatus.PENDING:
+			return <Ellipsis size={12} />;
 	}
 };
 

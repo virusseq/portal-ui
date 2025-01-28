@@ -106,6 +106,10 @@ const useEnvironmentalData = (origin: string) => {
 		});
 	};
 
+	const wait = (delay: number) => {
+		return new Promise((resolve) => setTimeout(resolve, delay));
+	};
+
 	/**
 	 * Fetch Submission details by its unique ID
 	 * @param id
@@ -113,13 +117,35 @@ const useEnvironmentalData = (origin: string) => {
 	 */
 	const fetchSubmissionById = async (
 		id: string,
-		{ signal }: { signal?: AbortSignal } = {},
-	): Promise<Submission> => {
-		return handleRequest({
-			url: urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id),
-			method: 'GET',
+		{
 			signal,
-		});
+			tries = 1,
+			delay = 1000,
+		}: { signal?: AbortSignal; tries?: number; delay?: number } = {},
+	): Promise<Submission> => {
+		const onError = async (err: unknown) => {
+			const triesLeft = tries - 1;
+			if (!triesLeft) {
+				throw err;
+			}
+			await wait(delay);
+			return fetchSubmissionById(id, { signal, tries: triesLeft, delay });
+		};
+
+		try {
+			const submissionResponse = await handleRequest({
+				url: urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id),
+				method: 'GET',
+				signal,
+			});
+
+			if (!submissionResponse?.data || !('inserts' in submissionResponse.data)) {
+				throw new Error('Unexpected response getting submission details', submissionResponse);
+			}
+			return submissionResponse;
+		} catch (error) {
+			return onError(error);
+		}
 	};
 
 	const fetchPreviousSubmissions = async ({ signal }: { signal?: AbortSignal } = {}): Promise<{
@@ -154,7 +180,11 @@ const useEnvironmentalData = (origin: string) => {
 			// Retrieve the first error and indicate the number of additional errors if any
 			const errors = submission.errors.inserts?.sample || [];
 			const errorMessage = getErrorDetailsMessage(errors, index);
-			const recordStatus = errorMessage ? UploadStatus.ERROR : UploadStatus.PROCESSING;
+			const recordStatus = errorMessage
+				? UploadStatus.ERROR
+				: submission.status === 'INVALID'
+				? UploadStatus.PENDING
+				: UploadStatus.PROCESSING;
 			acc.push({
 				submitterSampleId: item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString() || '',
 				submissionId: submissionId,
