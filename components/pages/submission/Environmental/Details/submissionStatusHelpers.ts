@@ -27,6 +27,7 @@ export const uploadsStatusDictionary: UploadsStatusDictionary = {
 	ERROR: [],
 	PROCESSING: [],
 	COMPLETE: [],
+	PENDING: [],
 };
 
 export const groupUploadsByStatus = (uploads: UploadData[]): UploadsStatusDictionary =>

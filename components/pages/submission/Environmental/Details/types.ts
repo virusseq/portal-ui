@@ -32,6 +32,7 @@ export const UploadStatus = {
 	COMPLETE: 'COMPLETE',
 	ERROR: 'ERROR',
 	PROCESSING: 'PROCESSING',
+	PENDING: 'PENDING',
 } as const;
 export type UploadStatus = keyof typeof UploadStatus;
 
@@ -39,6 +40,7 @@ export type UploadsStatusDictionary = {
 	ERROR: UploadData[];
 	PROCESSING: UploadData[];
 	COMPLETE: UploadData[];
+	PENDING: UploadData[];
 };
 
 export const UploadDetailsAction = {
