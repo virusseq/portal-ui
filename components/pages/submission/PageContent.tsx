@@ -20,17 +20,58 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { ReactElement } from 'react';
+import Router from 'next/router';
+import { ReactElement, useEffect, useState } from 'react';
 
 import { InternalLink as Link, StyledLinkAsButton } from '@/components/Link';
 import defaultTheme from '@/components/theme';
+import useAuthContext from '@/global/hooks/useAuthContext';
 import { INTERNAL_PATHS } from '@/global/utils/constants';
+import getInternalLink from '@/global/utils/getInternalLink';
 
 import PreviousClinicalSubmissions from './Clinical/PreviousSubmissions';
 import PreviousEnvironmentalSubmissions from './Environmental/PreviousSubmissions';
 
 const PageContent = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
+	const [clinicalAccess, setClinicalAccess] = useState(false);
+	const [environmentalAccess, setEnvironmentalAccess] = useState(false);
+	const {
+		user,
+		userHasWriteScopes,
+		userIsCurator,
+		userCanSubmitEnvironmentalData,
+		userIsEnvironmentalAdmin,
+	} = useAuthContext();
+
+	useEffect(() => {
+		if (
+			userIsCurator !== undefined &&
+			userHasWriteScopes !== undefined &&
+			userIsEnvironmentalAdmin !== undefined &&
+			userCanSubmitEnvironmentalData !== undefined
+		) {
+			const hasClinicalScopes = !!(userIsCurator || userHasWriteScopes);
+			const hasEnvironmentalScopes = !!(userIsEnvironmentalAdmin || userCanSubmitEnvironmentalData);
+			if (!hasClinicalScopes && hasEnvironmentalScopes) {
+				// user has only environmental submission access
+				Router.push(getInternalLink({ path: INTERNAL_PATHS.ENVIRONMENTAL_SUBMISSION }));
+			} else if (hasClinicalScopes && !hasEnvironmentalScopes) {
+				// user has only clinical submission access
+				Router.push(getInternalLink({ path: INTERNAL_PATHS.CLINICAL_SUBMISSION }));
+			} else {
+				// user has both clinical and environmental access
+				setClinicalAccess(hasClinicalScopes);
+				setEnvironmentalAccess(hasEnvironmentalScopes);
+			}
+		}
+	}, [
+		userIsCurator,
+		userHasWriteScopes,
+		userIsEnvironmentalAdmin,
+		userCanSubmitEnvironmentalData,
+		user,
+	]);
 
 	return (
 		<main
@@ -47,62 +88,66 @@ const PageContent = (): ReactElement => {
 		>
 			<h1 className="view-title">Your Data Submissions</h1>
 
-			<section
-				css={css`
-					margin: 2rem 0;
-					position: relative;
-				`}
-			>
-				<h2 className="view-title">Clinical Case Submissions</h2>
+			{clinicalAccess && (
+				<section
+					css={css`
+						margin: 2rem 0;
+						position: relative;
+					`}
+				>
+					<h2 className="view-title">Clinical Case Submissions</h2>
 
-				<Link path={INTERNAL_PATHS.CLINICAL_SUBMISSION}>
-					<StyledLinkAsButton
-						css={css`
-							${theme.typography.button};
-							background-color: ${theme.colors.primary_dark};
-							border-color: ${theme.colors.primary_dark};
-							line-height: 20px;
-							padding: 8px 20px;
-							position: absolute;
-							right: 0;
-							top: 0;
-							width: fit-content;
-						`}
-					>
-						+ Upload Clinical Cases
-					</StyledLinkAsButton>
-				</Link>
+					<Link path={INTERNAL_PATHS.CLINICAL_SUBMISSION}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.primary_dark};
+								border-color: ${theme.colors.primary_dark};
+								line-height: 20px;
+								padding: 8px 20px;
+								position: absolute;
+								right: 0;
+								top: 0;
+								width: fit-content;
+							`}
+						>
+							+ Upload Clinical Cases
+						</StyledLinkAsButton>
+					</Link>
 
-				<PreviousClinicalSubmissions />
-			</section>
+					<PreviousClinicalSubmissions />
+				</section>
+			)}
 
-			<section
-				css={css`
-					position: relative;
-				`}
-			>
-				<h2 className="view-title">Environmental Data Submissions</h2>
+			{environmentalAccess && (
+				<section
+					css={css`
+						position: relative;
+					`}
+				>
+					<h2 className="view-title">Environmental Data Submissions</h2>
 
-				<Link path={INTERNAL_PATHS.ENVIRONMENTAL_SUBMISSION}>
-					<StyledLinkAsButton
-						css={css`
-							${theme.typography.button};
-							background-color: ${theme.colors.primary_dark};
-							border-color: ${theme.colors.primary_dark};
-							line-height: 20px;
-							padding: 8px 20px;
-							position: absolute;
-							right: 0;
-							top: 0;
-							width: fit-content;
-						`}
-					>
-						+ Upload Environmental Data
-					</StyledLinkAsButton>
-				</Link>
+					<Link path={INTERNAL_PATHS.ENVIRONMENTAL_SUBMISSION}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.primary_dark};
+								border-color: ${theme.colors.primary_dark};
+								line-height: 20px;
+								padding: 8px 20px;
+								position: absolute;
+								right: 0;
+								top: 0;
+								width: fit-content;
+							`}
+						>
+							+ Upload Environmental Data
+						</StyledLinkAsButton>
+					</Link>
 
-				<PreviousEnvironmentalSubmissions />
-			</section>
+					<PreviousEnvironmentalSubmissions />
+				</section>
+			)}
 		</main>
 	);
 };

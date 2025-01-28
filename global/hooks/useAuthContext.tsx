@@ -19,115 +19,136 @@
  *
  */
 
-import { createContext, ReactElement, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
+import { createContext, ReactElement, useContext, useState } from 'react';
 
-import { EGO_JWT_KEY } from '../utils/constants';
-import { decodeToken, extractUser, isValidJwt } from '../utils/egoTokenUtils';
 import { getConfig } from '../config';
 import { UserWithId } from '../types';
+import { EGO_JWT_KEY } from '../utils/constants';
+import { decodeToken, extractUser, isValidJwt } from '../utils/egoTokenUtils';
+
 import { LogEventFunctionType } from './useTrackingContext';
 
 type T_AuthContext = {
-  token?: string;
-  logout: (logEvent: LogEventFunctionType) => void;
-  user?: UserWithId;
-  userHasWriteScopes?: boolean;
-  userIsCurator?: boolean;
-  userHasAccessToStudySvc?: boolean;
-  userCanSubmitDataForAllStudy?: boolean;
-  fetchWithAuth: typeof fetch;
+	token?: string;
+	logout: (logEvent: LogEventFunctionType) => void;
+	user?: UserWithId;
+	userHasWriteScopes?: boolean;
+	userIsCurator?: boolean;
+	userIsEnvironmentalAdmin?: boolean;
+	userHasAccessToStudySvc?: boolean;
+	userCanSubmitDataForAllStudy?: boolean;
+	userCanSubmitEnvironmentalData?: boolean;
+	fetchWithAuth: typeof fetch;
 };
 
 const AuthContext = createContext<T_AuthContext>({
-  token: undefined,
-  logout: () => null,
-  user: undefined,
-  userHasWriteScopes: false,
-  fetchWithAuth: fetch,
+	token: undefined,
+	logout: () => null,
+	user: undefined,
+	userHasWriteScopes: false,
+	fetchWithAuth: fetch,
 });
 
 export const AuthProvider = ({
-  egoJwt,
-  children,
+	egoJwt,
+	children,
 }: {
-  egoJwt?: string;
-  children: ReactElement;
+	egoJwt?: string;
+	children: ReactElement;
 }): ReactElement => {
-  const {
-    NEXT_PUBLIC_KEYCLOAK,
-    NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE,
-    NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE,
-  } = getConfig();
-  const [token, setTokenState] = useState(egoJwt);
-  const router = useRouter();
+	const {
+		NEXT_PUBLIC_KEYCLOAK,
+		NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE,
+		NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE,
+		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_ADMIN_WRITE,
+		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE,
+	} = getConfig();
+	const [token, setTokenState] = useState(egoJwt);
+	const router = useRouter();
 
-  const removeToken = () => {
-    localStorage.removeItem(EGO_JWT_KEY);
-    setTokenState('');
-  };
+	const removeToken = () => {
+		localStorage.removeItem(EGO_JWT_KEY);
+		setTokenState('');
+	};
 
-  const logout = (logEvent: LogEventFunctionType) => {
-    removeToken();
-    logEvent({
-      category: 'User',
-      action: 'Logged out using dropdown',
-    });
-    setTimeout(
-      () => router.push(`${NEXT_PUBLIC_KEYCLOAK}logout?redirect_uri=${window.location.origin}`),
-      2000,
-    );
-  };
+	const logout = (logEvent: LogEventFunctionType) => {
+		removeToken();
+		logEvent({
+			category: 'User',
+			action: 'Logged out using dropdown',
+		});
+		setTimeout(
+			() => router.push(`${NEXT_PUBLIC_KEYCLOAK}logout?redirect_uri=${window.location.origin}`),
+			2000,
+		);
+	};
 
-  if (!token) {
-    if (isValidJwt(egoJwt)) {
-      setTokenState(egoJwt);
-    }
-  } else {
-    if (!isValidJwt(token)) {
-      if (egoJwt && token === egoJwt) {
-        removeToken();
-      }
-    } else if (!egoJwt) {
-      setTokenState('');
-    }
-  }
+	if (!token) {
+		if (isValidJwt(egoJwt)) {
+			setTokenState(egoJwt);
+		}
+	} else {
+		if (!isValidJwt(token)) {
+			if (egoJwt && token === egoJwt) {
+				removeToken();
+			}
+		} else if (!egoJwt) {
+			setTokenState('');
+		}
+	}
 
-  const fetchWithAuth: T_AuthContext['fetchWithAuth'] = (url, options = { method: 'GET' }) => {
-    return fetch(url, {
-      ...options,
-      headers: { ...options?.headers, accept: '*/*', Authorization: `Bearer ${token || ''}` },
-      ...(options.method === 'GET' && { body: null }),
-    });
-  };
+	const fetchWithAuth: T_AuthContext['fetchWithAuth'] = (url, options = { method: 'GET' }) => {
+		return fetch(url, {
+			...options,
+			headers: { ...options?.headers, accept: '*/*', Authorization: `Bearer ${token || ''}` },
+			...(options.method === 'GET' && { body: null }),
+		});
+	};
 
-  const userInfo = token ? decodeToken(token) : null;
-  const user = userInfo ? extractUser(userInfo) : undefined;
+	const userInfo = token ? decodeToken(token) : null;
+	const user = userInfo ? extractUser(userInfo) : undefined;
 
-  const userHasWriteScopes = user?.scope.some((scope) => scope.toLowerCase().includes('write'));
+	// has any scope with write access excluding environmental scopes
+	const userHasWriteScopes = user?.scope.some(
+		(scope) =>
+			scope.toLowerCase() != NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_ADMIN_WRITE.toLowerCase() &&
+			!scope.toLowerCase().includes(NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.toLowerCase()) &&
+			scope.toLowerCase().includes('write'),
+	);
 
-  const userCanSubmitDataForAllStudy = user?.scope.some(
-    (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE.toLowerCase(),
-  );
+	const userCanSubmitDataForAllStudy = user?.scope.some(
+		(scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE.toLowerCase(),
+	);
 
-  const userHasAccessToStudySvc = user?.scope.some(
-    (scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE.toLowerCase(),
-  );
+	const userHasAccessToStudySvc = user?.scope.some(
+		(scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE.toLowerCase(),
+	);
 
-  const userIsCurator = userHasAccessToStudySvc && userCanSubmitDataForAllStudy;
+	const userIsCurator = userHasAccessToStudySvc && userCanSubmitDataForAllStudy;
 
-  const authData = {
-    token,
-    logout,
-    user,
-    userHasWriteScopes,
-    userIsCurator,
-    userHasAccessToStudySvc,
-    userCanSubmitDataForAllStudy,
-    fetchWithAuth,
-  };
+	const userIsEnvironmentalAdmin = user?.scope.some(
+		(scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_ADMIN_WRITE.toLowerCase(),
+	);
 
-  return <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>;
+	const userCanSubmitEnvironmentalData = user?.scope.some((scope) =>
+		scope.toLowerCase().includes(NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.toLowerCase()),
+	);
+
+	const authData = {
+		token,
+		logout,
+		user,
+		userHasWriteScopes,
+		userIsCurator,
+		userIsEnvironmentalAdmin,
+		userHasAccessToStudySvc,
+		userCanSubmitDataForAllStudy,
+		userCanSubmitEnvironmentalData,
+		fetchWithAuth,
+	};
+
+	return <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>;
 };
 
 const useAuthContext = (): T_AuthContext => useContext(AuthContext);
