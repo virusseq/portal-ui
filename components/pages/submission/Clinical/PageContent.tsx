@@ -23,7 +23,9 @@ import { css, useTheme } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 
+import Navigator from '@/components//Navigator';
 import defaultTheme from '@/components/theme';
+import useAuthContext from '@/global/hooks/useAuthContext';
 
 import SubmissionDetails from './Details';
 import NewSubmissions from './NewSubmissions';
@@ -34,6 +36,7 @@ const ClinicalDataSubmissionPage = (): ReactElement => {
 		query: { slug = [] },
 	} = useRouter();
 	const theme: typeof defaultTheme = useTheme();
+	const { userHasClinicalAccess, userHasEnvironmentalAccess } = useAuthContext();
 
 	// Submission ID
 	const submissionId = Array.isArray(slug) ? slug[0] : slug;
@@ -55,6 +58,9 @@ const ClinicalDataSubmissionPage = (): ReactElement => {
 				<SubmissionDetails ID={submissionId} />
 			) : (
 				<>
+					{userHasClinicalAccess && userHasEnvironmentalAccess && (
+						<Navigator path="/submission" text="All Submissions" />
+					)}
 					<h1 className="view-title">Clinical Case Submissions</h1>
 
 					<section
