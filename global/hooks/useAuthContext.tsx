@@ -37,6 +37,8 @@ type T_AuthContext = {
 	userIsCurator?: boolean;
 	userIsEnvironmentalAdmin?: boolean;
 	userHasAccessToStudySvc?: boolean;
+	userHasClinicalAccess?: boolean;
+	userHasEnvironmentalAccess?: boolean;
 	userCanSubmitDataForAllStudy?: boolean;
 	userCanSubmitEnvironmentalData?: boolean;
 	fetchWithAuth: typeof fetch;
@@ -135,6 +137,9 @@ export const AuthProvider = ({
 		scope.toLowerCase().includes(NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.toLowerCase()),
 	);
 
+	const userHasClinicalAccess = !!(userIsCurator || userHasWriteScopes);
+	const userHasEnvironmentalAccess = !!(userIsEnvironmentalAdmin || userCanSubmitEnvironmentalData);
+
 	const authData = {
 		token,
 		logout,
@@ -143,6 +148,8 @@ export const AuthProvider = ({
 		userIsCurator,
 		userIsEnvironmentalAdmin,
 		userHasAccessToStudySvc,
+		userHasClinicalAccess,
+		userHasEnvironmentalAccess,
 		userCanSubmitDataForAllStudy,
 		userCanSubmitEnvironmentalData,
 		fetchWithAuth,

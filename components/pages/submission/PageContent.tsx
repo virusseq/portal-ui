@@ -21,7 +21,7 @@
 
 import { css, useTheme } from '@emotion/react';
 import Router from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect } from 'react';
 
 import { InternalLink as Link, StyledLinkAsButton } from '@/components/Link';
 import defaultTheme from '@/components/theme';
@@ -34,44 +34,19 @@ import PreviousEnvironmentalSubmissions from './Environmental/PreviousSubmission
 
 const PageContent = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
-	const [clinicalAccess, setClinicalAccess] = useState(false);
-	const [environmentalAccess, setEnvironmentalAccess] = useState(false);
-	const {
-		user,
-		userHasWriteScopes,
-		userIsCurator,
-		userCanSubmitEnvironmentalData,
-		userIsEnvironmentalAdmin,
-	} = useAuthContext();
+	const { userHasClinicalAccess, userHasEnvironmentalAccess } = useAuthContext();
 
 	useEffect(() => {
-		if (
-			userIsCurator !== undefined &&
-			userHasWriteScopes !== undefined &&
-			userIsEnvironmentalAdmin !== undefined &&
-			userCanSubmitEnvironmentalData !== undefined
-		) {
-			const hasClinicalScopes = !!(userIsCurator || userHasWriteScopes);
-			const hasEnvironmentalScopes = !!(userIsEnvironmentalAdmin || userCanSubmitEnvironmentalData);
-			if (!hasClinicalScopes && hasEnvironmentalScopes) {
+		if (userHasClinicalAccess !== undefined && userHasEnvironmentalAccess !== undefined) {
+			if (!userHasClinicalAccess && userHasEnvironmentalAccess) {
 				// user has only environmental submission access
 				Router.push(getInternalLink({ path: INTERNAL_PATHS.ENVIRONMENTAL_SUBMISSION }));
-			} else if (hasClinicalScopes && !hasEnvironmentalScopes) {
+			} else if (userHasClinicalAccess && !userHasEnvironmentalAccess) {
 				// user has only clinical submission access
 				Router.push(getInternalLink({ path: INTERNAL_PATHS.CLINICAL_SUBMISSION }));
-			} else {
-				// user has both clinical and environmental access
-				setClinicalAccess(hasClinicalScopes);
-				setEnvironmentalAccess(hasEnvironmentalScopes);
 			}
 		}
-	}, [
-		userIsCurator,
-		userHasWriteScopes,
-		userIsEnvironmentalAdmin,
-		userCanSubmitEnvironmentalData,
-		user,
-	]);
+	}, [userHasClinicalAccess, userHasEnvironmentalAccess]);
 
 	return (
 		<main
@@ -88,7 +63,7 @@ const PageContent = (): ReactElement => {
 		>
 			<h1 className="view-title">Your Data Submissions</h1>
 
-			{clinicalAccess && (
+			{userHasClinicalAccess && (
 				<section
 					css={css`
 						margin: 2rem 0;
@@ -119,7 +94,7 @@ const PageContent = (): ReactElement => {
 				</section>
 			)}
 
-			{environmentalAccess && (
+			{userHasEnvironmentalAccess && (
 				<section
 					css={css`
 						position: relative;

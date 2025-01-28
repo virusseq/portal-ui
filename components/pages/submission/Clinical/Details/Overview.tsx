@@ -24,10 +24,10 @@ import { format } from 'date-fns';
 import { ReactElement, useEffect, useState } from 'react';
 import urlJoin from 'url-join';
 
-import StyledLink, { InternalLink } from '@/components/Link';
+import Navigator from '@/components//Navigator';
 import { LoaderMessage } from '@/components/Loader';
 import defaultTheme from '@/components/theme';
-import { Calendar, ChevronDown, CoronaVirus, File } from '@/components/theme/icons';
+import { Calendar, CoronaVirus, File } from '@/components/theme/icons';
 import useAuthContext from '@/global/hooks/useAuthContext';
 import useMuseData, { SubmissionDataType } from '@/global/hooks/useMuseData';
 
@@ -35,7 +35,7 @@ import { SubmissionDetailsProps } from './types';
 
 const Overview = ({ ID, setTotalUploads }: SubmissionDetailsProps): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
-	const { token } = useAuthContext();
+	const { token, userHasClinicalAccess, userHasEnvironmentalAccess } = useAuthContext();
 	const [{ createdAt, originalFileNames, totalRecords, ...submissionData }, setSubmissionData] =
 		useState<SubmissionDataType>({} as SubmissionDataType);
 
@@ -69,27 +69,21 @@ const Overview = ({ ID, setTotalUploads }: SubmissionDetailsProps): ReactElement
 				padding-bottom: 10px;
 			`}
 		>
-			<InternalLink path="/submission">
-				<StyledLink
+			{userHasClinicalAccess && userHasEnvironmentalAccess ? (
+				<section
 					css={css`
-						font-size: 14px;
-						font-weight: bold;
-						display: block;
-						margin-bottom: 10px;
+						align-items: flex-start;
+						display: flex;
+						flex-wrap: wrap;
 					`}
 				>
-					<ChevronDown
-						fill={theme.colors.canada}
-						height={9}
-						width={8}
-						style={css`
-							margin-right: 3px;
-							transform: rotate(90deg);
-						`}
-					/>
-					All Submissions
-				</StyledLink>
-			</InternalLink>
+					<Navigator path="/submission" text="All Submissions" />
+					&nbsp;/&nbsp;
+					<Navigator path="/submission/clinical" text="New Submission" />
+				</section>
+			) : (
+				<Navigator path="/submission/clinical" text="New Submission" />
+			)}
 
 			<section
 				css={css`
