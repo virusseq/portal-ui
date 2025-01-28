@@ -34,7 +34,7 @@ import columns from './columns';
 
 const PreviousSubmissions = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
-	const { token, userHasWriteScopes } = useAuthContext();
+	const { token, userCanSubmitEnvironmentalData, userIsEnvironmentalAdmin } = useAuthContext();
 	const { awaitingResponse, fetchPreviousSubmissions } =
 		useEnvironmentalData('PreviousSubmissions');
 	const [previousSubmissions, setPreviousSubmissions] = useState<DataRecord[]>([]);
@@ -42,7 +42,7 @@ const PreviousSubmissions = (): ReactElement => {
 	useEffect(() => {
 		const controller = new AbortController();
 		token &&
-			userHasWriteScopes &&
+			(userCanSubmitEnvironmentalData || userIsEnvironmentalAdmin) &&
 			fetchPreviousSubmissions({ signal: controller.signal })
 				.then((response) => {
 					response.data && setPreviousSubmissions(response.data);
@@ -55,7 +55,7 @@ const PreviousSubmissions = (): ReactElement => {
 			// Abort the request when the component unmounts or when a dependency changes
 			controller.abort();
 		};
-	}, [token]);
+	}, [token, userCanSubmitEnvironmentalData, userIsEnvironmentalAdmin]);
 
 	return (
 		<article
@@ -63,7 +63,7 @@ const PreviousSubmissions = (): ReactElement => {
 				width: 100%;
 			`}
 		>
-			{userHasWriteScopes ? (
+			{userCanSubmitEnvironmentalData || userIsEnvironmentalAdmin ? (
 				<LoaderWrapper loading={awaitingResponse} message="Retrieving your submissions.">
 					{previousSubmissions.length > 0 ? (
 						<GenericTable

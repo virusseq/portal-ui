@@ -29,6 +29,7 @@ import ErrorNotification from '@/components/ErrorNotification';
 import StyledLink from '@/components/Link';
 import { LoaderWrapper } from '@/components/Loader';
 import defaultTheme from '@/components/theme';
+import { getConfig } from '@/global/config';
 import useAuthContext from '@/global/hooks/useAuthContext';
 import useEnvironmentalData from '@/global/hooks/useEnvironmentalData';
 import getInternalLink from '@/global/utils/getInternalLink';
@@ -44,7 +45,9 @@ const noUploadError: NoUploadError = {
 };
 
 const NewSubmissions = (): ReactElement => {
-	const { token, userHasWriteScopes, user, userIsCurator } = useAuthContext();
+	const { token, userCanSubmitEnvironmentalData, user, userIsEnvironmentalAdmin } =
+		useAuthContext();
+	const { NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE } = getConfig();
 	const theme: typeof defaultTheme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
@@ -55,11 +58,13 @@ const NewSubmissions = (): ReactElement => {
 
 	const handleSubmit = () => {
 		const effectiveScopes = (user?.scope || [])
-			.filter((scope) => scope.includes('WRITE'))
+			.filter((scope) =>
+				scope.toLowerCase().includes(NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.toLowerCase()),
+			)
 			.map((scope) => scope.replace('.WRITE', ''))
 			.map((scope) => scope.toUpperCase());
 
-		if (thereAreFiles && token && userHasWriteScopes) {
+		if (thereAreFiles && token && (userCanSubmitEnvironmentalData || userIsEnvironmentalAdmin)) {
 			const formData = new FormData();
 			const errorMessages: string[] = [];
 
@@ -71,7 +76,7 @@ const NewSubmissions = (): ReactElement => {
 				// to upload environmental data to this organization.
 				const hasWriteAccessToOrganization =
 					effectiveScopes.length > 0 && effectiveScopes.includes(organizationName);
-				if (userIsCurator || hasWriteAccessToOrganization) {
+				if (userIsEnvironmentalAdmin || hasWriteAccessToOrganization) {
 					formData.append('organization', organizationName);
 					// Submission service expects a file with the name of the schema it represents
 					formData.append('files', csvFile, 'sample.csv');
@@ -126,7 +131,15 @@ const NewSubmissions = (): ReactElement => {
 			});
 		}
 
-		console.error(`no ${token ? 'token' : userHasWriteScopes ? 'scopes' : 'files'} to submit`);
+		console.error(
+			`no ${
+				token
+					? 'token'
+					: userCanSubmitEnvironmentalData || userIsEnvironmentalAdmin
+					? 'scopes'
+					: 'files'
+			} to submit`,
+		);
 	};
 
 	useEffect(() => {
@@ -209,7 +222,7 @@ const NewSubmissions = (): ReactElement => {
 			</ol>
 
 			<DropZone
-				disabled={!userHasWriteScopes}
+				disabled={!(userCanSubmitEnvironmentalData || userIsEnvironmentalAdmin)}
 				validationState={validationState}
 				validationDispatch={validationDispatch}
 			/>
