@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -25,7 +25,6 @@ import {
 	Pagination,
 	Table,
 	TableContextProvider,
-	useArrangerData,
 	useArrangerTheme,
 	Toolbar,
 } from '@overture-stack/arranger-components';
@@ -65,11 +64,27 @@ const getTableConfigs = ({
 		Table: {
 			borderColor: theme.colors.grey_3,
 			padding: '0.4rem',
-			// columnTypes: {
-			// 	list: {
-			// 		listStyle: 'roman',
-			// 	},
-			// },
+			columnTypes: {
+				// list: {
+				// 	listStyle: 'roman',
+				// },
+				// all: {
+				// 	cellValue: ({ getValue }) => {
+				// 		const value = getValue();
+				// 		return ['', null, 'null', undefined, 'undefined'].includes(value) ? (
+				// 			<span
+				// 				css={css`
+				// 					color: #9c9c9c;
+				// 				`}
+				// 			>
+				// 				beep
+				// 			</span>
+				// 		) : (
+				// 			value
+				// 		);
+				// 	},
+				// },
+			},
 
 			// Components
 			Cell: {
@@ -165,8 +180,8 @@ const RepoTable = (): ReactElement => {
 	const theme = useTheme();
 	const { logEvent } = useTrackingContext();
 	const {
-		NEXT_PUBLIC_ARRANGER_API,
-		NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS,
+		NEXT_PUBLIC_ARRANGER_SEQUENCES_API,
+		NEXT_PUBLIC_ARRANGER_SEQUENCES_MANIFEST_COLUMNS,
 		NEXT_PUBLIC_ENABLE_DOWNLOADS,
 		NEXT_PUBLIC_SINGULARITY_API_URL,
 	} = getConfig();
@@ -225,7 +240,7 @@ const RepoTable = (): ReactElement => {
 	};
 
 	const today = new Date().toISOString();
-	const tsvExportColumns = NEXT_PUBLIC_ARRANGER_MANIFEST_COLUMNS.split(',')
+	const tsvExportColumns = NEXT_PUBLIC_ARRANGER_SEQUENCES_MANIFEST_COLUMNS.split(',')
 		.filter((field) => field.trim()) // break it into arrays, and ensure there's no empty field names
 		.map((fieldName) => fieldName.replace(/['"]+/g, '').trim())
 		.map((fieldName): Partial<CustomColumnMappingInterface> => {
@@ -263,7 +278,9 @@ const RepoTable = (): ReactElement => {
 		  ]
 		: [];
 
-	useArrangerTheme(getTableConfigs({ apiHost: NEXT_PUBLIC_ARRANGER_API, customExporters, theme }));
+	useArrangerTheme(
+		getTableConfigs({ apiHost: NEXT_PUBLIC_ARRANGER_SEQUENCES_API, customExporters, theme }),
+	);
 
 	return (
 		<article

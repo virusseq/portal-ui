@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -26,13 +26,13 @@ import { ArrangerDataProvider } from '@overture-stack/arranger-components';
 import ErrorNotification from '@/components/ErrorNotification';
 import Loader from '@/components/Loader';
 import PageLayout from '@/components/PageLayout';
-import createArrangerFetcher from '@/components/utils/arrangerFetcher';
 import sleep from '@/components/utils/sleep';
 import { getConfig } from '@/global/config';
 import { RepoFiltersType } from '@/global/types/sqon';
 
 import getConfigError from './getConfigError';
 import PageContent from './PageContent';
+import { arrangerFetcher } from './RepoTable/helper';
 
 export interface PageContentProps {
 	sqon: RepoFiltersType;
@@ -54,21 +54,20 @@ export interface PageContentProps {
 	fetchData?: () => Promise<any>;
 }
 
-const arrangerFetcher = createArrangerFetcher({});
+const {
+	NEXT_PUBLIC_ARRANGER_SEQUENCES_API,
+	NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE,
+	NEXT_PUBLIC_ARRANGER_SEQUENCES_INDEX,
+} = getConfig();
 
 const configsQuery = `
-  query ($documentType: String!, $index: String!) {
-    hasValidConfig (documentType: $documentType, index: $index)
-  }
+	query ($documentType: String!, $index: String!) {
+		hasValidConfig (documentType: $documentType, index: $index)
+	}
 `;
 
 const RepositoryPage = (): ReactElement => {
 	const theme = useTheme();
-	const {
-		NEXT_PUBLIC_ARRANGER_API,
-		NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE,
-		NEXT_PUBLIC_ARRANGER_INDEX,
-	} = getConfig();
 	const [arrangerHasConfig, setArrangerHasConfig] = useState<boolean>(false);
 	const [loadingArrangerConfig, setLoadingArrangerConfig] = useState<boolean>(true);
 
@@ -77,8 +76,8 @@ const RepositoryPage = (): ReactElement => {
 			endpoint: 'graphql/hasValidConfig',
 			body: JSON.stringify({
 				variables: {
-					documentType: NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE,
-					index: NEXT_PUBLIC_ARRANGER_INDEX,
+					documentType: NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE,
+					index: NEXT_PUBLIC_ARRANGER_SEQUENCES_INDEX,
 				},
 				query: configsQuery,
 			}),
@@ -100,12 +99,12 @@ const RepositoryPage = (): ReactElement => {
 				await sleep(1000);
 				setLoadingArrangerConfig(false);
 			});
-	}, [NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE, NEXT_PUBLIC_ARRANGER_INDEX]);
+	}, [NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE, NEXT_PUBLIC_ARRANGER_SEQUENCES_INDEX]);
 
 	const ConfigError = getConfigError({
 		hasConfig: arrangerHasConfig,
-		index: NEXT_PUBLIC_ARRANGER_INDEX,
-		documentType: NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE,
+		index: NEXT_PUBLIC_ARRANGER_SEQUENCES_INDEX,
+		documentType: NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE,
 	});
 
 	return (
@@ -136,9 +135,9 @@ const RepositoryPage = (): ReactElement => {
 				</ErrorNotification>
 			) : (
 				<ArrangerDataProvider
-					apiUrl={NEXT_PUBLIC_ARRANGER_API}
+					apiUrl={NEXT_PUBLIC_ARRANGER_SEQUENCES_API}
 					customFetcher={arrangerFetcher}
-					documentType={NEXT_PUBLIC_ARRANGER_DOCUMENT_TYPE}
+					documentType={NEXT_PUBLIC_ARRANGER_SEQUENCES_DOCUMENT_TYPE}
 					theme={{
 						colors: {
 							common: {

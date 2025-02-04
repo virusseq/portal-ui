@@ -19,12 +19,18 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css } from '@emotion/react';
+import { ReactElement } from 'react';
 
 import { IconProps } from './types';
 
-const GenomeCanadaLogo = ({ fill, height = 94, width = 56, style }: IconProps): ReactElement => {
+const GenomeCanadaLogo = ({
+	fill,
+	height = 94,
+	viewBox = '0 0 94 56',
+	width = 56,
+	style,
+}: IconProps): ReactElement => {
 	return (
 		<svg
 			css={css`
@@ -33,9 +39,9 @@ const GenomeCanadaLogo = ({ fill, height = 94, width = 56, style }: IconProps): 
 				height: ${height};
 				width: ${width};
 			`}
-			width={width}
 			height={height}
-			viewBox={'0 0 94 56'}
+			viewBox={viewBox}
+			width={width}
 		>
 			<g fill="none" fillRule="evenodd">
 				<g fillRule="nonzero">
