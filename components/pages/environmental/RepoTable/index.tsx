@@ -153,13 +153,13 @@ const RepoTable = (): ReactElement => {
 	const theme = useTheme();
 	const { logEvent } = useTrackingContext();
 	const {
-		NEXT_PUBLIC_ARRANGER_CLINICAL_API,
-		NEXT_PUBLIC_ARRANGER_CLINICAL_MANIFEST_COLUMNS,
+		NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API,
+		NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MANIFEST_COLUMNS,
 		NEXT_PUBLIC_ENABLE_DOWNLOADS,
 	} = getConfig();
 
 	const today = new Date().toISOString();
-	const tsvExportColumns = NEXT_PUBLIC_ARRANGER_CLINICAL_MANIFEST_COLUMNS.split(',')
+	const tsvExportColumns = NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MANIFEST_COLUMNS.split(',')
 		.filter((field) => field.trim()) // break it into arrays, and ensure there's no empty field names
 		.map((fieldName) => fieldName.replace(/['"]+/g, '').trim())
 		.map((fieldName): Partial<CustomColumnMappingInterface> => {
@@ -188,7 +188,7 @@ const RepoTable = (): ReactElement => {
 		? [
 				{
 					columns: tsvExportColumns,
-					fileName: `virusseq-metadata-export-${today}.tsv`,
+					fileName: `wastewater-metadata-export-${today}.tsv`,
 					function: 'saveTSV',
 					// label: 'Download analyses',
 					valueWhenEmpty: '',
@@ -197,7 +197,7 @@ const RepoTable = (): ReactElement => {
 		: [];
 
 	useArrangerTheme(
-		getTableConfigs({ apiHost: NEXT_PUBLIC_ARRANGER_CLINICAL_API, customExporters, theme }),
+		getTableConfigs({ apiHost: NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API, customExporters, theme }),
 	);
 
 	return (
