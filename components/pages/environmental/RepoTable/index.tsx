@@ -75,6 +75,7 @@ const getTableConfigs = ({
 				borderColor: theme.colors.primary,
 				customExporters,
 				downloadUrl: urlJoin(apiHost, 'download'),
+				exportSelectedRowsField: 'data.specimen_collector_sample_id',
 				fontColor: theme.colors.white,
 				hoverBackground: theme.colors.accent3_dark,
 				label: () => (
