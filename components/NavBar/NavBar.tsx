@@ -124,7 +124,7 @@ const NavBar = (): ReactElement => {
 								</StyledListLink>
 							</InternalLink>,
 						]}
-						label="Explore VirusSeq Data"
+						label="Explore Data"
 						urls={[INTERNAL_PATHS.VISUALIZATION]}
 					/>
 
