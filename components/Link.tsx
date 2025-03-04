@@ -24,7 +24,7 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import { ReactElement, ReactNode } from 'react';
 
-import getInternalLink from '@/global/utils/getInternalLink';
+import getInternalLink from '#global/utils/getInternalLink';
 
 import defaultTheme from './theme';
 

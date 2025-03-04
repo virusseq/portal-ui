@@ -22,12 +22,11 @@
 import { useState } from 'react';
 import urlJoin from 'url-join';
 
-import { UploadStatus } from '@/components/pages/submission/Environmental/Details/types';
-import type { CreateSubmissionResult } from '@/components/pages/submission/Environmental/NewSubmissions/types';
-
-import { getConfig } from '../../config';
-import processStream from '../../utils/processStream';
-import useAuthContext from '../useAuthContext';
+import { UploadStatus } from '#components/pages/submission/Environmental/Details/types';
+import type { CreateSubmissionResult } from '#components/pages/submission/Environmental/NewSubmissions/types';
+import { getConfig } from '#global/config';
+import useAuthContext from '#global/hooks/useAuthContext';
+import processStream from '#global/utils/processStream';
 
 import type {
 	CommitSubmissionResult,

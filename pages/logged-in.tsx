@@ -19,104 +19,104 @@
  *
  */
 
-import { useEffect } from 'react';
 import { css } from '@emotion/react';
 import Router from 'next/router';
+import { useEffect } from 'react';
 import urlJoin from 'url-join';
 
-import Loader from '../components/Loader';
-import PageLayout from '../components/PageLayout';
-import { getConfig } from '../global/config';
-import useTrackingContext from '../global/hooks/useTrackingContext';
-import { EGO_JWT_KEY, INTERNAL_PATHS } from '../global/utils/constants';
-import getInternalLink from '../global/utils/getInternalLink';
-import { isValidJwt } from '../global/utils/egoTokenUtils';
-import { createPage } from '../global/utils/pages';
+import Loader from '#components/Loader';
+import PageLayout from '#components/PageLayout';
+import { getConfig } from '#global/config';
+import useTrackingContext from '#global/hooks/useTrackingContext';
+import { EGO_JWT_KEY, INTERNAL_PATHS } from '#global/utils/constants';
+import { isValidJwt } from '#global/utils/egoTokenUtils';
+import getInternalLink from '#global/utils/getInternalLink';
+import { createPage } from '#global/utils/pages';
 
 const fetchEgoToken = (logEvent: (action: string) => void) => {
-  const { NEXT_PUBLIC_EGO_API_URL, NEXT_PUBLIC_EGO_CLIENT_ID } = getConfig();
-  const egoLoginUrl = urlJoin(
-    NEXT_PUBLIC_EGO_API_URL,
-    `/oauth/ego-token?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`,
-  );
+	const { NEXT_PUBLIC_EGO_API_URL, NEXT_PUBLIC_EGO_CLIENT_ID } = getConfig();
+	const egoLoginUrl = urlJoin(
+		NEXT_PUBLIC_EGO_API_URL,
+		`/oauth/ego-token?client_id=${NEXT_PUBLIC_EGO_CLIENT_ID}`,
+	);
 
-  return fetch(egoLoginUrl, {
-    credentials: 'include',
-    headers: { accept: '*/*' },
-    body: null,
-    method: 'POST',
-  })
-    .then((res) => {
-      if (res.status !== 200) {
-        throw new Error();
-      }
-      return res.text();
-    })
-    .then((jwt) => {
-      if (isValidJwt(jwt)) {
-        localStorage.setItem(EGO_JWT_KEY, jwt);
-        logEvent('Logged in');
-        setTimeout(() => Router.push(getInternalLink({ path: INTERNAL_PATHS.SUBMISSION })), 2000);
-      } else {
-        logEvent('Invalid JWT provided by Ego/Keycloak');
-        throw new Error('Invalid jwt, cannot login.');
-      }
-    })
-    .catch((err) => {
-      console.warn(err);
-      localStorage.removeItem(EGO_JWT_KEY);
-      logEvent('Failed to login');
-      Router.push(getInternalLink({ path: INTERNAL_PATHS.LOGIN }));
-    });
+	return fetch(egoLoginUrl, {
+		credentials: 'include',
+		headers: { accept: '*/*' },
+		body: null,
+		method: 'POST',
+	})
+		.then((res) => {
+			if (res.status !== 200) {
+				throw new Error();
+			}
+			return res.text();
+		})
+		.then((jwt) => {
+			if (isValidJwt(jwt)) {
+				localStorage.setItem(EGO_JWT_KEY, jwt);
+				logEvent('Logged in');
+				setTimeout(() => Router.push(getInternalLink({ path: INTERNAL_PATHS.SUBMISSION })), 2000);
+			} else {
+				logEvent('Invalid JWT provided by Ego/Keycloak');
+				throw new Error('Invalid jwt, cannot login.');
+			}
+		})
+		.catch((err) => {
+			console.warn(err);
+			localStorage.removeItem(EGO_JWT_KEY);
+			logEvent('Failed to login');
+			Router.push(getInternalLink({ path: INTERNAL_PATHS.LOGIN }));
+		});
 };
 
 const LoginLoaderPage = createPage({
-  getInitialProps: async (ctx) => {
-    const { egoJwt, asPath, query } = ctx;
-    return { egoJwt, query, asPath };
-  },
-  isPublic: true,
+	getInitialProps: async (ctx) => {
+		const { egoJwt, asPath, query } = ctx;
+		return { egoJwt, query, asPath };
+	},
+	isPublic: true,
 })(() => {
-  const { logEvent } = useTrackingContext();
+	const { logEvent } = useTrackingContext();
 
-  useEffect(() => {
-    fetchEgoToken((action) => {
-      logEvent({
-        category: 'User',
-        action,
-      });
-    });
-  });
+	useEffect(() => {
+		fetchEgoToken((action) => {
+			logEvent({
+				category: 'User',
+				action,
+			});
+		});
+	});
 
-  return (
-    <PageLayout>
-      <div
-        css={(theme) =>
-          css`
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: ${theme.colors.grey_2};
-          `
-        }
-      >
-        <Loader margin="0 auto" />
+	return (
+		<PageLayout>
+			<div
+				css={(theme) =>
+					css`
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+						background-color: ${theme.colors.grey_2};
+					`
+				}
+			>
+				<Loader margin="0 auto" />
 
-        <div
-          css={(theme) =>
-            css`
-              margin-top: 2rem;
-              color: ${theme.colors.accent};
-              ${theme.typography.heading}
-            `
-          }
-        >
-          Logging in...
-        </div>
-      </div>
-    </PageLayout>
-  );
+				<div
+					css={(theme) =>
+						css`
+							margin-top: 2rem;
+							color: ${theme.colors.accent};
+							${theme.typography.heading}
+						`
+					}
+				>
+					Logging in...
+				</div>
+			</div>
+		</PageLayout>
+	);
 });
 
 export default LoginLoaderPage;

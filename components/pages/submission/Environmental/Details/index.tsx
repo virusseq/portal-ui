@@ -22,15 +22,15 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useReducer, useState } from 'react';
 
-import GenericTable from '@/components/GenericTable';
-import { LoaderWrapper } from '@/components/Loader';
-import defaultTheme from '@/components/theme';
-import useAuthContext from '@/global/hooks/useAuthContext';
+import GenericTable from '#components/GenericTable';
+import { LoaderWrapper } from '#components/Loader';
+import defaultTheme from '#components/theme';
+import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData, {
 	SubmissionStatus,
 	type SubmissionData,
 	type UploadData,
-} from '@/global/hooks/useEnvironmentalData';
+} from '#global/hooks/useEnvironmentalData';
 
 import columns from './columns';
 import Overview from './Overview';

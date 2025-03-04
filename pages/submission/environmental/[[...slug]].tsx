@@ -19,8 +19,8 @@
  *
  */
 
-import EnvironmentalSubmission from '@/components/pages/submission/Environmental';
-import { createPage } from '@/global/utils/pages';
+import EnvironmentalSubmission from '#components/pages/submission/Environmental';
+import { createPage } from '#global/utils/pages';
 
 const EnvironmentalSubmissionPage = createPage({
 	getInitialProps: async ({ query, egoJwt }) => {

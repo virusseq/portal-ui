@@ -61,7 +61,7 @@ module.exports = {
 		'import/resolver': {
 			'babel-module': { allowExistingDirectories: true },
 		},
-		'import/internal-regex': '^@/',
+		'import/internal-regex': '^#',
 		react: {
 			version: 'detect',
 		},

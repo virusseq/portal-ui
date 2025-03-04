@@ -22,13 +22,13 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useState } from 'react';
 
-import GenericTable from '@/components/GenericTable';
-import { LoaderWrapper } from '@/components/Loader';
-import NoScopes from '@/components/NoScopes';
-import defaultTheme from '@/components/theme';
-import { CoronaVirus } from '@/components/theme/icons';
-import useAuthContext from '@/global/hooks/useAuthContext';
-import useEnvironmentalData, { type DataRecord } from '@/global/hooks/useEnvironmentalData';
+import GenericTable from '#components/GenericTable';
+import { LoaderWrapper } from '#components/Loader';
+import NoScopes from '#components/NoScopes';
+import defaultTheme from '#components/theme';
+import { CoronaVirus } from '#components/theme/icons';
+import useAuthContext from '#global/hooks/useAuthContext';
+import useEnvironmentalData, { type DataRecord } from '#global/hooks/useEnvironmentalData';
 
 import columns from './columns';
 

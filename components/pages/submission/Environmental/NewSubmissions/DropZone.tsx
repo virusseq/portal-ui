@@ -23,9 +23,9 @@ import { css, useTheme } from '@emotion/react';
 import { Dispatch, ReactElement, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-import { ButtonElement as Button } from '@/components/Button';
-import defaultTheme from '@/components/theme';
-import DragAndDrop from '@/components/theme/icons/DragAndDrop';
+import { ButtonElement as Button } from '#components/Button';
+import defaultTheme from '#components/theme';
+import DragAndDrop from '#components/theme/icons/DragAndDrop';
 
 import { ValidationAction, ValidationParameters } from './types';
 import { validator } from './validationHelpers';

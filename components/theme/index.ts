@@ -21,9 +21,9 @@
 
 import colors from './colors';
 import components from './components';
-import typography from './typography';
-import shadow from './shadow';
 import dimensions from './dimensions';
+import shadow from './shadow';
+import typography from './typography';
 
 const defaultTheme = {
 	colors,

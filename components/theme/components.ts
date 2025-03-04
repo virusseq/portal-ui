@@ -19,7 +19,7 @@
  *
  */
 
-import colors from '@/components/theme/colors';
+import colors from './colors';
 
 type Colors = typeof colors;
 

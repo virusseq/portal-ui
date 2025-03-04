@@ -25,9 +25,9 @@ import HighchartsReact from 'highcharts-react-official';
 import { ReactElement } from 'react';
 import { Col, Row } from 'react-grid-system';
 
-import Loader from '@/components/Loader';
-import { CoronaVirus, CrossHairs, File, Storage } from '@/components/theme/icons';
-import useReleaseData from '@/global/hooks/useReleaseData';
+import Loader from '#components/Loader';
+import { CoronaVirus, CrossHairs, File, Storage } from '#components/theme/icons';
+import useReleaseData from '#global/hooks/useReleaseData';
 
 const DataAnalysis = (): ReactElement => {
 	const [releaseData, isFetchingData] = useReleaseData();

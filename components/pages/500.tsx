@@ -20,16 +20,17 @@
  */
 
 import { ReactElement } from 'react';
-import DMSAdminContact from '../DMSAdminContact';
-import { ErrorPageLayout } from '../PageLayout';
+
+import DMSAdminContact from '#components/DMSAdminContact';
+import { ErrorPageLayout } from '#components/PageLayout';
 
 const Error500 = (): ReactElement => {
-  return (
-    <ErrorPageLayout errorTitle="500: Server Error" subtitle="Error 500 - Server Error">
-      The page you requested could not be accessed due to a server error. If the problem persists,
-      please contact the <DMSAdminContact /> for help.
-    </ErrorPageLayout>
-  );
+	return (
+		<ErrorPageLayout errorTitle="500: Server Error" subtitle="Error 500 - Server Error">
+			The page you requested could not be accessed due to a server error. If the problem persists,
+			please contact the <DMSAdminContact /> for help.
+		</ErrorPageLayout>
+	);
 };
 
 export default Error500;

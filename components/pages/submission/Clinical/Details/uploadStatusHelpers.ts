@@ -19,7 +19,7 @@
  *
  */
 
-import { UploadDataType } from '@/global/hooks/useMuseData';
+import { UploadDataType } from '#global/hooks/useMuseData';
 
 import { UploadsStatusDictionaryType, UploadStatusActionType } from './types';
 

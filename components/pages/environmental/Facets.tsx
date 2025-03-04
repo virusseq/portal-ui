@@ -24,8 +24,8 @@ import { Aggregations, QuickSearch, useArrangerTheme } from '@overture-stack/arr
 import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/types';
 import { ReactElement } from 'react';
 
-import { ThemeInterface } from '@/components/theme';
-import { getConfig } from '@/global/config';
+import { ThemeInterface } from '#components/theme';
+import { getConfig } from '#global/config';
 
 const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => ({
 	callerName: 'Environmental-Facets',

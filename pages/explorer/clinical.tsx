@@ -19,8 +19,8 @@
  *
  */
 
-import ClinicalCasesData from '@/components/pages/clinical';
-import { createPage } from '@/global/utils/pages';
+import ClinicalCasesData from '#components/pages/clinical';
+import { createPage } from '#global/utils/pages';
 
 const ClinicalCasesDataPage = createPage({
 	getInitialProps: async ({ query, egoJwt }) => {

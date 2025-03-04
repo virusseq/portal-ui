@@ -25,14 +25,14 @@ import { isEmpty } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import { Tooltip } from 'react-tippy';
 
-import useAuthContext from '../../../global/hooks/useAuthContext';
-import Button from '../../Button';
-import DMSAdminContact, { GenericHelpMessage } from '../../DMSAdminContact';
-import ErrorNotification from '../../ErrorNotification';
-import NoScopes from '../../NoScopes';
-import defaultTheme from '../../theme';
-import { Checkmark } from '../../theme/icons';
-import sleep from '../../utils/sleep';
+import Button from '#components/Button';
+import DMSAdminContact, { GenericHelpMessage } from '#components/DMSAdminContact';
+import ErrorNotification from '#components/ErrorNotification';
+import NoScopes from '#components/NoScopes';
+import defaultTheme from '#components/theme';
+import { Checkmark } from '#components/theme/icons';
+import sleep from '#components/utils/sleep';
+import useAuthContext from '#global/hooks/useAuthContext';
 
 const TooltipContainer = styled('div')`
 	${({ theme }: { theme?: typeof defaultTheme }) => css`

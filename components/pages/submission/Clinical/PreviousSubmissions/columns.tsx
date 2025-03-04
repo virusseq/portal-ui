@@ -25,9 +25,9 @@ import { ReactElement } from 'react';
 import { Column } from 'react-table';
 import urljoin from 'url-join';
 
-import { numberSort, uuidSort } from '@/components/GenericTable/helpers';
-import StyledLink from '@/components/Link';
-import getInternalLink from '@/global/utils/getInternalLink';
+import { numberSort, uuidSort } from '#components/GenericTable/helpers';
+import StyledLink from '#components/Link';
+import getInternalLink from '#global/utils/getInternalLink';
 
 const columnData: Column<Record<string, unknown>>[] = [
 	{

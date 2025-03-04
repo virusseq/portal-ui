@@ -23,10 +23,10 @@ import { css } from '@emotion/react';
 import { ReactElement } from 'react';
 import { Column, Row } from 'react-table';
 
-import { UploadData } from '@/components/../global/hooks/useEnvironmentalData';
-import { uuidSort } from '@/components/GenericTable/helpers';
-import theme from '@/components/theme';
-import { Checkmark, Ellipsis, Warning } from '@/components/theme/icons';
+import { uuidSort } from '#components/GenericTable/helpers';
+import theme from '#components/theme';
+import { Checkmark, Ellipsis, Warning } from '#components/theme/icons';
+import { UploadData } from '#global/hooks/useEnvironmentalData';
 
 import { UploadStatus } from './types';
 

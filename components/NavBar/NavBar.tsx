@@ -24,12 +24,12 @@ import cx from 'classnames';
 import { useRouter } from 'next/router';
 import { createRef, ReactElement } from 'react';
 
-import useAuthContext from '../../global/hooks/useAuthContext';
-import useTrackingContext from '../../global/hooks/useTrackingContext';
-import { INTERNAL_PATHS, ROOT_PATH } from '../../global/utils/constants';
-import { InternalLink } from '../Link';
-import defaultTheme from '../theme';
-import { Avatar } from '../theme/icons';
+import { InternalLink } from '#components/Link';
+import defaultTheme from '#components/theme';
+import { Avatar } from '#components/theme/icons';
+import useAuthContext from '#global/hooks/useAuthContext';
+import useTrackingContext from '#global/hooks/useTrackingContext';
+import { INTERNAL_PATHS, ROOT_PATH } from '#global/utils/constants';
 
 import CurrentUser from './CurrentUser';
 import Dropdown from './Dropdown';

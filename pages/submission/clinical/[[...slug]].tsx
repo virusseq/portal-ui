@@ -19,8 +19,8 @@
  *
  */
 
-import ClinicalSubmission from '@/components/pages/submission/Clinical';
-import { createPage } from '@/global/utils/pages';
+import ClinicalSubmission from '#components/pages/submission/Clinical';
+import { createPage } from '#global/utils/pages';
 
 const ClinicalSubmissionPage = createPage({
 	getInitialProps: async ({ query, egoJwt }) => {

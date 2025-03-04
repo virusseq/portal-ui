@@ -23,10 +23,10 @@ import { useArrangerData } from '@overture-stack/arranger-components';
 import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
 import { useEffect, useState } from 'react';
 
-import { arrangerFetcher } from '@/components/pages/clinical/RepoTable/helper';
-import { getConfig } from '@/global/config';
-import { getProvince } from '@/global/utils/constants';
-import formatFileSize from '@/global/utils/formatFileSize';
+import { arrangerFetcher } from '#components/pages/clinical/RepoTable/helper';
+import { getConfig } from '#global/config';
+import { getProvince } from '#global/utils/constants';
+import formatFileSize from '#global/utils/formatFileSize';
 
 import { Count, FilesByVariantType, ReleaseDataProps } from './types';
 

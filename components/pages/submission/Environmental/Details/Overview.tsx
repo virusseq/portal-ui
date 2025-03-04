@@ -23,11 +23,11 @@ import { css, useTheme } from '@emotion/react';
 import { format } from 'date-fns';
 import { ReactElement } from 'react';
 
-import Navigator from '@/components//Navigator';
-import { LoaderMessage } from '@/components/Loader';
-import defaultTheme from '@/components/theme';
-import { Calendar, CoronaVirus, File } from '@/components/theme/icons';
-import useAuthContext from '@/global/hooks/useAuthContext';
+import Navigator from '#components//Navigator';
+import { LoaderMessage } from '#components/Loader';
+import defaultTheme from '#components/theme';
+import { Calendar, CoronaVirus, File } from '#components/theme/icons';
+import useAuthContext from '#global/hooks/useAuthContext';
 
 const Overview = ({
 	createdAt,

@@ -21,7 +21,7 @@
 
 import { Dispatch, SetStateAction } from 'react';
 
-import { UploadData } from '@/global/hooks/useEnvironmentalData';
+import { UploadData } from '#global/hooks/useEnvironmentalData';
 
 export type SubmissionDetailsProps = {
 	ID: string;

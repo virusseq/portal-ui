@@ -24,14 +24,14 @@ import Router from 'next/router';
 import { ReactElement, useEffect, useReducer, useState } from 'react';
 import urlJoin from 'url-join';
 
-import { ButtonElement as Button } from '@/components/Button';
-import ErrorNotification from '@/components/ErrorNotification';
-import StyledLink from '@/components/Link';
-import { LoaderWrapper } from '@/components/Loader';
-import defaultTheme from '@/components/theme';
-import useAuthContext from '@/global/hooks/useAuthContext';
-import useMuseData from '@/global/hooks/useMuseData';
-import getInternalLink from '@/global/utils/getInternalLink';
+import { ButtonElement as Button } from '#components/Button';
+import ErrorNotification from '#components/ErrorNotification';
+import StyledLink from '#components/Link';
+import { LoaderWrapper } from '#components/Loader';
+import defaultTheme from '#components/theme';
+import useAuthContext from '#global/hooks/useAuthContext';
+import useMuseData from '#global/hooks/useMuseData';
+import getInternalLink from '#global/utils/getInternalLink';
 
 import DropZone from './DropZone';
 import ErrorMessage from './ErrorMessage';

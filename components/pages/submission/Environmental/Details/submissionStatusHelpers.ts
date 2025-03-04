@@ -19,7 +19,7 @@
  *
  */
 
-import { UploadData } from '@/global/hooks/useEnvironmentalData';
+import { UploadData } from '#global/hooks/useEnvironmentalData';
 
 import { UploadDetailsAction, UploadsStatusDictionary, UploadStatusAction } from './types';
 

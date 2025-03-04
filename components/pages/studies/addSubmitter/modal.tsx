@@ -20,194 +20,196 @@
  */
 
 import { css } from '@emotion/react';
-import React, { ChangeEventHandler, InputHTMLAttributes } from 'react';
-import { UnStyledButton } from '../../../Button';
-import { Modal } from '../../../Modal';
-import { PlusIcon } from '../../../theme/icons';
-import defaultTheme from '../../../theme/index';
-import createAddSubmittersValidations from './validations';
-import {
-  FormTextBlock,
-  FormInputTextBin,
-  useFormValidator,
-  FormInputSearchSelect,
-} from '../../../Forms';
-import { AddSubmitterReq, Study } from '../../../../global/hooks/useStudiesSvcData/types';
 import { cloneDeep } from 'lodash';
+import { ChangeEventHandler, InputHTMLAttributes } from 'react';
+
+import { UnStyledButton } from '#components/Button';
+import {
+	FormInputSearchSelect,
+	FormInputTextBin,
+	FormTextBlock,
+	useFormValidator,
+} from '#components/Forms';
+import { Modal } from '#components/Modal';
+import { PlusIcon } from '#components/theme/icons';
+import defaultTheme from '#components/theme/index';
+import { AddSubmitterReq, Study } from '#global/hooks/useStudiesSvcData/types';
+
+import createAddSubmittersValidations from './validations';
 
 type AddButtonProp = {
-  onClick: () => void;
-  disabled: boolean;
+	onClick: () => void;
+	disabled: boolean;
 };
 
 const AddButton = ({ onClick, disabled }: AddButtonProp) => {
-  return (
-    <UnStyledButton
-      disabled={disabled}
-      css={css`
-        cursor: ${disabled ? 'alias' : undefined};
-        color: ${disabled ? defaultTheme.colors.grey_5 : defaultTheme.colors.primary};
-        background-color: ${disabled ? defaultTheme.colors.grey_2 : defaultTheme.colors.white};
-        font-size: 13px;
-        font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        border-radius: 5px;
-        border: 1px solid ${disabled ? defaultTheme.colors.grey_3 : defaultTheme?.colors.primary};
-        padding: 6px 10px;
-      `}
-      onClick={onClick}
-    >
-      <PlusIcon
-        style={css`
-          margin-right: 5px;
-        `}
-        fill={disabled ? defaultTheme.colors.grey_5 : undefined}
-      />
-      Add Another
-    </UnStyledButton>
-  );
+	return (
+		<UnStyledButton
+			disabled={disabled}
+			css={css`
+				cursor: ${disabled ? 'alias' : undefined};
+				color: ${disabled ? defaultTheme.colors.grey_5 : defaultTheme.colors.primary};
+				background-color: ${disabled ? defaultTheme.colors.grey_2 : defaultTheme.colors.white};
+				font-size: 13px;
+				font-weight: bold;
+				font-stretch: normal;
+				font-style: normal;
+				border-radius: 5px;
+				border: 1px solid ${disabled ? defaultTheme.colors.grey_3 : defaultTheme?.colors.primary};
+				padding: 6px 10px;
+			`}
+			onClick={onClick}
+		>
+			<PlusIcon
+				style={css`
+					margin-right: 5px;
+				`}
+				fill={disabled ? defaultTheme.colors.grey_5 : undefined}
+			/>
+			Add Another
+		</UnStyledButton>
+	);
 };
 
 const EMPTY_FORM: AddSubmitterReq = Object.freeze({ studyId: '', submitters: [''] });
 
 type AddSubmitterModalProps = {
-  studies: Study[];
-  onClose: () => void;
-  submitData: (currentFormData: AddSubmitterReq) => Promise<void>;
+	studies: Study[];
+	onClose: () => void;
+	submitData: (currentFormData: AddSubmitterReq) => Promise<void>;
 };
 
 const AddSubmitterModal = ({ studies, onClose, submitData }: AddSubmitterModalProps) => {
-  const { formData, formErrors, setFormData, validateForm, validateField, clearFieldError } =
-    useFormValidator<AddSubmitterReq>(
-      cloneDeep(EMPTY_FORM),
-      createAddSubmittersValidations(studies),
-    );
+	const { formData, formErrors, setFormData, validateForm, validateField, clearFieldError } =
+		useFormValidator<AddSubmitterReq>(
+			cloneDeep(EMPTY_FORM),
+			createAddSubmittersValidations(studies),
+		);
 
-  const updateStudyId: ChangeEventHandler = (event) => {
-    event.preventDefault();
+	const updateStudyId: ChangeEventHandler = (event) => {
+		event.preventDefault();
 
-    const target = event.target as InputHTMLAttributes<typeof event>;
-    setFormData({ ...formData, studyId: target.value?.toString() || '' });
+		const target = event.target as InputHTMLAttributes<typeof event>;
+		setFormData({ ...formData, studyId: target.value?.toString() || '' });
 
-    clearFieldError('studyId');
-  };
+		clearFieldError('studyId');
+	};
 
-  const updateSubmitters =
-    (index: number): ChangeEventHandler =>
-    (event) => {
-      event.preventDefault();
+	const updateSubmitters =
+		(index: number): ChangeEventHandler =>
+		(event) => {
+			event.preventDefault();
 
-      const updatedFormData = { ...formData };
-      const target = event.target as InputHTMLAttributes<typeof event>;
-      const updatedValue = target.value?.toString() || '';
-      updatedFormData.submitters[index] = updatedValue;
-      setFormData(updatedFormData);
+			const updatedFormData = { ...formData };
+			const target = event.target as InputHTMLAttributes<typeof event>;
+			const updatedValue = target.value?.toString() || '';
+			updatedFormData.submitters[index] = updatedValue;
+			setFormData(updatedFormData);
 
-      clearFieldError(`submitters[${index}]`);
-    };
+			clearFieldError(`submitters[${index}]`);
+		};
 
-  const addEmailInput = () => {
-    const updatedFormData = { ...formData };
-    updatedFormData.submitters.push('');
-    setFormData(updatedFormData);
-  };
+	const addEmailInput = () => {
+		const updatedFormData = { ...formData };
+		updatedFormData.submitters.push('');
+		setFormData(updatedFormData);
+	};
 
-  const removeEmailInput = (index: number) => () => {
-    clearFieldError(`submitters[${index}]`);
-    const updatedFormData = { ...formData };
-    updatedFormData.submitters.splice(index, 1);
-    setFormData(updatedFormData);
-  };
+	const removeEmailInput = (index: number) => () => {
+		clearFieldError(`submitters[${index}]`);
+		const updatedFormData = { ...formData };
+		updatedFormData.submitters.splice(index, 1);
+		setFormData(updatedFormData);
+	};
 
-  const handleSubmit = async () => {
-    const valid = await validateForm();
-    // care about valid only because formErrors will render validation errors
-    if (valid) {
-      await submitData(formData);
-      setFormData(cloneDeep(EMPTY_FORM));
-    }
-  };
+	const handleSubmit = async () => {
+		const valid = await validateForm();
+		// care about valid only because formErrors will render validation errors
+		if (valid) {
+			await submitData(formData);
+			setFormData(cloneDeep(EMPTY_FORM));
+		}
+	};
 
-  const onBlur = (field: string) => () => validateField(field);
+	const onBlur = (field: string) => () => validateField(field);
 
-  const notFilledRequiredFields = formData.studyId === '' || formData.submitters[0] === '';
+	const notFilledRequiredFields = formData.studyId === '' || formData.submitters[0] === '';
 
-  const hasNotInputedAnySubmitter =
-    formData.submitters[0] === undefined || formData.submitters[0] === '';
+	const hasNotInputedAnySubmitter =
+		formData.submitters[0] === undefined || formData.submitters[0] === '';
 
-  return (
-    <Modal
-      title={'Add Data Submitters'}
-      showActionButton={true}
-      disableActionButton={notFilledRequiredFields}
-      actionText={'Add Data Submitters'}
-      closeText={'Cancel'}
-      onCloseClick={onClose}
-      onActionClick={handleSubmit}
-    >
-      <div
-        css={css`
-          display: flex;
-          flex-direction: column;
-          width: 630px;
-          justify-content: space-evenly;
-          padding-right: 20px;
-        `}
-      >
-        <FormTextBlock
-          css={css`
-            margin-top: 15px;
-            margin-bottom: 25px;
-          `}
-        >
-          Which study would you like to add data submitter(s) to?
-        </FormTextBlock>
-        <FormInputSearchSelect
-          required={true}
-          label="Study ID"
-          onChange={updateStudyId}
-          onBlur={onBlur(`studyId`)}
-          errorMessage={formErrors[`studyId`]}
-          value={formData[`studyId`]}
-          size={50}
-          options={studies.map((s) => s.studyId)}
-        />
-        <FormTextBlock
-          css={css`
-            margin-top: 15px;
-            margin-bottom: 25px;
-          `}
-        >
-          What email addresses would you like to add for the data submitter(s)? Note: the email
-          address must already be registered in the VirusSeq Data Portal before you can add them.
-        </FormTextBlock>
-        <div
-          css={css`
+	return (
+		<Modal
+			title={'Add Data Submitters'}
+			showActionButton={true}
+			disableActionButton={notFilledRequiredFields}
+			actionText={'Add Data Submitters'}
+			closeText={'Cancel'}
+			onCloseClick={onClose}
+			onActionClick={handleSubmit}
+		>
+			<div
+				css={css`
+					display: flex;
+					flex-direction: column;
+					width: 630px;
+					justify-content: space-evenly;
+					padding-right: 20px;
+				`}
+			>
+				<FormTextBlock
+					css={css`
+						margin-top: 15px;
+						margin-bottom: 25px;
+					`}
+				>
+					Which study would you like to add data submitter(s) to?
+				</FormTextBlock>
+				<FormInputSearchSelect
+					required={true}
+					label="Study ID"
+					onChange={updateStudyId}
+					onBlur={onBlur(`studyId`)}
+					errorMessage={formErrors[`studyId`]}
+					value={formData[`studyId`]}
+					size={50}
+					options={studies.map((s) => s.studyId)}
+				/>
+				<FormTextBlock
+					css={css`
+						margin-top: 15px;
+						margin-bottom: 25px;
+					`}
+				>
+					What email addresses would you like to add for the data submitter(s)? Note: the email
+					address must already be registered in the VirusSeq Data Portal before you can add them.
+				</FormTextBlock>
+				<div
+					css={css`
             margin-bottom: 30px};
           `}
-        >
-          {formData.submitters.map((s, i) => {
-            return (
-              <FormInputTextBin
-                key={i}
-                required={true}
-                label="Email Address"
-                value={s}
-                size={44}
-                onChange={updateSubmitters(i)}
-                onBlur={onBlur(`submitters[${i}]`)}
-                onBinClick={removeEmailInput(i)}
-                showBin={i !== 0}
-                errorMessage={formErrors[`submitters[${i}]`]}
-              />
-            );
-          })}
-          <AddButton onClick={addEmailInput} disabled={hasNotInputedAnySubmitter} />
-        </div>
-      </div>
-    </Modal>
-  );
+				>
+					{formData.submitters.map((s, i) => {
+						return (
+							<FormInputTextBin
+								key={i}
+								required={true}
+								label="Email Address"
+								value={s}
+								size={44}
+								onChange={updateSubmitters(i)}
+								onBlur={onBlur(`submitters[${i}]`)}
+								onBinClick={removeEmailInput(i)}
+								showBin={i !== 0}
+								errorMessage={formErrors[`submitters[${i}]`]}
+							/>
+						);
+					})}
+					<AddButton onClick={addEmailInput} disabled={hasNotInputedAnySubmitter} />
+				</div>
+			</div>
+		</Modal>
+	);
 };
 
 export default AddSubmitterModal;

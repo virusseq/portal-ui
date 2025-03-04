@@ -1,9 +1,9 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import StyledLink, { InternalLink } from '@/components/Link';
-import defaultTheme from '@/components/theme';
-import { ChevronDown } from '@/components/theme/icons';
+import StyledLink, { InternalLink } from '#components/Link';
+import defaultTheme from '#components/theme';
+import { ChevronDown } from '#components/theme/icons';
 
 const Navigator = ({ path = '/', text = 'home' }: { path: string; text: string }): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();

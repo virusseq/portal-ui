@@ -23,8 +23,8 @@ import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/t
 import SQON from '@overture-stack/sqon-builder';
 import { isEmpty } from 'lodash';
 
-import createArrangerFetcher from '@/components/utils/arrangerFetcher';
-import { getConfig } from '@/global/config';
+import createArrangerFetcher from '#components/utils/arrangerFetcher';
+import { getConfig } from '#global/config';
 
 const { NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API } = getConfig();
 
