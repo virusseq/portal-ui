@@ -137,7 +137,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			delay?: number;
 		}) {
 			try {
-				const analysisIds = await getAnalysisIds(organization, submissionDetails.PROCESSING, {
+				const processingRecords = submissionDetails.PROCESSING.filter(
+					(record) => record.status === UploadStatus.PROCESSING,
+				);
+				const analysisIds = await getAnalysisIds(organization, processingRecords, {
 					signal: controller.signal,
 				});
 

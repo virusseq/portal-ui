@@ -233,6 +233,7 @@ const useEnvironmentalData = (origin: string) => {
 		// Construct query parameters
 		const queryParams = new URLSearchParams({
 			entityName: 'sample',
+			pageSize: '50',
 		});
 
 		// Extract sample IDs from records
