@@ -35,10 +35,10 @@ import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/T
 import { ReactElement } from 'react';
 import urlJoin from 'url-join';
 
-import { ThemeInterface } from '@/components/theme';
-import { Download } from '@/components/theme/icons';
-import { getConfig } from '@/global/config';
-import useTrackingContext from '@/global/hooks/useTrackingContext';
+import { ThemeInterface } from '#components/theme';
+import { Download } from '#components/theme/icons';
+import { getConfig } from '#global/config';
+import useTrackingContext from '#global/hooks/useTrackingContext';
 
 const COLUMNS_DROPDOWN_TOOLTIP = 'Column selection does \\a not affect downloads.';
 

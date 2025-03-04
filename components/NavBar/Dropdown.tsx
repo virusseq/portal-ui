@@ -32,10 +32,10 @@ import {
 	useState,
 } from 'react';
 
-import { TransparentButton } from '@/components/Button';
-import defaultTheme from '@/components/theme';
-import { ChevronDown } from '@/components/theme/icons';
-import { type INTERNAL_PATH_VALUES } from '@/global/utils/constants';
+import { TransparentButton } from '#components/Button';
+import defaultTheme from '#components/theme';
+import { ChevronDown } from '#components/theme/icons';
+import { type INTERNAL_PATH_VALUES } from '#global/utils/constants';
 
 const Dropdown = ({
 	children,

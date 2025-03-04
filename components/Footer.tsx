@@ -19,16 +19,16 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
+import { getConfig } from '#global/config';
+import useAuthContext from '#global/hooks/useAuthContext';
+import { INTERNAL_PATHS } from '#global/utils/constants';
+
+import StyledLink, { InternalLink } from './Link';
 import defaultTheme from './theme';
 import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
-
-import { getConfig } from '../global/config';
-import useAuthContext from '../global/hooks/useAuthContext';
-import { INTERNAL_PATHS } from '../global/utils/constants';
-import StyledLink, { InternalLink } from './Link';
 
 const Footer = (): ReactElement => {
 	const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();

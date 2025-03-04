@@ -22,10 +22,10 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactNode } from 'react';
 
-import { GenericHelpMessage } from '@/components/DMSAdminContact';
-import StyledLink from '@/components/Link';
-import { Checkmark, Warning } from '@/components/theme/icons';
-import { getConfig } from '@/global/config';
+import { GenericHelpMessage } from '#components/DMSAdminContact';
+import StyledLink from '#components/Link';
+import { Checkmark, Warning } from '#components/theme/icons';
+import { getConfig } from '#global/config';
 
 const ArrangerAdminUILink = () => {
 	const { NEXT_PUBLIC_ARRANGER_CLINICAL_ADMIN_UI } = getConfig();

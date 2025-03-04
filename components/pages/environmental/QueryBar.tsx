@@ -24,7 +24,7 @@ import { SQONViewer, useArrangerTheme } from '@overture-stack/arranger-component
 import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/types';
 import { Row } from 'react-grid-system';
 
-import { ThemeInterface } from '@/components/theme';
+import { ThemeInterface } from '#components/theme';
 
 const getThemeCustomisations = (theme: ThemeInterface): UseThemeContextProps => ({
 	callerName: 'Environmental-QueryBar',

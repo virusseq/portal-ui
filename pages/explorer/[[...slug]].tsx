@@ -21,8 +21,8 @@
 
 import { useRouter } from 'next/router';
 
-import Explorer from '../../components/pages/clinical';
-import { createPage } from '../../global/utils/pages';
+import Explorer from '#components/pages/clinical';
+import { createPage } from '#global/utils/pages';
 
 const ExplorerPage = createPage({
 	getInitialProps: async ({ query, egoJwt }) => {

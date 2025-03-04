@@ -19,14 +19,16 @@
  *
  */
 
-import PageContent from './PageContent';
-import PageLayout from '../../PageLayout';
 import { ReactElement } from 'react';
 
+import PageLayout from '#components/PageLayout';
+
+import PageContent from './PageContent';
+
 const Policies = (): ReactElement => (
-  <PageLayout subtitle="Website and Data Usage Policies">
-    <PageContent />
-  </PageLayout>
+	<PageLayout subtitle="Website and Data Usage Policies">
+		<PageContent />
+	</PageLayout>
 );
 
 export default Policies;

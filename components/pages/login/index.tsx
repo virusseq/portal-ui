@@ -21,13 +21,14 @@
 
 import { ReactElement } from 'react';
 
+import PageLayout from '#components/PageLayout';
+
 import PageContent from './PageContent';
-import PageLayout from '../../PageLayout';
 
 const LoginPage = (): ReactElement => (
-  <PageLayout subtitle="Submitter Login">
-    <PageContent />
-  </PageLayout>
+	<PageLayout subtitle="Submitter Login">
+		<PageContent />
+	</PageLayout>
 );
 
 export default LoginPage;

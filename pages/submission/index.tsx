@@ -19,8 +19,8 @@
  *
  */
 
-import Submission from '@/components/pages/submission';
-import { createPage } from '@/global/utils/pages';
+import Submission from '#components/pages/submission';
+import { createPage } from '#global/utils/pages';
 
 const SubmissionPage = createPage({
 	getInitialProps: async ({ query, egoJwt }) => {

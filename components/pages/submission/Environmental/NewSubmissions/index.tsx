@@ -24,15 +24,15 @@ import Router from 'next/router';
 import { ReactElement, useEffect, useReducer, useState } from 'react';
 import urlJoin from 'url-join';
 
-import { ButtonElement as Button } from '@/components/Button';
-import ErrorNotification from '@/components/ErrorNotification';
-import StyledLink from '@/components/Link';
-import { LoaderWrapper } from '@/components/Loader';
-import defaultTheme from '@/components/theme';
-import { getConfig } from '@/global/config';
-import useAuthContext from '@/global/hooks/useAuthContext';
-import useEnvironmentalData from '@/global/hooks/useEnvironmentalData';
-import getInternalLink from '@/global/utils/getInternalLink';
+import { ButtonElement as Button } from '#components/Button';
+import ErrorNotification from '#components/ErrorNotification';
+import StyledLink from '#components/Link';
+import { LoaderWrapper } from '#components/Loader';
+import defaultTheme from '#components/theme';
+import { getConfig } from '#global/config';
+import useAuthContext from '#global/hooks/useAuthContext';
+import useEnvironmentalData from '#global/hooks/useEnvironmentalData';
+import getInternalLink from '#global/utils/getInternalLink';
 
 import DropZone from './DropZone';
 import ErrorMessage from './ErrorMessage';

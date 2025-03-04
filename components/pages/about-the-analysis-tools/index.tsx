@@ -21,7 +21,7 @@
 
 import { ReactElement } from 'react';
 
-import PageLayout from '@/components/PageLayout';
+import PageLayout from '#components/PageLayout';
 
 import PageContent from './PageContent';
 

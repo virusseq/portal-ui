@@ -22,9 +22,9 @@
 import { useTheme } from '@emotion/react';
 import { MouseEventHandler, ReactElement } from 'react';
 
-import { UnStyledButton } from '@/components/Button';
-import defaultTheme from '@/components/theme';
-import { Bin, File } from '@/components/theme/icons';
+import { UnStyledButton } from '#components/Button';
+import defaultTheme from '#components/theme';
+import { Bin, File } from '#components/theme/icons';
 
 import { getFileExtension } from './validationHelpers';
 

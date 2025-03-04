@@ -24,12 +24,12 @@ import { format } from 'date-fns';
 import { ReactElement, useEffect, useState } from 'react';
 import urlJoin from 'url-join';
 
-import Navigator from '@/components//Navigator';
-import { LoaderMessage } from '@/components/Loader';
-import defaultTheme from '@/components/theme';
-import { Calendar, CoronaVirus, File } from '@/components/theme/icons';
-import useAuthContext from '@/global/hooks/useAuthContext';
-import useMuseData, { SubmissionDataType } from '@/global/hooks/useMuseData';
+import Navigator from '#components//Navigator';
+import { LoaderMessage } from '#components/Loader';
+import defaultTheme from '#components/theme';
+import { Calendar, CoronaVirus, File } from '#components/theme/icons';
+import useAuthContext from '#global/hooks/useAuthContext';
+import useMuseData, { SubmissionDataType } from '#global/hooks/useMuseData';
 
 import { SubmissionDetailsProps } from './types';
 

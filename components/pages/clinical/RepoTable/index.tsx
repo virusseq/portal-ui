@@ -38,12 +38,12 @@ import { isEmpty } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import urlJoin from 'url-join';
 
-import { ThemeInterface } from '@/components/theme';
-import { Download } from '@/components/theme/icons';
-import sleep from '@/components/utils/sleep';
-import { getConfig } from '@/global/config';
-import useSingularityData, { Archive } from '@/global/hooks/useSingularityData';
-import useTrackingContext from '@/global/hooks/useTrackingContext';
+import { ThemeInterface } from '#components/theme';
+import { Download } from '#components/theme/icons';
+import sleep from '#components/utils/sleep';
+import { getConfig } from '#global/config';
+import useSingularityData, { Archive } from '#global/hooks/useSingularityData';
+import useTrackingContext from '#global/hooks/useTrackingContext';
 
 import DownloadInfoModal from './DownloadInfoModal';
 import { buildSqonWithObjectIds, saveSet } from './helper';

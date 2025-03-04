@@ -21,7 +21,7 @@
 
 import { Dispatch, SetStateAction } from 'react';
 
-import { UploadDataType } from '@/global/hooks/useMuseData';
+import { UploadDataType } from '#global/hooks/useMuseData';
 
 export type SubmissionDetailsProps = {
 	ID: string;

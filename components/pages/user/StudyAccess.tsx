@@ -19,68 +19,68 @@
  *
  */
 
-import { ReactElement, useEffect, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement, useEffect, useState } from 'react';
 
-import useAuthContext from '../../../global/hooks/useAuthContext';
-import defaultTheme from '../../theme';
+import defaultTheme from '#components/theme';
+import useAuthContext from '#global/hooks/useAuthContext';
 
 const StudyAccess = (): ReactElement | null => {
-  const theme: typeof defaultTheme = useTheme();
-  const { user, userHasWriteScopes, userCanSubmitDataForAllStudy } = useAuthContext();
-  const [effectiveScopes, setEffectiveScopes] = useState<string[] | null>(null);
+	const theme: typeof defaultTheme = useTheme();
+	const { user, userHasWriteScopes, userCanSubmitDataForAllStudy } = useAuthContext();
+	const [effectiveScopes, setEffectiveScopes] = useState<string[] | null>(null);
 
-  useEffect(() => {
-    if (userCanSubmitDataForAllStudy) {
-      setEffectiveScopes(['All Studies']);
-      return;
-    }
-    userHasWriteScopes &&
-      !effectiveScopes &&
-      setEffectiveScopes(
-        (user?.scope || [])
-          .filter((scope) => scope.includes('WRITE'))
-          .map((scope) => scope.replace('.WRITE', '')),
-      );
-  }, [userHasWriteScopes, userCanSubmitDataForAllStudy]);
+	useEffect(() => {
+		if (userCanSubmitDataForAllStudy) {
+			setEffectiveScopes(['All Studies']);
+			return;
+		}
+		userHasWriteScopes &&
+			!effectiveScopes &&
+			setEffectiveScopes(
+				(user?.scope || [])
+					.filter((scope) => scope.includes('WRITE'))
+					.map((scope) => scope.replace('.WRITE', '')),
+			);
+	}, [userHasWriteScopes, userCanSubmitDataForAllStudy]);
 
-  return userHasWriteScopes && effectiveScopes && effectiveScopes.length > 0 ? (
-    <div
-      css={css`
-        border-top: 1px solid ${theme.colors.grey_3};
-        margin-top: 20px;
-      `}
-    >
-      <h2
-        css={css`
-          ${theme.typography.regular};
-          font-size: 24px;
-          line-height: 40px;
-          color: ${theme.colors.primary};
-        `}
-      >
-        Study Access
-      </h2>
+	return userHasWriteScopes && effectiveScopes && effectiveScopes.length > 0 ? (
+		<div
+			css={css`
+				border-top: 1px solid ${theme.colors.grey_3};
+				margin-top: 20px;
+			`}
+		>
+			<h2
+				css={css`
+					${theme.typography.regular};
+					font-size: 24px;
+					line-height: 40px;
+					color: ${theme.colors.primary};
+				`}
+			>
+				Study Access
+			</h2>
 
-      <p>You are authorized to submit data for the following studies:</p>
-      {userCanSubmitDataForAllStudy ? (
-        <b>All Studies</b>
-      ) : (
-        <ul
-          css={css`
-            ${theme.typography.subheading};
-            font-weight: normal;
-            color: ${theme.colors.accent_dark};
-            margin-bottom: 1rem;
-          `}
-        >
-          {effectiveScopes?.map((scope) => (
-            <li key={scope}>{scope}</li>
-          ))}
-        </ul>
-      )}
-    </div>
-  ) : null;
+			<p>You are authorized to submit data for the following studies:</p>
+			{userCanSubmitDataForAllStudy ? (
+				<b>All Studies</b>
+			) : (
+				<ul
+					css={css`
+						${theme.typography.subheading};
+						font-weight: normal;
+						color: ${theme.colors.accent_dark};
+						margin-bottom: 1rem;
+					`}
+				>
+					{effectiveScopes?.map((scope) => (
+						<li key={scope}>{scope}</li>
+					))}
+				</ul>
+			)}
+		</div>
+	) : null;
 };
 
 export default StudyAccess;

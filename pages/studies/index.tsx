@@ -19,20 +19,19 @@
  *
  */
 
-import React from 'react';
-import ManageStudies from '../../components/pages/studies';
-import { createPage } from '../../global/utils/pages';
-import useAuthContext from '../../global/hooks/useAuthContext';
-import Error401 from '../../components/pages/401';
+import Error401 from '#components/pages/401';
+import ManageStudies from '#components/pages/studies';
+import useAuthContext from '#global/hooks/useAuthContext';
+import { createPage } from '#global/utils/pages';
 
 const StudiesPage = createPage({
-  getInitialProps: async ({ query, egoJwt }) => {
-    return { query, egoJwt };
-  },
-  isPublic: false,
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: false,
 })(() => {
-  const { userHasAccessToStudySvc } = useAuthContext();
-  return userHasAccessToStudySvc ? <ManageStudies /> : <Error401 />;
+	const { userHasAccessToStudySvc } = useAuthContext();
+	return userHasAccessToStudySvc ? <ManageStudies /> : <Error401 />;
 });
 
 export default StudiesPage;

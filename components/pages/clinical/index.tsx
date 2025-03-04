@@ -23,12 +23,12 @@ import { css, useTheme } from '@emotion/react';
 import { ArrangerDataProvider } from '@overture-stack/arranger-components';
 import { ReactElement, useEffect, useState } from 'react';
 
-import ErrorNotification from '@/components/ErrorNotification';
-import Loader from '@/components/Loader';
-import PageLayout from '@/components/PageLayout';
-import sleep from '@/components/utils/sleep';
-import { getConfig } from '@/global/config';
-import { RepoFiltersType } from '@/global/types/sqon';
+import ErrorNotification from '#components/ErrorNotification';
+import Loader from '#components/Loader';
+import PageLayout from '#components/PageLayout';
+import sleep from '#components/utils/sleep';
+import { getConfig } from '#global/config';
+import { RepoFiltersType } from '#global/types/sqon';
 
 import getConfigError from './getConfigError';
 import PageContent from './PageContent';

@@ -19,8 +19,8 @@
  *
  */
 
-import EnvironmentalData from '@/components/pages/environmental';
-import { createPage } from '@/global/utils/pages';
+import EnvironmentalData from '#components/pages/environmental';
+import { createPage } from '#global/utils/pages';
 
 const EnvironmentalDataPage = createPage({
 	getInitialProps: async ({ query, egoJwt }) => {

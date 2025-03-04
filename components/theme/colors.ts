@@ -20,83 +20,83 @@
  */
 
 const base = {
-  white: '#fff',
-  black: '#282a35',
-  canada: '#D93738',
+	white: '#fff',
+	black: '#282a35',
+	canada: '#D93738',
 };
 
 const grey = {
-  grey_1: '#f2f5f8',
-  grey_2: '#f2f3f5',
-  grey_3: '#dfdfe1',
-  grey_4: '#cecfd3',
-  grey_5: '#aeafb3',
-  grey_6: '#5e6068',
-  grey_highlight: '#eceff2',
+	grey_1: '#f2f5f8',
+	grey_2: '#f2f3f5',
+	grey_3: '#dfdfe1',
+	grey_4: '#cecfd3',
+	grey_5: '#aeafb3',
+	grey_6: '#5e6068',
+	grey_highlight: '#eceff2',
 };
 
 const primary = {
-  primary: '#28519d',
-  primary_dark: '#113877',
-  primary_light: '#6885ba',
+	primary: '#28519d',
+	primary_dark: '#113877',
+	primary_light: '#6885ba',
 };
 
 const accent = {
-  accent: '#60b3e0',
-  accent_light: '#afd9ef',
-  accent_dark: '#151c3d',
-  accent_light_rgb: '175, 217, 239',
+	accent: '#60b3e0',
+	accent_light: '#afd9ef',
+	accent_dark: '#151c3d',
+	accent_light_rgb: '175, 217, 239',
 };
 
 // light blues
 const secondary = {
-  secondary: '#4bc6f0',
-  secondary_light: '#edf9fd',
-  secondary_dark: '#109ed9',
-  secondary_accessible: '#0c7cac',
-  secondary_1: '#d2f1fb',
-  secondary_2: '#aee5f8',
+	secondary: '#4bc6f0',
+	secondary_light: '#edf9fd',
+	secondary_dark: '#109ed9',
+	secondary_accessible: '#0c7cac',
+	secondary_1: '#d2f1fb',
+	secondary_2: '#aee5f8',
 };
 
 const accent2 = {
-  accent2_dark: '#9e005d',
-  accent2: '#b74a89',
-  accent2_light: '#f7ecf3',
+	accent2_dark: '#9e005d',
+	accent2: '#b74a89',
+	accent2_light: '#f7ecf3',
 };
 
 const accent3 = {
-  accent3: '#33aabb',
-  accent3_dark: '#1c8292',
-  accent3_alternate: '#4da3ab',
+	accent3: '#33aabb',
+	accent3_dark: '#1c8292',
+	accent3_alternate: '#4da3ab',
 };
 
 const success = {
-  success: '#00ddbe',
-  success_dark: '#009984',
-  success_light: '#e6f2f4',
+	success: '#00ddbe',
+	success_dark: '#009984',
+	success_light: '#e6f2f4',
 };
 
 const error = {
-  error: '#c86370',
-  error_dark: '#ad404e',
-  error_1: '#f7d7d7',
+	error: '#c86370',
+	error_dark: '#ad404e',
+	error_1: '#f7d7d7',
 };
 
 const warning = {
-  warning: '#f2d021',
-  warning_dark: '#e6c104',
-  warning_1: '#ffff758c',
+	warning: '#f2d021',
+	warning_dark: '#e6c104',
+	warning_1: '#ffff758c',
 };
 
 export default {
-  ...base,
-  ...grey,
-  ...accent,
-  ...accent2,
-  ...accent3,
-  ...primary,
-  ...secondary,
-  ...success,
-  ...error,
-  ...warning,
+	...base,
+	...grey,
+	...accent,
+	...accent2,
+	...accent3,
+	...primary,
+	...secondary,
+	...success,
+	...error,
+	...warning,
 };

@@ -19,18 +19,14 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { format } from 'date-fns';
+import { ReactElement } from 'react';
 
-import defaultTheme from '../../theme';
-import Policy from './Policy';
-
-/* trying without the contrib section
-import Contributors from './Contributors';
-*/
+import defaultTheme from '#components/theme';
 
 import Individuals from './Individuals';
-import { format } from 'date-fns';
+import Policy from './Policy';
 
 const PageContent = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();

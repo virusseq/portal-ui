@@ -21,124 +21,124 @@
 
 import { css } from '@emotion/react';
 import React, { ReactElement } from 'react';
-import DismissIcon from '../theme/icons/dismiss';
-import defaultTheme from '../theme';
-import { Info, Error } from '../theme/icons';
+
+import defaultTheme from '#components/theme';
+import DismissIcon from '#components/theme/icons/dismiss';
+import Error from '#components/theme/icons/error';
+import Info from '#components/theme/icons/info';
 
 type AlertLevel = 'error' | 'warning' | 'info';
 
 export type AlertDef = {
-  level: AlertLevel;
-  title: string;
-  message?: string;
-  dismissable: boolean;
-  id: string;
+	level: AlertLevel;
+	title: string;
+	message?: string;
+	dismissable: boolean;
+	id: string;
 };
 
 const isAlertLevel = (level: any): level is AlertLevel => {
-  return level === 'error' || level === 'warning' || level === 'info';
+	return level === 'error' || level === 'warning' || level === 'info';
 };
 
 export const isAlertDef = (obj: any): obj is AlertDef => {
-  return obj.id && obj.title && obj.dismissable !== undefined && isAlertLevel(obj.level);
+	return obj.id && obj.title && obj.dismissable !== undefined && isAlertLevel(obj.level);
 };
 
 export const isAlertDefs = (obj: any): obj is AlertDef[] => {
-  return Array.isArray(obj) && obj.every(isAlertDef);
+	return Array.isArray(obj) && obj.every(isAlertDef);
 };
 
 type AlertVariant = {
-  backgroundColor: string;
-  icon: ReactElement;
-  textColor: string;
+	backgroundColor: string;
+	icon: ReactElement;
+	textColor: string;
 };
 
 type SystemAlertProps = {
-  alert: AlertDef;
-  onClose: () => void;
+	alert: AlertDef;
+	onClose: () => void;
 };
 
 const ALERT_VARIANTS: Record<AlertLevel, AlertVariant> = {
-  error: {
-    backgroundColor: defaultTheme.colors.error_1,
-    icon: <Error size={40} />,
-    textColor: defaultTheme.colors.black,
-  },
-  warning: {
-    backgroundColor: defaultTheme.colors.warning_1,
-    icon: <Error size={40} fill={defaultTheme.colors.warning_dark} />,
-    textColor: defaultTheme.colors.black,
-  },
-  info: {
-    backgroundColor: defaultTheme.colors.secondary_2,
-    icon: <Info size={40} fill={defaultTheme.colors.secondary_dark} />,
-    textColor: defaultTheme.colors.black,
-  },
+	error: {
+		backgroundColor: defaultTheme.colors.error_1,
+		icon: <Error size={40} />,
+		textColor: defaultTheme.colors.black,
+	},
+	warning: {
+		backgroundColor: defaultTheme.colors.warning_1,
+		icon: <Error size={40} fill={defaultTheme.colors.warning_dark} />,
+		textColor: defaultTheme.colors.black,
+	},
+	info: {
+		backgroundColor: defaultTheme.colors.secondary_2,
+		icon: <Info size={40} fill={defaultTheme.colors.secondary_dark} />,
+		textColor: defaultTheme.colors.black,
+	},
 };
 
 export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onClose }) => {
+	function createMarkup(msg: string) {
+		return { __html: msg };
+	}
 
-  function createMarkup(msg: string) {
-    return { __html: msg };
-  }
+	const { backgroundColor, textColor, icon } = ALERT_VARIANTS[alert.level];
+	return (
+		<div
+			css={css`
+				padding: 12px;
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				background-color: ${backgroundColor};
+			`}
+		>
+			<div
+				css={css`
+					display: flex;
+				`}
+			>
+				<div
+					css={css`
+						margin: auto 15px auto auto;
+					`}
+				>
+					{icon}
+				</div>
+				<div>
+					<div
+						css={css`
+							color: ${textColor};
+							margin-top: ${alert.message ? '0px' : '6px'};
+							${defaultTheme.typography.heading}
+						`}
+					>
+						{alert.title}
+					</div>
+					{alert.message && (
+						<div
+							css={css`
+								color: ${textColor};
+								margin-bottom: 8px;
+								${defaultTheme.typography.regular};
+							`}
+							dangerouslySetInnerHTML={createMarkup(alert.message)}
+						></div>
+					)}
+				</div>
+			</div>
 
-  const { backgroundColor, textColor, icon } = ALERT_VARIANTS[alert.level];
-  return (
-    <div
-      css={css`
-        padding: 12px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        background-color: ${backgroundColor};
-      `}
-    >
-      <div
-        css={css`
-          display: flex;
-        `}
-      >
-        <div
-          css={css`
-            margin: auto 15px auto auto;
-          `}
-        >
-          {icon}
-        </div>
-        <div>
-          <div
-            css={css`
-              color: ${textColor};
-              margin-top: ${alert.message ? '0px' : '6px'};
-              ${defaultTheme.typography.heading}
-            `}
-          >
-            {alert.title}
-          </div>
-          {alert.message && (
-            <div
-              css={css`
-                color: ${textColor};
-                margin-bottom: 8px;
-                ${defaultTheme.typography.regular};
-              `}
-              dangerouslySetInnerHTML={createMarkup(alert.message)}
-            >
-            </div>
-          )}
-        </div>
-      </div>
-
-      {alert.dismissable && (
-        <div
-          css={css`
-            cursor: pointer;
-          `}
-          onClick={onClose}
-        >
-          <DismissIcon height={15} width={15} fill={defaultTheme.colors.black} />
-        </div>
-      )}
-    </div>
-  );
+			{alert.dismissable && (
+				<div
+					css={css`
+						cursor: pointer;
+					`}
+					onClick={onClose}
+				>
+					<DismissIcon height={15} width={15} fill={defaultTheme.colors.black} />
+				</div>
+			)}
+		</div>
+	);
 };

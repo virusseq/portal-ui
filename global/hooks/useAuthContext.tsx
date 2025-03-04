@@ -22,10 +22,10 @@
 import { useRouter } from 'next/router';
 import { createContext, ReactElement, useContext, useState } from 'react';
 
-import { getConfig } from '../config';
-import { UserWithId } from '../types';
-import { EGO_JWT_KEY } from '../utils/constants';
-import { decodeToken, extractUser, isValidJwt } from '../utils/egoTokenUtils';
+import { getConfig } from '#global/config';
+import { UserWithId } from '#global/types';
+import { EGO_JWT_KEY } from '#global/utils/constants';
+import { decodeToken, extractUser, isValidJwt } from '#global/utils/egoTokenUtils';
 
 import { LogEventFunctionType } from './useTrackingContext';
 

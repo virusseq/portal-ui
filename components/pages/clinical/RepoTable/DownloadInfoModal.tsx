@@ -21,14 +21,14 @@
 
 import { css } from '@emotion/react';
 
-import StyledLink from '@/components/Link';
-import Loader from '@/components/Loader';
-import { Modal } from '@/components/Modal';
-import defaultTheme from '@/components/theme';
-import { Checkmark, CoronaVirus, File } from '@/components/theme/icons';
-import Error from '@/components/theme/icons/error';
-import { Archive } from '@/global/hooks/useSingularityData/types';
-import { INTERNAL_PATHS } from '@/global/utils/constants';
+import StyledLink from '#components/Link';
+import Loader from '#components/Loader';
+import { Modal } from '#components/Modal';
+import defaultTheme from '#components/theme';
+import { Checkmark, CoronaVirus, File } from '#components/theme/icons';
+import Error from '#components/theme/icons/error';
+import { Archive } from '#global/hooks/useSingularityData/types';
+import { INTERNAL_PATHS } from '#global/utils/constants';
 
 type Props = { onClose: () => void; archive?: Archive };
 const CompleteCheckmark = () => (

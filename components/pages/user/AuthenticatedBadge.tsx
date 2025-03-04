@@ -19,55 +19,55 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import defaultTheme from '../../theme';
-import { Checkmark } from '../../theme/icons';
-import { ProviderType } from '../../../global/types';
-import providerMap from '../../../global/utils/providerTypeMap';
+import defaultTheme from '#components/theme';
+import { Checkmark } from '#components/theme/icons';
+import { ProviderType } from '#global/types';
+import providerMap from '#global/utils/providerTypeMap';
 
 const AuthenticatedBadge = ({ provider }: { provider: ProviderType }): ReactElement => {
-  const IconComponent = providerMap[provider]?.icon;
-  const theme: typeof defaultTheme = useTheme();
-  return (
-    <div
-      css={(theme) =>
-        css`
-          width: 235px;
-          max-height: 30px;
-          border: 1px solid ${theme.colors.grey_5};
-          border-radius: 5px;
-          background-color: ${theme.colors.white};
-          ${theme.typography.data};
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 2px 7px 0;
-        `
-      }
-    >
-      <span
-        css={(theme) =>
-          css`
-            border-right: 1px solid ${theme.colors.grey_5};
-            padding: 0 10px 0 0;
-          `
-        }
-      >
-        {IconComponent && <IconComponent height={20} width={20} />}
-      </span>
-      <span
-        css={(theme) => css`
-          ${theme.typography.data};
-          color: ${theme.colors.accent_dark};
-        `}
-      >
-        Authenticated with {providerMap[provider]?.displayName}
-      </span>
-      <Checkmark size={15} fill={theme.colors.success} />
-    </div>
-  );
+	const IconComponent = providerMap[provider]?.icon;
+	const theme: typeof defaultTheme = useTheme();
+	return (
+		<div
+			css={(theme) =>
+				css`
+					width: 235px;
+					max-height: 30px;
+					border: 1px solid ${theme.colors.grey_5};
+					border-radius: 5px;
+					background-color: ${theme.colors.white};
+					${theme.typography.data};
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					padding: 2px 7px 0;
+				`
+			}
+		>
+			<span
+				css={(theme) =>
+					css`
+						border-right: 1px solid ${theme.colors.grey_5};
+						padding: 0 10px 0 0;
+					`
+				}
+			>
+				{IconComponent && <IconComponent height={20} width={20} />}
+			</span>
+			<span
+				css={(theme) => css`
+					${theme.typography.data};
+					color: ${theme.colors.accent_dark};
+				`}
+			>
+				Authenticated with {providerMap[provider]?.displayName}
+			</span>
+			<Checkmark size={15} fill={theme.colors.success} />
+		</div>
+	);
 };
 
 export default AuthenticatedBadge;

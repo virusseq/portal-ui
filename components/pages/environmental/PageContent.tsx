@@ -26,8 +26,8 @@ import stringify from 'fast-json-stable-stringify';
 import { isEqual } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 
-import defaultTheme from '@/components/theme';
-import useUrlParamState from '@/global/hooks/useUrlParamsState';
+import defaultTheme from '#components/theme';
+import useUrlParamState from '#global/hooks/useUrlParamsState';
 
 import Facets from './Facets';
 import QueryBar from './QueryBar';

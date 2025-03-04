@@ -21,7 +21,7 @@
 
 import urlJoin from 'url-join';
 
-import { getConfig } from '@/global/config';
+import { getConfig } from '#global/config';
 
 const { NEXT_PUBLIC_EGO_API_URL } = getConfig();
 

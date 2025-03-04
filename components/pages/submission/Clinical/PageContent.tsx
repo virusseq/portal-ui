@@ -23,9 +23,9 @@ import { css, useTheme } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 
-import Navigator from '@/components//Navigator';
-import defaultTheme from '@/components/theme';
-import useAuthContext from '@/global/hooks/useAuthContext';
+import Navigator from '#components//Navigator';
+import defaultTheme from '#components/theme';
+import useAuthContext from '#global/hooks/useAuthContext';
 
 import SubmissionDetails from './Details';
 import NewSubmissions from './NewSubmissions';

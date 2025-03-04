@@ -19,7 +19,7 @@
  *
  */
 
-import type { UploadStatus } from '@/components/pages/submission/Environmental/Details/types';
+import type { UploadStatus } from '#components/pages/submission/Environmental/Details/types';
 
 export type SubmissionData = {
 	createdAt: string;

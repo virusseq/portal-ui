@@ -23,10 +23,10 @@ import { css } from '@emotion/react';
 import { ReactElement } from 'react';
 import { Column, Row } from 'react-table';
 
-import { UploadDataType } from '@/components/../global/hooks/useMuseData';
-import { uuidSort } from '@/components/GenericTable/helpers';
-import theme from '@/components/theme';
-import { Checkmark, Ellipsis, Warning } from '@/components/theme/icons';
+import { uuidSort } from '#components/GenericTable/helpers';
+import theme from '#components/theme';
+import { Checkmark, Ellipsis, Warning } from '#components/theme/icons';
+import { UploadDataType } from '#global/hooks/useMuseData';
 
 import { UploadStatusType } from './types';
 

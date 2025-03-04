@@ -22,11 +22,11 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useReducer, useState } from 'react';
 
-import GenericTable from '@/components/GenericTable';
-import { LoaderWrapper } from '@/components/Loader';
-import defaultTheme from '@/components/theme';
-import useAuthContext from '@/global/hooks/useAuthContext';
-import useMuseData, { UploadDataType } from '@/global/hooks/useMuseData';
+import GenericTable from '#components/GenericTable';
+import { LoaderWrapper } from '#components/Loader';
+import defaultTheme from '#components/theme';
+import useAuthContext from '#global/hooks/useAuthContext';
+import useMuseData, { UploadDataType } from '#global/hooks/useMuseData';
 
 import columns from './columns';
 import Overview from './Overview';
