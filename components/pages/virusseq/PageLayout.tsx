@@ -19,14 +19,39 @@
  *
  */
 
-import NextHead from 'next/head';
+import { css } from '@emotion/react';
+import { ReactElement, ReactNode } from 'react';
 
-const PageHead = ({ subtitle }: { subtitle?: string }) => {
+import Footer from './Footer';
+import PageHead from './Head';
+import NavBar from './NavBar';
+
+const PageLayout = ({
+	children,
+	subtitle,
+}: {
+	children: ReactNode;
+	subtitle?: string;
+}): ReactElement => {
 	return (
-		<NextHead>
-			<title>iMicroSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
-		</NextHead>
+		<>
+			<PageHead subtitle={subtitle}></PageHead>
+			<div
+				css={(theme) => css`
+					display: grid;
+					grid-template-rows: ${theme.dimensions.navbar.height}px 1fr ${theme.dimensions.footer
+							.height}px;
+					height: 100%;
+					${theme.typography.regular}
+					color: ${theme.colors.black};
+				`}
+			>
+				<NavBar />
+				{children}
+				<Footer />
+			</div>
+		</>
 	);
 };
 
-export default PageHead;
+export default PageLayout;

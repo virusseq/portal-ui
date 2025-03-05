@@ -19,14 +19,4 @@
  *
  */
 
-import NextHead from 'next/head';
-
-const PageHead = ({ subtitle }: { subtitle?: string }) => {
-	return (
-		<NextHead>
-			<title>iMicroSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
-		</NextHead>
-	);
-};
-
-export default PageHead;
+export { default } from './NavBar';

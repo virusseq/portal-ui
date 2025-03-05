@@ -22,18 +22,13 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import { getConfig } from '#global/config';
-import useAuthContext from '#global/hooks/useAuthContext';
+import StyledLink, { InternalLink } from '#components/Link';
+import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
-
-import StyledLink, { InternalLink } from './Link';
-import defaultTheme from './theme';
-import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
+import defaultTheme from '#virusseq/theme';
 
 const Footer = (): ReactElement => {
-	const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();
 	const theme: typeof defaultTheme = useTheme();
-	const { token } = useAuthContext();
 
 	return (
 		<div
@@ -133,18 +128,10 @@ const Footer = (): ReactElement => {
 							Contact Us
 						</StyledLink>
 					</li>
-
-					{(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) && !token && (
-						<li>
-							<InternalLink path={INTERNAL_PATHS.LOGIN}>
-								<StyledLink>Submitter Login</StyledLink>
-							</InternalLink>
-						</li>
-					)}
 				</ul>
 				<span>
 					&#169;
-					{` ${new Date().toISOString().slice(0, 4)} Canadian iMicroSeq Data Portal`}
+					{` ${new Date().toISOString().slice(0, 4)} Canadian VirusSeq Data Portal`}
 				</span>
 			</section>
 
@@ -192,7 +179,7 @@ const Footer = (): ReactElement => {
 						margin-left: 1rem;
 						text-decoration: none;
 					`}
-					href="https://github.com/imicroseq"
+					href="https://github.com/virusseq"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
@@ -202,7 +189,7 @@ const Footer = (): ReactElement => {
 							margin-left: 5px;
 						`}
 					>
-						iMicroSeq Github
+						VirusSeq Github
 					</span>
 				</a>
 			</section>

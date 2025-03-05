@@ -23,9 +23,9 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import { InternalLink as Link, StyledLinkAsButton } from '#components/Link';
-import defaultTheme from '#components/theme';
 import { MapleLeaf } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
+import defaultTheme from '#virusseq/theme';
 
 import ReleaseData from './ReleaseData';
 
@@ -102,7 +102,7 @@ const HeroBanner = (): ReactElement => {
 							position: absolute;
 						`}
 					/>
-					Canadian iMicroSeq Data Portal
+					Canadian VirusSeq Data Portal
 				</h1>
 
 				<p
@@ -111,15 +111,16 @@ const HeroBanner = (): ReactElement => {
 						font-weight: normal;
 					`}
 				>
-					The iMicroSeq Data Portal is an inclusive Canadian database of microbial (including viral)
-					sequences. This Data Portal integrates genomic data from clinical and environmental
-					sources, including wastewater, to monitor and understand the evolution and spread of
-					microbes and viruses affecting public health, agriculture and the environment. The
-					iMicroSeq Data Portal is an open-access data platform for Canadian genomic surveillance
-					data and associated contextual metadata. It harmonizes, validates, and automates
-					submissions. The Portal will also submit data to selected international databases, when
-					desired by the data provider. These features enable more integrated analyses across
-					Canada.
+					The goal of the CanCOGeN VirusSeq project was to sequence up to 150,000 viral samples from
+					Canadians testing positive for COVID-19. The VirusSeq Data Portal is an open-source and
+					open-access data portal for all Canadian SARS-CoV-2 sequences and associated non-personal
+					contextual data. It harmonizes, validates and automates submission to international
+					databases.
+				</p>
+
+				<p>
+					The expansion of the VirusSeq Data Portal that includes environmental Wastewater data is
+					available at the iMicroSeq Data portal
 				</p>
 
 				<ReleaseData />

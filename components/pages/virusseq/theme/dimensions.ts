@@ -19,14 +19,16 @@
  *
  */
 
-import NextHead from 'next/head';
-
-const PageHead = ({ subtitle }: { subtitle?: string }) => {
-	return (
-		<NextHead>
-			<title>iMicroSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
-		</NextHead>
-	);
+const dimensions = {
+	navbar: {
+		height: 64,
+	},
+	footer: {
+		height: 72,
+	},
+	facets: {
+		width: 250,
+	},
 };
 
-export default PageHead;
+export default dimensions;
