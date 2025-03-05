@@ -19,14 +19,16 @@
  *
  */
 
-import NextHead from 'next/head';
+import { createPage } from '#global/utils/pages';
+import VirusSeqPage from '#virusseq/index';
 
-const PageHead = ({ subtitle }: { subtitle?: string }) => {
-	return (
-		<NextHead>
-			<title>iMicroSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
-		</NextHead>
-	);
-};
+const VirusSeqRoute = createPage({
+	getInitialProps: async ({ query, egoJwt }) => {
+		return { query, egoJwt };
+	},
+	isPublic: true,
+})(() => {
+	return <VirusSeqPage />;
+});
 
-export default PageHead;
+export default VirusSeqRoute;

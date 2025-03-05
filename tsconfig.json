@@ -22,6 +22,7 @@
 		"paths": {
 			"react": ["./node_modules/@types/react"],
 			"#public": ["./public"],
+			"#virusseq/*": ["./components/pages/virusseq/*"],
 			"#*": ["./*"]
 		},
 		"plugins": [

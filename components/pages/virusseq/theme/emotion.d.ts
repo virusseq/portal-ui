@@ -19,14 +19,10 @@
  *
  */
 
-import NextHead from 'next/head';
+import '@emotion/react';
 
-const PageHead = ({ subtitle }: { subtitle?: string }) => {
-	return (
-		<NextHead>
-			<title>iMicroSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
-		</NextHead>
-	);
-};
+import { ThemeInterface } from '#virusseq/theme';
 
-export default PageHead;
+declare module '@emotion/react' {
+	export interface Theme extends ThemeInterface {}
+}

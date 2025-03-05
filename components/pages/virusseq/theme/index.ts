@@ -19,14 +19,19 @@
  *
  */
 
-import NextHead from 'next/head';
+import colors from './colors';
+import components from './components';
+import dimensions from './dimensions';
+import shadow from './shadow';
+import typography from './typography';
 
-const PageHead = ({ subtitle }: { subtitle?: string }) => {
-	return (
-		<NextHead>
-			<title>iMicroSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
-		</NextHead>
-	);
+const defaultTheme = {
+	colors,
+	components: components(colors),
+	dimensions,
+	shadow,
+	typography,
 };
 
-export default PageHead;
+export default defaultTheme;
+export type ThemeInterface = typeof defaultTheme;
