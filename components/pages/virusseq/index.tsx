@@ -19,14 +19,15 @@
  *
  */
 
-import NextHead from 'next/head';
+import { ReactElement } from 'react';
 
-const PageHead = ({ subtitle }: { subtitle?: string }) => {
-	return (
-		<NextHead>
-			<title>iMicroSeq Portal{subtitle ? ` - ${subtitle}` : ''}</title>
-		</NextHead>
-	);
-};
+import PageContent from './PageContent';
+import PageLayout from './PageLayout';
 
-export default PageHead;
+const VirusSeqPage = (): ReactElement => (
+	<PageLayout>
+		<PageContent />
+	</PageLayout>
+);
+
+export default VirusSeqPage;
