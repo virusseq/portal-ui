@@ -82,8 +82,9 @@ const useEnvironmentalData = (origin: string) => {
 						})
 				: (console.error(stream), new Error(`Unspecified error at ${origin}`));
 		} catch (err) {
+			setAwaitingResponse(false);
 			console.error('error', err);
-			return await Promise.reject(err);
+			return err;
 		}
 	};
 
