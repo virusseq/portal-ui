@@ -178,16 +178,28 @@ const useEnvironmentalData = (origin: string) => {
 		return submission.data.inserts?.sample.records.reduce<UploadData[]>((acc, item, index) => {
 			// Retrieve the first error and indicate the number of additional errors if any
 			const errors = submission.errors.inserts?.sample || [];
-			const errorMessage = getErrorDetailsMessage(errors, index);
-			const recordStatus = errorMessage
-				? UploadStatus.ERROR
-				: submission.status === 'INVALID'
-				? UploadStatus.PENDING
-				: UploadStatus.PROCESSING;
+			const errorDetailsMessage = getErrorDetailsMessage(errors, index);
+			const identifier = item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
+
+			let recordStatus: UploadStatus = UploadStatus.PROCESSING;
+			let messageText = '';
+
+			if (submission.status === 'INVALID') {
+				messageText = 'Submission error';
+			} else if (!identifier) {
+				messageText = 'Identifier not found';
+			} else {
+				messageText = errorDetailsMessage;
+			}
+
+			if (messageText) {
+				recordStatus = UploadStatus.ERROR;
+			}
+
 			acc.push({
-				submitterSampleId: item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString() || '',
+				submitterSampleId: identifier || '',
 				submissionId: submissionId,
-				error: errorMessage || '',
+				error: messageText || '',
 				organization: organization,
 				originalFilePair: fileName,
 				status: recordStatus,
@@ -232,7 +244,7 @@ const useEnvironmentalData = (origin: string) => {
 		// Construct query parameters
 		const queryParams = new URLSearchParams({
 			entityName: 'sample',
-			pageSize: '50',
+			pageSize: records.length.toString(),
 		});
 
 		// Extract sample IDs from records
@@ -292,10 +304,10 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param index
 	 * @returns A formatted error message string or `undefined` if no matching errors are found.
 	 */
-	const getErrorDetailsMessage = (errors: ErrorDetails[], index: number): string | undefined => {
+	const getErrorDetailsMessage = (errors: ErrorDetails[], index: number): string => {
 		const errorDetails = errors.filter((error) => error.index === index);
 
-		if (errorDetails.length === 0) return undefined;
+		if (errorDetails.length === 0) return '';
 
 		const { reason, fieldName, errors: errorMessages } = errorDetails[0];
 

@@ -26,6 +26,7 @@ export type SubmissionData = {
 	originalFileNames: string[];
 	submissionId: string;
 	totalRecords: number;
+	status: string;
 };
 
 export type UploadData = {

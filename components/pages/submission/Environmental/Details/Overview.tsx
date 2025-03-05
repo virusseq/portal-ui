@@ -26,20 +26,23 @@ import { ReactElement } from 'react';
 import Navigator from '#components//Navigator';
 import { LoaderMessage } from '#components/Loader';
 import defaultTheme from '#components/theme';
-import { Calendar, CoronaVirus, File } from '#components/theme/icons';
+import { Calendar, CoronaVirus, File, Info, Spinner, Success } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
+import { SubmissionStatus } from '#global/hooks/useEnvironmentalData/types';
 
 const Overview = ({
 	createdAt,
 	id,
 	loading,
 	originalFileNames,
+	status,
 	totalRecords,
 }: {
 	createdAt?: string;
 	id: string;
 	loading: boolean;
 	originalFileNames?: string[];
+	status?: string;
 	totalRecords: string;
 }): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
@@ -114,6 +117,25 @@ const Overview = ({
 							<p>
 								<CoronaVirus size={16} />
 								{`Viral Genomes: ${totalRecords}`}
+							</p>
+						)}
+						{status &&
+							(status === SubmissionStatus.CLOSED || status === SubmissionStatus.INVALID) && (
+								<p>
+									<Info size={16} />
+									{`Status: Submission is invalid and has been closed`}
+								</p>
+							)}
+						{status && (status === SubmissionStatus.OPEN || status === SubmissionStatus.VALID) && (
+							<p>
+								<Spinner size={16} />
+								{`Status: Submission is being processed`}
+							</p>
+						)}
+						{status && status === SubmissionStatus.COMMITTED && (
+							<p>
+								<Success size={16} />
+								{`Status: Submission is complete`}
 							</p>
 						)}
 					</div>

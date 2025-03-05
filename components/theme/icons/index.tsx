@@ -47,4 +47,5 @@ export { default as OvertureUser } from './overture_user';
 export { default as PlusIcon } from './Plus';
 export { default as Spinner } from './spinner';
 export { default as Storage } from './Storage';
+export { default as Success } from './Success';
 export { default as Warning } from './warning';

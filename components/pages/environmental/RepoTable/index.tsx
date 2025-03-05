@@ -42,6 +42,8 @@ import useTrackingContext from '#global/hooks/useTrackingContext';
 
 const COLUMNS_DROPDOWN_TOOLTIP = 'Column selection does \\a not affect downloads.';
 
+const downloadButtonCustomProps = { exportSelectedRowsField: 'data.specimen_collector_sample_id' };
+
 const getTableConfigs = ({
 	apiHost = '',
 	customExporters,
@@ -75,9 +77,9 @@ const getTableConfigs = ({
 				borderColor: theme.colors.primary,
 				customExporters,
 				downloadUrl: urlJoin(apiHost, 'download'),
-				exportSelectedRowsField: 'data.specimen_collector_sample_id',
 				fontColor: theme.colors.white,
 				hoverBackground: theme.colors.accent3_dark,
+				...downloadButtonCustomProps,
 				label: () => (
 					<>
 						<Download

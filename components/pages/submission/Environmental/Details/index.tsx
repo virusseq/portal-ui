@@ -83,9 +83,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				// Data to display in Overview table
 				setSubmissionData({
 					createdAt,
-					originalFileNames: [sampleInserts?.batchName],
+					originalFileNames: [],
 					submissionId: id.toString(),
 					totalRecords: totalRecords,
+					status,
 				});
 
 				// Data to display in Main Table
@@ -136,10 +137,13 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			tries?: number;
 			delay?: number;
 		}) {
+			const pageSize = 20;
 			try {
-				const processingRecords = submissionDetails.PROCESSING.filter(
-					(record) => record.status === UploadStatus.PROCESSING,
-				);
+				const processingRecords = Object.values(submissionDetails)
+					.flat()
+					.filter(({ status }) => status === UploadStatus.PROCESSING)
+					.slice(0, pageSize);
+
 				const analysisIds = await getAnalysisIds(organization, processingRecords, {
 					signal: controller.signal,
 				});
@@ -150,17 +154,17 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 						upload: analysis,
 					});
 				});
+				const recordsProcessing = Object.values(submissionDetails)
+					.flat()
+					.some(({ status }) => status === UploadStatus.PROCESSING);
+
+				setDataIsPending(recordsProcessing);
+
+				if (recordsProcessing) {
+					trackPendingData({ tries, delay });
+				}
 			} catch (error) {
 				console.error('Error handling submission:', error);
-			}
-
-			const recordsProcessing = Object.values(submissionDetails)
-				.flat()
-				.some(({ status }) => status === UploadStatus.PROCESSING);
-
-			setDataIsPending(recordsProcessing);
-
-			if (recordsProcessing) {
 				const triesLeft = tries - 1;
 				if (triesLeft) {
 					await wait(delay);
@@ -199,6 +203,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				totalRecords={totalUploads.toString()}
 				id={ID}
 				originalFileNames={submissionData?.originalFileNames}
+				status={submissionData?.status}
 			/>
 
 			<LoaderWrapper loading={awaitingResponse} size="10px">
