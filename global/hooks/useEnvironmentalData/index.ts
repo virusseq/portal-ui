@@ -183,24 +183,15 @@ const useEnvironmentalData = (origin: string) => {
 			const identifier = item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
 
 			let recordStatus: UploadStatus = UploadStatus.PROCESSING;
-			let messageText = '';
 
-			if (submission.status === 'INVALID') {
-				messageText = 'Submission error';
-			} else if (!identifier) {
-				messageText = 'Identifier not found';
-			} else {
-				messageText = errorDetailsMessage;
-			}
-
-			if (messageText) {
+			if (errorDetailsMessage) {
 				recordStatus = UploadStatus.ERROR;
 			}
 
 			acc.push({
 				submitterSampleId: identifier || '',
 				submissionId: submissionId,
-				error: messageText || '',
+				error: errorDetailsMessage || '',
 				organization: organization,
 				originalFilePair: fileName,
 				status: recordStatus,
