@@ -203,7 +203,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				totalRecords={totalUploads.toString()}
 				id={ID}
 				originalFileNames={submissionData?.originalFileNames}
-				status={submissionData?.status}
+				status={submissionStatus}
 			/>
 
 			<LoaderWrapper loading={awaitingResponse} size="10px">

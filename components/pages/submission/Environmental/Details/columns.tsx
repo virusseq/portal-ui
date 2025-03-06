@@ -28,6 +28,7 @@ import theme from '#components/theme';
 import { Checkmark, Ellipsis, Warning } from '#components/theme/icons';
 import { UploadData } from '#global/hooks/useEnvironmentalData';
 
+import Details from '#components/Details';
 import { UploadStatus } from './types';
 
 const statusSortingOrder = [UploadStatus.ERROR, UploadStatus.PROCESSING, UploadStatus.COMPLETE];
@@ -67,12 +68,11 @@ const columnData: Column<Record<string, unknown>>[] = [
 	{
 		accessor: 'status',
 		Cell: ({ row, value }: { row: Row<UploadData>; value: UploadStatus }): ReactElement => {
-			const { error } = row.original;
+			const { errors, systemId } = row.original;
 
 			return (
 				<>
 					<StatusIcon status={value} />
-
 					<span
 						css={css`
 							display: inline-block;
@@ -81,21 +81,40 @@ const columnData: Column<Record<string, unknown>>[] = [
 							${value === UploadStatus.ERROR && `color: ${theme.colors.error_dark}`}
 						`}
 					>
-						{`${value}${error ? ':' : ''}`}
+						{`${value}${errors.length ? ':' : ''}`}
 					</span>
-
-					{error && (
+					{errors.length === 1 && (
 						<span
 							css={css`
 								display: inline-block;
 								margin-left: 60px;
 								white-space: normal;
-
-								${value === UploadStatus.ERROR && `color: ${theme.colors.error_dark}`}
+								color: ${theme.colors.error_dark};
 							`}
 						>
-							{error}
+							{errors[0]}
 						</span>
+					)}
+					{errors.length > 1 && (
+						<Details
+							summary={`Found ${errors.length} errors`}
+							style={css`
+								margin-left: 60px;
+								color: ${theme.colors.error_dark};
+							`}
+						>
+							<ol
+								css={css`
+									display: inline-block;
+									white-space: pre-line;
+									color: ${theme.colors.error_dark};
+								`}
+							>
+								{errors.map((e, i) => (
+									<li key={`error-${i}-${systemId}`}>{e}</li>
+								))}
+							</ol>
+						</Details>
 					)}
 				</>
 			);

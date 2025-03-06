@@ -123,19 +123,19 @@ const Overview = ({
 							(status === SubmissionStatus.CLOSED || status === SubmissionStatus.INVALID) && (
 								<p>
 									<Info size={16} />
-									{`Status: Submission is invalid and has been closed`}
+									{`Status: Submission failed. Data has errors`}
 								</p>
 							)}
 						{status && (status === SubmissionStatus.OPEN || status === SubmissionStatus.VALID) && (
 							<p>
 								<Spinner size={16} />
-								{`Status: Submission is being processed`}
+								{`Status: Submission incomplete`}
 							</p>
 						)}
 						{status && status === SubmissionStatus.COMMITTED && (
 							<p>
 								<Success size={16} />
-								{`Status: Submission is complete`}
+								{`Status: Submission complete`}
 							</p>
 						)}
 					</div>

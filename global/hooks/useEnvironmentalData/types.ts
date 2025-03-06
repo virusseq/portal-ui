@@ -31,7 +31,7 @@ export type SubmissionData = {
 
 export type UploadData = {
 	systemId: string | null;
-	error: string | null;
+	errors: string[];
 	originalFilePair: string[];
 	status: UploadStatus;
 	organization: string;

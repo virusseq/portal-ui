@@ -179,19 +179,19 @@ const useEnvironmentalData = (origin: string) => {
 		return submission.data.inserts?.sample.records.reduce<UploadData[]>((acc, item, index) => {
 			// Retrieve the first error and indicate the number of additional errors if any
 			const errors = submission.errors.inserts?.sample || [];
-			const errorDetailsMessage = getErrorDetailsMessage(errors, index);
+			const errorDetails = getErrorDetailsMessage(errors, index);
 			const identifier = item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
 
 			let recordStatus: UploadStatus = UploadStatus.PROCESSING;
 
-			if (errorDetailsMessage) {
+			if (errorDetails.length) {
 				recordStatus = UploadStatus.ERROR;
 			}
 
 			acc.push({
 				submitterSampleId: identifier || '',
 				submissionId: submissionId,
-				error: errorDetailsMessage || '',
+				errors: errorDetails,
 				organization: organization,
 				originalFilePair: fileName,
 				status: recordStatus,
@@ -294,24 +294,19 @@ const useEnvironmentalData = (origin: string) => {
 	 * Retrieves formatted error message for a specific index from a list of errors
 	 * @param errors
 	 * @param index
-	 * @returns A formatted error message string or `undefined` if no matching errors are found.
+	 * @returns An array of formatted error messages
 	 */
-	const getErrorDetailsMessage = (errors: ErrorDetails[], index: number): string => {
+	const getErrorDetailsMessage = (errors: ErrorDetails[], index: number): string[] => {
 		const errorDetails = errors.filter((error) => error.index === index);
 
-		if (errorDetails.length === 0) return '';
+		const message = errorDetails.map((err) => {
+			const valuePart = err.fieldValue ? `- Value: '${err.fieldValue}'` : '';
+			const errorsPart = err.errors
+				? `- Details: '${err.errors[0].message.replace(/\.+$/, '')}'`
+				: '';
 
-		const { reason, fieldName, errors: errorMessages } = errorDetails[0];
-
-		let message = `${reason} - Field: ${fieldName}`;
-		if (errorMessages?.length) {
-			message += ` - Details: ${errorMessages[0].message.replace(/\.+$/, '')}`;
-		}
-
-		// If there are additional errors, add a note about how many more errors exist
-		if (errorDetails.length > 1) {
-			message += `. Found ${errorDetails.length - 1} more errors`;
-		}
+			return `${err.reason} - Field: '${err.fieldName}' ${valuePart} ${errorsPart}`;
+		});
 
 		return message;
 	};
