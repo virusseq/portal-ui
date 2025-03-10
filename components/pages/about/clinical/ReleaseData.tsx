@@ -29,8 +29,8 @@ import Loader from '#components/Loader';
 import defaultTheme from '#components/theme';
 import { CoronaVirus, CrossHairs, File, Storage } from '#components/theme/icons';
 import { getConfig } from '#global/config';
-import useReleaseData from '#global/hooks/useReleaseData';
-import { ReleaseDataProps } from '#global/hooks/useReleaseData/types';
+import useReleaseData from '#global/hooks/clinical/useReleaseData';
+import { ReleaseDataProps } from '#global/hooks/clinical/useReleaseData/types';
 import useSingularityData from '#global/hooks/useSingularityData';
 
 const ReleaseData = (): ReactElement => {

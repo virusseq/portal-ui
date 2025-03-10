@@ -27,7 +27,7 @@ import { Col, Row } from 'react-grid-system';
 
 import Loader from '#components/Loader';
 import { CoronaVirus, CrossHairs, File, Storage } from '#components/theme/icons';
-import useReleaseData from '#global/hooks/useReleaseData';
+import useReleaseData from '#global/hooks/clinical/useReleaseData';
 
 const DataAnalysis = (): ReactElement => {
 	const [releaseData, isFetchingData] = useReleaseData();
