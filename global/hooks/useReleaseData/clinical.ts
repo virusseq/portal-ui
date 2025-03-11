@@ -23,35 +23,48 @@ import { useArrangerData } from '@overture-stack/arranger-components';
 import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
 import { useEffect, useState } from 'react';
 
-import { arrangerFetcher } from '#components/pages/environmental/RepoTable/helper';
 import { getConfig } from '#global/config';
-import { getProvince } from '#global/utils/constants';
+import formatFileSize from '#global/utils/formatFileSize';
 
-import { Count, FilesByVariantType, ReleaseDataProps } from './types';
+import { Count, type ReleaseClinicalDataProps } from './types';
+
+import { fetchArrangerData, recordsbyProvince, roundToSignificantDigits } from './index';
 
 const {
-	NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_CARDINALITY_PRECISION_THRESHOLD,
-	NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MAX_BUCKET_COUNTS,
+	NEXT_PUBLIC_ARRANGER_CLINICAL_CARDINALITY_PRECISION_THRESHOLD,
+	NEXT_PUBLIC_ARRANGER_CLINICAL_MAX_BUCKET_COUNTS,
 } = getConfig();
 
 const RELEASE_DATA_QUERY = `
-query releaseEnvironmentalDataQuery ($sqon: JSON) {
-    analysis {
+query releaseDataQuery ($sqon: JSON) {
+    file {
     aggregations(
       filters: $sqon,
       include_missing: false,
       aggregations_filter_themselves: true
     ){
-	  data__geo_loc_name_state_province_territory {
-		buckets {
+      analysis__host__host_gender{
+        buckets {
           doc_count
           key
         }
-	  }
-      data__specimen_collector_sample_id {
-        cardinality (precision_threshold: ${NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_CARDINALITY_PRECISION_THRESHOLD})
       }
-      organization {
+      analysis__sample_collection__geo_loc_province {
+        buckets {
+          doc_count
+          key
+        }
+      }
+      donors__specimens__samples__sample_id {
+        cardinality (precision_threshold: ${NEXT_PUBLIC_ARRANGER_CLINICAL_CARDINALITY_PRECISION_THRESHOLD})
+      }
+      file__size {
+        stats {
+          count
+          sum
+        }
+      }
+      study_id {
         bucket_count
       }
     }
@@ -61,13 +74,13 @@ query releaseEnvironmentalDataQuery ($sqon: JSON) {
 
 const GENOMES_COUNT_QUERY = `
 query genomesCount ($sqon: JSON) {
-    analysis {
+    file {
       aggregations(
         filters: $sqon,
         include_missing: false,
         aggregations_filter_themselves: true
       ){
-        data__specimen_collector_sample_id {
+        donors__specimens__samples__sample_id {
           bucket_count
         }
       }
@@ -75,75 +88,51 @@ query genomesCount ($sqon: JSON) {
   }
 `;
 
-const fetchArrangerData = ({
-	endpointTag,
-	query,
-	sqon,
-}: {
-	endpointTag?: string;
-	query: string;
-	sqon?: SQONType;
-}) => {
-	return arrangerFetcher({
-		body: {
-			query: query,
-			variables: { sqon },
-		},
-		endpointTag,
-	});
-};
-
-function roundToSignificantDigits(a: number, sigDigs: number) {
-	const digitsToKeep = a.toString().length - sigDigs;
-	return Math.floor(a / Math.pow(10, digitsToKeep)) * Math.pow(10, digitsToKeep);
-}
-
 const fetchReleaseData = async (sqon?: SQONType) => {
 	return fetchArrangerData({
-		endpointTag: 'FetchEnvironmentalReleaseData',
+		endpointTag: 'FetchReleaseData',
 		query: RELEASE_DATA_QUERY,
 		sqon,
-	}).then(({ data: { analysis: { aggregations = {} } = {} } }) => {
+	}).then(({ data: { file: { aggregations = {} } = {} } }) => {
 		// aggregations will be null if there's an error in the response
 		if (aggregations) {
 			const {
-				data__geo_loc_name_state_province_territory: { buckets: provinces = [] } = {},
-				data__specimen_collector_sample_id: { cardinality: genomesCardinality = 0 } = {},
-				organization: { bucket_count: organizationCount = 0 } = {},
+				analysis__host__host_gender: { buckets: hostGenders = [] } = {},
+				analysis__sample_collection__geo_loc_province: { buckets: provinces = [] } = {},
+				donors__specimens__samples__sample_id: { cardinality: genomesCardinality = 0 } = {},
+				file__size: { stats: { count: fileCount = 0, sum: fileSize = 0 } = {} } = {},
+				study_id: { bucket_count: studyCount = 0 } = {},
 			} = aggregations;
 
-			const filesByVariant: FilesByVariantType[] = provinces
-				.map(({ doc_count, key }: { doc_count: number; key: string }) => {
-					const { abbreviation, name } = getProvince({ long: key });
+			const [value, unit] = formatFileSize(fileSize).split(' ');
 
-					return {
-						abbreviation,
-						count: doc_count,
-						name,
-					};
-				})
-				.filter((fv: FilesByVariantType) => fv.abbreviation !== '');
-
+			const filesByVariant = recordsbyProvince(provinces);
 			const genomesCount: Count = {
 				value: roundToSignificantDigits(genomesCardinality, 2),
 				type: 'APPROXIMATE',
 			};
 
 			return {
+				fileCount,
+				fileSize: {
+					unit,
+					value,
+				},
 				filesByVariant,
-				organizationCount,
+				hostGenders,
+				studyCount,
 				genomesCount,
 			};
 		}
 	});
 };
 
-const tuneGenomesAggs = async (sqon?: SQONType, currentReleaseData?: ReleaseDataProps) => {
+const tuneGenomesAggs = async (sqon?: SQONType, currentReleaseData?: ReleaseClinicalDataProps) => {
 	const currentGenomesValue = currentReleaseData?.genomesCount?.value;
 
 	if (
 		currentGenomesValue &&
-		currentGenomesValue >= NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MAX_BUCKET_COUNTS
+		currentGenomesValue >= NEXT_PUBLIC_ARRANGER_CLINICAL_MAX_BUCKET_COUNTS
 	) {
 		console.error('genomesValue is too high to do a bucket_count query');
 		return Promise.resolve(currentReleaseData);
@@ -153,9 +142,9 @@ const tuneGenomesAggs = async (sqon?: SQONType, currentReleaseData?: ReleaseData
 		endpointTag: 'TuneGenomesAggs',
 		query: GENOMES_COUNT_QUERY,
 		sqon,
-	}).then(({ data: { analysis: { aggregations = {} } = {} } }) => {
+	}).then(({ data: { file: { aggregations = {} } = {} } }) => {
 		if (aggregations && currentReleaseData?.genomesCount) {
-			const { data__specimen_collector_sample_id: { bucket_count: genomnesCount = 0 } = {} } =
+			const { donors__specimens__samples__sample_id: { bucket_count: genomnesCount = 0 } = {} } =
 				aggregations;
 
 			currentReleaseData.genomesCount.value = genomnesCount;
@@ -165,9 +154,9 @@ const tuneGenomesAggs = async (sqon?: SQONType, currentReleaseData?: ReleaseData
 	});
 };
 
-const useReleaseData = (): [ReleaseDataProps, boolean] => {
+const useReleaseData = (): [ReleaseClinicalDataProps, boolean] => {
 	const { sqon } = useArrangerData();
-	const [releaseData, setReleaseData] = useState<ReleaseDataProps>();
+	const [releaseData, setReleaseData] = useState<ReleaseClinicalDataProps>();
 	const [isFetchingData, setIsFetchingData] = useState(true);
 
 	useEffect(() => {
@@ -175,7 +164,9 @@ const useReleaseData = (): [ReleaseDataProps, boolean] => {
 			setIsFetchingData(true);
 			fetchReleaseData(sqon)
 				.then((data) => tuneGenomesAggs(sqon, data))
-				.then((data) => setReleaseData(data))
+				.then((data) => {
+					setReleaseData(data);
+				})
 				.catch(async (err) => {
 					console.warn(err);
 				})

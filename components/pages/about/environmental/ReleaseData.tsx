@@ -27,15 +27,15 @@ import Loader from '#components/Loader';
 import defaultTheme from '#components/theme';
 import { CoronaVirus, CrossHairs } from '#components/theme/icons';
 import { getConfig } from '#global/config';
-import useReleaseData from '#global/hooks/environmental/useReleaseData';
-import { ReleaseDataProps } from '#global/hooks/environmental/useReleaseData/types';
+import useReleaseData from '#global/hooks/useReleaseData/environmental';
+import { ReleaseEnvironmentalDataProps } from '#global/hooks/useReleaseData/types';
 
 const ReleaseData = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	const { NEXT_PUBLIC_RELEASE_DATE } = getConfig();
 	const [releaseData, loadingArrangerData] = useReleaseData();
 
-	const [releaseDataProps] = useState<ReleaseDataProps>();
+	const [releaseDataProps] = useState<ReleaseEnvironmentalDataProps>();
 
 	const { genomesCount = { value: 0, type: 'APPROXIMATE' }, organizationCount = 0 } = releaseData;
 
