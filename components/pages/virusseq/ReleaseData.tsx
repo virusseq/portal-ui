@@ -28,8 +28,8 @@ import { ReactElement, useEffect, useState } from 'react';
 import Loader from '#components/Loader';
 import { CoronaVirus, CrossHairs, File, Storage } from '#components/theme/icons';
 import { getConfig } from '#global/config';
-import useReleaseData from '#global/hooks/useReleaseData';
-import { ReleaseDataProps } from '#global/hooks/useReleaseData/types';
+import useReleaseData from '#global/hooks/useReleaseData/clinical';
+import { ReleaseClinicalDataProps } from '#global/hooks/useReleaseData/types';
 import useSingularityData from '#global/hooks/useSingularityData';
 import defaultTheme from '#virusseq/theme';
 
@@ -40,7 +40,7 @@ const ReleaseData = (): ReactElement => {
 	const { fetchTotalCounts } = useSingularityData();
 
 	const [isLoadingSingularityData, setIsLoadingSingularityData] = useState<boolean>(true);
-	const [releaseDataProps, setReleaseDataProps] = useState<ReleaseDataProps>();
+	const [releaseDataProps, setReleaseDataProps] = useState<ReleaseClinicalDataProps>();
 
 	useEffect(() => {
 		fetchTotalCounts()
