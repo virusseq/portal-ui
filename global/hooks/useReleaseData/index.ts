@@ -19,30 +19,9 @@
  *
  */
 
-import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
-
-import { arrangerFetcher } from '#components/pages/clinical/RepoTable/helper';
 import { getProvince } from '#global/utils/constants';
 
 import { ProvinceStats } from './types';
-
-export const fetchArrangerData = ({
-	endpointTag,
-	query,
-	sqon,
-}: {
-	endpointTag?: string;
-	query: string;
-	sqon?: SQONType;
-}) => {
-	return arrangerFetcher({
-		body: {
-			query: query,
-			variables: { sqon },
-		},
-		endpointTag,
-	});
-};
 
 export const recordsbyProvince = (
 	provinces: Array<{ doc_count: number; key: string }>,

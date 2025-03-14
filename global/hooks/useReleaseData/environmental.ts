@@ -23,15 +23,17 @@ import { useArrangerData } from '@overture-stack/arranger-components';
 import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
 import { useEffect, useState } from 'react';
 
+import createArrangerFetcher from '#components/utils/arrangerFetcher';
 import { getConfig } from '#global/config';
 
 import { Count, type ReleaseEnvironmentalDataProps } from './types';
 
-import { fetchArrangerData, recordsbyProvince, roundToSignificantDigits } from './index';
+import { recordsbyProvince, roundToSignificantDigits } from './index';
 
 const {
 	NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_CARDINALITY_PRECISION_THRESHOLD,
 	NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MAX_BUCKET_COUNTS,
+	NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API,
 } = getConfig();
 
 const RELEASE_DATA_QUERY = `
@@ -75,11 +77,17 @@ query genomesCount ($sqon: JSON) {
   }
 `;
 
+export const arrangerFetcher = createArrangerFetcher({
+	ARRANGER_API: NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API,
+});
+
 const fetchReleaseData = async (sqon?: SQONType) => {
-	return fetchArrangerData({
+	return arrangerFetcher({
+		body: {
+			query: RELEASE_DATA_QUERY,
+			variables: { sqon },
+		},
 		endpointTag: 'FetchEnvironmentalReleaseData',
-		query: RELEASE_DATA_QUERY,
-		sqon,
 	}).then(({ data: { analysis: { aggregations = {} } = {} } }) => {
 		// aggregations will be null if there's an error in the response
 		if (aggregations) {
@@ -119,10 +127,12 @@ const tuneGenomesAggs = async (
 		return Promise.resolve(currentReleaseData);
 	}
 
-	return fetchArrangerData({
+	return arrangerFetcher({
+		body: {
+			query: GENOMES_COUNT_QUERY,
+			variables: { sqon },
+		},
 		endpointTag: 'TuneGenomesAggs',
-		query: GENOMES_COUNT_QUERY,
-		sqon,
 	}).then(({ data: { analysis: { aggregations = {} } = {} } }) => {
 		if (aggregations && currentReleaseData?.genomesCount) {
 			const { data__specimen_collector_sample_id: { bucket_count: genomnesCount = 0 } = {} } =
