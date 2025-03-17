@@ -166,7 +166,7 @@ const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => (
 			},
 		},
 		QuickSearch: {
-			fieldNames: 'donors.specimens.submitter_specimen_id',
+			fieldNames: 'data.specimen_collector_sample_id',
 			headerTitle: 'Specimen Collector Sample ID',
 			placeholder: 'e.g. AB-12345',
 

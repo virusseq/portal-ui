@@ -176,11 +176,7 @@ const RepoTable = (): ReactElement => {
 							return fieldName;
 
 						default:
-							return (displayName || Header)
-								.toLowerCase()
-								.replace(/(\s+)ct(\s+)/g, '$1Ct$2')
-								.replace(/(\s+)id/g, '$1ID')
-								.replace(/(\s*)gisaid(\s*)/g, '$1GISAID$2');
+							return displayName || Header;
 					}
 				},
 				fieldName,
