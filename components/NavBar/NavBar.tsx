@@ -19,10 +19,10 @@
  *
  */
 
-import { createRef, ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
-import { useRouter } from 'next/router';
 import cx from 'classnames';
+import { useRouter } from 'next/router';
+import { createRef, ReactElement } from 'react';
 
 import useAuthContext from '../../global/hooks/useAuthContext';
 import useTrackingContext from '../../global/hooks/useTrackingContext';
@@ -126,17 +126,13 @@ const NavBar = (): ReactElement => {
 									About the tools
 								</StyledListLink>
 							</InternalLink>,
-							<InternalLink path={INTERNAL_PATHS.VISUALIZATION}>
-								<StyledListLink
-									className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.VISUALIZATION) })}
-									css={css`
-										pointer-events: none;
-										color: ${theme.colors.grey_5};
-									`}
-								>
-									CoVizu
-								</StyledListLink>
-							</InternalLink>,
+							<StyledListLink
+								href="https://filogeneti.ca/covizu/index.html"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								CoVizu
+							</StyledListLink>,
 							<StyledListLink
 								href="https://covidmvp.cidgoh.ca/"
 								rel="noopener noreferrer"
