@@ -27,7 +27,7 @@ import useAuthContext from '#global/hooks/useAuthContext';
 
 const StudyAccess = (): ReactElement | null => {
 	const theme: typeof defaultTheme = useTheme();
-	const { user, userHasWriteScopes, userCanSubmitDataForAllStudy } = useAuthContext();
+	const { userClinicalWriteScopes, userCanSubmitDataForAllStudy } = useAuthContext();
 	const [effectiveScopes, setEffectiveScopes] = useState<string[] | null>(null);
 
 	useEffect(() => {
@@ -35,16 +35,16 @@ const StudyAccess = (): ReactElement | null => {
 			setEffectiveScopes(['All Studies']);
 			return;
 		}
-		userHasWriteScopes &&
+		userClinicalWriteScopes.length > 0 &&
 			!effectiveScopes &&
 			setEffectiveScopes(
-				(user?.scope || [])
+				userClinicalWriteScopes
 					.filter((scope) => scope.includes('WRITE'))
 					.map((scope) => scope.replace('.WRITE', '')),
 			);
-	}, [userHasWriteScopes, userCanSubmitDataForAllStudy]);
+	}, [userCanSubmitDataForAllStudy, userClinicalWriteScopes]);
 
-	return userHasWriteScopes && effectiveScopes && effectiveScopes.length > 0 ? (
+	return userClinicalWriteScopes.length > 0 && effectiveScopes && effectiveScopes.length > 0 ? (
 		<div
 			css={css`
 				border-top: 1px solid ${theme.colors.grey_3};

@@ -122,7 +122,7 @@ const getErrorMessage = ({ type, statusCode }: ErrorResponse) => {
 };
 
 const ApiTokenInfo = (): ReactElement => {
-	const { token, userHasWriteScopes } = useAuthContext();
+	const { token, userHasClinicalAccess, userHasEnvironmentalAccess } = useAuthContext();
 	const [existingToken, setExistingToken] = useState<string | null>(null);
 	const [isCopyingToken, setIsCopyingToken] = useState(false);
 	const [copySuccess, setCopySuccess] = useState(false);
@@ -173,7 +173,7 @@ const ApiTokenInfo = (): ReactElement => {
 					margin-top: 0.5rem;
 				`}
 			>
-				{!userHasWriteScopes && <NoScopes />}
+				{!(userHasClinicalAccess || userHasEnvironmentalAccess) && <NoScopes />}
 			</div>
 
 			<ol
