@@ -45,9 +45,16 @@ const noUploadError: NoUploadError = {
 };
 
 const NewSubmissions = (): ReactElement => {
-	const { token, userCanSubmitEnvironmentalData, user, userIsEnvironmentalAdmin } =
-		useAuthContext();
-	const { NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE } = getConfig();
+	const {
+		token,
+		userHasEnvironmentalAccess,
+		userIsEnvironmentalAdmin,
+		userEnvironmentalWriteScopes,
+	} = useAuthContext();
+	const {
+		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE,
+		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE,
+	} = getConfig();
 	const theme: typeof defaultTheme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
@@ -57,14 +64,18 @@ const NewSubmissions = (): ReactElement => {
 	const { awaitingResponse, submitData } = useEnvironmentalData('NewSubmissions');
 
 	const handleSubmit = () => {
-		const effectiveScopes = (user?.scope || [])
-			.filter((scope) =>
-				scope.toLowerCase().includes(NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.toLowerCase()),
-			)
-			.map((scope) => scope.replace('.WRITE', ''))
-			.map((scope) => scope.toUpperCase());
+		const effectiveOrganizations = userEnvironmentalWriteScopes.map((scope) =>
+			scope.slice(
+				NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE.length,
+				scope.length - NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.length,
+			),
+		);
+		console.log(`start:${NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE.length}`);
+		console.log(`end:${NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.length}`);
+		console.log(`userEnvironmentalWriteScopes`, userEnvironmentalWriteScopes);
+		console.log(`effectiveOrganizations`, effectiveOrganizations);
 
-		if (thereAreFiles && token && (userCanSubmitEnvironmentalData || userIsEnvironmentalAdmin)) {
+		if (thereAreFiles && token && userHasEnvironmentalAccess) {
 			const formData = new FormData();
 			const errorMessages: string[] = [];
 
@@ -74,8 +85,7 @@ const NewSubmissions = (): ReactElement => {
 
 				// Verify if the user's session permissions allow them
 				// to upload environmental data to this organization.
-				const hasWriteAccessToOrganization =
-					effectiveScopes.length > 0 && effectiveScopes.includes(organizationName);
+				const hasWriteAccessToOrganization = effectiveOrganizations.includes(organizationName);
 				if (userIsEnvironmentalAdmin || hasWriteAccessToOrganization) {
 					formData.append('organization', organizationName);
 					// Submission service expects a file with the name of the schema it represents
@@ -132,13 +142,7 @@ const NewSubmissions = (): ReactElement => {
 		}
 
 		console.error(
-			`no ${
-				token
-					? 'token'
-					: userCanSubmitEnvironmentalData || userIsEnvironmentalAdmin
-					? 'scopes'
-					: 'files'
-			} to submit`,
+			`no ${token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'} to submit`,
 		);
 	};
 
@@ -222,7 +226,7 @@ const NewSubmissions = (): ReactElement => {
 			</ol>
 
 			<DropZone
-				disabled={!(userCanSubmitEnvironmentalData || userIsEnvironmentalAdmin)}
+				disabled={!userHasEnvironmentalAccess}
 				validationState={validationState}
 				validationDispatch={validationDispatch}
 			/>

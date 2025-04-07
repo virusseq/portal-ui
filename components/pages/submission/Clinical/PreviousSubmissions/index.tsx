@@ -34,13 +34,13 @@ import columns from './columns';
 
 const PreviousSubmissions = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
-	const { token, userHasWriteScopes } = useAuthContext();
+	const { token, userHasClinicalAccess } = useAuthContext();
 	const { awaitingResponse, fetchMuseData } = useMuseData('PreviousSubmissions');
 	const [previousSubmissions, setPreviousSubmissions] = useState([]);
 
 	useEffect(() => {
 		token &&
-			userHasWriteScopes &&
+			userHasClinicalAccess &&
 			fetchMuseData(
 				`submissions?${new URLSearchParams({
 					page: '0',
@@ -49,7 +49,7 @@ const PreviousSubmissions = (): ReactElement => {
 			).then((response) => {
 				response.data && setPreviousSubmissions(response.data);
 			});
-	}, [token]);
+	}, [token, userHasClinicalAccess]);
 
 	return (
 		<article
@@ -57,7 +57,7 @@ const PreviousSubmissions = (): ReactElement => {
 				width: 100%;
 			`}
 		>
-			{userHasWriteScopes ? (
+			{userHasClinicalAccess ? (
 				<LoaderWrapper loading={awaitingResponse} message="Retrieving your submissions.">
 					{previousSubmissions.length > 0 ? (
 						<GenericTable

@@ -42,7 +42,7 @@ import { getFileExtension, validationParameters, validationReducer } from './val
 const noUploadError = {} as NoUploadErrorType;
 
 const NewSubmissions = (): ReactElement => {
-	const { token, userHasWriteScopes } = useAuthContext();
+	const { token, userHasClinicalAccess } = useAuthContext();
 	const theme: typeof defaultTheme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [uploadError, setUploadError] = useState(noUploadError);
@@ -52,7 +52,7 @@ const NewSubmissions = (): ReactElement => {
 	const { awaitingResponse, fetchMuseData } = useMuseData('NewSubmissions');
 
 	const handleSubmit = () => {
-		if (thereAreFiles && token && userHasWriteScopes) {
+		if (thereAreFiles && token && userHasClinicalAccess) {
 			const formData = new FormData();
 
 			// if many TSV are available, submit only the first one along with all fastas
@@ -93,7 +93,7 @@ const NewSubmissions = (): ReactElement => {
 			});
 		}
 
-		console.error(`no ${token ? 'token' : userHasWriteScopes ? 'scopes' : 'files'} to submit`);
+		console.error(`no ${token ? 'token' : userHasClinicalAccess ? 'scopes' : 'files'} to submit`);
 	};
 
 	useEffect(() => {
@@ -205,7 +205,7 @@ const NewSubmissions = (): ReactElement => {
 			</ol>
 
 			<DropZone
-				disabled={!userHasWriteScopes}
+				disabled={!userHasClinicalAccess}
 				validationState={validationState}
 				validationDispatch={validationDispatch}
 			/>
