@@ -22,18 +22,19 @@
 import { useState } from 'react';
 import urlJoin from 'url-join';
 
-import { UploadStatus } from '#components/pages/submission/Environmental/Details/types';
+import { EventType, UploadStatus } from '#components/pages/submission/Environmental/Details/types';
 import type { CreateSubmissionResult } from '#components/pages/submission/Environmental/NewSubmissions/types';
 import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
 import processStream from '#global/utils/processStream';
 
-import type {
-	CommitSubmissionResult,
-	DataRecord,
-	ErrorDetails,
-	Submission,
-	UploadData,
+import {
+	SubmissionStatus,
+	type CommitSubmissionResult,
+	type DataRecord,
+	type ErrorDetails,
+	type Submission,
+	type UploadData,
 } from './types';
 
 const useEnvironmentalData = (origin: string) => {
@@ -139,7 +140,14 @@ const useEnvironmentalData = (origin: string) => {
 				signal,
 			});
 
-			if (!submissionResponse?.data || !('inserts' in submissionResponse.data)) {
+			if (
+				!submissionResponse?.data ||
+				!(
+					'inserts' in submissionResponse.data ||
+					'updates' in submissionResponse.data ||
+					'deletes' in submissionResponse.data
+				)
+			) {
 				throw new Error('Unexpected response getting submission details', submissionResponse);
 			}
 			return submissionResponse;
@@ -173,32 +181,99 @@ const useEnvironmentalData = (origin: string) => {
 	 * @returns
 	 */
 	const formatUploadData = (submission: Submission): UploadData[] => {
-		const fileName = [submission.data.inserts?.sample.batchName];
 		const organization = submission.organization;
 		const submissionId = submission.id.toString();
-		return submission.data.inserts?.sample.records.reduce<UploadData[]>((acc, item, index) => {
-			// Retrieve the first error and indicate the number of additional errors if any
-			const errors = submission.errors.inserts?.sample || [];
+
+		// Formatting Insert records
+		const insertRecords = submission.data.inserts?.sample?.records?.map<UploadData>(
+			(item, index) => {
+				const fileName = [submission.data.inserts?.sample.batchName];
+				const errors = submission.errors.inserts?.sample || [];
+				const errorDetails = getErrorDetailsMessage(errors, index);
+				const identifier = item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
+
+				let recordStatus: UploadStatus = UploadStatus.PROCESSING;
+				if (errorDetails.length) {
+					recordStatus = UploadStatus.ERROR;
+				} else if (
+					submission.status === SubmissionStatus.CLOSED ||
+					submission.status === SubmissionStatus.INVALID
+				) {
+					recordStatus = UploadStatus.INCOMPLETE;
+				}
+
+				return {
+					submitterSampleId: identifier || '',
+					submissionId: submissionId,
+					eventyType: EventType.INSERT,
+					details: errorDetails,
+					organization: organization,
+					originalFilePair: fileName,
+					status: recordStatus,
+					systemId: '',
+				};
+			},
+		);
+
+		// Formatting Update records
+		const updateRecords = submission.data.updates?.sample?.map<UploadData>((item, index) => {
+			const errors = submission.errors.updates?.sample || [];
 			const errorDetails = getErrorDetailsMessage(errors, index);
-			const identifier = item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
+			const updateDetails = [JSON.stringify({ old: item.old }), JSON.stringify({ new: item.new })];
 
 			let recordStatus: UploadStatus = UploadStatus.PROCESSING;
-
 			if (errorDetails.length) {
 				recordStatus = UploadStatus.ERROR;
+			} else if (
+				submission.status === SubmissionStatus.CLOSED ||
+				submission.status === SubmissionStatus.INVALID
+			) {
+				recordStatus = UploadStatus.INCOMPLETE;
 			}
 
-			acc.push({
+			return {
+				submitterSampleId: '', // Sample ID will be retrieved later
+				submissionId: submissionId,
+				eventyType: EventType.UPDATE,
+				details: recordStatus === UploadStatus.PROCESSING ? updateDetails : errorDetails,
+				organization: organization,
+				originalFilePair: [''],
+				status: recordStatus,
+				systemId: item.systemId,
+			};
+		});
+
+		// Formatting Delete records
+		const deleteRecords = submission.data.deletes?.sample?.map<UploadData>((item, index) => {
+			const identifier = item.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
+			const errors = submission.errors.deletes?.sample || [];
+			const errorDetails = getErrorDetailsMessage(errors, index);
+
+			let recordStatus: UploadStatus = UploadStatus.PROCESSING;
+			if (errorDetails.length) {
+				recordStatus = UploadStatus.ERROR;
+			} else if (
+				submission.status === SubmissionStatus.CLOSED ||
+				submission.status === SubmissionStatus.INVALID
+			) {
+				recordStatus = UploadStatus.INCOMPLETE;
+			} else if (submission.status === SubmissionStatus.COMMITTED) {
+				recordStatus = UploadStatus.COMPLETE;
+			}
+
+			return {
 				submitterSampleId: identifier || '',
 				submissionId: submissionId,
-				errors: errorDetails,
+				eventyType: EventType.DELETE,
+				details: errorDetails,
 				organization: organization,
-				originalFilePair: fileName,
+				originalFilePair: [''],
 				status: recordStatus,
-				systemId: '',
-			});
-			return acc;
-		}, []);
+				systemId: item.systemId,
+			};
+		});
+
+		return [...insertRecords, ...updateRecords, ...deleteRecords];
 	};
 
 	/**
@@ -220,6 +295,47 @@ const useEnvironmentalData = (origin: string) => {
 		});
 
 		return parseInt(responseActiveSubmission.id);
+	};
+
+	/**
+	 * Fetches and updates sample IDs and status for the provided records
+	 * @param records
+	 * @returns
+	 */
+	const getSampleId = async (records: UploadData[], { signal }: { signal?: AbortSignal } = {}) => {
+		const queryParams = new URLSearchParams({
+			view: 'flat',
+		});
+
+		return Promise.all(
+			records.map(async (record) => {
+				if (record.systemId === null) return record;
+
+				const queryResponse = await handleRequest({
+					url: urlJoin(
+						NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
+						'data',
+						'category',
+						NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
+						'id',
+						record.systemId,
+						`?${queryParams.toString()}`,
+					),
+					method: 'GET',
+					signal,
+				});
+
+				const sampleId =
+					queryResponse.data && queryResponse.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME];
+
+				// Update the record with the sample ID and status
+				if (sampleId) {
+					record.status = UploadStatus.COMPLETE;
+					record.submitterSampleId = sampleId;
+				}
+				return record;
+			}),
+		);
 	};
 
 	/**
@@ -357,6 +473,7 @@ const useEnvironmentalData = (origin: string) => {
 		formatUploadData,
 		getActiveSubmission,
 		getAnalysisIds,
+		getSampleId,
 		setAwaitingResponse,
 		submitData,
 	};

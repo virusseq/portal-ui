@@ -19,7 +19,10 @@
  *
  */
 
-import type { UploadStatus } from '#components/pages/submission/Environmental/Details/types';
+import type {
+	EventType,
+	UploadStatus,
+} from '#components/pages/submission/Environmental/Details/types';
 
 export type SubmissionData = {
 	createdAt: string;
@@ -31,7 +34,8 @@ export type SubmissionData = {
 
 export type UploadData = {
 	systemId: string | null;
-	errors: string[];
+	eventyType: EventType;
+	details: string[];
 	originalFilePair: string[];
 	status: UploadStatus;
 	organization: string;
@@ -109,8 +113,8 @@ export type Submission = {
 	id: number;
 	data: {
 		inserts: Record<string, SubmissionInsertData>;
-		updates: Record<string, SubmissionUpdateData>;
-		deletes: Record<string, SubmissionDeleteData>;
+		updates: Record<string, SubmissionUpdateData[]>;
+		deletes: Record<string, SubmissionDeleteData[]>;
 	};
 	dictionary: {
 		name: string;

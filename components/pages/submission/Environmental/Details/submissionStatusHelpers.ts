@@ -24,14 +24,14 @@ import { UploadData } from '#global/hooks/useEnvironmentalData';
 import { UploadDetailsAction, UploadsStatusDictionary, UploadStatusAction } from './types';
 
 export const uploadsStatusDictionary: UploadsStatusDictionary = {
-	ERROR: [],
-	PROCESSING: [],
 	COMPLETE: [],
-	PENDING: [],
+	ERROR: [],
+	INCOMPLETE: [],
+	PROCESSING: [],
 };
 
 export const groupUploadsByStatus = (uploads: UploadData[]): UploadsStatusDictionary =>
-	uploads.reduce(
+	uploads?.reduce(
 		// start with a dictionary, end with an array
 		(sortedUploads: UploadsStatusDictionary, upload: UploadData) => {
 			return {

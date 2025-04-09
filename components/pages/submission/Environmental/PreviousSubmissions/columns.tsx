@@ -29,18 +29,32 @@ import { numberSort, uuidSort } from '#components/GenericTable/helpers';
 import StyledLink from '#components/Link';
 import getInternalLink from '#global/utils/getInternalLink';
 
-const getTotalRecordsFromSubmission = (value: any): string =>
-	typeof value === 'object' &&
-	value !== null &&
-	'inserts' in value &&
-	typeof value.inserts === 'object' &&
-	value.inserts !== null &&
-	'sample' in value.inserts &&
-	typeof value.inserts.sample === 'object' &&
-	value.inserts.sample !== null &&
-	'recordsCount' in value.inserts.sample
-		? value.inserts.sample.recordsCount
-		: '';
+const getTotalRecordsFromSubmission = (value: any): string => {
+	const insertsCount = value?.inserts?.sample?.recordsCount;
+	const updatesCount = value?.updates?.sample?.recordsCount;
+	const deletesCount = value?.deletes?.sample?.recordsCount;
+
+	let message = '';
+	if (insertsCount) {
+		message += `${insertsCount}`;
+	}
+
+	if (updatesCount || deletesCount) {
+		message += `(`;
+		if (updatesCount) {
+			message += `${updatesCount} updated`;
+			if (deletesCount) {
+				message += ', ';
+			}
+		}
+		if (deletesCount) {
+			message += `${deletesCount} deleted`;
+		}
+		message += ')';
+	}
+
+	return message === '' ? '0' : message;
+};
 
 const columnData: Column<Record<string, unknown>>[] = [
 	{

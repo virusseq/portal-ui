@@ -28,19 +28,42 @@ export type SubmissionDetailsProps = {
 	setTotalUploads?: Dispatch<SetStateAction<number>>;
 };
 
+/**
+ * Represents the different types of events that can occur in a Submission process.
+ * INSERT: Insert new records
+ * UPDATE: Update existing records
+ * DELETE: Delete records
+ * These events are used to track the changes made to the data during the submission process.
+ */
+export const EventType = {
+	INSERT: 'INSERT',
+	UPDATE: 'UPDATE',
+	DELETE: 'DELETE',
+} as const;
+export type EventType = keyof typeof EventType;
+
+/**
+ * Represents the different statuses that a Submission can have.
+ * - COMPLETE: The submission is complete and all records are processed successfully.
+ *   New records have been inserted, existing records updated, or deleted records removed.
+ * - INCOMPLETE: The submission is incomplete and some records are missing or not processed.
+ *   e.g. Submission could have been closed by the user before all records were processed.
+ * - ERROR: There was an error during the submission process. e.g. Schema validation failed.
+ * - PROCESSING: The submission is currently being processed. e.g Schema validation is in progress and could take a while.
+ */
 export const UploadStatus = {
 	COMPLETE: 'COMPLETE',
+	INCOMPLETE: 'INCOMPLETE',
 	ERROR: 'ERROR',
 	PROCESSING: 'PROCESSING',
-	PENDING: 'PENDING',
 } as const;
 export type UploadStatus = keyof typeof UploadStatus;
 
 export type UploadsStatusDictionary = {
+	COMPLETE: UploadData[];
+	INCOMPLETE: UploadData[];
 	ERROR: UploadData[];
 	PROCESSING: UploadData[];
-	COMPLETE: UploadData[];
-	PENDING: UploadData[];
 };
 
 export const UploadDetailsAction = {
