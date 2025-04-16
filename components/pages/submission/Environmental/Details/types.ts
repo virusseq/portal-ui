@@ -43,6 +43,17 @@ export const EventType = {
 export type EventType = keyof typeof EventType;
 
 /**
+ * Maps 'EventType' constants to their corresponding
+ * lowercase, plural string keys used in response data.
+ */
+export const EventTypeToKey = {
+	[EventType.INSERT]: 'inserts',
+	[EventType.UPDATE]: 'updates',
+	[EventType.DELETE]: 'deletes',
+} as const;
+export type EventTypeKey = (typeof EventTypeToKey)[keyof typeof EventTypeToKey];
+
+/**
  * Represents the different statuses that a Submission can have.
  * - COMPLETE: The submission is complete and all records are processed successfully.
  *   New records have been inserted, existing records updated, or deleted records removed.

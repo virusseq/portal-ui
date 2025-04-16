@@ -22,7 +22,11 @@
 import { useState } from 'react';
 import urlJoin from 'url-join';
 
-import { EventType, UploadStatus } from '#components/pages/submission/Environmental/Details/types';
+import {
+	EventType,
+	EventTypeToKey,
+	UploadStatus,
+} from '#components/pages/submission/Environmental/Details/types';
 import type { CreateSubmissionResult } from '#components/pages/submission/Environmental/NewSubmissions/types';
 import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
@@ -142,11 +146,7 @@ const useEnvironmentalData = (origin: string) => {
 
 			if (
 				!submissionResponse?.data ||
-				!(
-					'inserts' in submissionResponse.data ||
-					'updates' in submissionResponse.data ||
-					'deletes' in submissionResponse.data
-				)
+				!Object.values(EventTypeToKey).some((status) => status in submissionResponse.data)
 			) {
 				throw new Error('Unexpected response getting submission details', submissionResponse);
 			}
@@ -184,94 +184,94 @@ const useEnvironmentalData = (origin: string) => {
 		const organization = submission.organization;
 		const submissionId = submission.id.toString();
 
+		const incompleteStatuses: SubmissionStatus[] = [
+			SubmissionStatus.CLOSED,
+			SubmissionStatus.INVALID,
+		];
+
 		// Formatting Insert records
-		const insertRecords = submission.data.inserts?.sample?.records?.map<UploadData>(
-			(item, index) => {
-				const fileName = [submission.data.inserts?.sample.batchName];
-				const errors = submission.errors.inserts?.sample || [];
+		const insertRecords =
+			submission.data[EventTypeToKey.INSERT]?.sample?.records?.map<UploadData>((item, index) => {
+				const fileName = [submission.data[EventTypeToKey.INSERT]?.sample.batchName];
+				const errors = submission.errors[EventTypeToKey.INSERT]?.sample || [];
 				const errorDetails = getErrorDetailsMessage(errors, index);
 				const identifier = item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
 
 				let recordStatus: UploadStatus = UploadStatus.PROCESSING;
 				if (errorDetails.length) {
 					recordStatus = UploadStatus.ERROR;
-				} else if (
-					submission.status === SubmissionStatus.CLOSED ||
-					submission.status === SubmissionStatus.INVALID
-				) {
+				} else if (incompleteStatuses.includes(submission.status)) {
 					recordStatus = UploadStatus.INCOMPLETE;
 				}
 
 				return {
 					submitterSampleId: identifier || '',
 					submissionId: submissionId,
-					eventyType: EventType.INSERT,
+					eventType: EventType.INSERT,
 					details: errorDetails,
 					organization: organization,
 					originalFilePair: fileName,
 					status: recordStatus,
 					systemId: '',
 				};
-			},
-		);
+			}) ?? [];
 
 		// Formatting Update records
-		const updateRecords = submission.data.updates?.sample?.map<UploadData>((item, index) => {
-			const errors = submission.errors.updates?.sample || [];
-			const errorDetails = getErrorDetailsMessage(errors, index);
-			const updateDetails = [JSON.stringify({ old: item.old }), JSON.stringify({ new: item.new })];
+		const updateRecords =
+			submission.data[EventTypeToKey.UPDATE]?.sample?.map<UploadData>((item, index) => {
+				const errors = submission.errors[EventTypeToKey.UPDATE]?.sample || [];
+				const errorDetails = getErrorDetailsMessage(errors, index);
+				const updateDetails = [
+					JSON.stringify({ old: item.old }),
+					JSON.stringify({ new: item.new }),
+				];
 
-			let recordStatus: UploadStatus = UploadStatus.PROCESSING;
-			if (errorDetails.length) {
-				recordStatus = UploadStatus.ERROR;
-			} else if (
-				submission.status === SubmissionStatus.CLOSED ||
-				submission.status === SubmissionStatus.INVALID
-			) {
-				recordStatus = UploadStatus.INCOMPLETE;
-			}
+				let recordStatus: UploadStatus = UploadStatus.PROCESSING;
+				if (errorDetails.length) {
+					recordStatus = UploadStatus.ERROR;
+				} else if (incompleteStatuses.includes(submission.status)) {
+					recordStatus = UploadStatus.INCOMPLETE;
+				}
 
-			return {
-				submitterSampleId: '', // Sample ID will be retrieved later
-				submissionId: submissionId,
-				eventyType: EventType.UPDATE,
-				details: recordStatus === UploadStatus.PROCESSING ? updateDetails : errorDetails,
-				organization: organization,
-				originalFilePair: [''],
-				status: recordStatus,
-				systemId: item.systemId,
-			};
-		});
+				return {
+					submitterSampleId: '', // Sample ID will be retrieved later
+					submissionId: submissionId,
+					eventType: EventType.UPDATE,
+					details: recordStatus === UploadStatus.PROCESSING ? updateDetails : errorDetails,
+					organization: organization,
+					originalFilePair: [''],
+					status: recordStatus,
+					systemId: item.systemId,
+				};
+			}) ?? [];
 
 		// Formatting Delete records
-		const deleteRecords = submission.data.deletes?.sample?.map<UploadData>((item, index) => {
-			const identifier = item.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
-			const errors = submission.errors.deletes?.sample || [];
-			const errorDetails = getErrorDetailsMessage(errors, index);
+		const deleteRecords =
+			submission.data[EventTypeToKey.DELETE]?.sample?.map<UploadData>((item, index) => {
+				const identifier = item.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
+				const errors = submission.errors[EventTypeToKey.DELETE]?.sample || [];
+				const errorDetails = getErrorDetailsMessage(errors, index);
 
-			let recordStatus: UploadStatus = UploadStatus.PROCESSING;
-			if (errorDetails.length) {
-				recordStatus = UploadStatus.ERROR;
-			} else if (
-				submission.status === SubmissionStatus.CLOSED ||
-				submission.status === SubmissionStatus.INVALID
-			) {
-				recordStatus = UploadStatus.INCOMPLETE;
-			} else if (submission.status === SubmissionStatus.COMMITTED) {
-				recordStatus = UploadStatus.COMPLETE;
-			}
+				let recordStatus: UploadStatus = UploadStatus.PROCESSING;
+				if (errorDetails.length) {
+					recordStatus = UploadStatus.ERROR;
+				} else if (incompleteStatuses.includes(submission.status)) {
+					recordStatus = UploadStatus.INCOMPLETE;
+				} else if (submission.status === SubmissionStatus.COMMITTED) {
+					recordStatus = UploadStatus.COMPLETE;
+				}
 
-			return {
-				submitterSampleId: identifier || '',
-				submissionId: submissionId,
-				eventyType: EventType.DELETE,
-				details: errorDetails,
-				organization: organization,
-				originalFilePair: [''],
-				status: recordStatus,
-				systemId: item.systemId,
-			};
-		});
+				return {
+					submitterSampleId: identifier || '',
+					submissionId: submissionId,
+					eventType: EventType.DELETE,
+					details: errorDetails,
+					organization: organization,
+					originalFilePair: [''],
+					status: recordStatus,
+					systemId: item.systemId,
+				};
+			}) ?? [];
 
 		return [...insertRecords, ...updateRecords, ...deleteRecords];
 	};

@@ -29,10 +29,16 @@ import { numberSort, uuidSort } from '#components/GenericTable/helpers';
 import StyledLink from '#components/Link';
 import getInternalLink from '#global/utils/getInternalLink';
 
+import { EventTypeKey, EventTypeToKey } from '../Details/types';
+
 const getTotalRecordsFromSubmission = (value: any): string => {
-	const insertsCount = value?.inserts?.sample?.recordsCount;
-	const updatesCount = value?.updates?.sample?.recordsCount;
-	const deletesCount = value?.deletes?.sample?.recordsCount;
+	const getRecordsCount = (operation: EventTypeKey): number | undefined => {
+		return value?.[operation]?.sample?.recordsCount;
+	};
+
+	const insertsCount = getRecordsCount(EventTypeToKey.INSERT);
+	const updatesCount = getRecordsCount(EventTypeToKey.UPDATE);
+	const deletesCount = getRecordsCount(EventTypeToKey.DELETE);
 
 	let message = '';
 	if (insertsCount) {

@@ -73,7 +73,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 	{
 		accessor: 'status',
 		Cell: ({ row, value }: { row: Row<UploadData>; value: UploadStatus }): ReactElement => {
-			const { details, systemId, eventyType } = row.original;
+			const { details, systemId, eventType } = row.original;
 
 			return (
 				<>
@@ -86,10 +86,10 @@ const columnData: Column<Record<string, unknown>>[] = [
 							${value === UploadStatus.ERROR && `color: ${theme.colors.error_dark}`}
 						`}
 					>
-						{`${eventyType} ${value}${details.length ? ':' : ''}`}
+						{`${eventType} ${value}${details.length ? ':' : ''}`}
 					</span>
 
-					{value === UploadStatus.ERROR && details.length === 1 && (
+					{value === UploadStatus.ERROR && details.length === 1 ? (
 						<span
 							css={css`
 								display: inline-block;
@@ -100,8 +100,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 						>
 							{details[0]}
 						</span>
-					)}
-					{value === UploadStatus.ERROR && details.length > 1 && (
+					) : value === UploadStatus.ERROR && details.length > 1 ? (
 						<Details
 							summary={`Found ${details.length} details`}
 							style={css`
@@ -121,8 +120,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 								))}
 							</ol>
 						</Details>
-					)}
-					{value !== UploadStatus.ERROR && details.length > 1 && (
+					) : value !== UploadStatus.ERROR && details.length > 1 ? (
 						<Details
 							summary={`Found ${details.length} details`}
 							style={css`
@@ -142,7 +140,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 								))}
 							</ol>
 						</Details>
-					)}
+					) : null}
 				</>
 			);
 		},

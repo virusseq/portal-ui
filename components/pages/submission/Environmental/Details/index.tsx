@@ -73,12 +73,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					tries: 3,
 				});
 
-				const { organization, createdAt, id, status, data } = submissionResponse;
+				const { organization, createdAt, id, status } = submissionResponse;
 				const formattedData = formatUploadData(submissionResponse);
-				const sampleInsertsCount = data.inserts?.sample?.records.length || 0;
-				const sampleUpdatesCount = data.updates?.sample?.length || 0;
-				const sampleDeletesCount = data.deletes?.sample?.length || 0;
-				const totalRecordsCount = sampleInsertsCount + sampleUpdatesCount + sampleDeletesCount;
+				const totalRecordsCount = formattedData.length;
 
 				// Set organization
 				setOrganization(organization);
