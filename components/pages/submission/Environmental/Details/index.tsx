@@ -60,6 +60,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		formatUploadData,
 		commitSubmission,
 		getAnalysisIds,
+		getSampleId,
 	} = useEnvironmentalData('SubmissionsDetails');
 
 	// gets the initial status for all the uploads
@@ -72,10 +73,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					tries: 3,
 				});
 
-				const { organization, createdAt, id, status, data } = submissionResponse;
+				const { organization, createdAt, id, status } = submissionResponse;
 				const formattedData = formatUploadData(submissionResponse);
-				const sampleInserts = data.inserts?.sample;
-				const totalRecords = sampleInserts?.records.length || 0;
+				const totalRecordsCount = formattedData.length;
 
 				// Set organization
 				setOrganization(organization);
@@ -85,7 +85,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					createdAt,
 					originalFileNames: [],
 					submissionId: id.toString(),
-					totalRecords: totalRecords,
+					totalRecords: totalRecordsCount,
 					status,
 				});
 
@@ -96,7 +96,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				});
 
 				// Total amount of records uploading
-				setTotalUploads(totalRecords);
+				setTotalUploads(totalRecordsCount);
 
 				// Submission validity
 				setSubmissionStatus(status);
@@ -106,6 +106,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING),
 				);
 			} catch (error) {
+				setSubmissionStatus(SubmissionStatus.INVALID);
 				console.error('Error fetching submission:', error);
 			}
 		}
@@ -130,6 +131,19 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			}
 		}
 
+		function completeAllProcessingRecords() {
+			Object.values(submissionDetails)
+				.flat()
+				.filter(({ status }) => status === UploadStatus.PROCESSING)
+				.forEach((analysis) => {
+					analysis.status = UploadStatus.COMPLETE;
+					submissionDetailsDispatch({
+						type: UploadDetailsAction.UPDATE,
+						upload: analysis,
+					});
+				});
+		}
+
 		async function trackPendingData({
 			tries = 1,
 			delay = 1000,
@@ -138,30 +152,99 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			delay?: number;
 		}) {
 			const pageSize = 20;
+			const failedGetSystemId: UploadData[] = [];
+			const failedGetSampleId: UploadData[] = [];
 			try {
 				const processingRecords = Object.values(submissionDetails)
 					.flat()
-					.filter(({ status }) => status === UploadStatus.PROCESSING)
+					.filter(({ status }) => status === UploadStatus.PROCESSING);
+
+				// Filter out records to get their analysis IDs
+				const recordsMissingSystemId = processingRecords
+					.filter(({ systemId }) => !systemId)
 					.slice(0, pageSize);
 
-				const analysisIds = await getAnalysisIds(organization, processingRecords, {
-					signal: controller.signal,
-				});
+				if (recordsMissingSystemId.length) {
+					const resultRecordsWithSystemId = await getAnalysisIds(
+						organization,
+						recordsMissingSystemId,
+						{
+							signal: controller.signal,
+						},
+					);
 
-				analysisIds.forEach((analysis) => {
-					submissionDetailsDispatch({
-						type: UploadDetailsAction.UPDATE,
-						upload: analysis,
+					resultRecordsWithSystemId.forEach((record) => {
+						submissionDetailsDispatch({
+							type: UploadDetailsAction.UPDATE,
+							upload: record,
+						});
 					});
-				});
-				const recordsProcessing = Object.values(submissionDetails)
-					.flat()
-					.some(({ status }) => status === UploadStatus.PROCESSING);
 
-				setDataIsPending(recordsProcessing);
+					// Records that failed to get System IDs
+					failedGetSystemId.push(...resultRecordsWithSystemId.filter((record) => !record.systemId));
+				}
 
-				if (recordsProcessing) {
+				// Filter out records to get their analysis IDs
+				const recordsMissingSampleId = processingRecords
+					.filter(({ submitterSampleId }) => !submitterSampleId)
+					.slice(0, pageSize);
+
+				if (recordsMissingSampleId.length) {
+					const resultRecordsWithSampleId = await getSampleId(recordsMissingSampleId, {
+						signal: controller.signal,
+					});
+
+					resultRecordsWithSampleId.forEach((record) => {
+						submissionDetailsDispatch({
+							type: UploadDetailsAction.UPDATE,
+							upload: record,
+						});
+					});
+
+					failedGetSampleId.push(
+						// Records that failed to get Sample IDs
+						...resultRecordsWithSampleId.filter((record) => !record.submitterSampleId),
+					);
+				}
+
+				const recordsMissingIds = recordsMissingSampleId.length + recordsMissingSystemId.length;
+				if (recordsMissingIds === 0) {
+					// No more records left to process
+					setDataIsPending(false);
+					completeAllProcessingRecords();
+					return;
+				}
+
+				// Check if there are any records to process in the next batch
+				const remainingToProcess = processingRecords
+					.filter(
+						// Exclude records that failed to retrieve submitterSampleId, by matching systemIds
+						({ systemId }) =>
+							!failedGetSampleId.some((failedRecord) => failedRecord.systemId === systemId),
+					)
+					.filter(
+						// Exclude records that failed to retrieve systemId, by matching submitterSampleIds
+						({ submitterSampleId }) =>
+							!failedGetSystemId.some(
+								(failedGetSampleId) => failedGetSampleId.submitterSampleId === submitterSampleId,
+							),
+					);
+
+				const failedGettingIds = failedGetSystemId.length + failedGetSampleId.length;
+
+				setDataIsPending(remainingToProcess.length > 0 || failedGettingIds > 0);
+
+				if (remainingToProcess.length) {
+					// There are still records to process
 					trackPendingData({ tries, delay });
+				} else if (failedGettingIds > 0 && tries > 1) {
+					// There are only records that failed to get IDs. Retry getting IDs for the failed records
+					const triesLeft = tries - 1;
+					await wait(delay);
+					trackPendingData({ tries: triesLeft, delay });
+				} else {
+					// Set all records as complete
+					completeAllProcessingRecords();
 				}
 			} catch (error) {
 				console.error('Error handling submission:', error);
@@ -169,6 +252,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				if (triesLeft) {
 					await wait(delay);
 					trackPendingData({ tries: triesLeft, delay });
+				} else {
+					// Set all records as complete
+					completeAllProcessingRecords();
 				}
 			}
 		}

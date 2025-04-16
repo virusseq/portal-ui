@@ -29,18 +29,38 @@ import { numberSort, uuidSort } from '#components/GenericTable/helpers';
 import StyledLink from '#components/Link';
 import getInternalLink from '#global/utils/getInternalLink';
 
-const getTotalRecordsFromSubmission = (value: any): string =>
-	typeof value === 'object' &&
-	value !== null &&
-	'inserts' in value &&
-	typeof value.inserts === 'object' &&
-	value.inserts !== null &&
-	'sample' in value.inserts &&
-	typeof value.inserts.sample === 'object' &&
-	value.inserts.sample !== null &&
-	'recordsCount' in value.inserts.sample
-		? value.inserts.sample.recordsCount
-		: '';
+import { EventTypeKey, EventTypeToKey } from '../Details/types';
+
+const getTotalRecordsFromSubmission = (value: any): string => {
+	const getRecordsCount = (operation: EventTypeKey): number | undefined => {
+		return value?.[operation]?.sample?.recordsCount;
+	};
+
+	const insertsCount = getRecordsCount(EventTypeToKey.INSERT);
+	const updatesCount = getRecordsCount(EventTypeToKey.UPDATE);
+	const deletesCount = getRecordsCount(EventTypeToKey.DELETE);
+
+	let message = '';
+	if (insertsCount) {
+		message += `${insertsCount}`;
+	}
+
+	if (updatesCount || deletesCount) {
+		message += `(`;
+		if (updatesCount) {
+			message += `${updatesCount} updated`;
+			if (deletesCount) {
+				message += ', ';
+			}
+		}
+		if (deletesCount) {
+			message += `${deletesCount} deleted`;
+		}
+		message += ')';
+	}
+
+	return message === '' ? '0' : message;
+};
 
 const columnData: Column<Record<string, unknown>>[] = [
 	{

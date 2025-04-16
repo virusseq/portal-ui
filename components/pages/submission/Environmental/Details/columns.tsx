@@ -23,15 +23,20 @@ import { css } from '@emotion/react';
 import { ReactElement } from 'react';
 import { Column, Row } from 'react-table';
 
+import Details from '#components/Details';
 import { uuidSort } from '#components/GenericTable/helpers';
 import theme from '#components/theme';
 import { Checkmark, Ellipsis, Warning } from '#components/theme/icons';
 import { UploadData } from '#global/hooks/useEnvironmentalData';
 
-import Details from '#components/Details';
 import { UploadStatus } from './types';
 
-const statusSortingOrder = [UploadStatus.ERROR, UploadStatus.PROCESSING, UploadStatus.COMPLETE];
+const statusSortingOrder = [
+	UploadStatus.ERROR,
+	UploadStatus.PROCESSING,
+	UploadStatus.COMPLETE,
+	UploadStatus.INCOMPLETE,
+];
 
 const StatusIcon = ({ status }: { status: UploadStatus }) => {
 	switch (status) {
@@ -41,10 +46,10 @@ const StatusIcon = ({ status }: { status: UploadStatus }) => {
 		case UploadStatus.ERROR:
 			return <Warning size={12} />;
 
-		case UploadStatus.PROCESSING:
-			return <Ellipsis size={12} />;
+		case UploadStatus.INCOMPLETE:
+			return <Warning size={12} />;
 
-		case UploadStatus.PENDING:
+		case UploadStatus.PROCESSING:
 			return <Ellipsis size={12} />;
 	}
 };
@@ -68,7 +73,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 	{
 		accessor: 'status',
 		Cell: ({ row, value }: { row: Row<UploadData>; value: UploadStatus }): ReactElement => {
-			const { errors, systemId } = row.original;
+			const { details, systemId, eventType } = row.original;
 
 			return (
 				<>
@@ -81,25 +86,25 @@ const columnData: Column<Record<string, unknown>>[] = [
 							${value === UploadStatus.ERROR && `color: ${theme.colors.error_dark}`}
 						`}
 					>
-						{`${value}${errors.length ? ':' : ''}`}
+						{`${eventType} ${value}${details.length ? ':' : ''}`}
 					</span>
-					{errors.length === 1 && (
+
+					{value === UploadStatus.ERROR && details.length === 1 ? (
 						<span
 							css={css`
 								display: inline-block;
-								margin-left: 60px;
+								margin-left: 105px;
 								white-space: normal;
 								color: ${theme.colors.error_dark};
 							`}
 						>
-							{errors[0]}
+							{details[0]}
 						</span>
-					)}
-					{errors.length > 1 && (
+					) : value === UploadStatus.ERROR && details.length > 1 ? (
 						<Details
-							summary={`Found ${errors.length} errors`}
+							summary={`Found ${details.length} details`}
 							style={css`
-								margin-left: 60px;
+								margin-left: 105px;
 								color: ${theme.colors.error_dark};
 							`}
 						>
@@ -110,12 +115,32 @@ const columnData: Column<Record<string, unknown>>[] = [
 									color: ${theme.colors.error_dark};
 								`}
 							>
-								{errors.map((e, i) => (
+								{details.map((e, i) => (
 									<li key={`error-${i}-${systemId}`}>{e}</li>
 								))}
 							</ol>
 						</Details>
-					)}
+					) : value !== UploadStatus.ERROR && details.length > 1 ? (
+						<Details
+							summary={`Found ${details.length} details`}
+							style={css`
+								margin-left: 130px;
+								color: ${theme.colors.success_dark};
+							`}
+						>
+							<ol
+								css={css`
+									display: inline-block;
+									white-space: pre-line;
+									color: ${theme.colors.success_dark};
+								`}
+							>
+								{details.map((e, i) => (
+									<li key={`details-${i}-${systemId}`}>{e}</li>
+								))}
+							</ol>
+						</Details>
+					) : null}
 				</>
 			);
 		},
