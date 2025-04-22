@@ -97,8 +97,6 @@ const Footer = (): ReactElement => {
 			>
 				<span
 					css={css`
-						font-size: 0.6rem;
-						/* margin: 10px 0 -10px; */
 						text-align: center;
 					`}
 				>
@@ -128,7 +126,6 @@ const Footer = (): ReactElement => {
 							&:not(:first-of-type)::before {
 								color: ${theme.colors.accent};
 								content: '•';
-								font-size: 10px;
 								left: -3px;
 								position: absolute;
 								top: 5px;
@@ -137,19 +134,20 @@ const Footer = (): ReactElement => {
 					`}
 				>
 					<li>
-						<InternalLink path={INTERNAL_PATHS.POLICIES}>
-							<StyledLink>Policies</StyledLink>
-						</InternalLink>
-					</li>
-
-					<li>
+						<span>Contact us at </span>
 						<StyledLink
 							href="mailto:info@virusseq-dataportal.ca"
 							rel="noopener noreferrer"
 							target="_blank"
 						>
-							Contact Us
+							info@virusseq-dataportal.ca
 						</StyledLink>
+					</li>
+
+					<li>
+						<InternalLink path={INTERNAL_PATHS.POLICIES}>
+							<StyledLink>Policies</StyledLink>
+						</InternalLink>
 					</li>
 
 					{(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) && !token && (
