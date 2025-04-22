@@ -35,8 +35,10 @@ import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/T
 import { ReactElement } from 'react';
 import urlJoin from 'url-join';
 
+import StyledLink from '#components/Link';
 import { ThemeInterface } from '#components/theme';
 import { Download } from '#components/theme/icons';
+import validateStringAsUrl from '#components/utils/urlValidation';
 import { getConfig } from '#global/config';
 import useTrackingContext from '#global/hooks/useTrackingContext';
 
@@ -58,11 +60,21 @@ const getTableConfigs = ({
 		Table: {
 			borderColor: theme.colors.grey_3,
 			padding: '0.4rem',
-			// columnTypes: {
-			// 	list: {
-			// 		listStyle: 'roman',
-			// 	},
-			// },
+			columnTypes: {
+				'data.sra_url': {
+					cellValue: ({ value = '' }) => {
+						const valueIsURL = validateStringAsUrl(value);
+						// TODO: may want to validate the URL is an SRA one, if we have a pattern
+						return valueIsURL ? (
+							<StyledLink href={value} rel="noopener noreferrer" target="_blank">
+								{value}
+							</StyledLink>
+						) : (
+							value
+						);
+					},
+				},
+			},
 
 			// Components
 			Cell: {
