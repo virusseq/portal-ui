@@ -21,6 +21,7 @@
 
 import { css, useTheme } from '@emotion/react';
 import { ArrangerDataProvider } from '@overture-stack/arranger-components';
+import type { APIFetcherFn } from '@overture-stack/arranger-components/dist/types.js';
 import { ReactElement, useEffect, useState } from 'react';
 
 import ErrorNotification from '#components/ErrorNotification';
@@ -136,7 +137,7 @@ const EnvironmentalDataRepositoryPage = (): ReactElement => {
 			) : (
 				<ArrangerDataProvider
 					apiUrl={NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API}
-					customFetcher={arrangerFetcher}
+					customFetcher={arrangerFetcher as APIFetcherFn} //TODO: WIP updating types in Arranger
 					documentType={NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_DOCUMENT_TYPE}
 					theme={{
 						colors: {

@@ -27,13 +27,13 @@ import {
 	Toolbar,
 	useArrangerTheme,
 } from '@overture-stack/arranger-components';
-import type { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
 import {
 	CustomColumnMappingInterface,
 	CustomExporterInput,
 	ExporterFunction,
 } from '@overture-stack/arranger-components/dist/Table/DownloadButton/types';
 import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/ThemeContext/types';
+import SQONBuilder, { type SQON } from '@overture-stack/sqon-builder';
 import { isEmpty } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import urlJoin from 'url-join';
@@ -182,7 +182,7 @@ const RepoTable = (): ReactElement => {
 		setArchive(undefined);
 	};
 
-	const saveSetThenBuildArchive = async (sqon: SQONType): Promise<Archive> => {
+	const saveSetThenBuildArchive = async (sqon: SQON): Promise<Archive> => {
 		const setId = await saveSet(sqon);
 		logEvent({
 			category: 'Downloads',
@@ -211,7 +211,14 @@ const RepoTable = (): ReactElement => {
 		updateArchiveState();
 	}, [archive]);
 
-	const handleBundleDownload: ExporterFunction = ({ selectedRows, sqon }) => {
+	// TODO asserting function type while we integrate SQON Builder into Arranger
+	const handleBundleDownload = (({
+		selectedRows,
+		sqon,
+	}: {
+		selectedRows: string[];
+		sqon: SQON;
+	}) => {
 		showModal();
 
 		const sqonToUse = buildSqonWithObjectIds(sqon, selectedRows);
@@ -221,7 +228,7 @@ const RepoTable = (): ReactElement => {
 			: saveSetThenBuildArchive(sqonToUse);
 
 		archivePromise.then(setArchive);
-	};
+	}) as ExporterFunction;
 
 	const today = new Date().toISOString();
 	const tsvExportColumns = NEXT_PUBLIC_ARRANGER_CLINICAL_MANIFEST_COLUMNS.split(',')

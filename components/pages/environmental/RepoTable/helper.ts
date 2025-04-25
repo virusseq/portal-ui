@@ -19,8 +19,7 @@
  *
  */
 
-import { SQONType } from '@overture-stack/arranger-components/dist/DataContext/types';
-import SQON from '@overture-stack/sqon-builder';
+import SQONBuilder, { type SQON } from '@overture-stack/sqon-builder';
 import { isEmpty } from 'lodash';
 
 import createArrangerFetcher from '#components/utils/arrangerFetcher';
@@ -42,7 +41,7 @@ const saveSetMutation = `mutation ($sqon: JSON!)  {
 	}
 }`;
 
-export const saveSet = (sqon: SQONType): Promise<string> => {
+export const saveSet = (sqon: SQON): Promise<string> => {
 	return arrangerFetcher({
 		body: {
 			query: saveSetMutation,
@@ -64,11 +63,12 @@ export const saveSet = (sqon: SQONType): Promise<string> => {
 		}) as Promise<string>;
 };
 
-export function buildSqonWithObjectIds(currentSqon: SQONType, objectIds: string[]): SQONType {
-	const objectsSqon = objectIds && objectIds.length > 0 ? SQON.in('object_id', objectIds) : null;
+export function buildSqonWithObjectIds(currentSqon: SQON, objectIds: string[]): SQON | null {
+	const objectsSqon =
+		objectIds && objectIds.length > 0 ? SQONBuilder.in('object_id', objectIds) : null;
 
 	if (!isEmpty(currentSqon) && !isEmpty(objectsSqon)) {
-		return currentSqon.and(objectsSqon);
+		return SQONBuilder(currentSqon).and(objectsSqon);
 	}
 
 	if (isEmpty(currentSqon) && !isEmpty(objectsSqon)) {
