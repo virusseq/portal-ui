@@ -203,7 +203,8 @@ const NewSubmissions = (): ReactElement => {
 
 			<p>
 				Waste water metadata is submitted as a <span className="code">.csv</span> file. The file
-				name must match the Province name for the Submission. (e.g. QC.csv, etc.)
+				name must match the Province name for the Submission. (e.g. QC.csv, etc.). Only one `.csv`
+				is permitted per submission.
 			</p>
 
 			<p>

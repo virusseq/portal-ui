@@ -30,6 +30,10 @@ import DragAndDrop from '#components/theme/icons/DragAndDrop';
 import { acceptedFileExtensions, ValidationAction, ValidationParameters } from './types';
 import { validator } from './validationHelpers';
 
+const acceptedExtensionsString = Object.values(acceptedFileExtensions)
+	.map((ext) => `.${ext}`)
+	.join(',');
+
 const DropZone = ({
 	disabled,
 	validationState,
@@ -48,9 +52,7 @@ const DropZone = ({
 		isDragActive,
 		// isFileTooLarge,
 	} = useDropzone({
-		accept: Object.values(acceptedFileExtensions)
-			.map((ext) => `.${ext}`)
-			.join(','),
+		accept: acceptedExtensionsString,
 		disabled,
 		onDrop: useCallback(
 			(acceptedFiles: File[]) =>

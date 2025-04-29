@@ -38,7 +38,7 @@ export const validationReducer = (
 ): ValidationParameters => {
 	switch (action.type) {
 		case 'add csv': {
-			const oneCsv = overwiteIfExists(state.oneCsv, action.file);
+			const oneCsv = [action.file];
 			return {
 				...state,
 				oneCsv,
