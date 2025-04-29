@@ -21,10 +21,11 @@
 
 import { Dispatch } from 'react';
 
-import { ValidationAction, ValidationParameters } from './types';
+import { acceptedFileExtensions, ValidationAction, ValidationParameters } from './types';
 
 export const validationParameters = {
-	oneOrMoreCsv: [],
+	oneCsv: [],
+	oneOrMoreTar: [],
 	readyToUpload: false, // there's at least one CSV
 };
 
@@ -37,20 +38,40 @@ export const validationReducer = (
 ): ValidationParameters => {
 	switch (action.type) {
 		case 'add csv': {
-			const oneOrMoreCsv = overwiteIfExists(state.oneOrMoreCsv, action.file);
+			const oneCsv = overwiteIfExists(state.oneCsv, action.file);
 			return {
 				...state,
-				oneOrMoreCsv,
-				readyToUpload: oneOrMoreCsv.length > 0,
+				oneCsv,
+				readyToUpload: oneCsv.length === 1,
 			};
 		}
 
 		case 'remove csv': {
-			const oneOrMoreCsv = state.oneOrMoreCsv.filter((fasta: File) => fasta.name !== action.file);
+			const oneCsv = state.oneCsv.filter((tarFile: File) => tarFile.name !== action.file);
 			return {
 				...state,
-				oneOrMoreCsv,
-				readyToUpload: oneOrMoreCsv.length > 0,
+				oneCsv,
+				readyToUpload: oneCsv.length === 1,
+			};
+		}
+
+		case 'add tar.xz': {
+			const oneOrMoreTar = overwiteIfExists(state.oneOrMoreTar, action.file);
+			return {
+				...state,
+				oneOrMoreTar,
+				readyToUpload: state.oneCsv.length === 1 && oneOrMoreTar.length >= 0,
+			};
+		}
+
+		case 'remove tar.xz': {
+			const oneOrMoreTar = state.oneOrMoreTar.filter(
+				(tarFile: File) => tarFile.name !== action.file,
+			);
+			return {
+				...state,
+				oneOrMoreTar,
+				readyToUpload: state.oneCsv.length === 1 && oneOrMoreTar.length >= 0,
 			};
 		}
 
@@ -66,21 +87,43 @@ export const validationReducer = (
 export const getFileExtension = (file: File | string = ''): string => {
 	const parsedFileName = (typeof file === 'string' ? file : file.name).toLowerCase().split('.');
 
+	// get the compound extension (e.g., tar.xz) or a single part extension (e.g., csv)
 	return parsedFileName
-		.slice(-(parsedFileName?.[parsedFileName.length - 1] === 'gz' ? 2 : 1))
+		.slice(
+			-(parsedFileName?.[parsedFileName.length - 1] ===
+			acceptedFileExtensions.TAR_XZ.split('.').pop()
+				? 2
+				: 1),
+		)
 		.join('.');
 };
 
-export const minFiles = ({ oneOrMoreCsv }: ValidationParameters): boolean =>
-	oneOrMoreCsv.length > 0;
+export const getSRAFromFileName = (fullFileName: string): string => {
+	if (!fullFileName) return '';
+
+	const [baseName] = fullFileName.split('.');
+	if (!baseName) return '';
+
+	const [sra] = baseName.split('-');
+	return sra || '';
+};
+
+export const minFiles = ({ oneCsv }: ValidationParameters): boolean => !!oneCsv;
 
 export const validator =
 	(state: ValidationParameters, dispatch: Dispatch<ValidationAction>) =>
 	(file: File): void => {
 		switch (getFileExtension(file)) {
-			case 'csv': {
+			case acceptedFileExtensions.CSV: {
 				return dispatch({
-					type: 'add csv',
+					type: `add ${acceptedFileExtensions.CSV}`,
+					file: file,
+				});
+			}
+
+			case acceptedFileExtensions.TAR_XZ: {
+				return dispatch({
+					type: `add ${acceptedFileExtensions.TAR_XZ}`,
 					file: file,
 				});
 			}
