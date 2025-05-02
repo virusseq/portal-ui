@@ -98,16 +98,6 @@ export const getFileExtension = (file: File | string = ''): string => {
 		.join('.');
 };
 
-export const getSRAFromFileName = (fullFileName: string): string => {
-	if (!fullFileName) return '';
-
-	const [baseName] = fullFileName.split('.');
-	if (!baseName) return '';
-
-	const [sra] = baseName.split('-');
-	return sra || '';
-};
-
 export const minFiles = ({ oneCsv }: ValidationParameters): boolean => !!oneCsv;
 
 export const validator =
