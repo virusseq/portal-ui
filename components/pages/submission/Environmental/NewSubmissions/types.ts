@@ -66,13 +66,21 @@ export type CreateSubmissionResult = {
 	batchErrors: BatchError[];
 };
 
+export const acceptedFileExtensions = {
+	CSV: 'csv',
+	TAR_XZ: 'tar.xz',
+} as const;
+
+export type AcceptedFileExtension =
+	(typeof acceptedFileExtensions)[keyof typeof acceptedFileExtensions];
+
 export type ValidationAction =
 	| {
-			type: 'add csv';
+			type: `add ${AcceptedFileExtension}`;
 			file: File;
 	  }
 	| {
-			type: 'remove csv';
+			type: `remove ${AcceptedFileExtension}`;
 			file: string;
 	  }
 	| {
@@ -80,6 +88,7 @@ export type ValidationAction =
 	  };
 
 export type ValidationParameters = {
-	oneOrMoreCsv: File[];
+	oneCsv: File[];
+	oneOrMoreTar: File[];
 	readyToUpload: boolean;
 };
