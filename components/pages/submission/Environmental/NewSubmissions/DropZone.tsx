@@ -27,8 +27,12 @@ import { ButtonElement as Button } from '#components/Button';
 import defaultTheme from '#components/theme';
 import DragAndDrop from '#components/theme/icons/DragAndDrop';
 
-import { ValidationAction, ValidationParameters } from './types';
+import { acceptedFileExtensions, ValidationAction, ValidationParameters } from './types';
 import { validator } from './validationHelpers';
+
+const acceptedExtensionsString = Object.values(acceptedFileExtensions)
+	.map((ext) => `.${ext}`)
+	.join(',');
 
 const DropZone = ({
 	disabled,
@@ -48,7 +52,7 @@ const DropZone = ({
 		isDragActive,
 		// isFileTooLarge,
 	} = useDropzone({
-		accept: '.csv',
+		accept: acceptedExtensionsString,
 		disabled,
 		onDrop: useCallback(
 			(acceptedFiles: File[]) =>

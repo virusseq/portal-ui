@@ -37,11 +37,59 @@ import getInternalLink from '#global/utils/getInternalLink';
 import DropZone from './DropZone';
 import ErrorMessage from './ErrorMessage';
 import FileRow from './FileRow';
-import { CreateSubmissionStatus, NoUploadError, ValidationAction } from './types';
-import { getFileExtension, validationParameters, validationReducer } from './validationHelpers';
+import {
+	acceptedFileExtensions,
+	CreateSubmissionStatus,
+	NoUploadError,
+	ValidationAction,
+	type BatchError,
+} from './types';
+import {
+	getFileExtension,
+	minFiles,
+	validationParameters,
+	validationReducer,
+} from './validationHelpers';
 
 const noUploadError: NoUploadError = {
 	status: '',
+};
+
+// Constants for submit parms
+export const SubmitParams = {
+	ORGANIZATION: 'organization' as const,
+	ENTITY_NAME: 'entityName' as const,
+	SUBMISSION_FILE: 'submissionFile' as const,
+	SEQUENCING_METADATA: 'sequencingMetadata' as const,
+};
+
+// Constants for file metadata
+export const SequencingMetadataDefaults = {
+	FILE_ACCESS: 'open' as const,
+	FILE_TYPE: 'fastaq' as const,
+};
+
+const buildFormData = (organizationName: string, selectedCsv: File, oneOrMoreTar: File[]) => {
+	const formData = new FormData();
+	formData.append(SubmitParams.ORGANIZATION, organizationName);
+	formData.append(SubmitParams.ENTITY_NAME, 'sample');
+	formData.append(SubmitParams.SUBMISSION_FILE, selectedCsv);
+
+	if (oneOrMoreTar.length > 0) {
+		formData.append(
+			SubmitParams.SEQUENCING_METADATA,
+			JSON.stringify(
+				oneOrMoreTar.map((tarFile: File) => ({
+					fileName: tarFile.name,
+					fileSize: tarFile.size,
+					fileMd5sum: '', // TODO: calculate md5sum
+					fileAccess: SequencingMetadataDefaults.FILE_ACCESS,
+					fileType: SequencingMetadataDefaults.FILE_TYPE,
+				})),
+			),
+		);
+	}
+	return formData;
 };
 
 const NewSubmissions = (): ReactElement => {
@@ -59,96 +107,106 @@ const NewSubmissions = (): ReactElement => {
 	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
-	const { oneOrMoreCsv, readyToUpload } = validationState;
+	const { oneCsv, oneOrMoreTar, readyToUpload } = validationState;
 
 	const { awaitingResponse, submitData } = useEnvironmentalData('NewSubmissions');
 
-	const handleSubmit = () => {
+	const setSubmitError = (
+		description: string,
+		status = 'Your submission has errors and cannot be processed.',
+		batchErrors?: BatchError[],
+	) => {
+		setUploadError({
+			description,
+			status,
+			batchErrors,
+		});
+	};
+
+	const handleSubmit = async () => {
+		if (!thereAreFiles || !token || !userHasEnvironmentalAccess) {
+			const errorMessage = `no ${
+				token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'
+			} to submit`;
+			setSubmitError(errorMessage);
+			return;
+		}
+
+		// Validate uploaded file
+		const selectedCsv = oneCsv[0];
+		if (!selectedCsv || getFileExtension(selectedCsv.name) !== acceptedFileExtensions.CSV) {
+			setSubmitError(`Please upload a .csv file.`);
+			return;
+		}
+
+		// Extract organization name from the CSV file
+		const organizationName = selectedCsv.name.split('.')[0].toUpperCase();
+
+		// Check user permissions for the organization
 		const effectiveOrganizations = userEnvironmentalWriteScopes.map((scope) =>
 			scope.slice(
 				NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE.length,
 				scope.length - NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.length,
 			),
 		);
-		console.log(`start:${NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE.length}`);
-		console.log(`end:${NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.length}`);
-		console.log(`userEnvironmentalWriteScopes`, userEnvironmentalWriteScopes);
-		console.log(`effectiveOrganizations`, effectiveOrganizations);
-
-		if (thereAreFiles && token && userHasEnvironmentalAccess) {
-			const formData = new FormData();
-			const errorMessages: string[] = [];
-
-			oneOrMoreCsv.forEach((csvFile) => {
-				// Using the filename to determine the organization associated with the submission
-				const organizationName = csvFile.name.split('.')[0].toUpperCase();
-
-				// Verify if the user's session permissions allow them
-				// to upload environmental data to this organization.
-				const hasWriteAccessToOrganization = effectiveOrganizations.includes(organizationName);
-				if (userIsEnvironmentalAdmin || hasWriteAccessToOrganization) {
-					formData.append('organization', organizationName);
-					// Submission service expects a file with the name of the schema it represents
-					formData.append('files', csvFile, 'sample.csv');
-				} else {
-					errorMessages.push(
-						`User does not have permission to upload data for organization ${organizationName}`,
-					);
-				}
-			});
-
-			if (errorMessages.length) {
-				console.error(errorMessages);
-				setUploadError({
-					description: errorMessages.join(','),
-					status: 'Your submission has errors and cannot be processed.',
-				});
-				return Promise.resolve();
-			}
-
-			return submitData({ body: formData }).then((response) => {
-				switch (response.status) {
-					case CreateSubmissionStatus.PARTIAL_SUBMISSION:
-					case CreateSubmissionStatus.INVALID_SUBMISSION: {
-						setUploadError({
-							batchErrors: response.batchErrors,
-							description: response.description,
-							status: 'Your submission has errors and cannot be processed.',
-						});
-						return Promise.resolve();
-					}
-
-					case CreateSubmissionStatus.PROCESSING: {
-						response.submissionId
-							? Router.push(
-									getInternalLink({
-										path: urlJoin('submission', 'environmental', response.submissionId.toString()),
-									}),
-							  )
-							: console.log('Unhandled response:', response);
-						return Promise.resolve();
-					}
-
-					default: {
-						console.error(response);
-						setUploadError({
-							status: 'Internal server error',
-							description: 'Your upload request has failed. Please try again later.',
-						});
-						return Promise.resolve();
-					}
-				}
-			});
+		const hasWriteAccessToOrganization =
+			userIsEnvironmentalAdmin || effectiveOrganizations.includes(organizationName);
+		if (!hasWriteAccessToOrganization) {
+			setSubmitError(
+				`User does not have permission to upload data for organization ${organizationName}`,
+			);
+			return;
 		}
 
-		console.error(
-			`no ${token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'} to submit`,
-		);
+		const formData = buildFormData(organizationName, selectedCsv, oneOrMoreTar);
+
+		// Submit data
+		try {
+			const response = await submitData({ body: formData });
+
+			switch (response.status) {
+				case CreateSubmissionStatus.PARTIAL_SUBMISSION:
+				case CreateSubmissionStatus.INVALID_SUBMISSION: {
+					console.error(`invalid submission: ${response}`);
+					setSubmitError(
+						response.description || response.batchErrors.map((e) => e.message).join(','),
+						undefined,
+						response.batchErrors,
+					);
+					break;
+				}
+
+				case CreateSubmissionStatus.PROCESSING: {
+					if (response.submissionId) {
+						Router.push(
+							getInternalLink({
+								path: urlJoin('submission', 'environmental', response.submissionId.toString()),
+							}),
+						);
+					} else {
+						console.log('Unhandled response:', response);
+					}
+					break;
+				}
+
+				default: {
+					console.error(response);
+					setSubmitError(
+						'Your upload request has failed. Please try again later.',
+						'Internal Server Error',
+					);
+					break;
+				}
+			}
+		} catch (error) {
+			console.error(error);
+			setSubmitError('An unexpected error occurred. Please try again later.');
+		}
 	};
 
 	useEffect(() => {
 		setUploadError(noUploadError);
-		setThereAreFiles(validationState.oneOrMoreCsv.length > 0);
+		setThereAreFiles(minFiles(validationState));
 	}, [validationState]);
 
 	const handleClearAll = () => {
@@ -189,9 +247,15 @@ const NewSubmissions = (): ReactElement => {
 			<h1 className="view-title">Start a New Submission</h1>
 
 			<p>
-				Waste water metadata is submitted as a <span className="code">.csv</span> file .The file
-				name must match the Study name for the Submission. (e.g. QC-WW.csv, etc.) Multiple files are
-				accepted.
+				Waste water metadata is submitted as a <span className="code">.csv</span> file. The file
+				name must match the Study name for the Submission. (e.g. QC.csv, etc.). Only one `.csv` is
+				permitted per submission.
+			</p>
+
+			<p>
+				Waste water Viral genome data must be submitted as a <span className="code">.tar.xz</span>{' '}
+				file. Multiple genome files can be uploaded in a single submission. The file name must match
+				the SRA accession for the submission. (e.g. SRS12345678-ABC123.tar.xz, etc.)
 			</p>
 
 			<h2>To format your waste water sequence metadata:</h2>
@@ -356,12 +420,21 @@ const NewSubmissions = (): ReactElement => {
 					<tbody>
 						{thereAreFiles ? (
 							<>
-								{oneOrMoreCsv.map((csvFile: File) => (
+								{oneCsv.map((csvFile: File, index: number) => (
+									// when more than one, all but the last one will get crossed out on render
 									<FileRow
-										active={true}
+										active={index === oneCsv.length - 1}
 										file={csvFile}
 										key={csvFile.name}
 										handleRemove={handleRemoveThis(csvFile)}
+									/>
+								))}
+								{oneOrMoreTar.map((tarFile: File) => (
+									<FileRow
+										active={true}
+										file={tarFile}
+										key={tarFile.name}
+										handleRemove={handleRemoveThis(tarFile)}
 									/>
 								))}
 							</>
