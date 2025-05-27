@@ -263,6 +263,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			switch (submissionStatus) {
 				case SubmissionStatus.VALID:
 				case SubmissionStatus.OPEN:
+					// TODO: Verify whether the submission includes any sequencing files that are still pending to upload.
+					// If there are pending files, display instructions to guide the user through the upload process.
+					// If all required files have been uploaded, proceed to commit the submission.
 					commit();
 					break;
 

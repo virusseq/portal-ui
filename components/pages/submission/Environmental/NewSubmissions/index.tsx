@@ -37,12 +37,14 @@ import getInternalLink from '#global/utils/getInternalLink';
 import DropZone from './DropZone';
 import ErrorMessage from './ErrorMessage';
 import FileRow from './FileRow';
+import FileUploadInstructionsModal from './FileUploadInstructionsModal';
 import {
 	acceptedFileExtensions,
 	CreateSubmissionStatus,
 	NoUploadError,
 	ValidationAction,
 	type BatchError,
+	type SubmissionManifest,
 } from './types';
 import {
 	getFileExtension,
@@ -66,7 +68,7 @@ export const SubmitParams = {
 // Constants for file metadata
 export const SequencingMetadataDefaults = {
 	FILE_ACCESS: 'open' as const,
-	FILE_TYPE: 'fastaq' as const,
+	FILE_TYPE: 'TAR' as const,
 };
 
 const buildFormData = (organizationName: string, selectedCsv: File, oneOrMoreTar: File[]) => {
@@ -82,7 +84,7 @@ const buildFormData = (organizationName: string, selectedCsv: File, oneOrMoreTar
 				oneOrMoreTar.map((tarFile: File) => ({
 					fileName: tarFile.name,
 					fileSize: tarFile.size,
-					fileMd5sum: '', // TODO: calculate md5sum
+					fileMd5sum: '00000000000000000000000000000000', // TODO: calculate md5sum
 					fileAccess: SequencingMetadataDefaults.FILE_ACCESS,
 					fileType: SequencingMetadataDefaults.FILE_TYPE,
 				})),
@@ -105,9 +107,14 @@ const NewSubmissions = (): ReactElement => {
 	} = getConfig();
 	const theme: typeof defaultTheme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
+	const [filesSubmissionInstructions, setFilesSubmissionInstructions] = useState<
+		SubmissionManifest[]
+	>([]);
+	const [submissionId, setSubmissionId] = useState<string>('');
 	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
 	const { oneCsv, oneOrMoreTar, readyToUpload } = validationState;
+	const [openGuideModal, setOpenGuideModal] = useState(false);
 
 	const { awaitingResponse, submitData } = useEnvironmentalData('NewSubmissions');
 
@@ -177,11 +184,19 @@ const NewSubmissions = (): ReactElement => {
 				}
 
 				case CreateSubmissionStatus.PROCESSING: {
-					if (response.submissionId) {
+					if (response.submissionId && oneOrMoreTar.length === 0) {
 						Router.push(
 							getInternalLink({
 								path: urlJoin('submission', 'environmental', response.submissionId.toString()),
 							}),
+						);
+					} else if (response.submissionId && oneOrMoreTar.length > 0) {
+						setFilesSubmissionInstructions(response.submissionManifest);
+						setSubmissionId(response.submissionId.toString());
+						setOpenGuideModal(
+							response.submissionManifest &&
+								response.submissionManifest.length > 0 &&
+								response.submissionId != null,
 						);
 					} else {
 						console.log('Unhandled response:', response);
@@ -453,7 +468,10 @@ const NewSubmissions = (): ReactElement => {
 										height: 34px;
 										padding: 0 15px;
 									`}
-									disabled={!(readyToUpload && !uploadError.description)}
+									disabled={
+										!(readyToUpload && !uploadError.description) ||
+										filesSubmissionInstructions.length > 0
+									}
 									onClick={handleSubmit}
 								>
 									Submit Data
@@ -473,6 +491,23 @@ const NewSubmissions = (): ReactElement => {
 						</tr>
 					</tfoot>
 				</table>
+				{openGuideModal && (
+					<FileUploadInstructionsModal
+						submissionManifest={filesSubmissionInstructions}
+						submissionId={submissionId}
+						onClose={() => {
+							setOpenGuideModal(false);
+							setFilesSubmissionInstructions([]);
+							setSubmissionId('');
+							validationDispatch({ type: 'clear all' });
+							Router.push(
+								getInternalLink({
+									path: urlJoin('submission', 'environmental', submissionId),
+								}),
+							);
+						}}
+					/>
+				)}
 			</LoaderWrapper>
 		</article>
 	);

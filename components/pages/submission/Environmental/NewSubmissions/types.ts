@@ -58,10 +58,17 @@ export type NoUploadError = {
 	status: string;
 };
 
+export type SubmissionManifest = {
+	objectId: string;
+	fileName: string;
+	md5Sum: string;
+};
+
 export type CreateSubmissionResult = {
 	submissionId?: number;
 	status: CreateSubmissionStatus;
 	description: string;
+	submissionManifest: SubmissionManifest[];
 	inProcessEntities: string[];
 	batchErrors: BatchError[];
 };
