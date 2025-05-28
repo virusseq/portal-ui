@@ -20,12 +20,12 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 import Button from '#components/Button';
 import { Modal } from '#components/Modal';
-import AccessTokenInfo from '#components/pages/user/AccessTokenInfo';
 import defaultTheme from '#components/theme';
+import useAuthContext from '#global/hooks/useAuthContext';
 
 import type { SubmissionManifest } from './types';
 
@@ -50,7 +50,7 @@ const downloadTSVFile = (data: string, filename: string) => {
 	URL.revokeObjectURL(url);
 };
 
-const dockerRunCommand = `
+const initialDockerRunCommand = `
 docker run -d -it --rm --name score-client \\
   -e ACCESSTOKEN=\${token} \\
   -e STORAGE_URL=https://score.dev.virusseq-dataportal.ca \\
@@ -58,8 +58,7 @@ docker run -d -it --rm --name score-client \\
   --network="host" \\
   --platform="linux/amd64" \\
   --mount type=bind,source="$(pwd)",target=/output \\
-  ghcr.io/overture-stack/score:latest"
-    `;
+  ghcr.io/overture-stack/score:latest`;
 
 const dockerExecCommand = `docker exec score-client sh -c "score-client upload --manifest /output/manifest.txt"`;
 
@@ -75,11 +74,20 @@ const FileUploadInstructionsModal = ({
 	submissionManifest: SubmissionManifest[];
 }): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
+	const { token } = useAuthContext();
 
 	const handleDownload = () => {
 		const manifestContent = convertManifestsToTSV(submissionId, submissionManifest);
 		downloadTSVFile(manifestContent, 'manifest.txt');
 	};
+
+	const [dockerRunCommand, setDockerRunCommand] = useState(initialDockerRunCommand);
+	useEffect(() => {
+		if (token) {
+			const updatedCommand = initialDockerRunCommand.replace('${token}', token);
+			setDockerRunCommand(updatedCommand);
+		}
+	}, [token]);
 
 	return (
 		<Modal title={'Genomic files upload instructions'} onCloseClick={onClose}>
@@ -116,20 +124,7 @@ const FileUploadInstructionsModal = ({
 					to upload.
 				</p>
 				<Button onClick={handleDownload}>Download Manifest</Button>
-				<h2>2. Copy your access token:</h2>
-				<p>
-					To authenticate, you need an access token for the Score client. Copy the token below and
-					continue with the next step.
-				</p>
-				<div
-					css={css`
-						padding: 0px 50px;
-						margin: 0px;
-					`}
-				>
-					<AccessTokenInfo />
-				</div>
-				<h2>3. Uploading Files Using the Score Client Docker Image:</h2>
+				<h2>2. Uploading Files Using the Score Client Docker Image:</h2>
 				<p>
 					<strong>Note:</strong> Ensure that Docker is installed and running on your local machine
 					before proceeding. If Docker is not installed, you can follow the installation
@@ -154,18 +149,22 @@ const FileUploadInstructionsModal = ({
 					you want to upload.
 				</p>
 				<p>
-					In the command below, replace <code>{'${token}'}</code> with the token you copied in Step
-					2.
+					Open a terminal, navigate to the same directory as the files you want to upload, and run
+					the following command to start the Score client Docker container:
 				</p>
-				<p>Run the following command to start the Score client Docker container:</p>
-				<pre>
+				<pre
+					css={css`
+						overflow-x: scroll;
+						margin: 0px;
+					`}
+				>
 					<code>{dockerRunCommand}</code>
 				</pre>
 				<p>Execute the following command to upload your files using the manifest:</p>
 				<pre>
 					<code>{dockerExecCommand}</code>
 				</pre>
-				<h2>4. Stop Score client:</h2>
+				<h2>3. Stop Score client:</h2>
 				After the upload is complete, stop the Score client container by running:
 				<pre>
 					<code>{dockerStopCommand}</code>
