@@ -24,7 +24,7 @@ import { Dispatch } from 'react';
 import { acceptedFileExtensions, ValidationAction, ValidationParameters } from './types';
 
 export const validationParameters = {
-	oneCsv: [],
+	oneOrMoreCsv: [],
 	oneOrMoreTar: [],
 	readyToUpload: false, // there's at least one CSV
 };
@@ -37,41 +37,43 @@ export const validationReducer = (
 	action: ValidationAction,
 ): ValidationParameters => {
 	switch (action.type) {
-		case 'add csv': {
-			const oneCsv = [action.file];
+		case `add ${acceptedFileExtensions.CSV}`: {
+			const oneOrMoreCsv = [action.file];
 			return {
 				...state,
-				oneCsv,
-				readyToUpload: oneCsv.length === 1,
+				oneOrMoreCsv,
+				readyToUpload: oneOrMoreCsv.length >= 1,
 			};
 		}
 
-		case 'remove csv': {
-			const oneCsv = state.oneCsv.filter((tarFile: File) => tarFile.name !== action.file);
+		case `remove ${acceptedFileExtensions.CSV}`: {
+			const oneOrMoreCsv = state.oneOrMoreCsv.filter(
+				(tarFile: File) => tarFile.name !== action.file,
+			);
 			return {
 				...state,
-				oneCsv,
-				readyToUpload: oneCsv.length === 1,
+				oneOrMoreCsv,
+				readyToUpload: oneOrMoreCsv.length >= 1,
 			};
 		}
 
-		case 'add tar.xz': {
+		case `add ${acceptedFileExtensions.TAR_XZ}`: {
 			const oneOrMoreTar = overwiteIfExists(state.oneOrMoreTar, action.file);
 			return {
 				...state,
 				oneOrMoreTar,
-				readyToUpload: state.oneCsv.length === 1 && oneOrMoreTar.length >= 0,
+				readyToUpload: state.oneOrMoreCsv.length >= 1 && oneOrMoreTar.length >= 0,
 			};
 		}
 
-		case 'remove tar.xz': {
+		case `remove ${acceptedFileExtensions.TAR_XZ}`: {
 			const oneOrMoreTar = state.oneOrMoreTar.filter(
 				(tarFile: File) => tarFile.name !== action.file,
 			);
 			return {
 				...state,
 				oneOrMoreTar,
-				readyToUpload: state.oneCsv.length === 1 && oneOrMoreTar.length >= 0,
+				readyToUpload: state.oneOrMoreCsv.length === 1 && oneOrMoreTar.length >= 0,
 			};
 		}
 
@@ -98,7 +100,7 @@ export const getFileExtension = (file: File | string = ''): string => {
 		.join('.');
 };
 
-export const minFiles = ({ oneCsv }: ValidationParameters): boolean => !!oneCsv;
+export const minFiles = ({ oneOrMoreCsv }: ValidationParameters): boolean => !!oneOrMoreCsv;
 
 export const validator =
 	(state: ValidationParameters, dispatch: Dispatch<ValidationAction>) =>
@@ -111,9 +113,11 @@ export const validator =
 				});
 			}
 
+			case acceptedFileExtensions.FASTAQ:
+			case acceptedFileExtensions.TAR:
 			case acceptedFileExtensions.TAR_XZ: {
 				return dispatch({
-					type: `add ${acceptedFileExtensions.TAR_XZ}`,
+					type: `add ${acceptedFileExtensions.FASTAQ}`,
 					file: file,
 				});
 			}

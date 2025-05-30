@@ -20,6 +20,7 @@
  */
 
 import { css, useTheme } from '@emotion/react';
+import { md5 } from 'js-md5';
 import { Dispatch, ReactElement, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
@@ -55,8 +56,22 @@ const DropZone = ({
 		accept: acceptedExtensionsString,
 		disabled,
 		onDrop: useCallback(
-			(acceptedFiles: File[]) =>
-				acceptedFiles.forEach(validator(validationState, validationDispatch)),
+			(acceptedFiles: File[]) => {
+				// acceptedFiles.forEach(validator(validationState, validationDispatch));
+				console.log('acceptedFiles', acceptedFiles);
+				const reader = new FileReader();
+
+				reader.onabort = () => console.log('file reading was aborted');
+				reader.onerror = () => console.log('file reading has failed');
+				reader.onload = () => {
+					// Do whatever you want with the file contents
+					const binaryStr = reader.result as ArrayBuffer;
+					console.log(binaryStr);
+					const calculatedMd5 = md5(binaryStr);
+					console.log('calculatedMd5', calculatedMd5);
+				};
+				reader.readAsArrayBuffer(acceptedFiles[0]);
+			},
 			[validationDispatch, validationState],
 		),
 	});

@@ -68,6 +68,8 @@ export type CreateSubmissionResult = {
 
 export const acceptedFileExtensions = {
 	CSV: 'csv',
+	FASTAQ: 'fastaq',
+	TAR: 'tar',
 	TAR_XZ: 'tar.xz',
 } as const;
 
@@ -88,7 +90,7 @@ export type ValidationAction =
 	  };
 
 export type ValidationParameters = {
-	oneCsv: File[];
+	oneOrMoreCsv: File[];
 	oneOrMoreTar: File[];
 	readyToUpload: boolean;
 };
