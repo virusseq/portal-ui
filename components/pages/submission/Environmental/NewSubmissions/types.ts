@@ -81,10 +81,14 @@ export const acceptedFileExtensions = {
 export type AcceptedFileExtension =
 	(typeof acceptedFileExtensions)[keyof typeof acceptedFileExtensions];
 
+export interface SubmissionFile extends File {
+	md5?: string;
+}
+
 export type ValidationAction =
 	| {
 			type: `add ${AcceptedFileExtension}`;
-			file: File;
+			file: SubmissionFile;
 	  }
 	| {
 			type: `remove ${AcceptedFileExtension}`;
@@ -95,7 +99,7 @@ export type ValidationAction =
 	  };
 
 export type ValidationParameters = {
-	oneCsv: File[];
-	oneOrMoreTar: File[];
+	oneCsv: SubmissionFile[];
+	oneOrMoreTar: SubmissionFile[];
 	readyToUpload: boolean;
 };

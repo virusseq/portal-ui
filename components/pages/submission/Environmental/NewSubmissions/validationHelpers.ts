@@ -21,7 +21,12 @@
 
 import { Dispatch } from 'react';
 
-import { acceptedFileExtensions, ValidationAction, ValidationParameters } from './types';
+import {
+	acceptedFileExtensions,
+	ValidationAction,
+	ValidationParameters,
+	type SubmissionFile,
+} from './types';
 
 export const validationParameters = {
 	oneCsv: [],
@@ -29,7 +34,7 @@ export const validationParameters = {
 	readyToUpload: false, // there's at least one CSV
 };
 
-const overwiteIfExists = (existingFiles: File[], file: File) =>
+const overwiteIfExists = (existingFiles: SubmissionFile[], file: SubmissionFile) =>
 	existingFiles.filter((old) => old.name !== file.name).concat(file);
 
 export const validationReducer = (
@@ -47,7 +52,7 @@ export const validationReducer = (
 		}
 
 		case 'remove csv': {
-			const oneCsv = state.oneCsv.filter((tarFile: File) => tarFile.name !== action.file);
+			const oneCsv = state.oneCsv.filter((tarFile: SubmissionFile) => tarFile.name !== action.file);
 			return {
 				...state,
 				oneCsv,
@@ -66,7 +71,7 @@ export const validationReducer = (
 
 		case 'remove tar.xz': {
 			const oneOrMoreTar = state.oneOrMoreTar.filter(
-				(tarFile: File) => tarFile.name !== action.file,
+				(tarFile: SubmissionFile) => tarFile.name !== action.file,
 			);
 			return {
 				...state,
@@ -84,7 +89,7 @@ export const validationReducer = (
 	}
 };
 
-export const getFileExtension = (file: File | string = ''): string => {
+export const getFileExtension = (file: SubmissionFile | string = ''): string => {
 	const parsedFileName = (typeof file === 'string' ? file : file.name).toLowerCase().split('.');
 
 	// get the compound extension (e.g., tar.xz) or a single part extension (e.g., csv)
@@ -102,7 +107,7 @@ export const minFiles = ({ oneCsv }: ValidationParameters): boolean => !!oneCsv;
 
 export const validator =
 	(state: ValidationParameters, dispatch: Dispatch<ValidationAction>) =>
-	(file: File): void => {
+	(file: SubmissionFile): void => {
 		switch (getFileExtension(file)) {
 			case acceptedFileExtensions.CSV: {
 				return dispatch({

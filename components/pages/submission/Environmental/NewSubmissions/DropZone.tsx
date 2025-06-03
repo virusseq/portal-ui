@@ -27,8 +27,14 @@ import { ButtonElement as Button } from '#components/Button';
 import defaultTheme from '#components/theme';
 import DragAndDrop from '#components/theme/icons/DragAndDrop';
 
-import { acceptedFileExtensions, ValidationAction, ValidationParameters } from './types';
-import { validator } from './validationHelpers';
+import { computeMd5 } from './fileUtils';
+import {
+	acceptedFileExtensions,
+	SubmissionFile,
+	ValidationAction,
+	ValidationParameters,
+} from './types';
+import { getFileExtension, validator } from './validationHelpers';
 
 const acceptedExtensionsString = Object.values(acceptedFileExtensions)
 	.map((ext) => `.${ext}`)
@@ -55,8 +61,15 @@ const DropZone = ({
 		accept: acceptedExtensionsString,
 		disabled,
 		onDrop: useCallback(
-			(acceptedFiles: File[]) =>
-				acceptedFiles.forEach(validator(validationState, validationDispatch)),
+			(acceptedFiles: SubmissionFile[]) => {
+				// Accept files to corresponding array of files based on it's extension
+				acceptedFiles.forEach(validator(validationState, validationDispatch));
+
+				// Process sequencing files (i.e. tar.xz) and compute MD5
+				acceptedFiles
+					.filter((f) => getFileExtension(f.name) === acceptedFileExtensions.TAR_XZ)
+					.forEach(computeMd5);
+			},
 			[validationDispatch, validationState],
 		),
 	});
