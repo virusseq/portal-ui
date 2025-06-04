@@ -44,6 +44,7 @@ import {
 	NoUploadError,
 	ValidationAction,
 	type BatchError,
+	type SubmissionFile,
 	type SubmissionManifest,
 } from './types';
 import {
@@ -71,7 +72,11 @@ export const SequencingMetadataDefaults = {
 	FILE_TYPE: 'TAR' as const,
 };
 
-const buildFormData = (organizationName: string, selectedCsv: File, oneOrMoreTar: File[]) => {
+const buildFormData = (
+	organizationName: string,
+	selectedCsv: SubmissionFile,
+	oneOrMoreTar: SubmissionFile[],
+) => {
 	const formData = new FormData();
 	formData.append(SubmitParams.ORGANIZATION, organizationName);
 	formData.append(SubmitParams.ENTITY_NAME, 'sample');
@@ -81,10 +86,10 @@ const buildFormData = (organizationName: string, selectedCsv: File, oneOrMoreTar
 		formData.append(
 			SubmitParams.SEQUENCING_METADATA,
 			JSON.stringify(
-				oneOrMoreTar.map((tarFile: File) => ({
+				oneOrMoreTar.map((tarFile: SubmissionFile) => ({
 					fileName: tarFile.name,
 					fileSize: tarFile.size,
-					fileMd5sum: '00000000000000000000000000000000', // TODO: calculate md5sum
+					fileMd5sum: tarFile.md5,
 					fileAccess: SequencingMetadataDefaults.FILE_ACCESS,
 					fileType: SequencingMetadataDefaults.FILE_TYPE,
 				})),
@@ -230,7 +235,7 @@ const NewSubmissions = (): ReactElement => {
 	};
 
 	const handleRemoveThis =
-		({ name }: File) =>
+		({ name }: SubmissionFile) =>
 		() => {
 			setUploadError(noUploadError);
 			validationDispatch({
@@ -435,7 +440,7 @@ const NewSubmissions = (): ReactElement => {
 					<tbody>
 						{thereAreFiles ? (
 							<>
-								{oneCsv.map((csvFile: File, index: number) => (
+								{oneCsv.map((csvFile: SubmissionFile, index: number) => (
 									// when more than one, all but the last one will get crossed out on render
 									<FileRow
 										active={index === oneCsv.length - 1}
@@ -444,7 +449,7 @@ const NewSubmissions = (): ReactElement => {
 										handleRemove={handleRemoveThis(csvFile)}
 									/>
 								))}
-								{oneOrMoreTar.map((tarFile: File) => (
+								{oneOrMoreTar.map((tarFile: SubmissionFile) => (
 									<FileRow
 										active={true}
 										file={tarFile}
