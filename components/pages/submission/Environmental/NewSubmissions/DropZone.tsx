@@ -67,7 +67,7 @@ const DropZone = ({
 
 				// Process sequencing files (i.e. tar.xz) and compute MD5
 				acceptedFiles
-					.filter((f) => getFileExtension(f.name) === acceptedFileExtensions.TAR_XZ)
+					.filter((file) => getFileExtension(file.name) === acceptedFileExtensions.TAR_XZ)
 					.forEach(computeMd5);
 			},
 			[validationDispatch, validationState],
