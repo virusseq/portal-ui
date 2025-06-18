@@ -57,7 +57,7 @@ query releaseDataQuery ($sqon: JSON) {
           key
         }
       }
-      donors__specimens__samples__sample_id {
+      analysis__samples__submitterSampleId {
         cardinality (precision_threshold: ${NEXT_PUBLIC_ARRANGER_CLINICAL_CARDINALITY_PRECISION_THRESHOLD})
       }
       file__size {
@@ -82,7 +82,7 @@ query genomesCount ($sqon: JSON) {
         include_missing: false,
         aggregations_filter_themselves: true
       ){
-        donors__specimens__samples__sample_id {
+        analysis__samples__submitterSampleId {
           bucket_count
         }
       }
@@ -107,7 +107,7 @@ const fetchReleaseData = async (sqon?: SQONType) => {
 			const {
 				analysis__host__host_gender: { buckets: hostGenders = [] } = {},
 				analysis__sample_collection__geo_loc_province: { buckets: provinces = [] } = {},
-				donors__specimens__samples__sample_id: { cardinality: genomesCardinality = 0 } = {},
+				analysis__samples__submitterSampleId: { cardinality: genomesCardinality = 0 } = {},
 				file__size: { stats: { count: fileCount = 0, sum: fileSize = 0 } = {} } = {},
 				study_id: { bucket_count: studyCount = 0 } = {},
 			} = aggregations;
@@ -154,7 +154,7 @@ const tuneGenomesAggs = async (sqon?: SQONType, currentReleaseData?: ReleaseClin
 		endpointTag: 'TuneGenomesAggs',
 	}).then(({ data: { file: { aggregations = {} } = {} } }) => {
 		if (aggregations && currentReleaseData?.genomesCount) {
-			const { donors__specimens__samples__sample_id: { bucket_count: genomnesCount = 0 } = {} } =
+			const { analysis__samples__submitterSampleId: { bucket_count: genomnesCount = 0 } = {} } =
 				aggregations;
 
 			currentReleaseData.genomesCount.value = genomnesCount;
