@@ -108,10 +108,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 				setPendingUploadManifests(pendingUploadManifests);
 
-				if (pendingUploadManifests.length) {
-					setOpenGuideModal(true);
-				}
-
 				// Data to display in Main Table
 				submissionDetailsDispatch({
 					type: UploadDetailsAction.NEW,
