@@ -24,24 +24,27 @@ import { format } from 'date-fns';
 import { ReactElement } from 'react';
 
 import Navigator from '#components//Navigator';
+import StyledLink from '#components/Link';
 import { LoaderMessage } from '#components/Loader';
 import defaultTheme from '#components/theme';
-import { Calendar, CoronaVirus, File, Info, Spinner, Success } from '#components/theme/icons';
+import { Calendar, CoronaVirus, File, Info, Success, Warning } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import { SubmissionStatus } from '#global/hooks/useEnvironmentalData/types';
 
 const Overview = ({
 	createdAt,
+	handleMissingUploadFiles,
 	id,
 	loading,
-	originalFileNames,
+	missingUploadFiles,
 	status,
 	totalRecords,
 }: {
 	createdAt?: string;
+	handleMissingUploadFiles?: () => void;
 	id: string;
 	loading: boolean;
-	originalFileNames?: string[];
+	missingUploadFiles?: string[];
 	status?: string;
 	totalRecords: string;
 }): ReactElement => {
@@ -128,7 +131,7 @@ const Overview = ({
 							)}
 						{status && (status === SubmissionStatus.OPEN || status === SubmissionStatus.VALID) && (
 							<p>
-								<Spinner size={16} />
+								<Warning size={16} />
 								{`Status: Submission incomplete`}
 							</p>
 						)}
@@ -145,33 +148,62 @@ const Overview = ({
 			{loading ? (
 				<LoaderMessage inline message="Loading data..." size="20px" />
 			) : (
-				originalFileNames &&
-				originalFileNames?.length > 0 && (
-					<ul
+				missingUploadFiles &&
+				missingUploadFiles?.length > 0 && (
+					<section
 						css={css`
-							font-size: 13px;
-							list-style: none;
-							margin: 0;
-							padding: 0;
-
-							li {
-								align-items: center;
-								display: flex;
-								margin-bottom: 10px;
-							}
-
-							svg {
-								margin-right: 5px;
-							}
+							padding: 20px;
+							margin: 0px;
+							${defaultTheme.typography.regular}
+							background-color: ${theme.colors.error_1};
+							border-radius: 8px;
+							box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+							padding: 10px;
+							border: 1px solid ${theme.colors.grey_3};
+							margin: 10px 10px;
 						`}
 					>
-						{originalFileNames?.map((fileName: string) => (
-							<li key={`submission-fileName-${fileName}`}>
-								<File fill={theme.colors.secondary_dark} />
-								{`${fileName}`}
-							</li>
-						))}
-					</ul>
+						<h2
+							css={css`
+								font-size: 26px;
+								color: ${theme.colors.error_dark};
+								margin: 0 60px 15px 0 !important;
+								white-space: nowrap;
+							`}
+						>
+							Missing files!
+						</h2>
+						<p>
+							Following files needs to be uploaded, click
+							<StyledLink onClick={handleMissingUploadFiles}> here </StyledLink>
+							for instructions
+						</p>
+						<ul
+							css={css`
+								font-size: 13px;
+								list-style: none;
+								margin: 0;
+								padding: 0;
+
+								li {
+									align-items: center;
+									display: flex;
+									margin-bottom: 10px;
+								}
+
+								svg {
+									margin-right: 5px;
+								}
+							`}
+						>
+							{missingUploadFiles?.map((fileName: string) => (
+								<li key={`submission-fileName-${fileName}`}>
+									<File fill={theme.colors.secondary_dark} />
+									{`${fileName}`}
+								</li>
+							))}
+						</ul>
+					</section>
 				)
 			)}
 		</header>
