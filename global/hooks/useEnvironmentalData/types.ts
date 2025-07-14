@@ -26,7 +26,7 @@ import type {
 
 export type SubmissionData = {
 	createdAt: string;
-	originalFileNames: string[];
+	submissionFiles?: string[];
 	submissionId: string;
 	totalRecords: number;
 	status: string;
@@ -108,6 +108,13 @@ export type CommitSubmissionResult = {
 	processedEntities: string[];
 };
 
+export type SubmissionFile = {
+	fileName: string;
+	isUploaded: boolean;
+	md5Sum: string;
+	objectId: string;
+};
+
 // Submission object returned by Submission Service
 export type Submission = {
 	id: number;
@@ -125,6 +132,7 @@ export type Submission = {
 		name: string;
 	};
 	errors: Record<string, SchemaErrors>;
+	files?: SubmissionFile[];
 	organization: string;
 	status: SubmissionStatus;
 	createdAt: string;

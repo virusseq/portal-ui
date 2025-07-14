@@ -20,7 +20,7 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { ReactElement, useEffect, useReducer, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useReducer, useState } from 'react';
 
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
@@ -29,8 +29,12 @@ import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData, {
 	SubmissionStatus,
 	type SubmissionData,
+	type SubmissionFile,
 	type UploadData,
 } from '#global/hooks/useEnvironmentalData';
+
+import FileUploadInstructionsModal from '../NewSubmissions/FileUploadInstructionsModal';
+import type { SubmissionManifest } from '../NewSubmissions/types';
 
 import columns from './columns';
 import Overview from './Overview';
@@ -39,6 +43,16 @@ import { SubmissionDetailsProps, UploadDetailsAction, UploadStatus } from './typ
 
 const wait = (delay: number) => {
 	return new Promise((resolve) => setTimeout(resolve, delay));
+};
+
+const getPendingUploadFileManifests = (files?: SubmissionFile[]) => {
+	return (files || [])
+		?.filter((file) => !file.isUploaded)
+		.map(({ objectId, fileName, md5Sum }) => ({
+			objectId,
+			fileName,
+			md5Sum,
+		}));
 };
 
 const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
@@ -52,6 +66,8 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		uploadsStatusReducer,
 		uploadsStatusDictionary,
 	);
+	const [openGuideModal, setOpenGuideModal] = useState(false);
+	const [pendingUploadManifests, setPendingUploadManifests] = useState<SubmissionManifest[]>([]);
 
 	const { token } = useAuthContext();
 	const {
@@ -63,8 +79,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		getSampleId,
 	} = useEnvironmentalData('SubmissionsDetails');
 
-	// gets the initial status for all the uploads
-	useEffect(() => {
+	const fetchSubmissionDetails = useCallback(async () => {
 		const controller = new AbortController();
 		async function getDetailsSubmission() {
 			try {
@@ -73,7 +88,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					tries: 3,
 				});
 
-				const { organization, createdAt, id, status } = submissionResponse;
+				const { organization, createdAt, id, status, files } = submissionResponse;
 				const formattedData = formatUploadData(submissionResponse);
 				const totalRecordsCount = formattedData.length;
 
@@ -83,11 +98,15 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				// Data to display in Overview table
 				setSubmissionData({
 					createdAt,
-					originalFileNames: [],
+					submissionFiles: files?.map(({ fileName }) => fileName),
 					submissionId: id.toString(),
 					totalRecords: totalRecordsCount,
 					status,
 				});
+
+				const pendingUploadManifests = getPendingUploadFileManifests(files);
+
+				setPendingUploadManifests(pendingUploadManifests);
 
 				// Data to display in Main Table
 				submissionDetailsDispatch({
@@ -119,6 +138,13 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			controller.abort();
 		};
 	}, [token, ID]);
+
+	// gets the initial status for all the uploads
+	useEffect(() => {
+		if (token && totalUploads === 0) {
+			fetchSubmissionDetails();
+		}
+	}, [token, ID, totalUploads, fetchSubmissionDetails]);
 
 	// get status updates if any are available from Submission Service
 	useEffect(() => {
@@ -263,10 +289,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			switch (submissionStatus) {
 				case SubmissionStatus.VALID:
 				case SubmissionStatus.OPEN:
-					// TODO: Verify whether the submission includes any sequencing files that are still pending to upload.
-					// If there are pending files, display instructions to guide the user through the upload process.
 					// If all required files have been uploaded, proceed to commit the submission.
-					commit();
+					if (pendingUploadManifests.length === 0) {
+						commit();
+					}
 					break;
 
 				case SubmissionStatus.COMMITTED:
@@ -278,7 +304,17 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			// Abort the request when the component unmounts or when a dependency changes
 			controller.abort();
 		};
-	}, [dataIsPending, submissionStatus, ID]);
+	}, [
+		dataIsPending,
+		submissionStatus,
+		pendingUploadManifests,
+		ID,
+		commitSubmission,
+		getAnalysisIds,
+		getSampleId,
+		organization,
+		submissionDetails,
+	]);
 
 	return (
 		<article
@@ -291,7 +327,8 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				loading={awaitingResponse}
 				totalRecords={totalUploads.toString()}
 				id={ID}
-				originalFileNames={submissionData?.originalFileNames}
+				missingUploadFiles={pendingUploadManifests.map((f) => f.fileName)}
+				handleMissingUploadFiles={() => setOpenGuideModal(true)}
 				status={submissionStatus}
 			/>
 
@@ -347,6 +384,16 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 							`}
 						/>
 					</>
+				)}
+				{openGuideModal && (
+					<FileUploadInstructionsModal
+						submissionManifest={pendingUploadManifests}
+						submissionId={ID}
+						onClose={() => {
+							setOpenGuideModal(false);
+							fetchSubmissionDetails();
+						}}
+					/>
 				)}
 			</LoaderWrapper>
 		</article>
