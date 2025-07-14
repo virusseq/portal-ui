@@ -174,9 +174,9 @@ const Overview = ({
 							Missing files!
 						</h2>
 						<p>
-							Following files needs to be uploaded, click
+							The following files could not be found, and may still need to be uploaded. Click
 							<StyledLink onClick={handleMissingUploadFiles}> here </StyledLink>
-							for instructions
+							for instructions.
 						</p>
 						<ul
 							css={css`
