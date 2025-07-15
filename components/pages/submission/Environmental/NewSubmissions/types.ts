@@ -58,21 +58,40 @@ export type NoUploadError = {
 	status: string;
 };
 
+export type SubmissionManifest = {
+	objectId: string;
+	fileName: string;
+	md5Sum: string;
+};
+
 export type CreateSubmissionResult = {
 	submissionId?: number;
 	status: CreateSubmissionStatus;
 	description: string;
+	submissionManifest: SubmissionManifest[];
 	inProcessEntities: string[];
 	batchErrors: BatchError[];
 };
 
+export const acceptedFileExtensions = {
+	CSV: 'csv',
+	TAR_XZ: 'tar.xz',
+} as const;
+
+export type AcceptedFileExtension =
+	(typeof acceptedFileExtensions)[keyof typeof acceptedFileExtensions];
+
+export interface SubmissionFile extends File {
+	md5?: string;
+}
+
 export type ValidationAction =
 	| {
-			type: 'add csv';
-			file: File;
+			type: `add ${AcceptedFileExtension}`;
+			file: SubmissionFile;
 	  }
 	| {
-			type: 'remove csv';
+			type: `remove ${AcceptedFileExtension}`;
 			file: string;
 	  }
 	| {
@@ -80,6 +99,7 @@ export type ValidationAction =
 	  };
 
 export type ValidationParameters = {
-	oneOrMoreCsv: File[];
+	oneCsv: SubmissionFile[];
+	oneOrMoreTar: SubmissionFile[];
 	readyToUpload: boolean;
 };
