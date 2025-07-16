@@ -45,6 +45,11 @@ const wait = (delay: number) => {
 	return new Promise((resolve) => setTimeout(resolve, delay));
 };
 
+/**
+ * Return files that have not been uploaded
+ * @param files
+ * @returns
+ */
 const getPendingUploadFileManifests = (files?: SubmissionFile[]) => {
 	return (files || [])
 		?.filter((file) => !file.isUploaded)
@@ -57,7 +62,7 @@ const getPendingUploadFileManifests = (files?: SubmissionFile[]) => {
 
 const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
-	const [totalUploads, setTotalUploads] = useState(0);
+	const [submissionRecordCount, setSubmissionRecordCount] = useState(0);
 	const [submissionData, setSubmissionData] = useState<SubmissionData>();
 	const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>();
 	const [organization, setOrganization] = useState('');
@@ -79,6 +84,50 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		getSampleId,
 	} = useEnvironmentalData('SubmissionsDetails');
 
+	/**
+	 * Marks all records with `PROCESSING` status as `COMPLETE` in the submission details.
+	 */
+	const completeAllProcessingRecords = useCallback(() => {
+		Object.values(submissionDetails)
+			.flat()
+			.filter(({ status }) => status === UploadStatus.PROCESSING)
+			.forEach((analysis) => {
+				analysis.status = UploadStatus.COMPLETE;
+				submissionDetailsDispatch({
+					type: UploadDetailsAction.UPDATE,
+					upload: analysis,
+				});
+			});
+	}, [submissionDetails, submissionDetailsDispatch]);
+
+	/**
+	 * Commit submission to Submission Service.
+	 * If the Submission is successfully commited (i.e. 'PROCESSING' status)
+	 * this function will update the submission status to `COMMITTED` and clears the list
+	 * of pending upload file manifests.
+	 */
+	const commit = useCallback(
+		async (signal?: AbortSignal) => {
+			const commitSubmissionResponse = await commitSubmission(ID, { signal });
+			if (commitSubmissionResponse.status === UploadStatus.PROCESSING) {
+				setSubmissionStatus(SubmissionStatus.COMMITTED);
+				setPendingUploadManifests([]);
+			}
+		},
+		[commitSubmission, ID],
+	);
+
+	/**
+	 * Fetches and initializes submission details from the backend.
+	 * This function:
+	 * - Retrieves the submission by ID with retry and abort support.
+	 * - Formats and stores data for both overview and detailed upload views.
+	 * - Automatically commits the submission if its status is `VALID`.
+	 * - Initializes state such as organization, total records count, upload status,
+	 *   and pending file upload manifests.
+	 *
+	 * If the fetch fails, it sets the submission status to `INVALID`.
+	 */
 	const fetchSubmissionDetails = useCallback(async () => {
 		const controller = new AbortController();
 		async function getDetailsSubmission() {
@@ -92,6 +141,11 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				const formattedData = formatUploadData(submissionResponse);
 				const totalRecordsCount = formattedData.length;
 
+				if (status === 'VALID') {
+					// Trigger submission commit when the current status is 'VALID'
+					commit(controller.signal);
+				}
+
 				// Set organization
 				setOrganization(organization);
 
@@ -104,9 +158,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					status,
 				});
 
-				const pendingUploadManifests = getPendingUploadFileManifests(files);
+				const filesNotUploaded = getPendingUploadFileManifests(files);
 
-				setPendingUploadManifests(pendingUploadManifests);
+				setPendingUploadManifests(filesNotUploaded);
 
 				// Data to display in Main Table
 				submissionDetailsDispatch({
@@ -115,7 +169,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				});
 
 				// Total amount of records uploading
-				setTotalUploads(totalRecordsCount);
+				setSubmissionRecordCount(totalRecordsCount);
 
 				// Submission validity
 				setSubmissionStatus(status);
@@ -130,7 +184,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			}
 		}
 
-		if (token && totalUploads === 0) {
+		if (token && submissionRecordCount === 0) {
 			getDetailsSubmission();
 		}
 		return () => {
@@ -139,44 +193,16 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		};
 	}, [token, ID]);
 
-	// gets the initial status for all the uploads
-	useEffect(() => {
-		if (token && totalUploads === 0) {
-			fetchSubmissionDetails();
-		}
-	}, [token, ID, totalUploads, fetchSubmissionDetails]);
-
-	// get status updates if any are available from Submission Service
-	useEffect(() => {
-		const controller = new AbortController();
-		async function commit() {
-			// Commit submission
-			const commitSubmissionResponse = await commitSubmission(ID, { signal: controller.signal });
-			if (commitSubmissionResponse.status === UploadStatus.PROCESSING) {
-				setSubmissionStatus(SubmissionStatus.COMMITTED);
-			}
-		}
-
-		function completeAllProcessingRecords() {
-			Object.values(submissionDetails)
-				.flat()
-				.filter(({ status }) => status === UploadStatus.PROCESSING)
-				.forEach((analysis) => {
-					analysis.status = UploadStatus.COMPLETE;
-					submissionDetailsDispatch({
-						type: UploadDetailsAction.UPDATE,
-						upload: analysis,
-					});
-				});
-		}
-
-		async function trackPendingData({
+	const trackPendingData = useCallback(
+		async ({
 			tries = 1,
 			delay = 1000,
+			signal,
 		}: {
 			tries?: number;
 			delay?: number;
-		}) {
+			signal?: AbortSignal;
+		}) => {
 			const pageSize = 20;
 			const failedGetSystemId: UploadData[] = [];
 			const failedGetSampleId: UploadData[] = [];
@@ -195,7 +221,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 						organization,
 						recordsMissingSystemId,
 						{
-							signal: controller.signal,
+							signal,
 						},
 					);
 
@@ -217,7 +243,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 				if (recordsMissingSampleId.length) {
 					const resultRecordsWithSampleId = await getSampleId(recordsMissingSampleId, {
-						signal: controller.signal,
+						signal,
 					});
 
 					resultRecordsWithSampleId.forEach((record) => {
@@ -283,7 +309,28 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					completeAllProcessingRecords();
 				}
 			}
+		},
+		[
+			submissionDetails,
+			getAnalysisIds,
+			organization,
+			getSampleId,
+			submissionDetailsDispatch,
+			setDataIsPending,
+			completeAllProcessingRecords,
+		],
+	);
+
+	// gets the initial status for all the uploads
+	useEffect(() => {
+		if (token && submissionRecordCount === 0) {
+			fetchSubmissionDetails();
 		}
+	}, [token, ID, submissionRecordCount, fetchSubmissionDetails]);
+
+	// get status updates if any are available from Submission Service
+	useEffect(() => {
+		const controller = new AbortController();
 
 		if (dataIsPending) {
 			switch (submissionStatus) {
@@ -291,7 +338,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				case SubmissionStatus.OPEN:
 					// If all required files have been uploaded, proceed to commit the submission.
 					if (pendingUploadManifests.length === 0) {
-						commit();
+						commit(controller.signal);
 					}
 					break;
 
@@ -304,17 +351,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			// Abort the request when the component unmounts or when a dependency changes
 			controller.abort();
 		};
-	}, [
-		dataIsPending,
-		submissionStatus,
-		pendingUploadManifests,
-		ID,
-		commitSubmission,
-		getAnalysisIds,
-		getSampleId,
-		organization,
-		submissionDetails,
-	]);
+	}, [dataIsPending, submissionStatus, pendingUploadManifests, ID, commit, trackPendingData]);
 
 	return (
 		<article
@@ -325,7 +362,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			<Overview
 				createdAt={submissionData?.createdAt}
 				loading={awaitingResponse}
-				totalRecords={totalUploads.toString()}
+				totalRecords={submissionRecordCount.toString()}
 				id={ID}
 				missingUploadFiles={pendingUploadManifests.map((f) => f.fileName)}
 				handleMissingUploadFiles={() => setOpenGuideModal(true)}
@@ -333,7 +370,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			/>
 
 			<LoaderWrapper loading={awaitingResponse} size="10px">
-				{totalUploads > 0 && (
+				{submissionRecordCount > 0 && (
 					<>
 						<p
 							css={css`
@@ -342,7 +379,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 								margin: 10px 0;
 							`}
 						>
-							1 - {totalUploads} of {totalUploads} Viral Genomes
+							1 - {submissionRecordCount} of {submissionRecordCount} Viral Genomes
 						</p>
 						<GenericTable
 							columns={columns}
@@ -391,7 +428,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 						submissionId={ID}
 						onClose={() => {
 							setOpenGuideModal(false);
-							fetchSubmissionDetails();
+							// Closing the modal will trigger submission commit to verify if
+							// files have been uploaded.
+							commit();
 						}}
 					/>
 				)}
