@@ -93,6 +93,12 @@ const useEnvironmentalData = (origin: string) => {
 		}
 	};
 
+	/**
+	 * Sends a POST request to Submission Service to commit Submission
+	 * @param id - ID of the Submission to commit
+	 * @param signal - A signal object that allows to abort request if required
+	 * @returns
+	 */
 	const commitSubmission = async (
 		id: string,
 		{ signal }: { signal?: AbortSignal } = {},
