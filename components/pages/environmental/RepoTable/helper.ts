@@ -19,11 +19,12 @@
  *
  */
 
-import SQONBuilder, { type SQON } from '@overture-stack/sqon-builder';
-import { isEmpty } from 'lodash';
+import type { CustomColumnMappingInterface } from '@overture-stack/arranger-components';
+import { type SQON } from '@overture-stack/sqon-builder';
 
 import createArrangerFetcher from '#components/utils/arrangerFetcher';
 import { getConfig } from '#global/config';
+import type { SubmissionManifest } from '#global/utils/fileManifest';
 
 const { NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API } = getConfig();
 
@@ -31,53 +32,106 @@ export const arrangerFetcher = createArrangerFetcher({
 	ARRANGER_API: NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API,
 });
 
-const saveSetMutation = `mutation ($sqon: JSON!)  {
-	saveSet(
-		sqon: $sqon,
-		type: file,
-		path: "name"
-	) {
-		setId
+function extractFilesFromResponse(response: any): SubmissionManifest[] {
+	const result: SubmissionManifest[] = [];
+
+	const analysisEdges = response?.data?.analysis?.hits?.edges;
+
+	if (!Array.isArray(analysisEdges)) {
+		return result;
+	}
+
+	for (const edge of analysisEdges) {
+		const files = edge?.node?.files?.hits?.edges;
+
+		if (!Array.isArray(files)) {
+			continue;
+		}
+
+		for (const fileEdge of files) {
+			result.push({
+				fileName: fileEdge?.node?.fileName,
+				md5Sum: fileEdge?.node?.md5Sum,
+				objectId: fileEdge?.node?.objectId,
+			});
+		}
+	}
+
+	return result;
+}
+
+const getFilesQuery = `query ($sqon: JSON!)  {
+	analysis {
+		hits(filters: $sqon) {
+			edges {
+				node {
+					systemId
+					files {
+						hits {
+							edges {
+								node {
+									fileName
+									md5Sum
+									objectId
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }`;
 
-export const saveSet = (sqon: SQON): Promise<string> => {
-	return arrangerFetcher({
+export const getManifestDataAsync = async (sqon: SQON): Promise<SubmissionManifest[]> => {
+	const result = await arrangerFetcher({
 		body: {
-			query: saveSetMutation,
+			query: getFilesQuery,
 			variables: { sqon },
 		},
-	})
-		.then(
-			({
-				data: {
-					saveSet: { setId },
-				},
-			}) => {
-				return setId;
-			},
-		)
-		.catch((err: any) => {
-			console.warn(err);
-			Promise.reject(err);
-		}) as Promise<string>;
+	});
+	return extractFilesFromResponse(result);
 };
 
-export function buildSqonWithObjectIds(currentSqon: SQON, objectIds: string[]): SQON | null {
-	const objectsSqon =
-		objectIds && objectIds.length > 0 ? SQONBuilder.in('object_id', objectIds) : null;
+export const getMetadataBlobAsync = async ({
+	sqon,
+	columns,
+	documentType,
+	fileType,
+	maxRows,
+	url,
+}: {
+	columns: (string | CustomColumnMappingInterface)[] | null;
+	documentType: string;
+	fileType: 'tsv' | string;
+	maxRows: number;
+	sqon: SQON;
+	url: string;
+}): Promise<Blob> => {
+	// Arranger Request in url form params
+	const formData = new URLSearchParams();
+	formData.append(
+		'params',
+		JSON.stringify({
+			files: [
+				{
+					documentType,
+					fileType,
+					maxRows,
+					sqon,
+					columns,
+				},
+			],
+		}),
+	);
 
-	if (!isEmpty(currentSqon) && !isEmpty(objectsSqon)) {
-		return SQONBuilder(currentSqon).and(objectsSqon);
-	}
-
-	if (isEmpty(currentSqon) && !isEmpty(objectsSqon)) {
-		return objectsSqon;
-	}
-
-	if (!isEmpty(currentSqon) && isEmpty(objectsSqon)) {
-		return currentSqon;
-	}
-
-	return null;
-}
+	// Use the provided Arranger url to fetch the metadata blob
+	const response = await fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+		},
+		body: formData.toString(),
+	});
+	return await response.blob();
+};

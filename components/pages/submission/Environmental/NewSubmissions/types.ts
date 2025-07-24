@@ -19,6 +19,8 @@
  *
  */
 
+import type { SubmissionManifest } from '#/global/utils/fileManifest';
+
 /**
  * Enum used in the Reponse on Create new Submissions
  */
@@ -56,12 +58,6 @@ export type NoUploadError = {
 	batchErrors?: BatchError[];
 	description?: string;
 	status: string;
-};
-
-export type SubmissionManifest = {
-	objectId: string;
-	fileName: string;
-	md5Sum: string;
 };
 
 export type CreateSubmissionResult = {

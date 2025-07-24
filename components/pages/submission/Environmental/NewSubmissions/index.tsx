@@ -32,6 +32,7 @@ import defaultTheme from '#components/theme';
 import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData from '#global/hooks/useEnvironmentalData';
+import type { SubmissionManifest } from '#global/utils/fileManifest';
 import getInternalLink from '#global/utils/getInternalLink';
 
 import DropZone from './DropZone';
@@ -45,7 +46,6 @@ import {
 	ValidationAction,
 	type BatchError,
 	type SubmissionFile,
-	type SubmissionManifest,
 } from './types';
 import {
 	getFileExtension,
