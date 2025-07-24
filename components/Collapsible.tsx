@@ -19,9 +19,11 @@
  *
  */
 
+import { css } from '@emotion/react';
 import { ReactElement, useState } from 'react';
 
 import defaultTheme from './theme';
+import { ChevronDown } from './theme/icons';
 
 type CollapsibleProps = {
 	title: string;
@@ -50,7 +52,16 @@ const Collapsible = ({ title, children }: CollapsibleProps): ReactElement => {
 					fontWeight: 'bold',
 				}}
 			>
-				{title} {isOpen ? '▲' : '▼'}
+				<ChevronDown
+					fill={defaultTheme.colors.canada}
+					height={9}
+					width={8}
+					style={css`
+						margin-right: 3px;
+						transform: rotate(${isOpen ? '180deg' : '0deg'});
+					`}
+				/>
+				&nbsp;{title}
 			</div>
 			<div
 				style={{

@@ -33,9 +33,11 @@ import StyledLink from '#components/Link';
 import Loader from '#components/Loader';
 import { Modal } from '#components/Modal';
 import defaultTheme from '#components/theme';
-import { CoronaVirus, Storage } from '#components/theme/icons';
+import { CoronaVirus, Download, Storage } from '#components/theme/icons';
 import Error from '#components/theme/icons/error';
 import { INTERNAL_PATHS } from '#global/utils/constants';
+
+import { createZipFile } from './helper';
 
 const dockerRunCommand = `docker run -d -it --rm --name score-client \\
   -e STORAGE_URL=https://score.dev.virusseq-dataportal.ca \\
@@ -156,7 +158,7 @@ const DownloadInfoModalTitle = (showDownloading: boolean) => (
 
 		{!showDownloading && (
 			<>
-				<span>Download files instructions</span>
+				<span>Download metadata and file manifest instructions</span>
 			</>
 		)}
 	</div>
@@ -187,6 +189,36 @@ const MetadataFileSection = ({
 		)}
 	</>
 );
+
+const plainTextSequencingFileInstructions = `To download the genomic files, follow these steps:
+
+1. Download the manifest file:
+   Click the button below to download the manifest file in TSV format. This file is required for the download process and contains the necessary information about your files.
+
+   Note: File must be downloaded in an empty directory, and the file must be saved with name manifest.txt.
+
+2. Downloading Files Using the Score Client Docker Image:
+   Note: Ensure that Docker is installed and running on your local machine before proceeding. If Docker is not installed, you can follow the installation instructions on the official Docker website.
+
+   Open a terminal, navigate to the same directory where the manifest.txt file was downloaded, and run the following command to start the Score client Docker container:
+
+   \`\`\`
+   ${dockerRunCommand}
+   \`\`\`
+
+   Execute the following command to download your files using the manifest:
+
+   \`\`\`
+   ${dockerExecCommand}
+   \`\`\`
+
+3. Stop Score client:
+   After the download is complete, stop the Score client container by running:
+
+   \`\`\`
+   ${dockerStopCommand}
+   \`\`\`
+`;
 
 /**
  * Section to display the sequencing genomic file download instructions.
@@ -299,6 +331,34 @@ const DownloadInfoModal = ({
 	const theme: typeof defaultTheme = useTheme();
 	const [showDownloading, setShowDownloading] = useState(true);
 
+	const today = new Date().toISOString();
+	const metadataFileName = `wastewater-metadata-export-${today}.tsv`;
+	const manifestFileName = 'manifest.txt';
+	const instructionsFileName = 'download_instructions.txt';
+	const zipBundleFileName = 'download_bundle.zip';
+
+	const handleBundleDownload = async () => {
+		setShowDownloading(true);
+		const bundleDownload: { content: Blob; fileName: string }[] = [];
+
+		if (fileManifest) {
+			const manifestContent = convertToDownloadManifest(fileManifest);
+			const manifestBlob = new Blob([manifestContent], { type: 'text/tab-separated-values' });
+			bundleDownload.push({ content: manifestBlob, fileName: manifestFileName });
+		}
+		if (fileMetadata) {
+			bundleDownload.push({ content: fileMetadata, fileName: metadataFileName });
+			bundleDownload.push({
+				content: new Blob([plainTextSequencingFileInstructions], { type: 'text/plain' }),
+				fileName: instructionsFileName,
+			});
+		}
+
+		const zipBlob = await createZipFile(bundleDownload);
+		downloadFile(zipBlob, zipBundleFileName);
+		setShowDownloading(false);
+	};
+
 	const handleDownloadManifest = () => {
 		if (!fileManifest || fileManifest.length === 0) {
 			console.warn('No genomic files available for download');
@@ -306,13 +366,11 @@ const DownloadInfoModal = ({
 		}
 		const manifestContent = convertToDownloadManifest(fileManifest);
 		const blob = new Blob([manifestContent], { type: 'text/tab-separated-values' });
-		downloadFile(blob, 'manifest.txt');
+		downloadFile(blob, manifestFileName);
 	};
 
 	const handleDownloadMetadata = (blob: Blob) => {
-		const today = new Date().toISOString();
-		const fileName = `wastewater-metadata-export-${today}.tsv`;
-		downloadFile(blob, fileName);
+		downloadFile(blob, metadataFileName);
 	};
 
 	useEffect(() => {
@@ -326,7 +384,7 @@ const DownloadInfoModal = ({
 			<div
 				css={css`
 					padding: 20px;
-					width: 900px;
+					width: 800px;
 					height: 500px;
 					overflow-y: scroll;
 					margin: 0px;
@@ -342,25 +400,46 @@ const DownloadInfoModal = ({
 					}
 				`}
 			>
-				<ArchiveStatDisplay
-					numOfSamples={selectedRows.length}
-					numOfSeqFiles={fileManifest?.length}
-				/>
-				<br />
-				<Collapsible title="Instructions for Download Metadata file">
-					<MetadataFileSection
-						fileMetadata={fileMetadata}
-						handleDownloadMetadata={handleDownloadMetadata}
-					/>
-				</Collapsible>
-				<Collapsible title="Instructions for Download Sequencing files">
-					<SequencingFilesSection
-						fileManifest={fileManifest}
-						handleDownloadManifest={handleDownloadManifest}
-						theme={theme}
-					/>
-				</Collapsible>
-
+				{showDownloading ? (
+					<>
+						<Loader size={'25px'} />
+						<span>Preparing Download...</span>
+					</>
+				) : (
+					<>
+						<p>
+							To download the data, you can either download the entire bundle or follow the
+							instructions below to download the metadata and genomic files separately.
+						</p>
+						<ArchiveStatDisplay
+							numOfSamples={selectedRows.length}
+							numOfSeqFiles={fileManifest?.length}
+						/>
+						<p>
+							<Download
+								fill={theme.colors.primary}
+								style={css`
+									margin-right: 0.2rem;
+								`}
+							/>
+							Click <StyledLink onClick={handleBundleDownload}>here</StyledLink> to start download
+							with instructions for the metadata and genomic files.
+						</p>
+						<Collapsible title="Instructions for Download Metadata file">
+							<MetadataFileSection
+								fileMetadata={fileMetadata}
+								handleDownloadMetadata={handleDownloadMetadata}
+							/>
+						</Collapsible>
+						<Collapsible title="Instructions for Download Sequencing files">
+							<SequencingFilesSection
+								fileManifest={fileManifest}
+								handleDownloadManifest={handleDownloadManifest}
+								theme={theme}
+							/>
+						</Collapsible>
+					</>
+				)}
 				<AdvisorySection />
 			</div>
 		</Modal>

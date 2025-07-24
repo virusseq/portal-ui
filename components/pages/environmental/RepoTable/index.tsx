@@ -185,6 +185,8 @@ const RepoTable = (): ReactElement => {
 
 	const closeModal = () => {
 		setShowDownloadInfoModal(false);
+		setFileManifest([]);
+		setFileMetadata(null);
 	};
 
 	const today = new Date().toISOString();

@@ -21,6 +21,7 @@
 
 import type { CustomColumnMappingInterface } from '@overture-stack/arranger-components';
 import { type SQON } from '@overture-stack/sqon-builder';
+import JSZip from 'jszip';
 
 import createArrangerFetcher from '#components/utils/arrangerFetcher';
 import { getConfig } from '#global/config';
@@ -31,6 +32,16 @@ const { NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API } = getConfig();
 export const arrangerFetcher = createArrangerFetcher({
 	ARRANGER_API: NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API,
 });
+
+export const createZipFile = async (
+	files: { content: Blob; fileName: string }[],
+): Promise<Blob> => {
+	const zip = new JSZip();
+	files.forEach(({ content, fileName }) => {
+		zip.file(fileName, content);
+	});
+	return await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+};
 
 function extractFilesFromResponse(response: any): SubmissionManifest[] {
 	const result: SubmissionManifest[] = [];
