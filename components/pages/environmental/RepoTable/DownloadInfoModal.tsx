@@ -20,7 +20,7 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import {
 	convertToDownloadManifest,
@@ -33,7 +33,7 @@ import StyledLink from '#components/Link';
 import Loader from '#components/Loader';
 import { Modal } from '#components/Modal';
 import defaultTheme from '#components/theme';
-import { CoronaVirus, Download, Storage } from '#components/theme/icons';
+import { Checkmark, CoronaVirus, Storage } from '#components/theme/icons';
 import Error from '#components/theme/icons/error';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
@@ -62,7 +62,7 @@ const AdvisorySection = () => (
 				margin-top: 25px;
 			`}
 		>
-			By downloading this data, you agree to{' '}
+			Your download has started. By downloading this data, you agree to{' '}
 			<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the Canadian
 			Public Health Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having
 			contributed data and follow all{' '}
@@ -130,6 +130,20 @@ const ArchiveStatDisplay = ({
 	);
 };
 
+const CompleteCheckmark = () => (
+	<div
+		css={css`
+			display: flex;
+			align-items: center;
+			padding: 8px;
+			background-color: ${defaultTheme.colors.success_dark};
+			border-radius: 50%;
+		`}
+	>
+		<Checkmark size={17} fill={defaultTheme.colors.white} />
+	</div>
+);
+
 /**
  * Component to display the title of the Download Info Modal.
  * @param showDownloading
@@ -158,7 +172,7 @@ const DownloadInfoModalTitle = (showDownloading: boolean) => (
 
 		{!showDownloading && (
 			<>
-				<span>Download metadata and file manifest instructions</span>
+				<CompleteCheckmark /> <span>Download Initiated</span>
 			</>
 		)}
 	</div>
@@ -322,14 +336,15 @@ const DownloadInfoModal = ({
 	fileManifest,
 	fileMetadata,
 	selectedRows = [],
+	isLoading,
 }: {
 	onClose: () => void;
 	fileManifest?: SubmissionManifest[];
 	fileMetadata: Blob | null;
 	selectedRows: string[];
+	isLoading: boolean;
 }) => {
 	const theme: typeof defaultTheme = useTheme();
-	const [showDownloading, setShowDownloading] = useState(true);
 
 	const today = new Date().toISOString();
 	const metadataFileName = `wastewater-metadata-export-${today}.tsv`;
@@ -337,8 +352,7 @@ const DownloadInfoModal = ({
 	const instructionsFileName = 'download_instructions.txt';
 	const zipBundleFileName = 'download_bundle.zip';
 
-	const handleBundleDownload = async () => {
-		setShowDownloading(true);
+	const handleBundleDownload = useCallback(async () => {
 		const bundleDownload: { content: Blob; fileName: string }[] = [];
 
 		if (fileManifest) {
@@ -356,8 +370,7 @@ const DownloadInfoModal = ({
 
 		const zipBlob = await createZipFile(bundleDownload);
 		downloadFile(zipBlob, zipBundleFileName);
-		setShowDownloading(false);
-	};
+	}, [fileManifest, fileMetadata, metadataFileName]);
 
 	const handleDownloadManifest = () => {
 		if (!fileManifest || fileManifest.length === 0) {
@@ -374,13 +387,13 @@ const DownloadInfoModal = ({
 	};
 
 	useEffect(() => {
-		if (fileMetadata) {
-			setShowDownloading(false);
+		if (!isLoading) {
+			handleBundleDownload();
 		}
-	}, [fileMetadata, fileManifest]);
+	}, [isLoading, handleBundleDownload]);
 
 	return (
-		<Modal onCloseClick={onClose} title={DownloadInfoModalTitle(showDownloading)}>
+		<Modal onCloseClick={onClose} title={DownloadInfoModalTitle(isLoading)}>
 			<div
 				css={css`
 					padding: 20px;
@@ -400,31 +413,18 @@ const DownloadInfoModal = ({
 					}
 				`}
 			>
-				{showDownloading ? (
+				{isLoading ? (
 					<>
 						<Loader size={'25px'} />
 						<span>Preparing Download...</span>
 					</>
 				) : (
 					<>
-						<p>
-							To download the data, you can either download the entire bundle or follow the
-							instructions below to download the metadata and genomic files separately.
-						</p>
 						<ArchiveStatDisplay
 							numOfSamples={selectedRows.length}
 							numOfSeqFiles={fileManifest?.length}
 						/>
-						<p>
-							<Download
-								fill={theme.colors.primary}
-								style={css`
-									margin-right: 0.2rem;
-								`}
-							/>
-							Click <StyledLink onClick={handleBundleDownload}>here</StyledLink> to start download
-							with instructions for the metadata and genomic files.
-						</p>
+						<p>Download metadata and sequencing files instructions:</p>
 						<Collapsible title="Instructions for Download Metadata file">
 							<MetadataFileSection
 								fileMetadata={fileMetadata}

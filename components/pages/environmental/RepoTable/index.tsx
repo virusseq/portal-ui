@@ -182,6 +182,8 @@ const RepoTable = (): ReactElement => {
 	const [fileManifest, setFileManifest] = useState<SubmissionManifest[]>([]);
 	const [fileMetadata, setFileMetadata] = useState<Blob | null>(null);
 	const [selectedRows, setSelectedRows] = useState<string[]>([]);
+	const [isLoadingManifest, setIsLoadingManifest] = useState(false);
+	const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
 
 	const closeModal = () => {
 		setShowDownloadInfoModal(false);
@@ -225,8 +227,19 @@ const RepoTable = (): ReactElement => {
 		if (!sqon) return;
 
 		setShowDownloadInfoModal(true);
-		getManifestDataAsync(sqon).then(setFileManifest);
+		setIsLoadingManifest(true);
+		setIsLoadingMetadata(true);
+		setSelectedRows(selectedRows);
 
+		// Start fetching manifest
+		getManifestDataAsync(sqon)
+			.then(setFileManifest)
+			.catch((error) => {
+				console.error('Failed to fetch manifest:', error);
+			})
+			.finally(() => setIsLoadingManifest(false));
+
+		// Start fetching files metadata if files are present
 		if (files && files.length > 0) {
 			getMetadataBlobAsync({
 				sqon,
@@ -235,10 +248,12 @@ const RepoTable = (): ReactElement => {
 				fileType: 'tsv',
 				maxRows: 0,
 				url,
-			}).then(setFileMetadata);
+			})
+				.then(setFileMetadata)
+				.finally(() => setIsLoadingMetadata(false));
+		} else {
+			setIsLoadingMetadata(false);
 		}
-
-		setSelectedRows(selectedRows);
 	};
 
 	const customExporters: CustomExporterInput = NEXT_PUBLIC_ENABLE_DOWNLOADS
@@ -280,6 +295,7 @@ const RepoTable = (): ReactElement => {
 					fileManifest={fileManifest}
 					fileMetadata={fileMetadata}
 					selectedRows={selectedRows}
+					isLoading={isLoadingManifest || isLoadingMetadata}
 				/>
 			)}
 		</article>
