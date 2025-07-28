@@ -39,13 +39,13 @@ import { ReactElement, useState } from 'react';
 import urlJoin from 'url-join';
 
 import StyledLink from '#components/Link';
+import DownloadModal from '#components/pages/environmental/DownloadModal';
 import { ThemeInterface } from '#components/theme';
 import { Download } from '#components/theme/icons';
 import validateStringAsUrl from '#components/utils/urlValidation';
 import { getConfig } from '#global/config';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
 
-import DownloadInfoModal from './DownloadInfoModal';
 import { excludeRecordsWithoutFiles, getManifestDataAsync, getMetadataBlobAsync } from './helper';
 
 const COLUMNS_DROPDOWN_TOOLTIP = 'Column selection does \\a not affect downloads.';
@@ -292,7 +292,7 @@ const RepoTable = (): ReactElement => {
 			</TableContextProvider>
 
 			{showDownloadInfoModal && (
-				<DownloadInfoModal
+				<DownloadModal
 					onClose={closeModal}
 					fileManifest={fileManifest}
 					fileMetadata={fileMetadata}

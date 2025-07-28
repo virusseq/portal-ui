@@ -28,10 +28,11 @@ import { ChevronDown } from './theme/icons';
 type CollapsibleProps = {
 	title: string;
 	children: ReactElement;
+	defaultOpen?: boolean;
 };
 
-const Collapsible = ({ title, children }: CollapsibleProps): ReactElement => {
-	const [isOpen, setIsOpen] = useState(false);
+const Collapsible = ({ title, children, defaultOpen = false }: CollapsibleProps): ReactElement => {
+	const [isOpen, setIsOpen] = useState(defaultOpen);
 
 	const toggle = () => setIsOpen((prev) => !prev);
 
