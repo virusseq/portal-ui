@@ -46,7 +46,7 @@ import { getConfig } from '#global/config';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
 
 import DownloadInfoModal from './DownloadInfoModal';
-import { getManifestDataAsync, getMetadataBlobAsync } from './helper';
+import { excludeRecordsWithoutFiles, getManifestDataAsync, getMetadataBlobAsync } from './helper';
 
 const COLUMNS_DROPDOWN_TOOLTIP = 'Column selection does \\a not affect downloads.';
 
@@ -226,13 +226,15 @@ const RepoTable = (): ReactElement => {
 	}) => {
 		if (!sqon) return;
 
+		const filteredSqonWithFiles = excludeRecordsWithoutFiles(sqon);
+
 		setShowDownloadInfoModal(true);
 		setIsLoadingManifest(true);
 		setIsLoadingMetadata(true);
 		setSelectedRows(selectedRows);
 
 		// Start fetching manifest
-		getManifestDataAsync(sqon)
+		getManifestDataAsync(filteredSqonWithFiles)
 			.then(setFileManifest)
 			.catch((error) => {
 				console.error('Failed to fetch manifest:', error);
