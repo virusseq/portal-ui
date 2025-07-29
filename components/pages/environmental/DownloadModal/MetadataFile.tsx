@@ -19,13 +19,13 @@
  *
  */
 
+import { css } from '@emotion/react';
+
 import Button from '#components/Button';
-import Loader from '#components/Loader';
+import Error from '#components/theme/icons/error';
 
 /**
  * Section to display the metadata file download instructions.
- * @param param0
- * @returns
  */
 export const MetadataFileSection = ({
 	fileMetadata,
@@ -35,8 +35,7 @@ export const MetadataFileSection = ({
 	handleDownloadMetadata: (blob: Blob) => void;
 }) => (
 	<>
-		{!fileMetadata && <Loader size={'25px'} />}
-		{fileMetadata && (
+		{fileMetadata ? (
 			<>
 				<p>
 					The metadata file contains information about the selected samples. Click the button below
@@ -44,6 +43,18 @@ export const MetadataFileSection = ({
 				</p>
 				<Button onClick={() => handleDownloadMetadata(fileMetadata)}>Download Metadata</Button>
 			</>
+		) : (
+			<div
+				css={css`
+					display: flex;
+					align-items: center;
+					column-gap: 10px;
+					margin-left: 10px;
+					margin-top: 10px;
+				`}
+			>
+				<Error /> <span>The metadata file could not be generated at this time</span>
+			</div>
 		)}
 	</>
 );

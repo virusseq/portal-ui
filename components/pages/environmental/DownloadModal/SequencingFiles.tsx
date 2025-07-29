@@ -22,8 +22,7 @@
 import { css } from '@emotion/react';
 
 import Button from '#components/Button';
-import Loader from '#components/Loader';
-import defaultTheme from '#components/theme';
+import { type ThemeInterface } from '#components/theme';
 import Error from '#components/theme/icons/error';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
 
@@ -41,8 +40,6 @@ const dockerStopCommand = `docker stop score-client`;
 
 /**
  * Section to display the sequencing genomic file download instructions.
- * @param param0
- * @returns
  */
 export const SequencingFilesSection = ({
 	fileManifest,
@@ -51,24 +48,10 @@ export const SequencingFilesSection = ({
 }: {
 	fileManifest?: SubmissionManifest[];
 	handleDownloadManifest: () => void;
-	theme: typeof defaultTheme;
+	theme: ThemeInterface;
 }) => (
 	<>
-		{fileManifest?.length === 0 && (
-			<div
-				css={css`
-					display: flex;
-					align-items: center;
-					column-gap: 10px;
-					margin-left: 10px;
-					margin-top: 10px;
-				`}
-			>
-				<Error /> <span>Selected records do not have genomic files available for download</span>
-			</div>
-		)}
-		{!fileManifest && <Loader size={'25px'} />}
-		{fileManifest && fileManifest.length > 0 && (
+		{fileManifest && fileManifest.length > 0 ? (
 			<>
 				<p>
 					Follow the steps below to download the genomic files. Make sure you have Docker installed
@@ -127,6 +110,18 @@ export const SequencingFilesSection = ({
 					<code>{dockerStopCommand}</code>
 				</pre>
 			</>
+		) : (
+			<div
+				css={css`
+					display: flex;
+					align-items: center;
+					column-gap: 10px;
+					margin-left: 10px;
+					margin-top: 10px;
+				`}
+			>
+				<Error /> <span>Selected records do not have genomic files available for download</span>
+			</div>
 		)}
 	</>
 );

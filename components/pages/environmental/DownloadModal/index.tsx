@@ -32,7 +32,7 @@ import StyledLink from '#components/Link';
 import Loader from '#components/Loader';
 import { Modal } from '#components/Modal';
 import { createZipFile } from '#components/pages/environmental/RepoTable/helper';
-import defaultTheme from '#components/theme';
+import defaultTheme, { type ThemeInterface } from '#components/theme';
 import { Checkmark, CoronaVirus, Storage } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
@@ -79,9 +79,11 @@ const AdvisorySection = () => (
 const ArchiveStatDisplay = ({
 	numOfSamples = 0,
 	numOfSeqFiles = 0,
+	theme = defaultTheme,
 }: {
 	numOfSamples?: number;
 	numOfSeqFiles?: number;
+	theme?: ThemeInterface;
 }) => {
 	return (
 		<div
@@ -89,7 +91,7 @@ const ArchiveStatDisplay = ({
 				display: flex;
 				margin-top: 20px;
 				align-items: center;
-				border: solid 1px ${defaultTheme.colors.grey_3};
+				border: solid 1px ${theme.colors.grey_3};
 				padding: 15px 20px 15px 20px;
 				column-gap: 40px;
 			`}
@@ -118,17 +120,17 @@ const ArchiveStatDisplay = ({
 	);
 };
 
-const CompleteCheckmark = () => (
+const CompleteCheckmark = ({ theme = defaultTheme }: { theme?: ThemeInterface }) => (
 	<div
 		css={css`
 			display: flex;
 			align-items: center;
 			padding: 8px;
-			background-color: ${defaultTheme.colors.success_dark};
+			background-color: ${theme.colors.success_dark};
 			border-radius: 50%;
 		`}
 	>
-		<Checkmark size={17} fill={defaultTheme.colors.white} />
+		<Checkmark size={17} fill={theme.colors.white} />
 	</div>
 );
 
@@ -137,7 +139,13 @@ const CompleteCheckmark = () => (
  * @param showDownloading
  * @returns
  */
-const DownloadInfoModalTitle = (showDownloading: boolean) => (
+const DownloadInfoModalTitle = ({
+	showDownloading,
+	theme = defaultTheme,
+}: {
+	showDownloading: boolean;
+	theme?: ThemeInterface;
+}) => (
 	<div
 		css={css`
 			display: flex;
@@ -145,8 +153,8 @@ const DownloadInfoModalTitle = (showDownloading: boolean) => (
 			column-gap: 10px;
 			margin-left: 10px;
 			margin-top: 10px;
-			color: ${defaultTheme.colors.primary};
-			${defaultTheme.typography.heading};
+			color: ${theme.colors.primary};
+			${theme.typography.heading};
 			span {
 				font-size: 22px;
 			}
@@ -160,7 +168,7 @@ const DownloadInfoModalTitle = (showDownloading: boolean) => (
 
 		{!showDownloading && (
 			<>
-				<CompleteCheckmark /> <span>Download Initiated</span>
+				<CompleteCheckmark theme={theme} /> <span>Download Initiated</span>
 			</>
 		)}
 	</div>
@@ -168,8 +176,6 @@ const DownloadInfoModalTitle = (showDownloading: boolean) => (
 
 /**
  * Main component for the Download Info Modal.
- * @param param0
- * @returns
  */
 const DownloadModal = ({
 	onClose,
@@ -184,7 +190,7 @@ const DownloadModal = ({
 	selectedRows: string[];
 	isLoading: boolean;
 }) => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme: ThemeInterface = useTheme();
 
 	const today = new Date().toISOString();
 	const metadataFileName = `wastewater-metadata-export-${today}.tsv`;
@@ -233,7 +239,10 @@ const DownloadModal = ({
 	}, [isLoading, handleBundleDownload]);
 
 	return (
-		<Modal onCloseClick={onClose} title={DownloadInfoModalTitle(isLoading)}>
+		<Modal
+			onCloseClick={onClose}
+			title={<DownloadInfoModalTitle showDownloading={isLoading} theme={theme} />}
+		>
 			<div
 				css={css`
 					padding: 20px;
@@ -241,7 +250,7 @@ const DownloadModal = ({
 					height: 500px;
 					overflow-y: auto;
 					margin: 0px;
-					${defaultTheme.typography.regular}
+					${theme.typography.regular}
 
 					pre {
 						background-color: ${theme.colors.grey_2};

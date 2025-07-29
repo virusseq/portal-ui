@@ -75,31 +75,26 @@ export const excludeRecordsWithoutFiles = (sqon: SQON): ExtendedSQON => {
 };
 
 function extractFilesFromResponse(response: any): SubmissionManifest[] {
-	const result: SubmissionManifest[] = [];
-
 	const analysisEdges = response?.data?.analysis?.hits?.edges;
 
 	if (!Array.isArray(analysisEdges)) {
-		return result;
+		return [];
 	}
 
-	for (const edge of analysisEdges) {
-		const files = edge?.node?.files?.hits?.edges;
-
-		if (!Array.isArray(files)) {
-			continue;
+	return analysisEdges.flatMap((edge) => {
+		const fileEdges = edge?.node?.files?.hits?.edges;
+		if (!Array.isArray(fileEdges)) {
+			return [];
 		}
 
-		for (const fileEdge of files) {
-			result.push({
-				fileName: fileEdge?.node?.fileName,
-				md5Sum: fileEdge?.node?.md5Sum,
-				objectId: fileEdge?.node?.objectId,
-			});
-		}
-	}
-
-	return result;
+		return fileEdges
+			.filter(({ node }) => node)
+			.map<SubmissionManifest>(({ node: { fileName, md5Sum, objectId } }) => ({
+				fileName,
+				md5Sum,
+				objectId,
+			}));
+	});
 }
 
 const getFilesQuery = `query ($sqon: JSON!)  {
