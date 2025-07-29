@@ -24,11 +24,14 @@ import { css } from '@emotion/react';
 import Button from '#components/Button';
 import { type ThemeInterface } from '#components/theme';
 import Error from '#components/theme/icons/error';
+import { getConfig } from '#global/config';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
 
+const { NEXT_PUBLIC_METADATA_API_URL, NEXT_PUBLIC_STORAGE_API_URL } = getConfig();
+
 const dockerRunCommand = `docker run -d -it --rm --name score-client \\
-  -e STORAGE_URL=https://score.dev.virusseq-dataportal.ca \\
-  -e METADATA_URL=https://song.dev.virusseq-dataportal.ca \\
+  -e STORAGE_URL=${NEXT_PUBLIC_STORAGE_API_URL} \\
+  -e METADATA_URL=${NEXT_PUBLIC_METADATA_API_URL} \\
   --network="host" \\
   --platform="linux/amd64" \\
   --mount type=bind,source="$(pwd)",target=/output \\
