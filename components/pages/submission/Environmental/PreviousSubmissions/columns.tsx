@@ -88,7 +88,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 					{<li>{value}</li>}
 				</ul>
 			) : null,
-		Header: 'Provinces',
+		Header: 'Study IDs',
 	},
 	{
 		accessor: 'createdAt',

@@ -190,6 +190,8 @@ const useEnvironmentalData = (origin: string) => {
 		const organization = submission.organization;
 		const submissionId = submission.id.toString();
 
+		const isUploadPending = submission.files?.some((f) => !f.isUploaded) ?? false;
+
 		const incompleteStatuses: SubmissionStatus[] = [
 			SubmissionStatus.CLOSED,
 			SubmissionStatus.INVALID,
@@ -207,6 +209,8 @@ const useEnvironmentalData = (origin: string) => {
 				if (errorDetails.length) {
 					recordStatus = UploadStatus.ERROR;
 				} else if (incompleteStatuses.includes(submission.status)) {
+					recordStatus = UploadStatus.INCOMPLETE;
+				} else if (isUploadPending) {
 					recordStatus = UploadStatus.INCOMPLETE;
 				}
 
