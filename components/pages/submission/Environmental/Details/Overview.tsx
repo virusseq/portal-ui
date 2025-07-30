@@ -133,6 +133,9 @@ const Overview = ({
 							<p>
 								<Warning size={16} />
 								{`Status: Submission incomplete`}
+								{missingUploadFiles &&
+									missingUploadFiles?.length > 0 &&
+									'. Required files have not been uploaded'}
 							</p>
 						)}
 						{status && status === SubmissionStatus.COMMITTED && (
@@ -155,7 +158,7 @@ const Overview = ({
 							padding: 20px;
 							margin: 0px;
 							${defaultTheme.typography.regular}
-							background-color: ${theme.colors.error_1};
+							background-color: ${theme.colors.accent_light};
 							border-radius: 8px;
 							box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 							padding: 10px;
@@ -166,17 +169,26 @@ const Overview = ({
 						<h2
 							css={css`
 								font-size: 26px;
-								color: ${theme.colors.error_dark};
+								color: ${theme.colors.primary};
 								margin: 0 60px 15px 0 !important;
 								white-space: nowrap;
 							`}
 						>
-							Missing files!
+							<Info size={16} fill={theme.colors.primary} />
+							&nbsp; Missing files
 						</h2>
 						<p>
-							The following files could not be found, and may still need to be uploaded. Click
-							<StyledLink onClick={handleMissingUploadFiles}> here </StyledLink>
-							for instructions.
+							The following files could not be found, and may still need to be uploaded.
+							<br />
+							<StyledLink
+								onClick={handleMissingUploadFiles}
+								css={css`
+									font-weight: bold;
+								`}
+							>
+								{' '}
+								Click here for instructions
+							</StyledLink>
 						</p>
 						<ul
 							css={css`
