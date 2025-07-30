@@ -31,11 +31,13 @@ const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => (
 	callerName: 'Explorer-Facets',
 	components: {
 		Aggregations: {
-			ActionIcon: {
-				fill: theme.colors.secondary,
-			},
 			AggsGroup: {
 				collapsedBackground: theme.colors.grey_2,
+				collapsing: {
+					fill: theme.colors.canada,
+					size: 8,
+					transition: 'all 0s',
+				},
 				css: css`
 					.title {
 						${theme.typography.subheading2}
@@ -73,10 +75,16 @@ const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => (
 						}
 					}
 				`,
+				filtering: {
+					fill: theme.colors.secondary,
+				},
 				groupDividerColor: theme.colors.grey_3,
 				headerBackground: theme.colors.white,
 				headerDividerColor: theme.colors.grey_2,
 				headerFontColor: theme.colors.accent_dark,
+				sorting: {
+					fill: theme.colors.secondary,
+				},
 			},
 			BucketCount: {
 				background: `rgba(${theme.colors.accent_light_rgb}, 0.45)`,
@@ -124,7 +132,7 @@ const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => (
 				`,
 				fontColor: theme.colors.primary,
 			},
-			RangeAgg: {
+			RangeAggs: {
 				css: css`
 					&[data-fieldName='analysis.host.host_age'] .unit-wrapper {
 						display: none;
@@ -158,11 +166,6 @@ const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => (
 					inBackground: theme.colors.secondary,
 					outBackground: theme.colors.grey_4,
 				},
-			},
-			TreeJointIcon: {
-				fill: theme.colors.canada,
-				size: 8,
-				transition: 'all 0s',
 			},
 		},
 		QuickSearch: {
