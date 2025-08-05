@@ -298,6 +298,7 @@ const RepoTable = (): ReactElement => {
 					fileMetadata={fileMetadata}
 					selectedRows={selectedRows}
 					isLoading={isLoadingManifest || isLoadingMetadata}
+					metadataFileName={`wastewater-metadata-export-${today}.tsv`}
 				/>
 			)}
 		</article>

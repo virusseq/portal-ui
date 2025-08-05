@@ -158,18 +158,20 @@ const DownloadInfoModalTitle = ({
 			span {
 				font-size: 22px;
 			}
+			.status-container {
+				display: inline-flex;
+				column-gap: 10px;
+			}
 		`}
 	>
-		{showDownloading && (
-			<>
+		{showDownloading ? (
+			<span className="status-container">
 				<Loader size={'20px'} margin={'0px'} /> <span>Preparing Download...</span>
-			</>
-		)}
-
-		{!showDownloading && (
-			<>
+			</span>
+		) : (
+			<span className="status-container">
 				<CompleteCheckmark theme={theme} /> <span>Download Initiated</span>
-			</>
+			</span>
 		)}
 	</div>
 );
@@ -178,25 +180,27 @@ const DownloadInfoModalTitle = ({
  * Main component for the Download Info Modal.
  */
 const DownloadModal = ({
-	onClose,
 	fileManifest,
 	fileMetadata,
-	selectedRows = [],
+	instructionsFileName = 'download_instructions.txt',
 	isLoading,
+	manifestFileName = 'manifest.txt',
+	metadataFileName = 'metadata-export.tsv',
+	onClose,
+	selectedRows = [],
+	zipArchiveFileName = 'download_bundle.zip',
 }: {
-	onClose: () => void;
 	fileManifest?: SubmissionManifest[];
 	fileMetadata: Blob | null;
-	selectedRows: string[];
+	instructionsFileName?: string;
 	isLoading: boolean;
+	manifestFileName?: string;
+	metadataFileName?: string;
+	onClose: () => void;
+	selectedRows: string[];
+	zipArchiveFileName?: string;
 }) => {
 	const theme: ThemeInterface = useTheme();
-
-	const today = new Date().toISOString();
-	const metadataFileName = `wastewater-metadata-export-${today}.tsv`;
-	const manifestFileName = 'manifest.txt';
-	const instructionsFileName = 'download_instructions.txt';
-	const zipBundleFileName = 'download_bundle.zip';
 
 	const handleBundleDownload = useCallback(async () => {
 		const bundleDownload: { content: Blob; fileName: string }[] = [];
@@ -215,8 +219,15 @@ const DownloadModal = ({
 		}
 
 		const zipBlob = await createZipFile(bundleDownload);
-		downloadFile(zipBlob, zipBundleFileName);
-	}, [fileManifest, fileMetadata, metadataFileName]);
+		downloadFile(zipBlob, zipArchiveFileName);
+	}, [
+		fileManifest,
+		fileMetadata,
+		metadataFileName,
+		instructionsFileName,
+		zipArchiveFileName,
+		manifestFileName,
+	]);
 
 	const handleDownloadManifest = () => {
 		if (!fileManifest || fileManifest.length === 0) {
