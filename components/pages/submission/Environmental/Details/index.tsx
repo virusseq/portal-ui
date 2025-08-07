@@ -32,9 +32,9 @@ import useEnvironmentalData, {
 	type SubmissionFile,
 	type UploadData,
 } from '#global/hooks/useEnvironmentalData';
+import type { SubmissionManifest } from '#global/utils/fileManifest';
 
 import FileUploadInstructionsModal from '../NewSubmissions/FileUploadInstructionsModal';
-import type { SubmissionManifest } from '../NewSubmissions/types';
 
 import columns from './columns';
 import Overview from './Overview';

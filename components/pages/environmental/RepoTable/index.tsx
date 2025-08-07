@@ -30,21 +30,27 @@ import {
 import {
 	CustomColumnMappingInterface,
 	CustomExporterInput,
+	type ExporterFileInterface,
+	type ExporterFunction,
 } from '@overture-stack/arranger-components/dist/Table/DownloadButton/types';
 import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/ThemeContext/types';
-import { ReactElement } from 'react';
+import type { SQON } from '@overture-stack/sqon-builder';
+import { ReactElement, useState } from 'react';
 import urlJoin from 'url-join';
 
 import StyledLink from '#components/Link';
+import DownloadModal from '#components/pages/environmental/DownloadModal';
 import { ThemeInterface } from '#components/theme';
 import { Download } from '#components/theme/icons';
 import validateStringAsUrl from '#components/utils/urlValidation';
 import { getConfig } from '#global/config';
-import useTrackingContext from '#global/hooks/useTrackingContext';
+import type { SubmissionManifest } from '#global/utils/fileManifest';
+
+import { excludeRecordsWithoutFiles, getManifestDataAsync, getMetadataBlobAsync } from './helper';
 
 const COLUMNS_DROPDOWN_TOOLTIP = 'Column selection does \\a not affect downloads.';
 
-const downloadButtonCustomProps = { exportSelectedRowsField: 'data.specimen_collector_sample_id' };
+const downloadButtonCustomProps = { exportSelectedRowsField: '_id' };
 
 const getTableConfigs = ({
 	apiHost = '',
@@ -166,12 +172,24 @@ const getTableConfigs = ({
 
 const RepoTable = (): ReactElement => {
 	const theme = useTheme();
-	const { logEvent } = useTrackingContext();
 	const {
 		NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API,
 		NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MANIFEST_COLUMNS,
 		NEXT_PUBLIC_ENABLE_DOWNLOADS,
 	} = getConfig();
+
+	const [showDownloadInfoModal, setShowDownloadInfoModal] = useState(false);
+	const [fileManifest, setFileManifest] = useState<SubmissionManifest[]>([]);
+	const [fileMetadata, setFileMetadata] = useState<Blob | null>(null);
+	const [selectedRows, setSelectedRows] = useState<string[]>([]);
+	const [isLoadingManifest, setIsLoadingManifest] = useState(false);
+	const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
+
+	const closeModal = () => {
+		setShowDownloadInfoModal(false);
+		setFileManifest([]);
+		setFileMetadata(null);
+	};
 
 	const today = new Date().toISOString();
 	const tsvExportColumns = NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MANIFEST_COLUMNS.split(',')
@@ -195,15 +213,61 @@ const RepoTable = (): ReactElement => {
 			};
 		});
 
+	const handleBundleDownload: ExporterFunction = ({
+		sqon,
+		url,
+		selectedRows,
+		files,
+	}: {
+		sqon: SQON | null;
+		url: string;
+		selectedRows: string[];
+		files?: ExporterFileInterface[];
+	}) => {
+		if (!sqon) return;
+
+		const filteredSqonWithFiles = excludeRecordsWithoutFiles(sqon);
+
+		setShowDownloadInfoModal(true);
+		setIsLoadingManifest(true);
+		setIsLoadingMetadata(true);
+		setSelectedRows(selectedRows);
+
+		// Start fetching manifest
+		getManifestDataAsync(filteredSqonWithFiles)
+			.then(setFileManifest)
+			.catch((error) => {
+				console.error('Failed to fetch manifest:', error);
+			})
+			.finally(() => setIsLoadingManifest(false));
+
+		// Start fetching files metadata if files are present
+		if (files && files.length > 0) {
+			getMetadataBlobAsync({
+				sqon,
+				columns: files[0].columns,
+				documentType: 'analysis',
+				fileType: 'tsv',
+				maxRows: 0,
+				url,
+			})
+				.then(setFileMetadata)
+				.finally(() => setIsLoadingMetadata(false));
+		} else {
+			setIsLoadingMetadata(false);
+		}
+	};
+
 	const customExporters: CustomExporterInput = NEXT_PUBLIC_ENABLE_DOWNLOADS
 		? [
 				{
 					columns: tsvExportColumns,
 					fileName: `wastewater-metadata-export-${today}.tsv`,
 					function: 'saveTSV',
-					// label: 'Download analyses',
+					label: 'Metadata only',
 					valueWhenEmpty: '',
 				},
+				{ function: handleBundleDownload, label: 'Metadata + File manifest' },
 		  ]
 		: [];
 
@@ -226,6 +290,17 @@ const RepoTable = (): ReactElement => {
 				<Table />
 				<Pagination />
 			</TableContextProvider>
+
+			{showDownloadInfoModal && (
+				<DownloadModal
+					onClose={closeModal}
+					fileManifest={fileManifest}
+					fileMetadata={fileMetadata}
+					selectedRows={selectedRows}
+					isLoading={isLoadingManifest || isLoadingMetadata}
+					metadataFileName={`wastewater-metadata-export-${today}.tsv`}
+				/>
+			)}
 		</article>
 	);
 };

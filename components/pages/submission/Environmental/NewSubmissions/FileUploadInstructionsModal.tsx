@@ -22,33 +22,15 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useState } from 'react';
 
+import {
+	convertToUploadManifest,
+	downloadFile,
+	type SubmissionManifest,
+} from '#/global/utils/fileManifest';
 import Button from '#components/Button';
 import { Modal } from '#components/Modal';
 import defaultTheme from '#components/theme';
 import useAuthContext from '#global/hooks/useAuthContext';
-
-import type { SubmissionManifest } from './types';
-
-export const convertManifestsToTSV = (submissionId: string, manifests: SubmissionManifest[]) => {
-	const header = `${submissionId}\t\t\n`;
-	const dataRows = manifests
-		.map(({ objectId, fileName, md5Sum }) => `${objectId}\t/output/${fileName}\t${md5Sum}`)
-		.join('\n');
-	return header + dataRows;
-};
-
-const downloadTSVFile = (data: string, filename: string) => {
-	const blob = new Blob([data], { type: 'text/tab-separated-values' });
-	const url = URL.createObjectURL(blob);
-
-	const link = document.createElement('a');
-	link.href = url;
-	link.download = filename;
-	document.body.appendChild(link);
-	link.click();
-	document.body.removeChild(link);
-	URL.revokeObjectURL(url);
-};
 
 const initialDockerRunCommand = `
 docker run -d -it --rm --name score-client \\
@@ -77,8 +59,9 @@ const FileUploadInstructionsModal = ({
 	const { token } = useAuthContext();
 
 	const handleDownload = () => {
-		const manifestContent = convertManifestsToTSV(submissionId, submissionManifest);
-		downloadTSVFile(manifestContent, 'manifest.txt');
+		const manifestContent = convertToUploadManifest(submissionId, submissionManifest);
+		const blob = new Blob([manifestContent], { type: 'text/tab-separated-values' });
+		downloadFile(blob, 'manifest.txt');
 	};
 
 	const [dockerRunCommand, setDockerRunCommand] = useState(initialDockerRunCommand);
