@@ -30,13 +30,16 @@ import {
 import Button from '#components/Button';
 import { Modal } from '#components/Modal';
 import defaultTheme from '#components/theme';
+import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
+
+const { NEXT_PUBLIC_METADATA_API_URL, NEXT_PUBLIC_STORAGE_API_URL } = getConfig();
 
 const initialDockerRunCommand = `
 docker run -d -it --rm --name score-client \\
   -e ACCESSTOKEN=\${token} \\
-  -e STORAGE_URL=https://score.dev.virusseq-dataportal.ca \\
-  -e METADATA_URL=https://song.dev.virusseq-dataportal.ca \\
+  -e STORAGE_URL=${NEXT_PUBLIC_STORAGE_API_URL} \\
+  -e METADATA_URL=${NEXT_PUBLIC_METADATA_API_URL} \\
   --network="host" \\
   --platform="linux/amd64" \\
   --mount type=bind,source="$(pwd)",target=/output \\
