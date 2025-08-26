@@ -25,7 +25,7 @@ const CreateStudyValidations = yup
 	.object()
 	.shape({
 		studyId: yup.string().trim().label('Study ID').required().max(15),
-		songId: yup.string().trim().label('Sample Type').required(),
+		sampleType: yup.string().trim().label('Sample Type').required(),
 		organization: yup.string().trim().label('Organization').required(),
 		name: yup.string().trim().label('Study Name').required(),
 		description: yup.string().trim().label('Description'),

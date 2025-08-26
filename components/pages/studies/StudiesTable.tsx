@@ -91,7 +91,7 @@ const columnData = (
 		Header: 'Study ID',
 	},
 	{
-		accessor: 'songId',
+		accessor: 'sampleType',
 		Header: 'Sample Type',
 	},
 	{

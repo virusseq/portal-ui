@@ -32,7 +32,7 @@ export type CreateStudyReq = {
 	organization: string;
 	name: string;
 	description: string;
-	songId: string;
+	sampleType: string;
 };
 
 export type AddSubmitterReq = {

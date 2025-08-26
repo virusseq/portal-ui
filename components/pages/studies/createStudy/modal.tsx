@@ -38,7 +38,7 @@ const EMPTY_FORM: CreateStudyReq = Object.freeze({
 	organization: '',
 	name: '',
 	description: '',
-	songId: '',
+	sampleType: '',
 });
 
 type CreateStudyModalProps = {
@@ -121,10 +121,10 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
 					options={['clinical', 'environmental']}
 					required={true}
 					label="Sample Type"
-					onChange={buildOnChangeFunc('songId')}
-					onBlur={buildOnBlurFunc(`songId`)}
-					errorMessage={formErrors[`songId`]}
-					value={formData[`songId`]}
+					onChange={buildOnChangeFunc('sampleType')}
+					onBlur={buildOnBlurFunc(`sampleType`)}
+					errorMessage={formErrors[`sampleType`]}
+					value={formData[`sampleType`]}
 					size={50}
 				/>
 				<FormInputText

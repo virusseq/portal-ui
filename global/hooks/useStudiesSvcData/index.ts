@@ -79,8 +79,8 @@ const useStudiesSvcData = () => {
 			});
 	};
 
-	const fetchStudies = (songId?: string): Promise<StudiesSvcRes<Study[]>> => {
-		const queryParams = songId ? `?songId=${encodeURIComponent(songId)}` : '';
+	const fetchStudies = (sampleType?: string): Promise<StudiesSvcRes<Study[]>> => {
+		const queryParams = sampleType ? `?sampleType=${encodeURIComponent(sampleType)}` : '';
 		const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies', queryParams), {
 			method: 'GET',
 		});

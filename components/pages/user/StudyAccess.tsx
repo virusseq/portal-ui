@@ -83,6 +83,7 @@ const StudyAccess = (): ReactElement | null => {
 	const [effectiveClinicalScopes, setEffectiveClinicalScopes] = useState<string[]>([]);
 
 	useEffect(() => {
+		// Users can be admin for either/both Clinical and Environmental data
 		if (userIsClinicalAdmin) {
 			setEffectiveClinicalScopes(['All Studies']);
 		} else {
