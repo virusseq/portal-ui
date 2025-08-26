@@ -106,10 +106,6 @@ const NewSubmissions = (): ReactElement => {
 		userIsEnvironmentalAdmin,
 		userEnvironmentalWriteScopes,
 	} = useAuthContext();
-	const {
-		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE,
-		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE,
-	} = getConfig();
 	const theme: typeof defaultTheme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [filesSubmissionInstructions, setFilesSubmissionInstructions] = useState<
@@ -154,15 +150,8 @@ const NewSubmissions = (): ReactElement => {
 		// Extract organization name from the CSV file
 		const organizationName = selectedCsv.name.split('.')[0].toUpperCase();
 
-		// Check user permissions for the organization
-		const effectiveOrganizations = userEnvironmentalWriteScopes.map((scope) =>
-			scope.slice(
-				NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE.length,
-				scope.length - NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.length,
-			),
-		);
 		const hasWriteAccessToOrganization =
-			userIsEnvironmentalAdmin || effectiveOrganizations.includes(organizationName);
+			userIsEnvironmentalAdmin || userEnvironmentalWriteScopes.includes(organizationName);
 		if (!hasWriteAccessToOrganization) {
 			setSubmitError(
 				`User does not have permission to upload data for organization ${organizationName}`,

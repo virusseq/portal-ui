@@ -20,53 +20,54 @@
  */
 
 export type Study = {
-  name: string;
-  studyId: string;
-  organization: string;
-  description: string;
-  submitters: string[];
+	name: string;
+	studyId: string;
+	organization: string;
+	description: string;
+	submitters: string[];
 };
 
 export type CreateStudyReq = {
-  studyId: string;
-  organization: string;
-  name: string;
-  description: string;
+	studyId: string;
+	organization: string;
+	name: string;
+	description: string;
+	songId: string;
 };
 
 export type AddSubmitterReq = {
-  studyId: string;
-  submitters: string[];
+	studyId: string;
+	submitters: string[];
 };
 
 export type RemoveSubmitterReq = {
-  studyId: string;
-  submitter: string;
+	studyId: string;
+	submitter: string;
 };
 
 export type StudiesSvcResError = {
-  type: ErrorType;
-  studyId: string;
-  submitters: string[];
+	type: ErrorType;
+	studyId: string;
+	submitters: string[];
 };
 
 export type StudiesSvcRes<T> = {
-  success: boolean;
-  // data is condition on success, if success is true data will exist with type T
-  data?: T;
-  // error is condition of success, if success is false error will exist with error.type
-  error?: StudiesSvcResError;
+	success: boolean;
+	// data is condition on success, if success is true data will exist with type T
+	data?: T;
+	// error is condition of success, if success is false error will exist with error.type
+	error?: StudiesSvcResError;
 };
 
 // Error types returned by studies svc
 export enum ErrorType {
-  UNKNOWN = 'UNKNOWN',
-  STUDY_NOT_FOUND = 'STUDY_NOT_FOUND',
-  SUBMITTERS_NOT_FOUND = 'SUBMITTERS_NOT_FOUND',
-  STUDY_ALREADY_EXISTS = 'STUDY_ALREADY_EXISTS',
-  SUBMITTERS_ALREADY_IN_STUDY = 'SUBMITTER_ALREADY_IN_STUDY',
-  SUBMITTER_NOT_IN_STUDY = 'SUBMITTER_NOT_IN_STUDY',
-  FAILED_TO_CREATE_STUDY = 'FAILED_TO_CREATE_STUDY',
-  FAILED_TO_REMOVE_SUBMITTER_FROM_STUDY = 'FAILED_TO_REMOVE_SUBMITTER_FROM_STUDY',
-  FAILED_TO_ADD_SUBMITTERS_TO_STUDY = 'FAILED_TO_ADD_SUBMITTERS_TO_STUDY',
+	UNKNOWN = 'UNKNOWN',
+	STUDY_NOT_FOUND = 'STUDY_NOT_FOUND',
+	SUBMITTERS_NOT_FOUND = 'SUBMITTERS_NOT_FOUND',
+	STUDY_ALREADY_EXISTS = 'STUDY_ALREADY_EXISTS',
+	SUBMITTERS_ALREADY_IN_STUDY = 'SUBMITTER_ALREADY_IN_STUDY',
+	SUBMITTER_NOT_IN_STUDY = 'SUBMITTER_NOT_IN_STUDY',
+	FAILED_TO_CREATE_STUDY = 'FAILED_TO_CREATE_STUDY',
+	FAILED_TO_REMOVE_SUBMITTER_FROM_STUDY = 'FAILED_TO_REMOVE_SUBMITTER_FROM_STUDY',
+	FAILED_TO_ADD_SUBMITTERS_TO_STUDY = 'FAILED_TO_ADD_SUBMITTERS_TO_STUDY',
 }

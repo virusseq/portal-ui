@@ -40,7 +40,7 @@ type T_AuthContext = {
 	userHasAccessToStudySvc?: boolean;
 	userHasClinicalAccess?: boolean;
 	userHasEnvironmentalAccess?: boolean;
-	userCanSubmitDataForAllStudy?: boolean;
+	userIsClinicalAdmin?: boolean;
 	fetchWithAuth: typeof fetch;
 };
 
@@ -63,10 +63,12 @@ export const AuthProvider = ({
 	const {
 		NEXT_PUBLIC_KEYCLOAK,
 		NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE,
-		NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE,
 		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_ADMIN_WRITE,
 		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE,
 		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE,
+		NEXT_PUBLIC_SCOPE_CLINICAL_ADMIN_WRITE,
+		NEXT_PUBLIC_SCOPE_CLINICAL_PREFIX_WRITE,
+		NEXT_PUBLIC_SCOPE_CLINICAL_SUFFIX_WRITE,
 	} = getConfig();
 	const [token, setTokenState] = useState(egoJwt);
 	const router = useRouter();
@@ -113,34 +115,49 @@ export const AuthProvider = ({
 	const userInfo = token ? decodeToken(token) : null;
 	const user = userInfo ? extractUser(userInfo) : undefined;
 
-	const userEnvironmentalWriteScopes =
-		user?.scope
-			.filter((scope) =>
-				scope.toLowerCase().startsWith(NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE.toLowerCase()),
-			)
-			.filter((scope) =>
-				scope.toLowerCase().endsWith(NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE.toLowerCase()),
-			)
-			.filter((scope) => scope.toLowerCase().includes('write')) || [];
+	const extractScopes = (
+		scopes: string[] | undefined,
+		prefix: string,
+		suffix: string,
+	): string[] => {
+		if (!scopes) return [];
 
-	const userClinicalWriteScopes =
-		user?.scope
-			.filter((scope) => !userEnvironmentalWriteScopes.includes(scope))
-			.filter((scope) => scope.toLowerCase().includes('write')) || [];
+		const prefixLower = prefix.toLowerCase();
+		const suffixLower = suffix.toLowerCase();
 
-	const userCanSubmitDataForAllStudy = user?.scope.some(
-		(scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_MUSE_STUDY_SYSTEM_WRITE.toLowerCase(),
+		return scopes
+			.filter((scope) => {
+				const lower = scope.toLowerCase();
+				return lower.startsWith(prefixLower) && lower.endsWith(suffixLower);
+			})
+			.map((scope) => scope.slice(prefix.length, scope.length - suffix.length));
+	};
+
+	const userEnvironmentalWriteScopes = extractScopes(
+		user?.scope,
+		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_PREFIX_WRITE,
+		NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_SUFFIX_WRITE,
+	);
+
+	const userClinicalWriteScopes = extractScopes(
+		user?.scope,
+		NEXT_PUBLIC_SCOPE_CLINICAL_PREFIX_WRITE,
+		NEXT_PUBLIC_SCOPE_CLINICAL_SUFFIX_WRITE,
+	);
+
+	const userIsClinicalAdmin = user?.scope.some(
+		(scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_CLINICAL_ADMIN_WRITE.toLowerCase(),
 	);
 
 	const userHasAccessToStudySvc = user?.scope.some(
 		(scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_STUDY_SVC_WRITE.toLowerCase(),
 	);
 
-	const userIsCurator = userHasAccessToStudySvc && userCanSubmitDataForAllStudy;
-
 	const userIsEnvironmentalAdmin = user?.scope.some(
 		(scope) => scope.toLowerCase() === NEXT_PUBLIC_SCOPE_ENVIRONMENTAL_ADMIN_WRITE.toLowerCase(),
 	);
+
+	const userIsCurator = userHasAccessToStudySvc && userIsClinicalAdmin && userIsEnvironmentalAdmin;
 
 	const userHasClinicalAccess = !!(userIsCurator || userClinicalWriteScopes.length > 0);
 	const userHasEnvironmentalAccess = !!(
@@ -158,7 +175,7 @@ export const AuthProvider = ({
 		userHasAccessToStudySvc,
 		userHasClinicalAccess,
 		userHasEnvironmentalAccess,
-		userCanSubmitDataForAllStudy,
+		userIsClinicalAdmin,
 		fetchWithAuth,
 	};
 

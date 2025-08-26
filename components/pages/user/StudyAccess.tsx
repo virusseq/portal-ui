@@ -23,28 +23,85 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useState } from 'react';
 
 import defaultTheme from '#components/theme';
+import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
+
+const StyledList = ({ children }: { children: React.ReactNode }) => {
+	const theme: typeof defaultTheme = useTheme();
+	return (
+		<ul
+			css={css`
+				${theme.typography.subheading};
+				font-weight: normal;
+				color: ${theme.colors.accent_dark};
+				margin-bottom: 1rem;
+			`}
+		>
+			{children}
+		</ul>
+	);
+};
+
+type StudiesSectionProps = {
+	title: string;
+	isAdmin: boolean;
+	hasAccess: boolean;
+	scopes?: string[];
+};
+
+const StudiesSection = ({ title, isAdmin, hasAccess, scopes }: StudiesSectionProps) => {
+	if (!isAdmin && !hasAccess) return null;
+
+	return (
+		<>
+			<h3>{title}</h3>
+			<StyledList>
+				{isAdmin ? (
+					<li>
+						<b>All studies</b>
+					</li>
+				) : (
+					scopes?.map((scope) => <li key={scope}>{scope}</li>)
+				)}
+			</StyledList>
+		</>
+	);
+};
 
 const StudyAccess = (): ReactElement | null => {
 	const theme: typeof defaultTheme = useTheme();
-	const { userClinicalWriteScopes, userCanSubmitDataForAllStudy } = useAuthContext();
-	const [effectiveScopes, setEffectiveScopes] = useState<string[] | null>(null);
+	const {
+		userClinicalWriteScopes,
+		userIsClinicalAdmin,
+		userHasClinicalAccess,
+		userIsCurator,
+		userIsEnvironmentalAdmin,
+		userHasEnvironmentalAccess,
+		userEnvironmentalWriteScopes,
+	} = useAuthContext();
+	const [effectiveEnvironmentalScopes, setEffectiveEnvironmentalScopes] = useState<string[]>([]);
+	const [effectiveClinicalScopes, setEffectiveClinicalScopes] = useState<string[]>([]);
 
 	useEffect(() => {
-		if (userCanSubmitDataForAllStudy) {
-			setEffectiveScopes(['All Studies']);
-			return;
+		if (userIsClinicalAdmin) {
+			setEffectiveClinicalScopes(['All Studies']);
+		} else {
+			setEffectiveClinicalScopes(userClinicalWriteScopes);
 		}
-		userClinicalWriteScopes.length > 0 &&
-			!effectiveScopes &&
-			setEffectiveScopes(
-				userClinicalWriteScopes
-					.filter((scope) => scope.includes('WRITE'))
-					.map((scope) => scope.replace('.WRITE', '')),
-			);
-	}, [userCanSubmitDataForAllStudy, userClinicalWriteScopes]);
+		if (userIsEnvironmentalAdmin) {
+			setEffectiveEnvironmentalScopes(['All Studies']);
+		} else {
+			setEffectiveEnvironmentalScopes(userEnvironmentalWriteScopes);
+		}
+	}, [
+		userIsCurator,
+		userClinicalWriteScopes,
+		userEnvironmentalWriteScopes,
+		userIsClinicalAdmin,
+		userIsEnvironmentalAdmin,
+	]);
 
-	return userClinicalWriteScopes.length > 0 && effectiveScopes && effectiveScopes.length > 0 ? (
+	return userHasClinicalAccess || userHasEnvironmentalAccess ? (
 		<div
 			css={css`
 				border-top: 1px solid ${theme.colors.grey_3};
@@ -63,22 +120,19 @@ const StudyAccess = (): ReactElement | null => {
 			</h2>
 
 			<p>You are authorized to submit data for the following studies:</p>
-			{userCanSubmitDataForAllStudy ? (
-				<b>All Studies</b>
-			) : (
-				<ul
-					css={css`
-						${theme.typography.subheading};
-						font-weight: normal;
-						color: ${theme.colors.accent_dark};
-						margin-bottom: 1rem;
-					`}
-				>
-					{effectiveScopes?.map((scope) => (
-						<li key={scope}>{scope}</li>
-					))}
-				</ul>
-			)}
+			<StudiesSection
+				title="Clinical studies"
+				isAdmin={!!userIsClinicalAdmin}
+				hasAccess={!!userHasClinicalAccess}
+				scopes={effectiveClinicalScopes}
+			/>
+
+			<StudiesSection
+				title="Environmental studies"
+				isAdmin={!!userIsEnvironmentalAdmin}
+				hasAccess={!!userHasEnvironmentalAccess}
+				scopes={effectiveEnvironmentalScopes}
+			/>
 		</div>
 	) : null;
 };

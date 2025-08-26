@@ -63,6 +63,7 @@ const PageContent = () => {
 	} = useStudiesSvcData();
 
 	const updateTable = async () => {
+		// TODO: Get studies from roles and permissions
 		const res = await fetchStudies();
 		if (res.success) {
 			setTableData(res.data || []);

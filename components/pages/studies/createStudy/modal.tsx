@@ -22,7 +22,12 @@
 import { css } from '@emotion/react';
 import { ChangeEventHandler, InputHTMLAttributes } from 'react';
 
-import { FormInputText, FormInputTextArea, useFormValidator } from '#components/Forms';
+import {
+	FormInputSearchSelect,
+	FormInputText,
+	FormInputTextArea,
+	useFormValidator,
+} from '#components/Forms';
 import { Modal } from '#components/Modal';
 import { CreateStudyReq } from '#global/hooks/useStudiesSvcData/types';
 
@@ -33,6 +38,7 @@ const EMPTY_FORM: CreateStudyReq = Object.freeze({
 	organization: '',
 	name: '',
 	description: '',
+	songId: '',
 });
 
 type CreateStudyModalProps = {
@@ -109,6 +115,16 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
 					onBlur={buildOnBlurFunc(`studyId`)}
 					errorMessage={formErrors[`studyId`]}
 					value={formData[`studyId`]}
+					size={50}
+				/>
+				<FormInputSearchSelect
+					options={['clinical', 'environmental']}
+					required={true}
+					label="Sample Type"
+					onChange={buildOnChangeFunc('songId')}
+					onBlur={buildOnBlurFunc(`songId`)}
+					errorMessage={formErrors[`songId`]}
+					value={formData[`songId`]}
 					size={50}
 				/>
 				<FormInputText
