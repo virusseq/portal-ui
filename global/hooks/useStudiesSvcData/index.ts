@@ -79,8 +79,9 @@ const useStudiesSvcData = () => {
 			});
 	};
 
-	const fetchStudies = (): Promise<StudiesSvcRes<Study[]>> => {
-		const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies'), {
+	const fetchStudies = (sampleType?: string): Promise<StudiesSvcRes<Study[]>> => {
+		const queryParams = sampleType ? `?sampleType=${encodeURIComponent(sampleType)}` : '';
+		const promise = fetchWithAuth(urlJoin(NEXT_PUBLIC_STUDIES_SVC_URL, '/studies', queryParams), {
 			method: 'GET',
 		});
 		return wrapWithHandlers(promise);
