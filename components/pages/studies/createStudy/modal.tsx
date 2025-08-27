@@ -30,6 +30,7 @@ import {
 } from '#components/Forms';
 import { Modal } from '#components/Modal';
 import { CreateStudyReq } from '#global/hooks/useStudiesSvcData/types';
+import { SAMPLE_TYPES } from '#global/utils/constants';
 
 import CreateStudyValidations from './validations';
 
@@ -108,6 +109,17 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
 					padding-right: 10px;
 				`}
 			>
+				<FormInputSearchSelect
+					options={Object.values(SAMPLE_TYPES)}
+					required={true}
+					label="Sample Type"
+					id="sampleType"
+					onChange={buildOnChangeFunc('sampleType')}
+					onBlur={buildOnBlurFunc(`sampleType`)}
+					errorMessage={formErrors[`sampleType`]}
+					value={formData[`sampleType`]}
+					size={50}
+				/>
 				<FormInputText
 					required={true}
 					label="Study ID"

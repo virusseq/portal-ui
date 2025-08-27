@@ -40,7 +40,11 @@ import DeleteSubmitterModal from './DeleteSubmitterModal';
 import useNotifier, { NotificationType } from './notifier/useNotifier';
 import StudiesTable from './StudiesTable';
 
-const EMPTY_DELETE_ROW: RemoveSubmitterReq = Object.freeze({ studyId: '', submitter: '' });
+const EMPTY_DELETE_ROW: RemoveSubmitterReq = Object.freeze({
+	studyId: '',
+	submitter: '',
+	sampleType: '',
+});
 
 const PageContent = () => {
 	const [tableData, setTableData] = useState<Study[]>([]);

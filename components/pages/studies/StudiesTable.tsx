@@ -109,7 +109,8 @@ const columnData = (
 	{
 		accessor: (row) => {
 			const studyId = row.studyId;
-			return (row as Study).submitters?.map((s) => ({ studyId, submitter: s }));
+			const sampleType = row.sampleType;
+			return (row as Study).submitters?.map((s) => ({ studyId, submitter: s, sampleType }));
 		},
 		Header: 'Data Submitters',
 		Cell: ({ value }: { value: RemoveSubmitterReq[] }) => {

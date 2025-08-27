@@ -113,7 +113,7 @@ const useStudiesSvcData = () => {
 	): Promise<StudiesSvcRes<undefined>> => {
 		const url = urlJoin(
 			NEXT_PUBLIC_STUDIES_SVC_URL,
-			`/studies/submitters?studyId=${removeSubmitterReq.studyId}&submitter=${removeSubmitterReq.submitter}`,
+			`/studies/submitters?studyId=${removeSubmitterReq.studyId}&submitter=${removeSubmitterReq.submitter}&sampleType=${removeSubmitterReq.sampleType}`,
 		);
 		const promise = fetchWithAuth(url, { method: 'DELETE' });
 		return wrapWithHandlers(promise);

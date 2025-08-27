@@ -24,6 +24,7 @@ export type Study = {
 	studyId: string;
 	organization: string;
 	description: string;
+	sampleType: string;
 	submitters: string[];
 };
 
@@ -37,10 +38,12 @@ export type CreateStudyReq = {
 
 export type AddSubmitterReq = {
 	studyId: string;
+	sampleType: string;
 	submitters: string[];
 };
 
 export type RemoveSubmitterReq = {
+	sampleType: string;
 	studyId: string;
 	submitter: string;
 };
