@@ -20,6 +20,7 @@
  */
 
 import { Study } from '#global/hooks/useStudiesSvcData/types';
+import { SAMPLE_TYPES } from '#global/utils/constants';
 import yup from '#global/utils/validations';
 
 const createAddSubmittersValidations = (studies: Study[]) => {
@@ -34,6 +35,13 @@ const createAddSubmittersValidations = (studies: Study[]) => {
 				.max(15)
 				// oneOf includes empty string so required error message is propagated correctly
 				.oneOf(studies.map((s) => s.studyId).concat(''), 'Study ID does not exist.')
+				.defined(),
+			sampleType: yup
+				.string()
+				.required()
+				.trim()
+				.label('Sample Type')
+				.oneOf(Object.values(SAMPLE_TYPES), 'Invalid Sample Type')
 				.defined(),
 			submitters: yup
 				.array()

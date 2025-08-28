@@ -35,6 +35,7 @@ import { PlusIcon } from '#components/theme/icons';
 import defaultTheme from '#components/theme/index';
 import { AddSubmitterReq, Study } from '#global/hooks/useStudiesSvcData/types';
 
+import { SAMPLE_TYPES } from '../../../../global/utils/constants';
 import createAddSubmittersValidations from './validations';
 
 type AddButtonProp = {
@@ -71,7 +72,11 @@ const AddButton = ({ onClick, disabled }: AddButtonProp) => {
 	);
 };
 
-const EMPTY_FORM: AddSubmitterReq = Object.freeze({ studyId: '', submitters: [''] });
+const EMPTY_FORM: AddSubmitterReq = Object.freeze({
+	studyId: '',
+	sampleType: '',
+	submitters: [''],
+});
 
 type AddSubmitterModalProps = {
 	studies: Study[];
@@ -93,6 +98,15 @@ const AddSubmitterModal = ({ studies, onClose, submitData }: AddSubmitterModalPr
 		setFormData({ ...formData, studyId: target.value?.toString() || '' });
 
 		clearFieldError('studyId');
+	};
+
+	const updateSampleType: ChangeEventHandler = (event) => {
+		event.preventDefault();
+
+		const target = event.target as InputHTMLAttributes<typeof event>;
+		setFormData({ ...formData, sampleType: target.value?.toString() || '' });
+
+		clearFieldError('sampleType');
 	};
 
 	const updateSubmitters =
@@ -166,6 +180,17 @@ const AddSubmitterModal = ({ studies, onClose, submitData }: AddSubmitterModalPr
 					Which study would you like to add data submitter(s) to?
 				</FormTextBlock>
 				<FormInputSearchSelect
+					options={Object.values(SAMPLE_TYPES)}
+					required={true}
+					label="Sample Type"
+					id="sampleType"
+					onChange={updateSampleType}
+					onBlur={onBlur(`sampleType`)}
+					errorMessage={formErrors[`sampleType`]}
+					value={formData[`sampleType`]}
+					size={50}
+				/>
+				<FormInputSearchSelect
 					required={true}
 					label="Study ID"
 					onChange={updateStudyId}
@@ -173,7 +198,10 @@ const AddSubmitterModal = ({ studies, onClose, submitData }: AddSubmitterModalPr
 					errorMessage={formErrors[`studyId`]}
 					value={formData[`studyId`]}
 					size={50}
-					options={studies.map((s) => s.studyId)}
+					id="studyId"
+					options={studies
+						.filter((s) => s.sampleType === formData.sampleType)
+						.map((s) => s.studyId)}
 				/>
 				<FormTextBlock
 					css={css`
