@@ -57,10 +57,19 @@ export type SubmissionInsertData = {
 	records: DataRecord[];
 };
 
+export type SubmissionInsertDataSummary = {
+	batchName: string;
+	recordsCount: number;
+};
+
 export type SubmissionUpdateData = {
 	systemId: string;
 	old: DataRecord;
 	new: DataRecord;
+};
+
+export type SubmissionUpdateDataSummary = {
+	recordsCount: number;
 };
 
 export type SubmissionDeleteData = {
@@ -69,6 +78,10 @@ export type SubmissionDeleteData = {
 	entityName: string;
 	isValid: boolean;
 	organization: string;
+};
+
+export type SubmissionDeleteDataSummary = {
+	recordsCount: number;
 };
 
 export type FieldRestrictionRule = {
@@ -122,6 +135,31 @@ export type Submission = {
 		inserts: Record<string, SubmissionInsertData>;
 		updates: Record<string, SubmissionUpdateData[]>;
 		deletes: Record<string, SubmissionDeleteData[]>;
+	};
+	dictionary: {
+		name: string;
+		version: string;
+	};
+	dictionaryCategory: {
+		id: number;
+		name: string;
+	};
+	errors: Record<string, SchemaErrors>;
+	files?: SubmissionFile[];
+	organization: string;
+	status: SubmissionStatus;
+	createdAt: string;
+	createdBy: string;
+	updatedAt: string;
+	updatedBy: string;
+};
+
+export type SubmissionSummary = {
+	id: number;
+	data: {
+		inserts: Record<string, SubmissionInsertDataSummary>;
+		updates: Record<string, SubmissionUpdateDataSummary>;
+		deletes: Record<string, SubmissionDeleteDataSummary>;
 	};
 	dictionary: {
 		name: string;
