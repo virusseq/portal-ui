@@ -241,14 +241,14 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				// setDataIsPending(remainingToProcess.length > 0 || failedGettingIds > 0);
 				setDataIsPending(remainingToProcess.length > 0);
 
-				if (remainingToProcess.length) {
-					// There are still records to process
-					trackPendingData({ tries, delay });
-				} else if (failedGetSystemId.length > 0 && tries > 1) {
-					// There are only records that failed to get IDs. Retry getting IDs for the failed records
+				if (failedGetSystemId.length > 0 && tries > 1) {
+					// There are records that failed to get IDs. Retry getting IDs for the failed records
 					const triesLeft = tries - 1;
 					await wait(delay);
 					trackPendingData({ tries: triesLeft, delay });
+				} else if (remainingToProcess.length) {
+					// There are still records to process
+					trackPendingData({ tries, delay });
 				} else {
 					// Set all records as complete
 					completeAllProcessingRecords();

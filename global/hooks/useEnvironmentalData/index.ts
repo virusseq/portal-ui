@@ -391,6 +391,7 @@ const useEnvironmentalData = (origin: string) => {
 			if (matchingRecord) {
 				record.status = UploadStatus.COMPLETE;
 				record.systemId = matchingRecord.systemId;
+				record.details = [];
 			}
 			return record;
 		});
