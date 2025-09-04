@@ -168,7 +168,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				// Submission validity
 				setSubmissionStatus(status);
 
-				// // Track update status
+				// Track update status
 				setDataIsPending(
 					formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING) ||
 						filesNotUploaded.length > 0,
@@ -238,7 +238,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					({ status }) => status === UploadStatus.PROCESSING || status === UploadStatus.ERROR,
 				);
 
-				// setDataIsPending(remainingToProcess.length > 0 || failedGettingIds > 0);
 				setDataIsPending(remainingToProcess.length > 0);
 
 				if (failedGetSystemId.length > 0 && tries > 1) {
