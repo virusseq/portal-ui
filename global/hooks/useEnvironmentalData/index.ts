@@ -38,6 +38,7 @@ import {
 	type DataRecord,
 	type ErrorDetails,
 	type Submission,
+	type SubmissionSummary,
 	type UploadData,
 } from './types';
 
@@ -47,7 +48,7 @@ const useEnvironmentalData = (origin: string) => {
 		NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
 		NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME,
 	} = getConfig();
-	const { fetchWithAuth } = useAuthContext();
+	const { fetchWithAuth, user } = useAuthContext();
 	const [awaitingResponse, setAwaitingResponse] = useState(false);
 
 	// For reference: https://submission-service.dev.virusseq-dataportal.ca/api-docs/
@@ -210,8 +211,11 @@ const useEnvironmentalData = (origin: string) => {
 					recordStatus = UploadStatus.ERROR;
 				} else if (incompleteStatuses.includes(submission.status)) {
 					recordStatus = UploadStatus.INCOMPLETE;
-				} else if (isUploadPending) {
-					recordStatus = UploadStatus.INCOMPLETE;
+				}
+
+				if (isUploadPending) {
+					errorDetails.push('File upload is still pending');
+					recordStatus = UploadStatus.ERROR;
 				}
 
 				return {
@@ -291,61 +295,37 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param organization
 	 * @returns
 	 */
-	const getActiveSubmission = async (organization: string) => {
+	const getActiveSubmission = async (
+		organization: string,
+		username?: string,
+	): Promise<Promise<SubmissionSummary | undefined>> => {
+		const queryParams = new URLSearchParams({
+			organization,
+			pageSize: '1',
+			onlyActive: 'true',
+		});
+
+		if (username) {
+			queryParams.append('username', username);
+		}
+
 		const responseActiveSubmission = await handleRequest({
 			url: urlJoin(
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
 				'submission',
 				'category',
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
-				'organization',
-				organization,
+				`?${queryParams.toString()}`,
 			),
 			method: 'GET',
 		});
 
-		return parseInt(responseActiveSubmission.id);
-	};
-
-	/**
-	 * Fetches and updates sample IDs and status for the provided records
-	 * @param records
-	 * @returns
-	 */
-	const getSampleId = async (records: UploadData[], { signal }: { signal?: AbortSignal } = {}) => {
-		const queryParams = new URLSearchParams({
-			view: 'flat',
-		});
-
-		return Promise.all(
-			records.map(async (record) => {
-				if (record.systemId === null) return record;
-
-				const queryResponse = await handleRequest({
-					url: urlJoin(
-						NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
-						'data',
-						'category',
-						NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
-						'id',
-						record.systemId,
-						`?${queryParams.toString()}`,
-					),
-					method: 'GET',
-					signal,
-				});
-
-				const sampleId =
-					queryResponse.data && queryResponse.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME];
-
-				// Update the record with the sample ID and status
-				if (sampleId) {
-					record.status = UploadStatus.COMPLETE;
-					record.submitterSampleId = sampleId;
-				}
-				return record;
-			}),
-		);
+		if (responseActiveSubmission.records) {
+			// By design, only 1 active submission can exists by user and organization
+			return responseActiveSubmission.records[0];
+		} else {
+			return;
+		}
 	};
 
 	/**
@@ -411,6 +391,7 @@ const useEnvironmentalData = (origin: string) => {
 			if (matchingRecord) {
 				record.status = UploadStatus.COMPLETE;
 				record.systemId = matchingRecord.systemId;
+				record.details = [];
 			}
 			return record;
 		});
@@ -447,15 +428,15 @@ const useEnvironmentalData = (origin: string) => {
 		const organization = body.get('organization')?.toString();
 		if (!organization) throw new Error('Organization is required field');
 
-		const activeSubmissionId = await getActiveSubmission(organization);
+		const activeSubmission = await getActiveSubmission(organization, user?.email);
 
-		if (activeSubmissionId) {
+		if (activeSubmission) {
 			// need to delete previous active Submission
 			await handleRequest({
 				url: urlJoin(
 					NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
 					'submission',
-					activeSubmissionId.toString(),
+					activeSubmission.id.toString(),
 				),
 				method: 'DELETE',
 				body: body,
@@ -483,7 +464,6 @@ const useEnvironmentalData = (origin: string) => {
 		formatUploadData,
 		getActiveSubmission,
 		getAnalysisIds,
-		getSampleId,
 		setAwaitingResponse,
 		submitData,
 	};

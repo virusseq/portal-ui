@@ -44,12 +44,10 @@ const StatusIcon = ({ status }: { status: UploadStatus }) => {
 			return <Checkmark size={12} />;
 
 		case UploadStatus.ERROR:
-			return <Warning size={12} />;
-
 		case UploadStatus.INCOMPLETE:
 			return <Warning size={12} />;
 
-		case UploadStatus.PROCESSING:
+		default:
 			return <Ellipsis size={12} />;
 	}
 };
@@ -86,7 +84,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 							${value === UploadStatus.ERROR && `color: ${theme.colors.error_dark}`}
 						`}
 					>
-						{`${eventType} ${value}${details.length ? ':' : ''}`}
+						{`${eventType} ${value}${details.length ? ': ' : ''}`}
 					</span>
 
 					{value === UploadStatus.ERROR && details.length === 1 ? (

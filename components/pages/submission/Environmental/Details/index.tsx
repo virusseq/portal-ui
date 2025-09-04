@@ -81,7 +81,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		formatUploadData,
 		commitSubmission,
 		getAnalysisIds,
-		getSampleId,
 	} = useEnvironmentalData('SubmissionsDetails');
 
 	/**
@@ -141,11 +140,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				const formattedData = formatUploadData(submissionResponse);
 				const totalRecordsCount = formattedData.length;
 
-				if (status === 'VALID') {
-					// Trigger submission commit when the current status is 'VALID'
-					commit(controller.signal);
-				}
-
 				// Set organization
 				setOrganization(organization);
 
@@ -176,7 +170,8 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 				// Track update status
 				setDataIsPending(
-					formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING),
+					formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING) ||
+						filesNotUploaded.length > 0,
 				);
 			} catch (error) {
 				setSubmissionStatus(SubmissionStatus.INVALID);
@@ -205,11 +200,12 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		}) => {
 			const pageSize = 20;
 			const failedGetSystemId: UploadData[] = [];
-			const failedGetSampleId: UploadData[] = [];
 			try {
 				const processingRecords = Object.values(submissionDetails)
 					.flat()
-					.filter(({ status }) => status === UploadStatus.PROCESSING);
+					.filter(
+						({ status }) => status === UploadStatus.PROCESSING || status === UploadStatus.ERROR,
+					);
 
 				// Filter out records to get their analysis IDs
 				const recordsMissingSystemId = processingRecords
@@ -236,64 +232,22 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					failedGetSystemId.push(...resultRecordsWithSystemId.filter((record) => !record.systemId));
 				}
 
-				// Filter out records to get their analysis IDs
-				const recordsMissingSampleId = processingRecords
-					.filter(({ submitterSampleId }) => !submitterSampleId)
-					.slice(0, pageSize);
-
-				if (recordsMissingSampleId.length) {
-					const resultRecordsWithSampleId = await getSampleId(recordsMissingSampleId, {
-						signal,
-					});
-
-					resultRecordsWithSampleId.forEach((record) => {
-						submissionDetailsDispatch({
-							type: UploadDetailsAction.UPDATE,
-							upload: record,
-						});
-					});
-
-					failedGetSampleId.push(
-						// Records that failed to get Sample IDs
-						...resultRecordsWithSampleId.filter((record) => !record.submitterSampleId),
-					);
-				}
-
-				const recordsMissingIds = recordsMissingSampleId.length + recordsMissingSystemId.length;
-				if (recordsMissingIds === 0) {
-					// No more records left to process
-					setDataIsPending(false);
-					completeAllProcessingRecords();
-					return;
-				}
-
 				// Check if there are any records to process in the next batch
-				const remainingToProcess = processingRecords
-					.filter(
-						// Exclude records that failed to retrieve submitterSampleId, by matching systemIds
-						({ systemId }) =>
-							!failedGetSampleId.some((failedRecord) => failedRecord.systemId === systemId),
-					)
-					.filter(
-						// Exclude records that failed to retrieve systemId, by matching submitterSampleIds
-						({ submitterSampleId }) =>
-							!failedGetSystemId.some(
-								(failedGetSampleId) => failedGetSampleId.submitterSampleId === submitterSampleId,
-							),
-					);
+				const remainingToProcess = processingRecords.filter(
+					// Include only records that are still processing or errored
+					({ status }) => status === UploadStatus.PROCESSING || status === UploadStatus.ERROR,
+				);
 
-				const failedGettingIds = failedGetSystemId.length + failedGetSampleId.length;
+				setDataIsPending(remainingToProcess.length > 0);
 
-				setDataIsPending(remainingToProcess.length > 0 || failedGettingIds > 0);
-
-				if (remainingToProcess.length) {
-					// There are still records to process
-					trackPendingData({ tries, delay });
-				} else if (failedGettingIds > 0 && tries > 1) {
-					// There are only records that failed to get IDs. Retry getting IDs for the failed records
+				if (failedGetSystemId.length > 0 && tries > 1) {
+					// There are records that failed to get IDs. Retry getting IDs for the failed records
 					const triesLeft = tries - 1;
 					await wait(delay);
 					trackPendingData({ tries: triesLeft, delay });
+				} else if (remainingToProcess.length) {
+					// There are still records to process
+					trackPendingData({ tries, delay });
 				} else {
 					// Set all records as complete
 					completeAllProcessingRecords();
@@ -314,7 +268,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			submissionDetails,
 			getAnalysisIds,
 			organization,
-			getSampleId,
 			submissionDetailsDispatch,
 			setDataIsPending,
 			completeAllProcessingRecords,
@@ -331,15 +284,12 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	// get status updates if any are available from Submission Service
 	useEffect(() => {
 		const controller = new AbortController();
-
 		if (dataIsPending) {
 			switch (submissionStatus) {
 				case SubmissionStatus.VALID:
 				case SubmissionStatus.OPEN:
-					// If all required files have been uploaded, proceed to commit the submission.
-					if (pendingUploadManifests.length === 0) {
-						commit(controller.signal);
-					}
+					// Trigger submission commit when the current status is 'VALID' or 'OPEN'
+					commit(controller.signal);
 					break;
 
 				case SubmissionStatus.COMMITTED:
@@ -351,7 +301,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			// Abort the request when the component unmounts or when a dependency changes
 			controller.abort();
 		};
-	}, [dataIsPending, submissionStatus, pendingUploadManifests, ID, commit, trackPendingData]);
+	}, [dataIsPending, submissionStatus]);
 
 	return (
 		<article

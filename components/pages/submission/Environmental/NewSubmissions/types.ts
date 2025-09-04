@@ -72,6 +72,7 @@ export type CreateSubmissionResult = {
 export const acceptedFileExtensions = {
 	CSV: 'csv',
 	TAR_XZ: 'tar.xz',
+	XZ: 'xz',
 } as const;
 
 export type AcceptedFileExtension =
