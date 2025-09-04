@@ -159,7 +159,7 @@ export const AuthProvider = ({
 
 	const userIsCurator = userHasAccessToStudySvc && userIsClinicalAdmin && userIsEnvironmentalAdmin;
 
-	const userHasClinicalAccess = !!(userIsCurator || userClinicalWriteScopes.length > 0);
+	const userHasClinicalAccess = !!(userIsClinicalAdmin || userClinicalWriteScopes.length > 0);
 	const userHasEnvironmentalAccess = !!(
 		userIsEnvironmentalAdmin || userEnvironmentalWriteScopes.length > 0
 	);

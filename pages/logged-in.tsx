@@ -86,7 +86,7 @@ const LoginLoaderPage = createPage({
 				action,
 			});
 		});
-	});
+	}, []);
 
 	return (
 		<PageLayout>
