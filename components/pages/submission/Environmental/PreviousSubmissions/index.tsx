@@ -81,7 +81,7 @@ const PageNumber = ({ num }: { num: number }) => {
 	);
 };
 
-const PreviousSubmissions = (): ReactElement => {
+const PreviousSubmissions = ({ pageSize = 20 }: { pageSize?: number }): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	const { token, userHasEnvironmentalAccess, user } = useAuthContext();
 	const { awaitingResponse, fetchPreviousSubmissions } =
@@ -100,7 +100,7 @@ const PreviousSubmissions = (): ReactElement => {
 		const controller = new AbortController();
 		token &&
 			userHasEnvironmentalAccess &&
-			fetchPreviousSubmissions({ username: user?.email, signal: controller.signal })
+			fetchPreviousSubmissions({ username: user?.email, signal: controller.signal, pageSize })
 				.then(setPreviousSubmissions)
 				.catch((error) => {
 					console.error('Error fetching previous submissions:', error);
@@ -114,28 +114,36 @@ const PreviousSubmissions = (): ReactElement => {
 
 	const goToFirstPage = () => {
 		if (previousSubmissions.first) return;
-		fetchPreviousSubmissions({ username: user?.email, page: 1 }).then(setPreviousSubmissions);
+		fetchPreviousSubmissions({ username: user?.email, page: 1, pageSize }).then(
+			setPreviousSubmissions,
+		);
 	};
 
 	const goToPrevPage = () => {
 		if (previousSubmissions.first || previousSubmissions.page === undefined) return;
-		fetchPreviousSubmissions({ username: user?.email, page: previousSubmissions.page - 1 }).then(
-			setPreviousSubmissions,
-		);
+		fetchPreviousSubmissions({
+			username: user?.email,
+			page: previousSubmissions.page - 1,
+			pageSize,
+		}).then(setPreviousSubmissions);
 	};
 
 	const goToNextPage = () => {
 		if (previousSubmissions.last || previousSubmissions.page === undefined) return;
-		fetchPreviousSubmissions({ username: user?.email, page: previousSubmissions.page + 1 }).then(
-			setPreviousSubmissions,
-		);
+		fetchPreviousSubmissions({
+			username: user?.email,
+			page: previousSubmissions.page + 1,
+			pageSize,
+		}).then(setPreviousSubmissions);
 	};
 
 	const goToLastPage = () => {
 		if (previousSubmissions.last || previousSubmissions.totalPages === undefined) return;
-		fetchPreviousSubmissions({ username: user?.email, page: previousSubmissions.totalPages }).then(
-			setPreviousSubmissions,
-		);
+		fetchPreviousSubmissions({
+			username: user?.email,
+			page: previousSubmissions.totalPages,
+			pageSize,
+		}).then(setPreviousSubmissions);
 	};
 
 	return (

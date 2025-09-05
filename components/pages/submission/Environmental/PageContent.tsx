@@ -75,7 +75,7 @@ const PageContent = (): ReactElement => {
 							}
 						`}
 					>
-						<PreviousSubmissions />
+						<PreviousSubmissions pageSize={25} />
 						<NewSubmissions />
 					</section>
 				</>
