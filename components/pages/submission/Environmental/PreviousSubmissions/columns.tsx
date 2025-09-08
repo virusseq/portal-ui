@@ -73,7 +73,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 			</StyledLink>
 		),
 		Header: 'Submission ID',
-		sortType: uuidSort,
+		sortType: numberSort,
 	},
 	{
 		accessor: 'organization',
