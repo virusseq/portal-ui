@@ -33,6 +33,7 @@ export const PaginationToolBar = ({
 	isFirst,
 	isLast,
 	page,
+	align = 'right',
 }: {
 	goToFirstPage: () => void;
 	goToPrevPage: () => void;
@@ -41,6 +42,7 @@ export const PaginationToolBar = ({
 	isFirst: boolean;
 	isLast: boolean;
 	page: number;
+	align?: 'left' | 'right';
 }): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 
@@ -92,12 +94,19 @@ export const PaginationToolBar = ({
 	};
 
 	return (
-		<>
+		<div
+			css={css`
+				display: inline-flex;
+				align-items: center;
+				column-gap: 10px;
+				float: ${align};
+			`}
+		>
 			<PageButton direction={'DOUBLE_LEFT'} onClick={goToFirstPage} disabled={isFirst} />
 			<PageButton direction={'LEFT'} onClick={goToPrevPage} disabled={isFirst} />
 			<PageNumber num={page ? page : 1} />
 			<PageButton direction={'RIGHT'} onClick={goToNextPage} disabled={isLast} />
 			<PageButton direction={'DOUBLE_RIGHT'} onClick={goToLastPage} disabled={isLast} />
-		</>
+		</div>
 	);
 };

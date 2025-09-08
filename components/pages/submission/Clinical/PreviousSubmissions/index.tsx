@@ -136,30 +136,15 @@ const PreviousSubmissions = ({
 								`}
 							/>
 							{paginationEnabled && (
-								<div
-									css={css`
-										display: flex;
-										justify-content: space-between;
-									`}
-								>
-									<div
-										css={css`
-											display: inline-flex;
-											align-items: center;
-											column-gap: 10px;
-										`}
-									>
-										<PaginationToolBar
-											goToFirstPage={goToFirstPage}
-											goToPrevPage={goToPrevPage}
-											goToNextPage={goToNextPage}
-											goToLastPage={goToLastPage}
-											isFirst={previousSubmissions.first}
-											isLast={previousSubmissions.last}
-											page={previousSubmissions.page ?? 1}
-										/>
-									</div>
-								</div>
+								<PaginationToolBar
+									goToFirstPage={goToFirstPage}
+									goToPrevPage={goToPrevPage}
+									goToNextPage={goToNextPage}
+									goToLastPage={goToLastPage}
+									isFirst={previousSubmissions.first}
+									isLast={previousSubmissions.last}
+									page={previousSubmissions.page ?? 1}
+								/>
 							)}
 						</>
 					) : (
