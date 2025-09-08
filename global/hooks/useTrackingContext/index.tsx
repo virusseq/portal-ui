@@ -20,7 +20,7 @@
  */
 
 import { useRouter } from 'next/router';
-import { createContext, ReactElement, useContext, useEffect, useState } from 'react';
+import { createContext, ReactElement, useCallback, useContext, useEffect, useState } from 'react';
 import ReactGA from 'react-ga';
 
 import { getConfig } from '#global/config';
@@ -45,19 +45,22 @@ export const TrackingProvider = (props: { children: ReactElement }): ReactElemen
 		trackers: [],
 	});
 
-	const logEvent: LogEventFunctionType = ({ category, action, label, value }) => {
-		if (analytics.isInitialized) {
-			ReactGA.event(
-				{
-					category,
-					action,
-					...(label && { label }),
-					...(value && { value }),
-				},
-				analytics.trackers,
-			);
-		}
-	};
+	const logEvent: LogEventFunctionType = useCallback(({ category, action, label, value }) => {
+		setAnalytics((prev) => {
+			if (prev.isInitialized) {
+				ReactGA.event(
+					{
+						category,
+						action,
+						...(label && { label }),
+						...(value && { value }),
+					},
+					prev.trackers,
+				);
+			}
+			return prev;
+		});
+	}, []);
 
 	const addTracker = (trackerId: string, trackerName: string) => {
 		if (analytics.isInitialized) {
