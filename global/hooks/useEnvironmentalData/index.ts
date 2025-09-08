@@ -28,6 +28,7 @@ import {
 	UploadStatus,
 } from '#components/pages/submission/Environmental/Details/types';
 import type { CreateSubmissionResult } from '#components/pages/submission/Environmental/NewSubmissions/types';
+import type { SubmissionPaginatedResponse } from '#components/pages/submission/Environmental/PreviousSubmissions/types';
 import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
 import processStream from '#global/utils/processStream';
@@ -35,7 +36,6 @@ import processStream from '#global/utils/processStream';
 import {
 	SubmissionStatus,
 	type CommitSubmissionResult,
-	type DataRecord,
 	type ErrorDetails,
 	type Submission,
 	type SubmissionSummary,
@@ -163,21 +163,40 @@ const useEnvironmentalData = (origin: string) => {
 		}
 	};
 
-	const fetchPreviousSubmissions = async ({ signal }: { signal?: AbortSignal } = {}): Promise<{
-		data: DataRecord[];
-	}> => {
+	const fetchPreviousSubmissions = async ({
+		username,
+		signal,
+		page = 1,
+		pageSize = 20,
+	}: {
+		username?: string;
+		signal?: AbortSignal;
+		page?: number;
+		pageSize?: number;
+	} = {}): Promise<SubmissionPaginatedResponse> => {
 		const response = await handleRequest({
 			url: urlJoin(
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
 				'submission',
 				'category',
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
+				`?page=${page}`,
+				`&pageSize=${pageSize}`,
+				username ? `&username=${username}` : '',
 			),
 			method: 'GET',
 			signal,
 		});
 
-		return { data: response.records };
+		return {
+			data: response.records,
+			first: response.pagination.currentPage === 1,
+			last: response.pagination.currentPage === response.pagination.totalPages,
+			page: response.pagination.currentPage,
+			size: response.records.length,
+			totalPages: response.pagination.totalPages,
+			totalRecords: response.pagination.totalRecords,
+		};
 	};
 
 	/**

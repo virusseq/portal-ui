@@ -22,6 +22,7 @@
 import { useState } from 'react';
 import urlJoin from 'url-join';
 
+import type { SubmissionPaginatedResponse } from '#components/pages/submission/Clinical/PreviousSubmissions/types';
 import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
 import processStream from '#global/utils/processStream';
@@ -98,10 +99,30 @@ const useMuseData = (origin: string) => {
 		return eventSource;
 	};
 
+	const fetchPreviousSubmissions = async ({
+		page = 1,
+		pageSize = 10,
+	}: {
+		page: number;
+		pageSize: number;
+	}): Promise<SubmissionPaginatedResponse> => {
+		const pageIndex = page > 0 ? page - 1 : 0;
+		const urlJoined = urlJoin('submissions', `?page=${pageIndex}&size=${pageSize}`);
+		return fetchMuseData(urlJoined).then((response) => {
+			return {
+				data: response?.data ?? [],
+				first: page === 1,
+				last: response?.data?.length < pageSize,
+				page: page,
+			};
+		});
+	};
+
 	return {
 		awaitingResponse,
 		fetchEventStream,
 		fetchMuseData,
+		fetchPreviousSubmissions,
 		setAwaitingResponse,
 	};
 };

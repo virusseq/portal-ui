@@ -25,31 +25,66 @@ import { ReactElement, useEffect, useState } from 'react';
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
 import NoScopes from '#components/NoScopes';
+import { PaginationToolBar } from '#components/Pagination';
 import defaultTheme from '#components/theme';
 import { CoronaVirus } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useMuseData from '#global/hooks/useMuseData';
 
 import columns from './columns';
+import type { SubmissionPaginatedResponse } from './types';
 
-const PreviousSubmissions = (): ReactElement => {
+const PreviousSubmissions = ({
+	pageSize = 20,
+	paginationEnabled = true,
+}: {
+	pageSize?: number;
+	paginationEnabled?: boolean;
+}): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	const { token, userHasClinicalAccess } = useAuthContext();
-	const { awaitingResponse, fetchMuseData } = useMuseData('PreviousSubmissions');
-	const [previousSubmissions, setPreviousSubmissions] = useState([]);
+	const { awaitingResponse, fetchPreviousSubmissions } = useMuseData('PreviousSubmissions');
+	const [previousSubmissions, setPreviousSubmissions] = useState<SubmissionPaginatedResponse>({
+		data: [],
+		first: true,
+		last: true,
+		page: 1,
+	});
 
 	useEffect(() => {
 		token &&
 			userHasClinicalAccess &&
-			fetchMuseData(
-				`submissions?${new URLSearchParams({
-					page: '0',
-					size: '100000',
-				})}`,
-			).then((response) => {
-				response.data && setPreviousSubmissions(response.data);
+			fetchPreviousSubmissions({ page: 1, pageSize }).then((response) => {
+				response.data && setPreviousSubmissions(response);
 			});
 	}, [token, userHasClinicalAccess]);
+
+	const goToFirstPage = () => {
+		fetchPreviousSubmissions({ page: 1, pageSize }).then((response) => {
+			response.data && setPreviousSubmissions(response);
+		});
+	};
+
+	const goToPrevPage = () => {
+		if (previousSubmissions.first || previousSubmissions.page === undefined) return;
+		fetchPreviousSubmissions({ page: previousSubmissions.page - 1, pageSize }).then((response) => {
+			response.data && setPreviousSubmissions(response);
+		});
+	};
+
+	const goToNextPage = () => {
+		if (previousSubmissions.page === undefined) return;
+		fetchPreviousSubmissions({ page: previousSubmissions.page + 1, pageSize }).then((response) => {
+			response.data && setPreviousSubmissions(response);
+		});
+	};
+
+	const goToLastPage = () => {
+		// There's no reliable way to get the last page without knowing the total number of records,
+		// which isn't provided by the current API response.
+		// so this function is currently a no-op.
+		return;
+	};
 
 	return (
 		<article
@@ -59,46 +94,59 @@ const PreviousSubmissions = (): ReactElement => {
 		>
 			{userHasClinicalAccess ? (
 				<LoaderWrapper loading={awaitingResponse} message="Retrieving your submissions.">
-					{previousSubmissions.length > 0 ? (
-						<GenericTable
-							caption="Submissions made by you in the past"
-							columns={columns}
-							data={previousSubmissions}
-							sortable={{
-								defaultSortBy: [
-									{
-										id: 'createdAt',
-									},
-								],
-							}}
-							style={css`
-								margin-top: 35px;
-								max-height: 315px;
+					{previousSubmissions.data.length > 0 || !previousSubmissions.first ? (
+						<>
+							<GenericTable
+								caption="Submissions made by you in the past"
+								columns={columns}
+								data={previousSubmissions.data}
+								sortable={{
+									defaultSortBy: [
+										{
+											id: 'createdAt',
+										},
+									],
+								}}
+								style={css`
+									margin-top: 35px;
+									max-height: 315px;
 
-								&.sortable {
-									th.asc {
-										border-top-color: ${theme.colors.accent};
+									&.sortable {
+										th.asc {
+											border-top-color: ${theme.colors.accent};
+										}
+
+										th.desc {
+											border-bottom-color: ${theme.colors.accent};
+										}
 									}
 
-									th.desc {
-										border-bottom-color: ${theme.colors.accent};
+									td {
+										vertical-align: top;
 									}
-								}
 
-								td {
-									vertical-align: top;
-								}
+									.tableColumnHeader-submissionId {
+										width: 242px;
+									}
 
-								.tableColumnHeader-submissionId {
-									width: 242px;
-								}
-
-								.tableColumnHeader-createdAt,
-								.tableColumnHeader-totalRecords {
-									width: 60px;
-								}
-							`}
-						/>
+									.tableColumnHeader-createdAt,
+									.tableColumnHeader-totalRecords {
+										width: 60px;
+									}
+								`}
+							/>
+							{paginationEnabled && (
+								<PaginationToolBar
+									goToFirstPage={goToFirstPage}
+									goToPrevPage={goToPrevPage}
+									goToNextPage={goToNextPage}
+									goToLastPage={goToLastPage}
+									isFirst={previousSubmissions.first}
+									isLast={previousSubmissions.last}
+									page={previousSubmissions.page ?? 1}
+								/>
+							)}
+						</>
 					) : (
 						<figure
 							css={css`
