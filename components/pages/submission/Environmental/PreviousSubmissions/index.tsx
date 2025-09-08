@@ -22,10 +22,10 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useState } from 'react';
 
-import { UnStyledButton } from '#components/Button';
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
 import NoScopes from '#components/NoScopes';
+import { PaginationToolBar } from '#components/Pagination';
 import defaultTheme from '#components/theme';
 import { CoronaVirus } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
@@ -34,54 +34,13 @@ import useEnvironmentalData from '#global/hooks/useEnvironmentalData';
 import columns from './columns';
 import { SubmissionPaginatedResponse } from './types';
 
-const PageButton = ({
-	direction,
-	onClick,
-	disabled,
+const PreviousSubmissions = ({
+	pageSize = 20,
+	paginationEnabled = true,
 }: {
-	direction: 'LEFT' | 'DOUBLE_LEFT' | 'RIGHT' | 'DOUBLE_RIGHT';
-	onClick: any;
-	disabled: boolean | undefined;
-}) => {
-	return (
-		<UnStyledButton
-			onClick={onClick}
-			disabled={disabled}
-			css={css`
-				cursor: ${disabled ? 'default' : undefined};
-				color: ${disabled ? defaultTheme.colors.grey_6 : defaultTheme.colors.primary};
-				font-size: 18px;
-				${defaultTheme.typography.baseFont}
-			`}
-		>
-			{direction === 'LEFT' && '‹'}
-			{direction === 'DOUBLE_LEFT' && '«'}
-			{direction === 'RIGHT' && '›'}
-			{direction === 'DOUBLE_RIGHT' && '»'}
-		</UnStyledButton>
-	);
-};
-
-const PageNumber = ({ num }: { num: number }) => {
-	return (
-		<span
-			css={css`
-				font-size: 14px;
-				text-align: center;
-				width: 14px;
-				height: 14px;
-				border-radius: 50%;
-				padding: 3px 4px 5px 4px;
-				background-color: ${defaultTheme.colors.grey_1};
-				${defaultTheme.typography.baseFont};
-			`}
-		>
-			{num}
-		</span>
-	);
-};
-
-const PreviousSubmissions = ({ pageSize = 20 }: { pageSize?: number }): ReactElement => {
+	pageSize?: number;
+	paginationEnabled?: boolean;
+}): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	const { token, userHasEnvironmentalAccess, user } = useAuthContext();
 	const { awaitingResponse, fetchPreviousSubmissions } =
@@ -195,42 +154,32 @@ const PreviousSubmissions = ({ pageSize = 20 }: { pageSize?: number }): ReactEle
 									}
 								`}
 							/>
-							<div
-								css={css`
-									display: flex;
-									justify-content: space-between;
-								`}
-							>
+							{paginationEnabled && (
 								<div
 									css={css`
-										display: inline-flex;
-										align-items: center;
-										column-gap: 10px;
+										display: flex;
+										justify-content: space-between;
 									`}
 								>
-									<PageButton
-										direction={'DOUBLE_LEFT'}
-										onClick={goToFirstPage}
-										disabled={previousSubmissions.first}
-									/>
-									<PageButton
-										direction={'LEFT'}
-										onClick={goToPrevPage}
-										disabled={previousSubmissions.first}
-									/>
-									<PageNumber num={previousSubmissions.page ? previousSubmissions.page : 1} />
-									<PageButton
-										direction={'RIGHT'}
-										onClick={goToNextPage}
-										disabled={previousSubmissions.last}
-									/>
-									<PageButton
-										direction={'DOUBLE_RIGHT'}
-										onClick={goToLastPage}
-										disabled={previousSubmissions.last}
-									/>
+									<div
+										css={css`
+											display: inline-flex;
+											align-items: center;
+											column-gap: 10px;
+										`}
+									>
+										<PaginationToolBar
+											goToFirstPage={goToFirstPage}
+											goToPrevPage={goToPrevPage}
+											goToNextPage={goToNextPage}
+											goToLastPage={goToLastPage}
+											isFirst={previousSubmissions.first}
+											isLast={previousSubmissions.last}
+											page={previousSubmissions.page ?? 1}
+										/>
+									</div>
 								</div>
-							</div>
+							)}
 						</>
 					) : (
 						<figure
