@@ -220,7 +220,6 @@ const useEnvironmentalData = (origin: string) => {
 		// Formatting Insert records
 		const insertRecords =
 			submission.data[EventTypeToKey.INSERT]?.sample?.records?.map<UploadData>((item, index) => {
-				const fileName = [submission.data[EventTypeToKey.INSERT]?.sample.batchName];
 				const errors = submission.errors[EventTypeToKey.INSERT]?.sample || [];
 				const errorDetails = getErrorDetailsMessage(errors, index);
 				const identifier = item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
@@ -230,11 +229,8 @@ const useEnvironmentalData = (origin: string) => {
 					recordStatus = UploadStatus.ERROR;
 				} else if (incompleteStatuses.includes(submission.status)) {
 					recordStatus = UploadStatus.INCOMPLETE;
-				}
-
-				if (isUploadPending) {
-					errorDetails.push('File upload is still pending');
-					recordStatus = UploadStatus.ERROR;
+				} else if (isUploadPending) {
+					recordStatus = UploadStatus.INCOMPLETE;
 				}
 
 				return {
@@ -243,7 +239,7 @@ const useEnvironmentalData = (origin: string) => {
 					eventType: EventType.INSERT,
 					details: errorDetails,
 					organization: organization,
-					originalFilePair: fileName,
+					originalFilePair: [],
 					status: recordStatus,
 					systemId: '',
 				};
@@ -410,6 +406,7 @@ const useEnvironmentalData = (origin: string) => {
 			if (matchingRecord) {
 				record.status = UploadStatus.COMPLETE;
 				record.systemId = matchingRecord.systemId;
+				record.originalFilePair = matchingRecord.files?.map((f: any) => f.fileName) || [];
 				record.details = [];
 			}
 			return record;

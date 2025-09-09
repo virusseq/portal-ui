@@ -115,6 +115,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 						<GenericTable
 							columns={columns}
 							data={Object.values(submissionDetails).flat()}
+							emptyValue={'-'}
 							sortable={{
 								defaultSortBy: [
 									{

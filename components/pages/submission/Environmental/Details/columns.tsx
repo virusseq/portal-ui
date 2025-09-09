@@ -69,6 +69,11 @@ const columnData: Column<Record<string, unknown>>[] = [
 		sortType: uuidSort,
 	},
 	{
+		accessor: 'originalFilePair',
+		Header: 'File name',
+		sortType: uuidSort,
+	},
+	{
 		accessor: 'status',
 		Cell: ({ row, value }: { row: Row<UploadData>; value: UploadStatus }): ReactElement => {
 			const { details, systemId, eventType } = row.original;
