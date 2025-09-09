@@ -47,6 +47,7 @@ type GenericTableProps = {
 		  }
 		| boolean;
 	style?: SerializedStyles;
+	emptyValue?: string;
 };
 
 const GenericTable = ({
@@ -57,6 +58,7 @@ const GenericTable = ({
 	options,
 	pageable,
 	sortable,
+	emptyValue = '',
 	style,
 }: GenericTableProps): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
@@ -180,7 +182,7 @@ const GenericTable = ({
 						<tr {...row.getRowProps()}>
 							{row.cells.map((cell) => (
 								<td {...cell.getCellProps()} className={`tableBodyCell-${cell.column.id}`}>
-									{cell.render('Cell')}
+									{cell.value && String(cell.value).length > 0 ? cell.render('Cell') : emptyValue}
 								</td>
 							))}
 						</tr>

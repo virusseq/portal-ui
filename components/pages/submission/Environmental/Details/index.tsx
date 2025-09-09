@@ -203,9 +203,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			try {
 				const processingRecords = Object.values(submissionDetails)
 					.flat()
-					.filter(
-						({ status }) => status === UploadStatus.PROCESSING || status === UploadStatus.ERROR,
-					);
+					.filter(({ status }) => status !== UploadStatus.COMPLETE);
 
 				// Filter out records to get their analysis IDs
 				const recordsMissingSystemId = processingRecords
@@ -235,7 +233,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				// Check if there are any records to process in the next batch
 				const remainingToProcess = processingRecords.filter(
 					// Include only records that are still processing or errored
-					({ status }) => status === UploadStatus.PROCESSING || status === UploadStatus.ERROR,
+					({ status }) => status !== UploadStatus.COMPLETE,
 				);
 
 				setDataIsPending(remainingToProcess.length > 0);
@@ -334,6 +332,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 						<GenericTable
 							columns={columns}
 							data={Object.values(submissionDetails).flat()}
+							emptyValue={'-'}
 							sortable={{
 								defaultSortBy: [
 									{
