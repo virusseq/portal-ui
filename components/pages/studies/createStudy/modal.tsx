@@ -129,16 +129,6 @@ const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
 					value={formData[`studyId`]}
 					size={50}
 				/>
-				<FormInputSearchSelect
-					options={['clinical', 'environmental']}
-					required={true}
-					label="Sample Type"
-					onChange={buildOnChangeFunc('sampleType')}
-					onBlur={buildOnBlurFunc(`sampleType`)}
-					errorMessage={formErrors[`sampleType`]}
-					value={formData[`sampleType`]}
-					size={50}
-				/>
 				<FormInputText
 					required={true}
 					label="Organization"
