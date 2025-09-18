@@ -24,6 +24,7 @@ import { ReactElement, useCallback, useEffect, useReducer, useState } from 'reac
 
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
+import { getPaginationRange, PaginationToolBar } from '#components/Pagination';
 import defaultTheme from '#components/theme';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData, {
@@ -67,10 +68,15 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>();
 	const [organization, setOrganization] = useState('');
 	const [dataIsPending, setDataIsPending] = useState(false);
+	const [page, setPage] = useState(1);
+	const [lastPage, setLastPage] = useState(1);
+	const [firstRecord, setFirstRecord] = useState(1);
+	const [lastRecord, setLastRecord] = useState(1);
 	const [submissionDetails, submissionDetailsDispatch] = useReducer(
 		uploadsStatusReducer,
 		uploadsStatusDictionary,
 	);
+	const [recordsPaginated, setRecordsPaginated] = useState<UploadData[]>([]);
 	const [openGuideModal, setOpenGuideModal] = useState(false);
 	const [pendingUploadManifests, setPendingUploadManifests] = useState<SubmissionManifest[]>([]);
 
@@ -82,6 +88,8 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		commitSubmission,
 		getAnalysisIds,
 	} = useEnvironmentalData('SubmissionsDetails');
+
+	const pageSize = 20;
 
 	/**
 	 * Marks all records with `PROCESSING` status as `COMPLETE` in the submission details.
@@ -164,6 +172,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 				// Total amount of records uploading
 				setSubmissionRecordCount(totalRecordsCount);
+
+				const totalPages = Math.ceil(totalRecordsCount / pageSize);
+
+				setLastPage(totalPages);
 
 				// Submission validity
 				setSubmissionStatus(status);
@@ -301,6 +313,32 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		};
 	}, [dataIsPending, submissionStatus]);
 
+	const paginateRecords = (records: UploadData[], page: number, pageSize: number) => {
+		const total = records.length;
+		const totalPages = Math.ceil(total / pageSize);
+
+		// Ensure page is within valid range
+		const currentPage = Math.max(1, Math.min(page, totalPages));
+
+		const startIndex = (currentPage - 1) * pageSize;
+		const endIndex = startIndex + pageSize;
+
+		return records.slice(startIndex, endIndex);
+	};
+
+	useEffect(() => {
+		const fullRecordList = Object.values(submissionDetails).flat();
+		if (fullRecordList.length) {
+			const paginated = paginateRecords(fullRecordList, page, pageSize);
+			setRecordsPaginated(paginated);
+
+			const { first, last } = getPaginationRange(page, pageSize, paginated.length);
+
+			setFirstRecord(first);
+			setLastRecord(last);
+		}
+	}, [page, submissionDetails]);
+
 	return (
 		<article
 			css={css`
@@ -327,11 +365,11 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 								margin: 10px 0;
 							`}
 						>
-							1 - {submissionRecordCount} of {submissionRecordCount} Viral Genomes
+							{firstRecord} - {lastRecord} of {submissionRecordCount} Viral Genomes
 						</p>
 						<GenericTable
 							columns={columns}
-							data={Object.values(submissionDetails).flat()}
+							data={recordsPaginated}
 							emptyValue={'-'}
 							sortable={{
 								defaultSortBy: [
@@ -368,6 +406,23 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 									}
 								}
 							`}
+						/>
+						<PaginationToolBar
+							goToFirstPage={() => {
+								setPage(1);
+							}}
+							goToPrevPage={() => {
+								setPage((currentPage) => currentPage - 1);
+							}}
+							goToNextPage={() => {
+								setPage((currentPage) => currentPage + 1);
+							}}
+							goToLastPage={() => {
+								setPage(lastPage);
+							}}
+							isFirst={page === 1}
+							isLast={lastPage === page}
+							page={page}
 						/>
 					</>
 				)}
