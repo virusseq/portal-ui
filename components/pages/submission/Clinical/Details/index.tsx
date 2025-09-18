@@ -55,7 +55,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	// gets the initial status for all the uploads
 	useEffect(() => {
 		if (token) {
-			console.log(`fetching submission details for page ${page}`);
 			fetchMuseData(
 				`uploads?${new URLSearchParams({
 					page: (page - 1).toString(),
