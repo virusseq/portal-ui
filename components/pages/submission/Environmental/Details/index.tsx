@@ -89,7 +89,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		getAnalysisIds,
 	} = useEnvironmentalData('SubmissionsDetails');
 
-	const pageSize = 20;
+	const pageSize = 50;
 
 	/**
 	 * Marks all records with `PROCESSING` status as `COMPLETE` in the submission details.

@@ -50,7 +50,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const { token } = useAuthContext();
 	const { awaitingResponse, fetchMuseData, fetchEventStream } = useMuseData('SubmissionsDetails');
 
-	const pageSize = 20;
+	const pageSize = 50;
 
 	// gets the initial status for all the uploads
 	useEffect(() => {
