@@ -24,6 +24,7 @@ import { ReactElement, useEffect, useReducer, useState } from 'react';
 
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
+import { getPaginationRange, PaginationToolBar } from '#components/Pagination';
 import defaultTheme from '#components/theme';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useMuseData, { UploadDataType } from '#global/hooks/useMuseData';
@@ -37,6 +38,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	const [totalUploads, setTotalUploads] = useState(0);
 	const [dataIsPending, setDataIsPending] = useState(false);
+	const [page, setPage] = useState(1);
+	const [lastPage, setLastPage] = useState(1);
+	const [firstRecord, setFirstRecord] = useState(1);
+	const [lastRecord, setLastRecord] = useState(1);
 	const [submissionDetails, submissionDetailsDispatch] = useReducer(
 		uploadsStatusReducer,
 		uploadsStatusDictionary,
@@ -45,13 +50,16 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const { token } = useAuthContext();
 	const { awaitingResponse, fetchMuseData, fetchEventStream } = useMuseData('SubmissionsDetails');
 
+	const pageSize = 20;
+
 	// gets the initial status for all the uploads
 	useEffect(() => {
-		if (token && totalUploads === 0) {
+		if (token) {
+			console.log(`fetching submission details for page ${page}`);
 			fetchMuseData(
 				`uploads?${new URLSearchParams({
-					page: '0',
-					size: '100000',
+					page: (page - 1).toString(),
+					size: pageSize.toString(),
 					submissionId: ID,
 				})}`,
 			).then(({ data: uploadsData, ...response }) => {
@@ -66,6 +74,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 							['QUEUED', 'PROCESSING'].includes(status),
 						),
 					);
+					const { first, last } = getPaginationRange(page, pageSize, uploadsData.length);
+					setFirstRecord(first);
+					setLastRecord(last);
 				} else {
 					// handle rare edge case
 					// TODO: create dev mode
@@ -73,7 +84,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				}
 			});
 		}
-	}, [token]);
+	}, [token, page]);
 
 	// tries to get status updates, if any are available
 	useEffect(() => {
@@ -91,6 +102,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		// close any pending streams
 		return () => eStream?.close?.();
 	}, [dataIsPending]);
+
+	useEffect(() => {
+		setLastPage(Math.ceil(totalUploads / pageSize));
+	}, [totalUploads]);
 
 	return (
 		<article
@@ -110,7 +125,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 								margin: 10px 0;
 							`}
 						>
-							1 - {totalUploads} of {totalUploads} Viral Genomes
+							{firstRecord} - {lastRecord} of {totalUploads} Viral Genomes
 						</p>
 						<GenericTable
 							columns={columns}
@@ -151,6 +166,23 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 									}
 								}
 							`}
+						/>
+						<PaginationToolBar
+							goToFirstPage={() => {
+								setPage(1);
+							}}
+							goToPrevPage={() => {
+								setPage((currentPage) => currentPage - 1);
+							}}
+							goToNextPage={() => {
+								setPage((currentPage) => currentPage + 1);
+							}}
+							goToLastPage={() => {
+								setPage(lastPage);
+							}}
+							isFirst={page === 1}
+							isLast={lastPage === page}
+							page={page}
 						/>
 					</>
 				)}
