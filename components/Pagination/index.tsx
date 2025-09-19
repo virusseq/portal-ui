@@ -25,6 +25,14 @@ import type { ReactElement } from 'react';
 import { UnStyledButton } from '#components/Button';
 import defaultTheme from '#components/theme';
 
+export const getPaginationRange = (page: number, pageSize: number, dataLength: number) => {
+	const start = (page - 1) * pageSize;
+	return {
+		first: start + 1,
+		last: start + dataLength,
+	};
+};
+
 export const PaginationToolBar = ({
 	goToFirstPage,
 	goToPrevPage,

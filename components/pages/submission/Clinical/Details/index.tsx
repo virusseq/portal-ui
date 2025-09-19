@@ -24,6 +24,7 @@ import { ReactElement, useEffect, useReducer, useState } from 'react';
 
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
+import { getPaginationRange, PaginationToolBar } from '#components/Pagination';
 import defaultTheme from '#components/theme';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useMuseData, { UploadDataType } from '#global/hooks/useMuseData';
@@ -37,6 +38,11 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	const [totalUploads, setTotalUploads] = useState(0);
 	const [dataIsPending, setDataIsPending] = useState(false);
+	const [page, setPage] = useState(1);
+	const [lastPage, setLastPage] = useState(1);
+	const [firstRecord, setFirstRecord] = useState(1);
+	const [lastRecord, setLastRecord] = useState(1);
+	const [recordsPaginated, setRecordsPaginated] = useState<UploadDataType[]>([]);
 	const [submissionDetails, submissionDetailsDispatch] = useReducer(
 		uploadsStatusReducer,
 		uploadsStatusDictionary,
@@ -45,13 +51,15 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const { token } = useAuthContext();
 	const { awaitingResponse, fetchMuseData, fetchEventStream } = useMuseData('SubmissionsDetails');
 
+	const pageSize = 50;
+
 	// gets the initial status for all the uploads
 	useEffect(() => {
-		if (token && totalUploads === 0) {
+		if (token) {
 			fetchMuseData(
 				`uploads?${new URLSearchParams({
-					page: '0',
-					size: '100000',
+					page: (page - 1).toString(),
+					size: pageSize.toString(),
 					submissionId: ID,
 				})}`,
 			).then(({ data: uploadsData, ...response }) => {
@@ -73,7 +81,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				}
 			});
 		}
-	}, [token]);
+	}, [token, page]);
 
 	// tries to get status updates, if any are available
 	useEffect(() => {
@@ -91,6 +99,34 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		// close any pending streams
 		return () => eStream?.close?.();
 	}, [dataIsPending]);
+
+	useEffect(() => {
+		setLastPage(Math.ceil(totalUploads / pageSize));
+	}, [totalUploads]);
+
+	const paginateRecords = (records: UploadDataType[], page: number, pageSize: number) => {
+		const total = records.length;
+		const totalPages = Math.ceil(total / pageSize);
+
+		// Ensure page is within valid range
+		const currentPage = Math.max(1, Math.min(page, totalPages));
+
+		const startIndex = (currentPage - 1) * pageSize;
+		const endIndex = startIndex + pageSize;
+
+		return records.slice(startIndex, endIndex);
+	};
+
+	useEffect(() => {
+		const fullRecordList = Object.values(submissionDetails).flat();
+		if (fullRecordList.length) {
+			const paginatedUploads = paginateRecords(fullRecordList, page, pageSize);
+			setRecordsPaginated(paginatedUploads);
+			const { first, last } = getPaginationRange(page, pageSize, paginatedUploads.length);
+			setFirstRecord(first);
+			setLastRecord(last);
+		}
+	}, [submissionDetails]);
 
 	return (
 		<article
@@ -110,11 +146,11 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 								margin: 10px 0;
 							`}
 						>
-							1 - {totalUploads} of {totalUploads} Viral Genomes
+							{firstRecord} - {lastRecord} of {totalUploads} Viral Genomes
 						</p>
 						<GenericTable
 							columns={columns}
-							data={Object.values(submissionDetails).flat()}
+							data={recordsPaginated}
 							emptyValue={'-'}
 							sortable={{
 								defaultSortBy: [
@@ -151,6 +187,23 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 									}
 								}
 							`}
+						/>
+						<PaginationToolBar
+							goToFirstPage={() => {
+								setPage(1);
+							}}
+							goToPrevPage={() => {
+								setPage((currentPage) => currentPage - 1);
+							}}
+							goToNextPage={() => {
+								setPage((currentPage) => currentPage + 1);
+							}}
+							goToLastPage={() => {
+								setPage(lastPage);
+							}}
+							isFirst={page === 1}
+							isLast={lastPage === page}
+							page={page}
 						/>
 					</>
 				)}
