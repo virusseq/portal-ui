@@ -42,6 +42,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const [lastPage, setLastPage] = useState(1);
 	const [firstRecord, setFirstRecord] = useState(1);
 	const [lastRecord, setLastRecord] = useState(1);
+	const [recordsPaginated, setRecordsPaginated] = useState<UploadDataType[]>([]);
 	const [submissionDetails, submissionDetailsDispatch] = useReducer(
 		uploadsStatusReducer,
 		uploadsStatusDictionary,
@@ -73,9 +74,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 							['QUEUED', 'PROCESSING'].includes(status),
 						),
 					);
-					const { first, last } = getPaginationRange(page, pageSize, uploadsData.length);
-					setFirstRecord(first);
-					setLastRecord(last);
 				} else {
 					// handle rare edge case
 					// TODO: create dev mode
@@ -106,6 +104,30 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		setLastPage(Math.ceil(totalUploads / pageSize));
 	}, [totalUploads]);
 
+	const paginateRecords = (records: UploadDataType[], page: number, pageSize: number) => {
+		const total = records.length;
+		const totalPages = Math.ceil(total / pageSize);
+
+		// Ensure page is within valid range
+		const currentPage = Math.max(1, Math.min(page, totalPages));
+
+		const startIndex = (currentPage - 1) * pageSize;
+		const endIndex = startIndex + pageSize;
+
+		return records.slice(startIndex, endIndex);
+	};
+
+	useEffect(() => {
+		const fullRecordList = Object.values(submissionDetails).flat();
+		if (fullRecordList.length) {
+			const paginatedUploads = paginateRecords(fullRecordList, page, pageSize);
+			setRecordsPaginated(paginatedUploads);
+			const { first, last } = getPaginationRange(page, pageSize, paginatedUploads.length);
+			setFirstRecord(first);
+			setLastRecord(last);
+		}
+	}, [submissionDetails]);
+
 	return (
 		<article
 			css={css`
@@ -128,7 +150,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 						</p>
 						<GenericTable
 							columns={columns}
-							data={Object.values(submissionDetails).flat()}
+							data={recordsPaginated}
 							emptyValue={'-'}
 							sortable={{
 								defaultSortBy: [
