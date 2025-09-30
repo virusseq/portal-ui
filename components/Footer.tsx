@@ -150,13 +150,11 @@ const Footer = (): ReactElement => {
 						</InternalLink>
 					</li>
 
-					{(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) && !token && (
-						<li>
-							<InternalLink path={INTERNAL_PATHS.LOGIN}>
-								<StyledLink>Submitter Login</StyledLink>
-							</InternalLink>
-						</li>
-					)}
+					<li>
+						<InternalLink path={INTERNAL_PATHS.LOGIN}>
+							<StyledLink disabled>Submitter Login</StyledLink>
+						</InternalLink>
+					</li>
 				</ul>
 
 				<span>

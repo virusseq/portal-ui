@@ -24,66 +24,68 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import Link from 'next/link';
 
-import defaultTheme from './theme';
 import getInternalLink from '../global/utils/getInternalLink';
 
+import defaultTheme from './theme';
+
 const StyledLink = styled('a')`
-  ${({ theme, disabled }: { theme?: typeof defaultTheme; disabled?: boolean }) => css`
-    line-height: 24px;
-    ${theme?.typography.regular};
+	${({ theme, disabled }: { theme?: typeof defaultTheme; disabled?: boolean }) => css`
+		line-height: 24px;
+		${theme?.typography.regular};
 
-    ${disabled
-      ? `
-      cursor: not-allowed;
-      color: ${theme?.colors.grey_5};
+		${disabled
+			? `
+        cursor: not-allowed;
+        color: ${theme?.colors.grey_5};
+        pointer-events: none;
 
-      svg g {
-        fill: ${theme?.colors.grey_5};
-      }
-    `
-      : `
-      color: ${theme?.colors.primary};
-      cursor: pointer;
+        svg g {
+          fill: ${theme?.colors.grey_5};
+        }
+      `
+			: `
+        color: ${theme?.colors.primary};
+        cursor: pointer;
 
-      &:hover {
-        color: ${theme?.colors.primary_light};
-      }
+        &:hover {
+          color: ${theme?.colors.primary_light};
+        }
     `}
-  `}
+	`}
 `;
 
 export const StyledLinkAsButton = styled(StyledLink)`
-  ${({ theme }: { theme?: typeof defaultTheme }) => css`
-    color: ${theme?.colors.white};
-    background-color: ${theme?.colors.accent};
-    ${theme?.typography.subheading2};
-    line-height: 24px;
-    border-radius: 5px;
-    border: 1px solid ${theme?.colors.accent};
-    padding: 6px 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
-    text-decoration: none;
-    &:hover {
-      color: ${theme?.colors.white};
-      background-color: ${theme?.colors.accent_dark};
-    }
-  `}
+	${({ theme }: { theme?: typeof defaultTheme }) => css`
+		color: ${theme?.colors.white};
+		background-color: ${theme?.colors.accent};
+		${theme?.typography.subheading2};
+		line-height: 24px;
+		border-radius: 5px;
+		border: 1px solid ${theme?.colors.accent};
+		padding: 6px 15px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		position: relative;
+		text-decoration: none;
+		&:hover {
+			color: ${theme?.colors.white};
+			background-color: ${theme?.colors.accent_dark};
+		}
+	`}
 `;
 
 export const InternalLink = ({
-  children,
-  path,
+	children,
+	path,
 }: {
-  children: ReactNode;
-  path: string;
+	children: ReactNode;
+	path: string;
 }): ReactElement => (
-  <Link href={getInternalLink({ path })} passHref>
-    {children}
-  </Link>
+	<Link href={getInternalLink({ path })} passHref>
+		{children}
+	</Link>
 );
 
 export default StyledLink;
