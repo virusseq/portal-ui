@@ -20,44 +20,106 @@
  */
 
 import { css } from '@emotion/react';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
-import CovidCloudPane from './CovidCloudPane';
-import HeroBanner from './HeroBanner';
-import Impact from './Impact';
-import WhySequence from './WhySequence';
+import { getConfig } from '#global/config.ts';
+
+import AnnouncementsPanel, { isAnnouncementsArray } from './Announcements/index.ts';
+import type { AnnouncementObj } from './Announcements/types.ts';
+import CovidCloudPane from './CovidCloudPane.tsx';
+import HeroBanner from './HeroBanner.tsx';
+import Impact from './Impact.tsx';
+import WhySequence from './WhySequence.tsx';
 
 const PageContent = (): ReactElement => {
-  return (
-    <main
-      css={(theme) => css`
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        padding-bottom: ${theme.dimensions.footer.height}px;
-      `}
-    >
-      <HeroBanner />
+	const [announcementsList, setAnnouncementsList] = useState<AnnouncementObj[]>([]);
+	const { NEXT_PUBLIC_ENABLE_NEWS, NEXT_PUBLIC_NEWS_AND_ANNOUNCEMENTS } = getConfig();
 
-      <article
-        css={css`
-          display: flex;
-          flex-wrap: wrap;
-          margin-top: 30px;
-          max-width: 1680px;
-          width: 100%;
+	useEffect(() => {
+		try {
+			const parsedAnnouncementsList = JSON.parse(NEXT_PUBLIC_NEWS_AND_ANNOUNCEMENTS);
+			const curatedList = parsedAnnouncementsList.slice(0, 5);
+			console.log('curatedList', curatedList);
 
-          @media (min-width: 900px) {
-          }
-        `}
-      >
-        <Impact />
-        <WhySequence />
-      </article>
+			if (NEXT_PUBLIC_ENABLE_NEWS && isAnnouncementsArray(curatedList)) {
+				setAnnouncementsList(curatedList);
+			} else {
+				throw new Error('Announcement types are invalid!');
+			}
+		} catch (err) {
+			console.error('Failed to parse the announcements!', err);
+		}
+	}, [NEXT_PUBLIC_ENABLE_NEWS, NEXT_PUBLIC_NEWS_AND_ANNOUNCEMENTS]);
 
-      <CovidCloudPane />
-    </main>
-  );
+	const hasNews = announcementsList.length > 0;
+
+	return (
+		<main
+			css={(theme) => css`
+				align-items: center;
+				display: flex;
+				flex-direction: column;
+				padding-bottom: ${theme.dimensions.footer.height}px;
+			`}
+		>
+			<HeroBanner />
+
+			<article
+				css={css`
+					box-sizing: border-box;
+					display: flex;
+					margin-top: 30px;
+					max-width: 1550px;
+					padding: 0 50px;
+					width: 100%;
+
+					@media (max-width: 1236px) {
+						flex-wrap: wrap;
+					}
+				`}
+			>
+				<div
+					css={[
+						css`
+							display: flex;
+						`,
+						hasNews
+							? css`
+									flex-wrap: wrap;
+									& > * {
+										max-width: 760px;
+									}
+								`
+							: css`
+									& > :first-of-type {
+										margin-right: 3rem;
+									}
+								`,
+					]}
+				>
+					<Impact />
+					<WhySequence />
+				</div>
+
+				{hasNews && (
+					<AnnouncementsPanel
+						css={css`
+							margin: 25px 0;
+							width: 100%;
+
+							@media (min-width: 1237px) {
+								margin-left: 25px;
+								max-width: calc(100% - 760px);
+							}
+						`}
+						announcements={announcementsList}
+					/>
+				)}
+			</article>
+
+			<CovidCloudPane />
+		</main>
+	);
 };
 
 export default PageContent;

@@ -24,8 +24,7 @@ import React, { ReactElement } from 'react';
 
 import defaultTheme from '#components/theme';
 import DismissIcon from '#components/theme/icons/dismiss';
-import Error from '#components/theme/icons/error';
-import Info from '#components/theme/icons/info';
+import { Info, Error } from '#components/theme/icons';
 
 type AlertLevel = 'error' | 'warning' | 'info';
 
@@ -68,21 +67,31 @@ const ALERT_VARIANTS: Record<AlertLevel, AlertVariant> = {
 	},
 	warning: {
 		backgroundColor: defaultTheme.colors.warning_1,
-		icon: <Error size={40} fill={defaultTheme.colors.warning_dark} />,
+		icon: (
+			<Error
+				size={40}
+				fill={defaultTheme.colors.warning_dark}
+			/>
+		),
 		textColor: defaultTheme.colors.black,
 	},
 	info: {
 		backgroundColor: defaultTheme.colors.secondary_2,
-		icon: <Info size={40} fill={defaultTheme.colors.secondary_dark} />,
+		icon: (
+			<Info
+				size={40}
+				fill={defaultTheme.colors.secondary_dark}
+			/>
+		),
 		textColor: defaultTheme.colors.black,
 	},
 };
 
-export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onClose }) => {
-	function createMarkup(msg: string) {
-		return { __html: msg };
-	}
+function createMarkup(msg: string) {
+	return { __html: msg };
+}
 
+export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onClose }) => {
 	const { backgroundColor, textColor, icon } = ALERT_VARIANTS[alert.level];
 	return (
 		<div
@@ -124,7 +133,7 @@ export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onCl
 								${defaultTheme.typography.regular};
 							`}
 							dangerouslySetInnerHTML={createMarkup(alert.message)}
-						></div>
+						/>
 					)}
 				</div>
 			</div>
@@ -136,7 +145,11 @@ export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onCl
 					`}
 					onClick={onClose}
 				>
-					<DismissIcon height={15} width={15} fill={defaultTheme.colors.black} />
+					<DismissIcon
+						height={15}
+						width={15}
+						fill={defaultTheme.colors.black}
+					/>
 				</div>
 			)}
 		</div>
