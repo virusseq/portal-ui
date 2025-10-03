@@ -23,9 +23,10 @@ import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
 
 import { INTERNAL_PATHS } from '../../../global/utils/constants';
-import defaultTheme from '../../theme';
 import { StyledLinkAsButton, InternalLink as Link } from '../../Link';
+import defaultTheme from '../../theme';
 import { MapleLeaf } from '../../theme/icons';
+
 import ReleaseData from './ReleaseData';
 
 /** Layout notes:
