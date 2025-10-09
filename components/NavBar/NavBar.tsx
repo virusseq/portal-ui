@@ -140,13 +140,13 @@ const NavBar = (): ReactElement => {
 									About the tools
 								</StyledListLink>
 							</InternalLink>,
-							<InternalLink path={INTERNAL_PATHS.VISUALIZATION}>
-								<StyledListLink
-									className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.VISUALIZATION) })}
-								>
-									CoVizu
-								</StyledListLink>
-							</InternalLink>,
+							<StyledListLink
+								href="https://filogeneti.ca/covizu/index.html"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								CoVizu
+							</StyledListLink>,
 							<StyledListLink
 								href="https://covidmvp.cidgoh.ca/"
 								rel="noopener noreferrer"

@@ -36,18 +36,18 @@ const Footer = (): ReactElement => {
 	const { token } = useAuthContext();
 
 	return (
-		<div
+		<footer
 			css={css`
 				height: ${theme.dimensions.footer.height}px;
 				background-color: ${theme.colors.white};
 				border-top: 1px solid ${theme.colors.grey_3};
+				${theme.shadow.default};
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				padding: 0 20px;
-				${theme.shadow.default};
 				z-index: 10;
 				overflow: hidden;
+				padding: 0 15px;
 				position: fixed;
 				bottom: 0px;
 				left: 0px;
@@ -65,9 +65,9 @@ const Footer = (): ReactElement => {
 				`}
 			>
 				<a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
-					<GenomeCanadaLogo width={80} />
+					<GenomeCanadaLogo height={60} width={80} viewBox="0 15 94 26" />
 				</a>
-				<img src="/images/cancogen-logo.png" alt="Cancogen logo" width="100" />
+				<img src="/images/cancogen-logo.png" alt="Cancogen logo" width="85" />
 				<a
 					css={css`
 						margin-left: 1rem;
@@ -76,7 +76,7 @@ const Footer = (): ReactElement => {
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					<img src="/images/covarrnet-logo.png" alt="CoVaRRNet logo" width="120" />
+					<img src="/images/covarrnet-logo.png" alt="CoVaRRNet logo" width="100" />
 				</a>
 			</section>
 
@@ -95,6 +95,22 @@ const Footer = (): ReactElement => {
 					}
 				`}
 			>
+				<span
+					css={css`
+						text-align: center;
+					`}
+				>
+					If you use the VirusSeq Data Portal, please cite{' '}
+					<span css={css``}>Gill et al (2024) Microbial Genomics.</span>{' '}
+					<StyledLink
+						href="https://doi.org/10.1099/mgen.0.001293"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						10.1099/mgen.0.001293
+					</StyledLink>
+				</span>
+
 				<ul
 					css={css`
 						display: flex;
@@ -110,7 +126,6 @@ const Footer = (): ReactElement => {
 							&:not(:first-of-type)::before {
 								color: ${theme.colors.accent};
 								content: '•';
-								font-size: 10px;
 								left: -3px;
 								position: absolute;
 								top: 5px;
@@ -119,19 +134,20 @@ const Footer = (): ReactElement => {
 					`}
 				>
 					<li>
-						<InternalLink path={INTERNAL_PATHS.POLICIES}>
-							<StyledLink>Policies</StyledLink>
-						</InternalLink>
-					</li>
-
-					<li>
+						<span>Contact us at </span>
 						<StyledLink
 							href="mailto:info@virusseq-dataportal.ca"
 							rel="noopener noreferrer"
 							target="_blank"
 						>
-							Contact Us
+							info@virusseq-dataportal.ca
 						</StyledLink>
+					</li>
+
+					<li>
+						<InternalLink path={INTERNAL_PATHS.POLICIES}>
+							<StyledLink>Policies</StyledLink>
+						</InternalLink>
 					</li>
 
 					{(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) && !token && (
@@ -142,9 +158,10 @@ const Footer = (): ReactElement => {
 						</li>
 					)}
 				</ul>
+
 				<span>
 					&#169;
-					{` ${new Date().toISOString().slice(0, 4)} Canadian iMicroSeq Data Portal`}
+					{` 2021 - ${new Date().toISOString().slice(0, 4)} Canadian iMicroSeq Data Portal.`}
 				</span>
 			</section>
 
@@ -164,12 +181,15 @@ const Footer = (): ReactElement => {
 						css={css`
 							color: ${theme.colors.accent_dark};
 							${theme.typography.subheading2}
+							font-size: 0.8rem;
 							font-weight: normal;
-							padding-right: 10px;
+							padding-right: 0.2rem;
+							width: 4.4rem;
 						`}
 					>
 						Powered by:
 					</span>
+
 					<a
 						css={css`
 							margin-top: 5px;
@@ -178,7 +198,7 @@ const Footer = (): ReactElement => {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						<OvertureLogoWithText width={100} height={18} />
+						<OvertureLogoWithText width={90} height={18} />
 					</a>
 				</span>
 
@@ -189,24 +209,26 @@ const Footer = (): ReactElement => {
 						display: flex;
 						font-weight: bold;
 						justify-content: center;
-						margin-left: 1rem;
+						margin-left: 0.8rem;
+						margin-top: -0.1rem;
 						text-decoration: none;
 					`}
 					href="https://github.com/imicroseq"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					<GitHubLogo height={20} width={20} />
+					<GitHubLogo height={15} width={15} />
 					<span
 						css={css`
-							margin-left: 5px;
+							margin-left: 0.3rem;
+							width: 4rem;
 						`}
 					>
 						iMicroSeq Github
 					</span>
 				</a>
 			</section>
-		</div>
+		</footer>
 	);
 };
 
