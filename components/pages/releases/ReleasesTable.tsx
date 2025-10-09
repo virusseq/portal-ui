@@ -19,17 +19,17 @@
  *
  */
 
-import { ChangeEventHandler, ComponentProps, ReactElement, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import axios from 'axios';
+import { ChangeEventHandler, ComponentProps, ReactElement, useEffect, useState } from 'react';
 import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
-import urlJoin from 'url-join';
 import 'react-datepicker/dist/react-datepicker.css';
+import urlJoin from 'url-join';
 
-import { UnStyledButton } from '@/components/Button';
-import GenericTable from '@/components/GenericTable';
-import defaultTheme from '@/components/theme';
-import { getConfig } from '@/global/config';
+import { UnStyledButton } from '#components/Button';
+import GenericTable from '#components/GenericTable';
+import defaultTheme from '#components/theme';
+import { getConfig } from '#global/config';
 
 import columns from './columns';
 import {

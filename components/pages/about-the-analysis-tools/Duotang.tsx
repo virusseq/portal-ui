@@ -19,11 +19,11 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import StyledLink from '@/components/Link';
-import defaultTheme from '@/components/theme';
+import StyledLink from '#components/Link';
+import defaultTheme from '#components/theme';
 
 const Portal = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();

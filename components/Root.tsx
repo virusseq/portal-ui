@@ -19,17 +19,17 @@
  *
  */
 
-import { createRef, ReactElement, useEffect } from 'react';
 import { ThemeProvider } from '@emotion/react';
+import { createRef, ReactElement, useEffect } from 'react';
 
-import { AuthProvider } from '../global/hooks/useAuthContext';
-import { PageContext } from '../global/hooks/usePageContext';
-import { TrackingProvider } from '../global/hooks/useTrackingContext';
-import { ClientSideGetInitialPropsContext } from '../global/utils/pages/types';
+import { getConfig } from '#global/config';
+import { AuthProvider } from '#global/hooks/useAuthContext';
+import { PageContext } from '#global/hooks/usePageContext';
+import { TrackingProvider } from '#global/hooks/useTrackingContext';
+import { ClientSideGetInitialPropsContext } from '#global/utils/pages/types';
 
-import defaultTheme from './theme';
 import SystemAlerts from './SystemAlerts';
-import { getConfig } from '../global/config';
+import defaultTheme from './theme';
 
 /**
  * portal ref where modals will show up
@@ -37,25 +37,25 @@ import { getConfig } from '../global/config';
 export const modalPortalRef = createRef<HTMLDivElement>();
 
 const Root = ({
-  children,
-  egoJwt,
-  pageContext,
+	children,
+	egoJwt,
+	pageContext,
 }: {
-  children: ReactElement;
-  egoJwt?: string;
-  pageContext: ClientSideGetInitialPropsContext;
+	children: ReactElement;
+	egoJwt?: string;
+	pageContext: ClientSideGetInitialPropsContext;
 }): ReactElement => {
-  const { NEXT_PUBLIC_APP_VERSION, NEXT_PUBLIC_APP_COMMIT } = getConfig();
+	const { NEXT_PUBLIC_APP_VERSION, NEXT_PUBLIC_APP_COMMIT } = getConfig();
 
-  useEffect(() => {
-    NEXT_PUBLIC_APP_VERSION && console.info(`App Version: ${NEXT_PUBLIC_APP_VERSION}`);
-    NEXT_PUBLIC_APP_COMMIT && console.info(`App Commit: ${NEXT_PUBLIC_APP_COMMIT}`);
-  }, [NEXT_PUBLIC_APP_COMMIT, NEXT_PUBLIC_APP_VERSION]);
+	useEffect(() => {
+		NEXT_PUBLIC_APP_VERSION && console.info(`App Version: ${NEXT_PUBLIC_APP_VERSION}`);
+		NEXT_PUBLIC_APP_COMMIT && console.info(`App Commit: ${NEXT_PUBLIC_APP_COMMIT}`);
+	}, [NEXT_PUBLIC_APP_COMMIT, NEXT_PUBLIC_APP_VERSION]);
 
-  return (
-    <>
-      <style>
-        {`
+	return (
+		<>
+			<style>
+				{`
           body {
             margin: 0;
             position: absolute;
@@ -79,21 +79,21 @@ const Root = ({
             padding: 0 3px;
           }
         `}
-      </style>
+			</style>
 
-      <AuthProvider egoJwt={egoJwt}>
-        <PageContext.Provider value={pageContext}>
-          <TrackingProvider>
-            <ThemeProvider theme={defaultTheme}>
-              <SystemAlerts />
-              <div ref={modalPortalRef} />
-              {children}
-            </ThemeProvider>
-          </TrackingProvider>
-        </PageContext.Provider>
-      </AuthProvider>
-    </>
-  );
+			<AuthProvider egoJwt={egoJwt}>
+				<PageContext.Provider value={pageContext}>
+					<TrackingProvider>
+						<ThemeProvider theme={defaultTheme}>
+							<SystemAlerts />
+							<div ref={modalPortalRef} />
+							{children}
+						</ThemeProvider>
+					</TrackingProvider>
+				</PageContext.Provider>
+			</AuthProvider>
+		</>
+	);
 };
 
 export default Root;

@@ -20,8 +20,9 @@
 		"strictNullChecks": true /* When type checking, take into account `null` and `undefined`. */,
 		"baseUrl": "./",
 		"paths": {
-			"@/public": ["./public"],
-			"@/*": ["./*"],
+			"#public": ["./public"],
+			"#virusseq/*": ["./components/pages/virusseq/*"],
+			"#*": ["./*"],
 			"react": ["./node_modules/@types/react"]
 		},
 		"plugins": [

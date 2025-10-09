@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:lts-alpine
 
 ARG ASSET_PREFIX
 ARG APP_COMMIT

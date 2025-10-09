@@ -19,36 +19,38 @@
  *
  */
 
-import DismissIcon from '../../../theme/icons/dismiss';
-import defaultTheme from '../../../theme/index';
 import { css } from '@emotion/react';
-import { Checkmark, Error } from '../../../theme/icons';
+
+import Checkmark from '#components/theme/icons/checkmark';
+import DismissIcon from '#components/theme/icons/dismiss';
+import Error from '#components/theme/icons/error';
+import defaultTheme from '#components/theme/index';
 
 const CircularCheckmark = (
-  <div
-    css={css`
-      padding: 6px 6px 2px 6px;
-      border-radius: 50%;
-      background-color: ${defaultTheme.colors.success_dark};
-    `}
-  >
-    <Checkmark size={20} fill={defaultTheme.colors.white} />
-  </div>
+	<div
+		css={css`
+			padding: 6px 6px 2px 6px;
+			border-radius: 50%;
+			background-color: ${defaultTheme.colors.success_dark};
+		`}
+	>
+		<Checkmark size={20} fill={defaultTheme.colors.white} />
+	</div>
 );
 
 const ErrorMark = <Error size={40} />;
 
 type NotifactionDivProps = {
-  success: boolean;
-  message: JSX.Element;
-  title: string;
-  onDismiss: () => void;
+	success: boolean;
+	message: JSX.Element;
+	title: string;
+	onDismiss: () => void;
 };
 
 const NotifactionDiv = ({ success, message, title, onDismiss }: NotifactionDivProps) => {
-  return (
-    <div
-      css={css`
+	return (
+		<div
+			css={css`
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
@@ -58,46 +60,46 @@ const NotifactionDiv = ({ success, message, title, onDismiss }: NotifactionDivPr
           margin-top: 20px;
           margin-bottom: 20px;
           background-color: ${
-            success ? defaultTheme.colors.success_light : defaultTheme.colors.error_1
-          }};
+						success ? defaultTheme.colors.success_light : defaultTheme.colors.error_1
+					}};
         `}
-    >
-      {success ? CircularCheckmark : ErrorMark}
-      <div
-        css={css`
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          width: 100%;
-          margin-left: 15px;
-        `}
-      >
-        <div
-          css={css`
-            ${defaultTheme.typography.heading}
-          `}
-        >
-          {title}
-        </div>
-        <div
-          css={css`
-            ${defaultTheme.typography.regular}
-            margin-top: 3px;
-          `}
-        >
-          {message}
-        </div>
-      </div>
-      <div
-        css={css`
-          cursor: pointer;
-        `}
-        onClick={onDismiss}
-      >
-        <DismissIcon height={15} width={15} fill={defaultTheme.colors.black} />
-      </div>
-    </div>
-  );
+		>
+			{success ? CircularCheckmark : ErrorMark}
+			<div
+				css={css`
+					display: flex;
+					flex-direction: column;
+					justify-content: flex-start;
+					width: 100%;
+					margin-left: 15px;
+				`}
+			>
+				<div
+					css={css`
+						${defaultTheme.typography.heading}
+					`}
+				>
+					{title}
+				</div>
+				<div
+					css={css`
+						${defaultTheme.typography.regular}
+						margin-top: 3px;
+					`}
+				>
+					{message}
+				</div>
+			</div>
+			<div
+				css={css`
+					cursor: pointer;
+				`}
+				onClick={onDismiss}
+			>
+				<DismissIcon height={15} width={15} fill={defaultTheme.colors.black} />
+			</div>
+		</div>
+	);
 };
 
 export default NotifactionDiv;

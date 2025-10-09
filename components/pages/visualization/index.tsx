@@ -19,14 +19,14 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import defaultTheme from '@/components/theme';
-import { InternalLink as Link } from '@/components/Link';
-import PageLayout from '@/components/PageLayout';
-import { getConfig } from '@/global/config';
-import { covizuGithubUrl, INTERNAL_PATHS } from '@/global/utils/constants';
+import { InternalLink as Link } from '#components/Link';
+import PageLayout from '#components/PageLayout';
+import defaultTheme from '#components/theme';
+import { getConfig } from '#global/config';
+import { covizuGithubUrl, INTERNAL_PATHS } from '#global/utils/constants';
 
 const VisualizationPage = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();

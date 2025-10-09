@@ -19,73 +19,79 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import StyledLink from '../../Link';
-import defaultTheme from '../../theme';
-import { ChevronDown } from '../../theme/icons';
+import StyledLink from '#components/Link';
+import defaultTheme from '#components/theme';
+import { ChevronDown } from '#components/theme/icons';
 
 const CovidCloudPane = (): ReactElement => {
-  const theme: typeof defaultTheme = useTheme();
+	const theme: typeof defaultTheme = useTheme();
 
-  return (
-    <article
-      css={css`
-        align-items: center;
-        background-color: ${theme.colors.grey_2};
-        border: 1px solid ${theme.colors.grey_3};
-        border-radius: 5px;
-        box-sizing: border-box;
-        color: ${theme.colors.accent_dark};
-        display: flex;
-        flex-direction: column;
-        margin: 50px;
-        padding: 30px;
-        text-align: center;
-        width: calc(100% - 100px);
-      `}
-    >
-      <img src="/images/viral-ai.png" alt="logo for Viral AI" width="180" />
-      <p
-        css={css`
-          margin: 20px 0;
-          max-width: 900px;
-        `}
-      >
-        Genome Canada has also partnered with DNAstack to share{' '}
-        <StyledLink href="https://viral.ai/collections/virusseq/overview" rel="noopener noreferrer" target="_blank">
-          VirusSeq data on Viral AI
-        </StyledLink>{' '}, a federated network for genomic variant surveillance and infectious disease research. 
-        Viral AI was designed to deliver equitable access to software infrastructure, accelerate international data sharing, 
-        and empower scientists and public health officials with globally representative datasets they need to mitigate 
-        current and future infectious disease outbreaks.
-      </p>
-      <a
-        css={css`
-          align-items: center;
-          color: ${theme.colors.primary};
-          display: flex;
-          font-weight: bold;
-          text-decoration: none;
-        `}
-        href="https://viral.ai/collections/virusseq/overview"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Explore VirusSeq Data on Viral AI
-        <ChevronDown
-          fill={theme.colors.primary}
-          height={11}
-          width={10}
-          style={css`
-            margin-left: 3px;
-            transform: rotate(-90deg);
-          `}
-        />
-      </a>
-    </article>
-  );
+	return (
+		<article
+			css={css`
+				align-items: center;
+				background-color: ${theme.colors.grey_2};
+				border: 1px solid ${theme.colors.grey_3};
+				border-radius: 5px;
+				box-sizing: border-box;
+				color: ${theme.colors.accent_dark};
+				display: flex;
+				flex-direction: column;
+				margin: 50px;
+				padding: 30px;
+				text-align: center;
+				width: calc(100% - 100px);
+			`}
+		>
+			<img src="/images/viral-ai.png" alt="logo for Viral AI" width="180" />
+			<p
+				css={css`
+					margin: 20px 0;
+					max-width: 900px;
+				`}
+			>
+				Genome Canada has also partnered with DNAstack to share{' '}
+				<StyledLink
+					href="https://viral.ai/collections/virusseq/overview"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					VirusSeq data on Viral AI
+				</StyledLink>{' '}
+				, a federated network for genomic variant surveillance and infectious disease research.
+				Viral AI was designed to deliver equitable access to software infrastructure, accelerate
+				international data sharing, and empower scientists and public health officials with globally
+				representative datasets they need to mitigate current and future infectious disease
+				outbreaks.
+			</p>
+			<a
+				css={css`
+					align-items: center;
+					color: ${theme.colors.primary};
+					display: flex;
+					font-weight: bold;
+					text-decoration: none;
+				`}
+				href="https://viral.ai/collections/virusseq/overview"
+				rel="noopener noreferrer"
+				target="_blank"
+			>
+				Explore VirusSeq Data on Viral AI
+				<ChevronDown
+					fill={theme.colors.primary}
+					height={11}
+					width={10}
+					style={css`
+						margin-left: 3px;
+						transform: rotate(-90deg);
+					`}
+				/>
+			</a>
+		</article>
+	);
 };
 
 export default CovidCloudPane;

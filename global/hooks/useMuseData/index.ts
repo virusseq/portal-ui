@@ -22,59 +22,60 @@
 import { useState } from 'react';
 import urlJoin from 'url-join';
 
-import { getConfig } from '../../config';
-import processStream from '../../utils/processStream';
-import useAuthContext from '../useAuthContext';
+import type { SubmissionPaginatedResponse } from '#components/pages/submission/Clinical/PreviousSubmissions/types';
+import { getConfig } from '#global/config';
+import useAuthContext from '#global/hooks/useAuthContext';
+import processStream from '#global/utils/processStream';
 
 const useMuseData = (origin: string) => {
-  const { NEXT_PUBLIC_MUSE_API } = getConfig();
-  const { fetchWithAuth, token } = useAuthContext();
-  const [awaitingResponse, setAwaitingResponse] = useState(false);
+	const { NEXT_PUBLIC_MUSE_API } = getConfig();
+	const { fetchWithAuth, token } = useAuthContext();
+	const [awaitingResponse, setAwaitingResponse] = useState(false);
 
-  // For reference: https://muse.virusseq-dataportal.ca/swagger-ui/
-  const fetchMuseData = (
-    endpoint: string,
-    { body = '', method = 'GET' }: { body?: any; method?: string } = {},
-  ) => {
-    setAwaitingResponse(true);
+	// For reference: https://muse.virusseq-dataportal.ca/swagger-ui/
+	const fetchMuseData = (
+		endpoint: string,
+		{ body = '', method = 'GET' }: { body?: any; method?: string } = {},
+	) => {
+		setAwaitingResponse(true);
 
-    return fetchWithAuth(urlJoin(NEXT_PUBLIC_MUSE_API,endpoint), {
-      method,
-      body,
-    })
-      .then((response) => {
-        // TODO: create dev mode
-        // console.log('initial response', response);
-        return response?.body;
-      })
-      .then((stream) =>
-        stream?.constructor?.name === 'ReadableStream'
-          ? processStream(origin, stream.getReader())()
-              .then((parsedStream: string) => {
-                setAwaitingResponse(false);
-                // TODO: create dev mode
-                // console.log('parsedStream', parsedStream)
-                return parsedStream && JSON.parse(parsedStream);
-              })
-              .catch((error: Error | string) => {
-                console.log(`Offending stream at ${origin}`, stream);
-                console.error(error);
-                return error;
-              })
-          : (console.error(stream), new Error(`Unspecified error at ${origin}`)),
-      )
-      .catch((err: { response: any }) => {
-        console.error('error', err);
-        return Promise.reject(err);
-      });
-  };
+		return fetchWithAuth(urlJoin(NEXT_PUBLIC_MUSE_API, endpoint), {
+			method,
+			body,
+		})
+			.then((response) => {
+				// TODO: create dev mode
+				// console.log('initial response', response);
+				return response?.body;
+			})
+			.then((stream) =>
+				stream?.constructor?.name === 'ReadableStream'
+					? processStream(origin, stream.getReader())()
+							.then((parsedStream: string) => {
+								setAwaitingResponse(false);
+								// TODO: create dev mode
+								// console.log('parsedStream', parsedStream)
+								return parsedStream && JSON.parse(parsedStream);
+							})
+							.catch((error: Error | string) => {
+								console.log(`Offending stream at ${origin}`, stream);
+								console.error(error);
+								return error;
+							})
+					: (console.error(stream), new Error(`Unspecified error at ${origin}`)),
+			)
+			.catch((err: { response: any }) => {
+				console.error('error', err);
+				return Promise.reject(err);
+			});
+	};
 
-  const fetchEventStream = (
-    endpoint: string,
-    submissionId?: string,
-    onMessage?: Function,
-  ): EventSource => {
-    const eventSource = new EventSource(
+	const fetchEventStream = (
+		endpoint: string,
+		submissionId?: string,
+		onMessage?: Function,
+	): EventSource => {
+		const eventSource = new EventSource(
 			`${urlJoin(NEXT_PUBLIC_MUSE_API, endpoint)}?access_token=${token}${
 				submissionId ? `&submissionId=${submissionId}` : ''
 			}`,
@@ -83,27 +84,47 @@ const useMuseData = (origin: string) => {
 			},
 		);
 
-    eventSource.onmessage = function (event: MessageEvent) {
-      console.log('New message', event);
-      onMessage?.(JSON.parse(event.data));
-    };
+		eventSource.onmessage = function (event: MessageEvent) {
+			console.log('New message', event);
+			onMessage?.(JSON.parse(event.data));
+		};
 
-    eventSource.onopen = (event) => {
-      console.log('Connection to Muse EventSource Established: Awaiting further details');
-    };
-    eventSource.onerror = (cause) => {
-      console.error(cause);
-    };
+		eventSource.onopen = (event) => {
+			console.log('Connection to Muse EventSource Established: Awaiting further details');
+		};
+		eventSource.onerror = (cause) => {
+			console.error(cause);
+		};
 
-    return eventSource;
-  };
+		return eventSource;
+	};
 
-  return {
-    awaitingResponse,
-    fetchEventStream,
-    fetchMuseData,
-    setAwaitingResponse,
-  };
+	const fetchPreviousSubmissions = async ({
+		page = 1,
+		pageSize = 10,
+	}: {
+		page: number;
+		pageSize: number;
+	}): Promise<SubmissionPaginatedResponse> => {
+		const pageIndex = page > 0 ? page - 1 : 0;
+		const urlJoined = urlJoin('submissions', `?page=${pageIndex}&size=${pageSize}`);
+		return fetchMuseData(urlJoined).then((response) => {
+			return {
+				data: response?.data ?? [],
+				first: page === 1,
+				last: response?.data?.length < pageSize,
+				page: page,
+			};
+		});
+	};
+
+	return {
+		awaitingResponse,
+		fetchEventStream,
+		fetchMuseData,
+		fetchPreviousSubmissions,
+		setAwaitingResponse,
+	};
 };
 
 export default useMuseData;

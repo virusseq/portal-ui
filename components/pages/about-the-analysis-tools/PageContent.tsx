@@ -19,12 +19,12 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import StyledLink, { InternalLink } from '@/components/Link';
-import defaultTheme from '@/components/theme';
-import { INTERNAL_PATHS } from '@/global/utils/constants';
+import StyledLink, { InternalLink } from '#components/Link';
+import defaultTheme from '#components/theme';
+import { INTERNAL_PATHS } from '#global/utils/constants';
 
 import CoVizu from './CoVizu';
 import Duotang from './Duotang';

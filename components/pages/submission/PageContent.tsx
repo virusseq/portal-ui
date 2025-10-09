@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -19,55 +19,112 @@
  *
  */
 
-import { ReactElement } from 'react';
-import { useRouter } from 'next/router';
 import { css, useTheme } from '@emotion/react';
+import Router from 'next/router';
+import { ReactElement, useEffect } from 'react';
 
-import defaultTheme from '../../theme';
-import NewSubmissions from './NewSubmissions';
-import PreviousSubmissions from './PreviousSubmissions';
-import SubmissionDetails from './SubmissionDetails';
+import { InternalLink as Link, StyledLinkAsButton } from '#components/Link';
+import defaultTheme from '#components/theme';
+import useAuthContext from '#global/hooks/useAuthContext';
+import { INTERNAL_PATHS } from '#global/utils/constants';
+import getInternalLink from '#global/utils/getInternalLink';
 
-type QueryType = {
-  query: {
-    ID?: string[];
-  };
-};
+import PreviousClinicalSubmissions from './Clinical/PreviousSubmissions';
+import PreviousEnvironmentalSubmissions from './Environmental/PreviousSubmissions';
+
 const PageContent = (): ReactElement => {
-  const {
-    query: { ID: [submissionID] = [] },
-  }: QueryType = useRouter();
-  const theme: typeof defaultTheme = useTheme();
+	const theme: typeof defaultTheme = useTheme();
+	const { userHasClinicalAccess, userHasEnvironmentalAccess } = useAuthContext();
 
-  return (
-    <main
-      css={css`
-        display: flex;
-        padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
-        position: relative;
+	useEffect(() => {
+		if (userHasClinicalAccess !== undefined && userHasEnvironmentalAccess !== undefined) {
+			if (!userHasClinicalAccess && userHasEnvironmentalAccess) {
+				// user has only environmental submission access
+				Router.push(getInternalLink({ path: INTERNAL_PATHS.ENVIRONMENTAL_SUBMISSION }));
+			} else if (userHasClinicalAccess && !userHasEnvironmentalAccess) {
+				// user has only clinical submission access
+				Router.push(getInternalLink({ path: INTERNAL_PATHS.CLINICAL_SUBMISSION }));
+			}
+		}
+	}, [userHasClinicalAccess, userHasEnvironmentalAccess]);
 
-        > * {
-          ${!submissionID && 'flex-basis: 50%;'}
-          padding: 0 30px;
-        }
+	return (
+		<main
+			css={css`
+				padding: 40px 30px calc(${theme.dimensions.footer.height}px + 30px);
+				position: relative;
 
-        .view-title {
-          color: ${theme.colors.primary};
-          font-weight: normal;
-          margin: 0 0 40px;
-        }
-      `}
-    >
-      {submissionID ? (
-        <SubmissionDetails ID={submissionID} />
-      ) : (
-        <>
-          <PreviousSubmissions />
-          <NewSubmissions />
-        </>
-      )}
-    </main>
-  );
+				.view-title {
+					color: ${theme.colors.primary};
+					font-weight: normal;
+					margin: 0;
+				}
+			`}
+		>
+			<h1 className="view-title">Your Data Submissions</h1>
+
+			{userHasClinicalAccess && (
+				<section
+					css={css`
+						margin: 2rem 0;
+						position: relative;
+					`}
+				>
+					<h2 className="view-title">Clinical Case Submissions</h2>
+
+					<Link path={INTERNAL_PATHS.CLINICAL_SUBMISSION}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.primary_dark};
+								border-color: ${theme.colors.primary_dark};
+								line-height: 20px;
+								padding: 8px 20px;
+								position: absolute;
+								right: 0;
+								top: 0;
+								width: fit-content;
+							`}
+						>
+							+ Upload Clinical Cases
+						</StyledLinkAsButton>
+					</Link>
+
+					<PreviousClinicalSubmissions />
+				</section>
+			)}
+
+			{userHasEnvironmentalAccess && (
+				<section
+					css={css`
+						position: relative;
+					`}
+				>
+					<h2 className="view-title">Environmental Data Submissions</h2>
+
+					<Link path={INTERNAL_PATHS.ENVIRONMENTAL_SUBMISSION}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.primary_dark};
+								border-color: ${theme.colors.primary_dark};
+								line-height: 20px;
+								padding: 8px 20px;
+								position: absolute;
+								right: 0;
+								top: 0;
+								width: fit-content;
+							`}
+						>
+							+ Upload Environmental Data
+						</StyledLinkAsButton>
+					</Link>
+
+					<PreviousEnvironmentalSubmissions />
+				</section>
+			)}
+		</main>
+	);
 };
 
 export default PageContent;
