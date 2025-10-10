@@ -39,7 +39,6 @@ const PageContent = (): ReactElement => {
 		try {
 			const parsedAnnouncementsList = JSON.parse(NEXT_PUBLIC_NEWS_AND_ANNOUNCEMENTS);
 			const curatedList = parsedAnnouncementsList.slice(0, 5);
-			console.log('curatedList', curatedList);
 
 			if (NEXT_PUBLIC_ENABLE_NEWS && isAnnouncementsArray(curatedList)) {
 				setAnnouncementsList(curatedList);
