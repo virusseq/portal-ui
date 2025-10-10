@@ -13,7 +13,7 @@
 		"nuke:nextTemp": "rimraf .next",
 		"predev": "npm run nuke:nextTemp",
 		"nuke:nodeModules": "rimraf node_modules",
-		"reset": "npm run nuke:nodeModules && npm run nuke:nextTemp",
+		"reset": "npm run nuke:nextTemp && npm run nuke:nodeModules",
 		"start": "next start",
 		"test": "jest"
 	},
