@@ -20,7 +20,7 @@
  */
 
 import { css } from '@emotion/react';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useMemo } from 'react';
 
 import { getConfig } from '#global/config.ts';
 
@@ -32,25 +32,24 @@ import Impact from './Impact.tsx';
 import WhySequence from './WhySequence.tsx';
 
 const PageContent = (): ReactElement => {
-	const [announcementsList, setAnnouncementsList] = useState<AnnouncementObj[]>([]);
 	const { NEXT_PUBLIC_ENABLE_NEWS, NEXT_PUBLIC_NEWS_AND_ANNOUNCEMENTS } = getConfig();
 
-	useEffect(() => {
+	const announcementsList: AnnouncementObj[] | void = useMemo(() => {
 		try {
 			const parsedAnnouncementsList = JSON.parse(NEXT_PUBLIC_NEWS_AND_ANNOUNCEMENTS);
 			const curatedList = parsedAnnouncementsList.slice(0, 5);
 
 			if (NEXT_PUBLIC_ENABLE_NEWS && isAnnouncementsArray(curatedList)) {
-				setAnnouncementsList(curatedList);
-			} else {
-				throw new Error('Announcement types are invalid!');
+				return curatedList;
 			}
+
+			throw new Error('Announcement types are invalid!');
 		} catch (err) {
 			console.error('Failed to parse the announcements!', err);
 		}
 	}, [NEXT_PUBLIC_ENABLE_NEWS, NEXT_PUBLIC_NEWS_AND_ANNOUNCEMENTS]);
 
-	const hasNews = announcementsList.length > 0;
+	const hasNews = announcementsList?.length;
 
 	return (
 		<main
