@@ -19,16 +19,15 @@
  *
  */
 
-import React from 'react';
+import { createPage } from '#global/utils/pages';
 
 import AboutPage from './about';
-import { createPage } from '../global/utils/pages';
 
 const HomePage = createPage({
-  getInitialProps: async () => null,
-  isPublic: true,
+	getInitialProps: async () => null,
+	isPublic: true,
 })(() => {
-  return <AboutPage />;
+	return <AboutPage />;
 });
 
 export default HomePage;

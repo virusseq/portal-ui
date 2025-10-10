@@ -19,12 +19,12 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import StyledLink from '../../Link';
-import defaultTheme from '../../theme';
-import { GenomeCanadaLogo } from '../../theme/icons';
+import StyledLink from '#components/Link';
+import defaultTheme from '#components/theme';
+import { GenomeCanadaLogo } from '#components/theme/icons';
 
 const Funding = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();

@@ -19,28 +19,36 @@
  *
  */
 
-import { Study } from '../../../../global/hooks/useStudiesSvcData/types';
-import yup from '../../../../global/utils/validations';
+import { Study } from '#global/hooks/useStudiesSvcData/types';
+import { SAMPLE_TYPES } from '#global/utils/constants';
+import yup from '#global/utils/validations';
 
 const createAddSubmittersValidations = (studies: Study[]) => {
-  return yup
-    .object()
-    .shape({
-      studyId: yup
-        .string()
-        .required()
-        .trim()
-        .label('Study ID')
-        .max(15)
-        // oneOf includes empty string so required error message is propagated correctly
-        .oneOf(studies.map((s) => s.studyId).concat(''), 'Study ID does not exist.')
-        .defined(),
-      submitters: yup
-        .array()
-        .of(yup.string().trim().label('Email Address').required().email())
-        .defined(),
-    })
-    .defined();
+	return yup
+		.object()
+		.shape({
+			studyId: yup
+				.string()
+				.required()
+				.trim()
+				.label('Study ID')
+				.max(15)
+				// oneOf includes empty string so required error message is propagated correctly
+				.oneOf(studies.map((s) => s.studyId).concat(''), 'Study ID does not exist.')
+				.defined(),
+			sampleType: yup
+				.string()
+				.required()
+				.trim()
+				.label('Sample Type')
+				.oneOf(Object.values(SAMPLE_TYPES), 'Invalid Sample Type')
+				.defined(),
+			submitters: yup
+				.array()
+				.of(yup.string().trim().label('Email Address').required().email())
+				.defined(),
+		})
+		.defined();
 };
 
 export default createAddSubmittersValidations;

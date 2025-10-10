@@ -22,9 +22,9 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import { getConfig } from '../global/config';
-import useAuthContext from '../global/hooks/useAuthContext';
-import { INTERNAL_PATHS } from '../global/utils/constants';
+import { getConfig } from '#global/config';
+import useAuthContext from '#global/hooks/useAuthContext';
+import { INTERNAL_PATHS } from '#global/utils/constants';
 
 import StyledLink, { InternalLink } from './Link';
 import defaultTheme from './theme';
@@ -161,7 +161,7 @@ const Footer = (): ReactElement => {
 
 				<span>
 					&#169;
-					{` 2021 - ${new Date().toISOString().slice(0, 4)} Canadian VirusSeq Data Portal.`}
+					{` 2021 - ${new Date().toISOString().slice(0, 4)} Canadian iMicroSeq Data Portal.`}
 				</span>
 			</section>
 
@@ -213,7 +213,7 @@ const Footer = (): ReactElement => {
 						margin-top: -0.1rem;
 						text-decoration: none;
 					`}
-					href="https://github.com/virusseq"
+					href="https://github.com/imicroseq"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
@@ -224,7 +224,7 @@ const Footer = (): ReactElement => {
 							width: 4rem;
 						`}
 					>
-						GitHub
+						iMicroSeq Github
 					</span>
 				</a>
 			</section>

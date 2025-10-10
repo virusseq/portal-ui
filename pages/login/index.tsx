@@ -19,34 +19,33 @@
  *
  */
 
-import React from 'react';
 import Router from 'next/router';
 
-import { getConfig } from '../../global/config';
-import Login from '../../components/pages/login';
-import { ROOT_PATH } from '../../global/utils/constants';
-import getInternalLink from '../../global/utils/getInternalLink';
-import { createPage } from '../../global/utils/pages';
-import useAuthContext from '../../global/hooks/useAuthContext';
+import Login from '#components/pages/login';
+import { getConfig } from '#global/config';
+import useAuthContext from '#global/hooks/useAuthContext';
+import { ROOT_PATH } from '#global/utils/constants';
+import getInternalLink from '#global/utils/getInternalLink';
+import { createPage } from '#global/utils/pages';
 
 const LoginPage = createPage({
-  getInitialProps: async () => {
-    // console.log('nada');
-  },
-  isPublic: true,
+	getInitialProps: async () => {
+		// console.log('nada');
+	},
+	isPublic: true,
 })(() => {
-  const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();
-  const { token } = useAuthContext();
+	const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();
+	const { token } = useAuthContext();
 
-  return token || // logged in, so it shouldn't give you a login page
-    !(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) ? (
-    (Router.push({
-      pathname: getInternalLink({ path: ROOT_PATH }),
-    }),
-    (<></>)) // shows nothing, while passing TypeScript validations
-  ) : (
-    <Login />
-  );
+	return token || // logged in, so it shouldn't give you a login page
+		!(NEXT_PUBLIC_ENABLE_LOGIN || NEXT_PUBLIC_ENABLE_REGISTRATION) ? (
+		(Router.push({
+			pathname: getInternalLink({ path: ROOT_PATH }),
+		}),
+		(<></>)) // shows nothing, while passing TypeScript validations
+	) : (
+		<Login />
+	);
 });
 
 export default LoginPage;

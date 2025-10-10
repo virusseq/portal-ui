@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2021 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -21,7 +21,7 @@
 
 import urlJoin from 'url-join';
 
-import { getConfig } from '../config';
+import { getConfig } from '#global/config';
 
 const { NEXT_PUBLIC_EGO_API_URL } = getConfig();
 
@@ -30,19 +30,41 @@ export const EGO_API_KEY_ENDPOINT = urlJoin(NEXT_PUBLIC_EGO_API_URL, '/o/api_key
 
 export const ROOT_PATH = '/';
 
-export enum INTERNAL_PATHS {
-	ABOUT_ANALYSIS_TOOLS = '/about-the-analysis-tools',
-	ACKNOWLEDGEMENTS = '/acknowledgements',
-	EXPLORER = '/explorer',
-	LOGIN = '/login',
-	POLICIES = '/policies',
-	RELEASES = '/releases',
-	SUBMISSION = '/submission',
-	STUDIES = '/studies',
-	TEAM = '/team',
-	USER = '/user',
-	VISUALIZATION = '/visualization',
-}
+const SIMPLE_INTERNAL_PATHS = {
+	ABOUT_ANALYSIS_TOOLS: '/about-the-analysis-tools',
+	ACKNOWLEDGEMENTS: '/acknowledgements',
+	EXPLORER: '/explorer',
+	LOGIN: '/login',
+	POLICIES: '/policies',
+	RELEASES: '/releases',
+	SUBMISSION: '/submission',
+	STUDIES: '/studies',
+	TEAM: '/team',
+	USER: '/user',
+	VISUALIZATION: '/visualization',
+} as const;
+
+export const SAMPLE_TYPES = {
+	CLINICAL: 'clinical',
+	ENVIRONMENTAL: 'environmental',
+} as const;
+
+const COMPOUND_INTERNAL_PATHS = {
+	CLINICAL_EXPLORATION: urlJoin(SIMPLE_INTERNAL_PATHS.EXPLORER, SAMPLE_TYPES.CLINICAL),
+	CLINICAL_SUBMISSION: urlJoin(SIMPLE_INTERNAL_PATHS.SUBMISSION, SAMPLE_TYPES.CLINICAL),
+	ENVIRONMENTAL_EXPLORATION: urlJoin(SIMPLE_INTERNAL_PATHS.EXPLORER, SAMPLE_TYPES.ENVIRONMENTAL),
+	ENVIRONMENTAL_SUBMISSION: urlJoin(SIMPLE_INTERNAL_PATHS.SUBMISSION, SAMPLE_TYPES.ENVIRONMENTAL),
+} as const;
+
+// Record<partial<(typeof INTERNAL_PATH_NAMES)[number]>, string>;
+
+export const INTERNAL_PATHS = {
+	...SIMPLE_INTERNAL_PATHS,
+	...COMPOUND_INTERNAL_PATHS,
+} as const;
+
+export type INTERNAL_PATH_NAMES = keyof typeof INTERNAL_PATHS;
+export type INTERNAL_PATH_VALUES = (typeof INTERNAL_PATHS)[INTERNAL_PATH_NAMES];
 
 // external docs links
 const OVERTURE_DMS_DOCS_URL = 'https://overture.bio/documentation/dms/';

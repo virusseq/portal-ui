@@ -19,12 +19,12 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import StyledLink from '../../Link';
-import OvertureLogoWithText from '../../theme/icons/overture_logo_with_text';
-import OicrLogo from '../../theme/icons/oicr';
+import StyledLink from '#components/Link';
+import OicrLogo from '#components/theme/icons/oicr';
+import OvertureLogoWithText from '#components/theme/icons/overture_logo_with_text';
 
 const Portal = (): ReactElement => (
 	<section>

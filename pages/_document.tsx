@@ -1,8 +1,8 @@
-import { Html, Head, Main, NextScript } from 'next/document';
-import { Global, css } from '@emotion/react';
+import { css, Global } from '@emotion/react';
+import { Head, Html, Main, NextScript } from 'next/document';
 import urlJoin from 'url-join';
 
-import { getConfig } from '../global/config';
+import { getConfig } from '#global/config';
 
 const Document = () => {
 	const { NEXT_PUBLIC_BASE_PATH } = getConfig();

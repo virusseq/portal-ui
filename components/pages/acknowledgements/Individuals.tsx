@@ -19,10 +19,10 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import defaultTheme from '../../theme';
+import defaultTheme from '#components/theme';
 
 const Individuals = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();

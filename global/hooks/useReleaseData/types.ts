@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2025 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -19,30 +19,36 @@
  *
  */
 
-export type FilesByVariantType = {
-  abbreviation: string;
-  count: number;
-  name: string;
-};
-
-type AggBuckets = {
-  doc_count?: number;
-  key?: number;
+export type ProvinceStats = {
+	abbreviation: string;
+	count: number;
+	name: string;
 };
 
 export type Count = {
-  value: number;
-  type: 'APPROXIMATE' | 'EXACT';
+	value: number;
+	type: 'APPROXIMATE' | 'EXACT';
 };
 
-export type ReleaseDataProps = {
-  fileCount?: number;
-  filesByVariant?: Array<FilesByVariantType>;
-  fileSize?: {
-    unit: string;
-    value: string;
-  };
-  hostGenders?: Array<AggBuckets>;
-  studyCount?: number;
-  genomesCount?: Count;
+export type AggBuckets = {
+	doc_count?: number;
+	key?: number;
+};
+
+export type ReleaseEnvironmentalDataProps = {
+	filesByVariant?: Array<ProvinceStats>;
+	organizationCount?: number;
+	genomesCount?: Count;
+};
+
+export type ReleaseClinicalDataProps = {
+	fileCount?: number;
+	filesByVariant?: Array<ProvinceStats>;
+	fileSize?: {
+		unit: string;
+		value: string;
+	};
+	hostGenders?: Array<AggBuckets>;
+	studyCount?: number;
+	genomesCount?: Count;
 };

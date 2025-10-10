@@ -23,15 +23,11 @@ import { css, useTheme } from '@emotion/react';
 import { format } from 'date-fns';
 import { ReactElement } from 'react';
 
-import StyledLink from '../../Link';
-import defaultTheme from '../../theme';
+import StyledLink from '#components/Link';
+import defaultTheme from '#components/theme';
 
 import Individuals from './Individuals';
 import Policy from './Policy';
-
-/* trying without the contrib section
-import Contributors from './Contributors';
-*/
 
 const PageContent = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();

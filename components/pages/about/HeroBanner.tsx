@@ -19,15 +19,16 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import { INTERNAL_PATHS } from '../../../global/utils/constants';
-import { StyledLinkAsButton, InternalLink as Link } from '../../Link';
-import defaultTheme from '../../theme';
-import { MapleLeaf } from '../../theme/icons';
+import { InternalLink as Link, StyledLinkAsButton } from '#components/Link';
+import defaultTheme from '#components/theme';
+import { MapleLeaf } from '#components/theme/icons';
+import { INTERNAL_PATHS } from '#global/utils/constants';
 
-import ReleaseData from './ReleaseData';
+import ReleaseDataClinical from './clinical/ReleaseData';
+import ReleaseDataEnvironmental from './environmental/ReleaseData';
 
 /** Layout notes:
   - Article is the full-width background for the hero banner
@@ -44,14 +45,14 @@ const HeroBanner = (): ReactElement => {
 				box-sizing: border-box;
 				color: ${theme.colors.white};
 				display: flex;
-				padding: 45px 50px;
+				padding: 5px 50px;
 				width: 100%;
 
 				@media (min-width: 1270px) {
 					background-image: url('/images/about-hero.png');
 					background-repeat: no-repeat;
 					background-size: 589px;
-					height: 400px;
+					height: 500px;
 					padding-left: 630px;
 				}
 
@@ -112,25 +113,24 @@ const HeroBanner = (): ReactElement => {
 					`}
 				>
 					The iMicroSeq Data Portal is an inclusive Canadian database of microbial (including viral)
-					sequences. This Data Portal integrates genomic data from clinical and environmental
-					sources, including wastewater, to monitor and understand the evolution and spread of
-					microbes and viruses affecting public health, agriculture, aquaculture, and the
-					environment. The iMicroSeq Data Portal is an open-access data platform for Canadian
-					genomic surveillance data and associated contextual metadata that harmonizes, validates,
-					and automates submissions. The Portal will also submit data to selected international
-					databases, when desired by the data provider. This resource enables more integrated
-					analyses, including with cost effective wastewater data, supporting more wholistic, robust
-					and rapid responses to microbial threats.
+					sequences. This Data Portal integrates genomic data from clinical and environmental sources,
+					including wastewater, to monitor and understand the evolution and spread of microbes and viruses
+					affecting public health, agriculture, aquaculture, and the environment. The iMicroSeq Data Portal is
+					an open-access data platform for Canadian genomic surveillance data and associated contextual
+					metadata that harmonizes, validates, and automates submissions. The Portal will also submit data to
+					selected international databases, when desired by the data provider. This resource enables more
+					integrated analyses, including with cost effective wastewater data, supporting more wholistic,
+					robust and rapid responses to microbial threats.
 				</p>
 
-				<ReleaseData />
+				<ReleaseDataClinical />
 
 				<div
 					css={css`
 						display: flex;
 					`}
 				>
-					<Link path={INTERNAL_PATHS.EXPLORER}>
+					<Link path={INTERNAL_PATHS.CLINICAL_EXPLORATION}>
 						<StyledLinkAsButton
 							css={css`
 								${theme.typography.button};
@@ -169,6 +169,34 @@ const HeroBanner = (): ReactElement => {
 							`}
 						>
 							Download the Data
+						</StyledLinkAsButton>
+					</Link>
+				</div>
+				<ReleaseDataEnvironmental />
+
+				<div
+					css={css`
+						display: flex;
+					`}
+				>
+					<Link path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.accent3};
+								border-color: ${theme.colors.accent3};
+								line-height: 20px;
+								margin-right: 15px;
+								padding: 8px 20px;
+								width: fit-content;
+
+								&:hover {
+									color: ${theme.colors.white};
+									background-color: ${theme.colors.accent3_dark};
+								}
+							`}
+						>
+							Explore the Data
 						</StyledLinkAsButton>
 					</Link>
 				</div>

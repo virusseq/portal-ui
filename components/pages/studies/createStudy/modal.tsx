@@ -20,126 +20,146 @@
  */
 
 import { css } from '@emotion/react';
-import React, { ChangeEventHandler, InputHTMLAttributes } from 'react';
-import { Modal } from '../../../Modal';
-import { FormInputTextArea, FormInputText, useFormValidator } from '../../../Forms';
+import { ChangeEventHandler, InputHTMLAttributes } from 'react';
+
+import {
+	FormInputSearchSelect,
+	FormInputText,
+	FormInputTextArea,
+	useFormValidator,
+} from '#components/Forms';
+import { Modal } from '#components/Modal';
+import { CreateStudyReq } from '#global/hooks/useStudiesSvcData/types';
+import { SAMPLE_TYPES } from '#global/utils/constants';
+
 import CreateStudyValidations from './validations';
-import { CreateStudyReq } from '../../../../global/hooks/useStudiesSvcData/types';
 
 const EMPTY_FORM: CreateStudyReq = Object.freeze({
-  studyId: '',
-  organization: '',
-  name: '',
-  description: '',
+	studyId: '',
+	organization: '',
+	name: '',
+	description: '',
+	sampleType: '',
 });
 
 type CreateStudyModalProps = {
-  onClose: () => void;
-  submitData: (currentFormData: CreateStudyReq) => Promise<void>;
+	onClose: () => void;
+	submitData: (currentFormData: CreateStudyReq) => Promise<void>;
 };
 
 const CreateStudyModal = ({ onClose, submitData }: CreateStudyModalProps) => {
-  const {
-    isFormInvalid,
-    formData,
-    formErrors,
-    setFormData,
-    validateForm,
-    validateField,
-    clearFieldError,
-  } = useFormValidator<CreateStudyReq>(EMPTY_FORM, CreateStudyValidations);
+	const {
+		isFormInvalid,
+		formData,
+		formErrors,
+		setFormData,
+		validateForm,
+		validateField,
+		clearFieldError,
+	} = useFormValidator<CreateStudyReq>(EMPTY_FORM, CreateStudyValidations);
 
-  const handleSubmit = () => {
-    validateForm()
-      .then((valid) => {
-        if (!valid) {
-          throw Error('Form data is not valid, refuse to submit!');
-        }
-      })
-      .then(async () => {
-        await submitData(formData);
-        setFormData({ ...EMPTY_FORM });
-      })
-      .catch((err) => console.error(err));
-  };
+	const handleSubmit = () => {
+		validateForm()
+			.then((valid) => {
+				if (!valid) {
+					throw Error('Form data is not valid, refuse to submit!');
+				}
+			})
+			.then(async () => {
+				await submitData(formData);
+				setFormData({ ...EMPTY_FORM });
+			})
+			.catch((err) => console.error(err));
+	};
 
-  const buildOnChangeFunc =
-    (key: keyof CreateStudyReq): ChangeEventHandler =>
-    (event) => {
-      event.preventDefault();
-      const target = event.target as InputHTMLAttributes<typeof event>;
-      setFormData({ ...formData, [key]: target.value || '' });
-      clearFieldError(key);
-    };
+	const buildOnChangeFunc =
+		(key: keyof CreateStudyReq): ChangeEventHandler =>
+		(event) => {
+			event.preventDefault();
+			const target = event.target as InputHTMLAttributes<typeof event>;
+			setFormData({ ...formData, [key]: target.value || '' });
+			clearFieldError(key);
+		};
 
-  const buildOnBlurFunc = (key: keyof CreateStudyReq) => () => validateField(key);
+	const buildOnBlurFunc = (key: keyof CreateStudyReq) => () => validateField(key);
 
-  const notFilledRequiredFields =
-    formData.studyId === '' || formData.name === '' || formData.organization === '';
+	const notFilledRequiredFields =
+		formData.studyId === '' || formData.name === '' || formData.organization === '';
 
-  return (
-    <Modal
-      key="CreateForm"
-      title={'Create a Study'}
-      showActionButton={true}
-      disableActionButton={isFormInvalid || notFilledRequiredFields}
-      actionText={'Create Study'}
-      closeText={'Cancel'}
-      onCloseClick={onClose}
-      onActionClick={handleSubmit}
-    >
-      <div
-        key="CreateForm"
-        css={css`
-          display: flex;
-          flex-direction: column;
-          row-gap: 5px;
-          width: 630px;
-          justify-content: space-evenly;
-          margin-top: 10px;
-          padding-right: 10px;
-        `}
-      >
-        <FormInputText
-          required={true}
-          label="Study ID"
-          onChange={buildOnChangeFunc('studyId')}
-          onBlur={buildOnBlurFunc(`studyId`)}
-          errorMessage={formErrors[`studyId`]}
-          value={formData[`studyId`]}
-          size={50}
-        />
-        <FormInputText
-          required={true}
-          label="Organization"
-          onChange={buildOnChangeFunc('organization')}
-          onBlur={buildOnBlurFunc(`organization`)}
-          errorMessage={formErrors[`organization`]}
-          value={formData[`organization`]}
-          size={50}
-        />
-        <FormInputText
-          required={true}
-          label="Study Name"
-          onChange={buildOnChangeFunc('name')}
-          onBlur={buildOnBlurFunc(`name`)}
-          errorMessage={formErrors[`name`]}
-          value={formData[`name`]}
-          size={50}
-        />
-        <FormInputTextArea
-          required={false}
-          label="Description"
-          onChange={buildOnChangeFunc('description')}
-          onBlur={buildOnBlurFunc(`description`)}
-          errorMessage={formErrors[`description`]}
-          value={formData[`description`]}
-          cols={52}
-          rows={8}
-        />
-      </div>
-    </Modal>
-  );
+	return (
+		<Modal
+			key="CreateForm"
+			title={'Create a Study'}
+			showActionButton={true}
+			disableActionButton={isFormInvalid || notFilledRequiredFields}
+			actionText={'Create Study'}
+			closeText={'Cancel'}
+			onCloseClick={onClose}
+			onActionClick={handleSubmit}
+		>
+			<div
+				key="CreateForm"
+				css={css`
+					display: flex;
+					flex-direction: column;
+					row-gap: 5px;
+					width: 630px;
+					justify-content: space-evenly;
+					margin-top: 10px;
+					padding-right: 10px;
+				`}
+			>
+				<FormInputSearchSelect
+					options={Object.values(SAMPLE_TYPES)}
+					required={true}
+					label="Sample Type"
+					id="sampleType"
+					onChange={buildOnChangeFunc('sampleType')}
+					onBlur={buildOnBlurFunc(`sampleType`)}
+					errorMessage={formErrors[`sampleType`]}
+					value={formData[`sampleType`]}
+					size={50}
+				/>
+				<FormInputText
+					required={true}
+					label="Study ID"
+					onChange={buildOnChangeFunc('studyId')}
+					onBlur={buildOnBlurFunc(`studyId`)}
+					errorMessage={formErrors[`studyId`]}
+					value={formData[`studyId`]}
+					size={50}
+				/>
+				<FormInputText
+					required={true}
+					label="Organization"
+					onChange={buildOnChangeFunc('organization')}
+					onBlur={buildOnBlurFunc(`organization`)}
+					errorMessage={formErrors[`organization`]}
+					value={formData[`organization`]}
+					size={50}
+				/>
+				<FormInputText
+					required={true}
+					label="Study Name"
+					onChange={buildOnChangeFunc('name')}
+					onBlur={buildOnBlurFunc(`name`)}
+					errorMessage={formErrors[`name`]}
+					value={formData[`name`]}
+					size={50}
+				/>
+				<FormInputTextArea
+					required={false}
+					label="Description"
+					onChange={buildOnChangeFunc('description')}
+					onBlur={buildOnBlurFunc(`description`)}
+					errorMessage={formErrors[`description`]}
+					value={formData[`description`]}
+					cols={52}
+					rows={8}
+				/>
+			</div>
+		</Modal>
+	);
 };
 
 export default CreateStudyModal;

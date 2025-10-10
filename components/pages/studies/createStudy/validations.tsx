@@ -19,16 +19,23 @@
  *
  */
 
-import yup from '../../../../global/utils/validations';
+import { SAMPLE_TYPES } from '#global/utils/constants';
+import yup from '#global/utils/validations';
 
 const CreateStudyValidations = yup
-  .object()
-  .shape({
-    studyId: yup.string().trim().label('Study ID').required().max(15),
-    organization: yup.string().trim().label('Organization').required(),
-    name: yup.string().trim().label('Study Name').required(),
-    description: yup.string().trim().label('Description'),
-  })
-  .defined();
+	.object()
+	.shape({
+		studyId: yup.string().trim().label('Study ID').required().max(15),
+		sampleType: yup
+			.string()
+			.trim()
+			.label('Sample Type')
+			.oneOf(Object.values(SAMPLE_TYPES), 'Invalid Sample Type')
+			.required(),
+		organization: yup.string().trim().label('Organization').required(),
+		name: yup.string().trim().label('Study Name').required(),
+		description: yup.string().trim().label('Description'),
+	})
+	.defined();
 
 export default CreateStudyValidations;

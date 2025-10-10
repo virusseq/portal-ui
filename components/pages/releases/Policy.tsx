@@ -20,27 +20,28 @@
  */
 
 import { css } from '@emotion/react';
-import { INTERNAL_PATHS } from '../../../global/utils/constants';
-import StyledLink from '../../Link';
-import defaultTheme from '../../theme/index';
+
+import { INTERNAL_PATHS } from '#/global/utils/constants';
+import StyledLink from '#components/Link';
+import defaultTheme from '#components/theme/index';
 
 const Policy = () => {
-  return (
-    <div
-      css={css`
-        ${defaultTheme.typography.baseFont}
-      `}
-    >
-      <b>VirusSeq Data Portal Publication Policy</b>
-      <p>
-        The CanCOGen VirusSeq project requests that authors who use data from the portal{' '}
-        <StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the
-        contributions of Canadian researchers in the acknowledgements section of their work. Authors
-        are encouraged to recognize the contributions of the appropriate specimens and research
-        groups based on the datasets used in their research.
-      </p>
-    </div>
-  );
+	return (
+		<div
+			css={css`
+				${defaultTheme.typography.baseFont}
+			`}
+		>
+			<b>VirusSeq Data Portal Publication Policy</b>
+			<p>
+				The CanCOGen VirusSeq project requests that authors who use data from the portal{' '}
+				<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the
+				contributions of Canadian researchers in the acknowledgements section of their work. Authors
+				are encouraged to recognize the contributions of the appropriate specimens and research
+				groups based on the datasets used in their research.
+			</p>
+		</div>
+	);
 };
 
 export default Policy;
