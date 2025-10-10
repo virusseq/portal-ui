@@ -22,6 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import cx from 'classnames';
 
+import StyledLink from '#components/Link.tsx';
 import type defaultTheme from '#components/theme/index.ts';
 
 import Announcement from './Announcement.tsx';
@@ -99,7 +100,15 @@ const AnnouncementsPanel = ({ announcements = [], className, css: customCSS }: A
 					padding-bottom: 0;
 				`}
 			>
-				If you have feature suggestions, feedback, or want to report a bug, please <a href="#">contact us</a>
+				If you have feature suggestions, feedback, or want to report a bug, please{' '}
+				<StyledLink
+					href="mailto:info@virusseq-dataportal.ca"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					contact us
+				</StyledLink>
+				.
 			</footer>
 		</aside>
 	);
