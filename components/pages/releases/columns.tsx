@@ -23,9 +23,9 @@ import { css } from '@emotion/react';
 import { format } from 'date-fns';
 import urlJoin from 'url-join';
 
-import StyledLink from '@/components/Link';
-import { Download } from '@/components/theme/icons';
-import { getConfig } from '@/global/config';
+import StyledLink from '#components/Link';
+import { Download } from '#components/theme/icons';
+import { getConfig } from '#global/config';
 
 import { Archive } from './types';
 

@@ -21,7 +21,7 @@
 
 import { ReactElement } from 'react';
 
-import StyledLink from '../../Link';
+import StyledLink from '#components/Link';
 
 const Usage = (): ReactElement => (
 	<section>

@@ -1,0 +1,60 @@
+/*
+ *
+ * Copyright (c) 2025 The Ontario Institute for Cancer Research. All rights reserved
+ *
+ *  This program and the accompanying materials are made available under the terms of
+ *  the GNU Affero General Public License v3.0. You should have received a copy of the
+ *  GNU Affero General Public License along with this program.
+ *  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ *  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ *  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ *  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ *  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+import { css } from '@emotion/react';
+
+import Button from '#components/Button';
+import Error from '#components/theme/icons/error';
+
+/**
+ * Section to display the metadata file download instructions.
+ */
+export const MetadataFileSection = ({
+	fileMetadata,
+	handleDownloadMetadata,
+}: {
+	fileMetadata: Blob | null;
+	handleDownloadMetadata: (blob: Blob) => void;
+}) => (
+	<>
+		{fileMetadata ? (
+			<>
+				<p>
+					The metadata file contains information about the selected samples. Click the button below
+					to download it.
+				</p>
+				<Button onClick={() => handleDownloadMetadata(fileMetadata)}>Download Metadata</Button>
+			</>
+		) : (
+			<div
+				css={css`
+					display: flex;
+					align-items: center;
+					column-gap: 10px;
+					margin-left: 10px;
+					margin-top: 10px;
+				`}
+			>
+				<Error /> <span>The metadata file could not be generated at this time</span>
+			</div>
+		)}
+	</>
+);

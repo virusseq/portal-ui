@@ -23,8 +23,12 @@ import { Row } from 'react-table';
 
 export type SortingFunctionType = (rowA: Row, rowB: Row, columnId: string) => number;
 
-export const uuidSort: SortingFunctionType = (rowA, rowB, columnId) =>
-  rowA.values[columnId].replace('-', '') > rowB.values[columnId].replace('-', '') ? 1 : -1;
+export const uuidSort: SortingFunctionType = (rowA, rowB, columnId) => {
+	const a = String(rowA.values[columnId] ?? '').replace(/-/g, '');
+	const b = String(rowB.values[columnId] ?? '').replace(/-/g, '');
+	if (a === b) return 0;
+	return a > b ? 1 : -1;
+};
 
 export const numberSort: SortingFunctionType = (rowA, rowB, columnId) =>
-  rowB.values[columnId] - rowA.values[columnId];
+	rowB.values[columnId] - rowA.values[columnId];

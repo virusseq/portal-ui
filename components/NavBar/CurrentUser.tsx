@@ -19,11 +19,11 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import useAuthContext from '@/global/hooks/useAuthContext';
-import { UserWithId } from '@/global/types';
+import useAuthContext from '#global/hooks/useAuthContext';
+import { UserWithId } from '#global/types';
 
 const getDisplayName = (user?: UserWithId) => {
 	const greeting = 'Hello';

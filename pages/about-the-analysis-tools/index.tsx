@@ -19,8 +19,8 @@
  *
  */
 
-import AboutTheAnalysisTools from '../../components/pages/about-the-analysis-tools';
-import { createPage } from '../../global/utils/pages';
+import AboutTheAnalysisTools from '#components/pages/about-the-analysis-tools';
+import { createPage } from '#global/utils/pages';
 
 const AboutTheAnalysisToolsPage = createPage({
 	getInitialProps: async ({ query, egoJwt }) => {

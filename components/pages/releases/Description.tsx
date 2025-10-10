@@ -19,8 +19,8 @@
  *
  */
 
-import { INTERNAL_PATHS } from '../../../global/utils/constants';
-import StyledLink from '../../Link';
+import StyledLink from '#components/Link';
+import { INTERNAL_PATHS } from '#global/utils/constants';
 
 const Description = () => {
 	return (

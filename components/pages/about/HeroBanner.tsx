@@ -19,14 +19,16 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import { INTERNAL_PATHS } from '../../../global/utils/constants';
-import defaultTheme from '../../theme';
-import { StyledLinkAsButton, InternalLink as Link } from '../../Link';
-import { MapleLeaf } from '../../theme/icons';
-import ReleaseData from './ReleaseData';
+import { InternalLink as Link, StyledLinkAsButton } from '#components/Link';
+import defaultTheme from '#components/theme';
+import { MapleLeaf } from '#components/theme/icons';
+import { INTERNAL_PATHS } from '#global/utils/constants';
+
+import ReleaseDataClinical from './clinical/ReleaseData';
+import ReleaseDataEnvironmental from './environmental/ReleaseData';
 
 /** Layout notes:
   - Article is the full-width background for the hero banner
@@ -34,141 +36,173 @@ import ReleaseData from './ReleaseData';
  ** */
 
 const HeroBanner = (): ReactElement => {
-  const theme: typeof defaultTheme = useTheme();
+	const theme: typeof defaultTheme = useTheme();
 
-  return (
-    <article
-      css={css`
-        background-color: ${theme.colors.primary_dark};
-        box-sizing: border-box;
-        color: ${theme.colors.white};
-        display: flex;
-        padding: 45px 50px;
-        width: 100%;
+	return (
+		<article
+			css={css`
+				background-color: ${theme.colors.primary_dark};
+				box-sizing: border-box;
+				color: ${theme.colors.white};
+				display: flex;
+				padding: 5px 50px;
+				width: 100%;
 
-        @media (min-width: 1270px) {
-          background-image: url('/images/about-hero.png');
-          background-repeat: no-repeat;
-          background-size: 589px;
-          height: 400px;
-          padding-left: 630px;
-        }
+				@media (min-width: 1270px) {
+					background-image: url('/images/about-hero.png');
+					background-repeat: no-repeat;
+					background-size: 589px;
+					height: 500px;
+					padding-left: 630px;
+				}
 
-        @media (min-width: 2165px) {
-          padding-left: 50px;
-          justify-content: center;
-        }
+				@media (min-width: 2165px) {
+					padding-left: 50px;
+					justify-content: center;
+				}
 
-        @media (min-width: 2170px) {
-        }
+				@media (min-width: 2170px) {
+				}
 
-        @media (min-width: 2880px) {
-          padding-left: 50px;
-        }
-      `}
-    >
-      <section
-        css={css`
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          max-width: 1550px;
-          width: 100%;
+				@media (min-width: 2880px) {
+					padding-left: 50px;
+				}
+			`}
+		>
+			<section
+				css={css`
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+					max-width: 1550px;
+					width: 100%;
 
-          > * {
-            margin: 0;
+					> * {
+						margin: 0;
 
-            &:not(h1) {
-              margin-top: 20px;
-            }
-          }
-        `}
-      >
-        <h1
-          css={css`
-            font-size: 30px;
-            font-weight: normal;
-            position: relative;
+						&:not(h1) {
+							margin-top: 20px;
+						}
+					}
+				`}
+			>
+				<h1
+					css={css`
+						font-size: 30px;
+						font-weight: normal;
+						position: relative;
 
-            @media (min-width: 1345px) {
-              font-size: 34px;
-            }
-          `}
-        >
-          <MapleLeaf
-            style={css`
-              left: -42px;
-              position: absolute;
-            `}
-          />
-          Canadian VirusSeq Data Portal
-        </h1>
+						@media (min-width: 1345px) {
+							font-size: 34px;
+						}
+					`}
+				>
+					<MapleLeaf
+						style={css`
+							left: -42px;
+							position: absolute;
+						`}
+					/>
+					Canadian iMicroSeq Data Portal
+				</h1>
 
-        <p
-          css={css`
-            ${theme.typography.subheading}
-            font-weight: normal;
-          `}
-        >
-          The goal of the CanCOGeN VirusSeq project was to sequence up to 150,000 viral samples from
-          Canadians testing positive for COVID-19. The VirusSeq Data Portal is an open-source and
-          open-access data portal for all Canadian SARS-CoV-2 sequences and associated non-personal
-          contextual data. It harmonizes, validates and automates submission to international
-          databases.
-        </p>
+				<p
+					css={css`
+						${theme.typography.subheading}
+						font-weight: normal;
+					`}
+				>
+					The iMicroSeq Data Portal is an inclusive Canadian database of microbial (including viral)
+					sequences. This Data Portal integrates genomic data from clinical and environmental
+					sources, including wastewater, to monitor and understand the evolution and spread of
+					microbes and viruses affecting public health, agriculture and the environment. The
+					iMicroSeq Data Portal is an open-access data platform for Canadian genomic surveillance
+					data and associated contextual metadata. It harmonizes, validates, and automates
+					submissions. The Portal will also submit data to selected international databases, when
+					desired by the data provider. These features enable more integrated analyses across
+					Canada.
+				</p>
 
-        <ReleaseData />
+				<ReleaseDataClinical />
 
-        <div
-          css={css`
-            display: flex;
-          `}
-        >
-          <Link path={INTERNAL_PATHS.EXPLORER}>
-            <StyledLinkAsButton
-              css={css`
-                ${theme.typography.button};
-                background-color: ${theme.colors.accent3};
-                border-color: ${theme.colors.accent3};
-                line-height: 20px;
-                margin-right: 15px;
-                padding: 8px 20px;
-                width: fit-content;
+				<div
+					css={css`
+						display: flex;
+					`}
+				>
+					<Link path={INTERNAL_PATHS.CLINICAL_EXPLORATION}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.accent3};
+								border-color: ${theme.colors.accent3};
+								line-height: 20px;
+								margin-right: 15px;
+								padding: 8px 20px;
+								width: fit-content;
 
-                &:hover {
-                  color: ${theme.colors.white};
-                  background-color: ${theme.colors.accent3_dark};
-                }
-              `}
-            >
-              Explore the Data
-            </StyledLinkAsButton>
-          </Link>
+								&:hover {
+									color: ${theme.colors.white};
+									background-color: ${theme.colors.accent3_dark};
+								}
+							`}
+						>
+							Explore the Data
+						</StyledLinkAsButton>
+					</Link>
 
-          <Link path={INTERNAL_PATHS.RELEASES}>
-            <StyledLinkAsButton
-              css={css`
-                ${theme.typography.button};
-                background-color: ${theme.colors.accent3};
-                border-color: ${theme.colors.accent3};
-                line-height: 20px;
-                margin-right: 15px;
-                padding: 8px 20px;
-                width: fit-content;
+					<Link path={INTERNAL_PATHS.RELEASES}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.accent3};
+								border-color: ${theme.colors.accent3};
+								line-height: 20px;
+								margin-right: 15px;
+								padding: 8px 20px;
+								width: fit-content;
 
-                &:hover {
-                  color: ${theme.colors.white};
-                  background-color: ${theme.colors.accent3_dark};
-                }
-              `}
-            >
-              Download the Data
-            </StyledLinkAsButton>
-          </Link>
-        </div>
-      </section>
-    </article>
-  );
+								&:hover {
+									color: ${theme.colors.white};
+									background-color: ${theme.colors.accent3_dark};
+								}
+							`}
+						>
+							Download the Data
+						</StyledLinkAsButton>
+					</Link>
+				</div>
+				<ReleaseDataEnvironmental />
+
+				<div
+					css={css`
+						display: flex;
+					`}
+				>
+					<Link path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.accent3};
+								border-color: ${theme.colors.accent3};
+								line-height: 20px;
+								margin-right: 15px;
+								padding: 8px 20px;
+								width: fit-content;
+
+								&:hover {
+									color: ${theme.colors.white};
+									background-color: ${theme.colors.accent3_dark};
+								}
+							`}
+						>
+							Explore the Data
+						</StyledLinkAsButton>
+					</Link>
+				</div>
+			</section>
+		</article>
+	);
 };
 
 export default HeroBanner;

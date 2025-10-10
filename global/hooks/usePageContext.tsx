@@ -19,21 +19,22 @@
  *
  */
 
-import React from 'react';
-import { ClientSideGetInitialPropsContext } from '../utils/pages/types';
+import { createContext, useContext } from 'react';
 
-export const PageContext = React.createContext<ClientSideGetInitialPropsContext>({
-  pathname: '',
-  query: {},
-  asPath: '',
+import { ClientSideGetInitialPropsContext } from '#global/utils/pages/types';
+
+export const PageContext = createContext<ClientSideGetInitialPropsContext>({
+	pathname: '',
+	query: {},
+	asPath: '',
 });
 
 export default function usePageContext(): ClientSideGetInitialPropsContext {
-  const pageContext = React.useContext(PageContext);
-  return pageContext;
+	const pageContext = useContext(PageContext);
+	return pageContext;
 }
 
 export const usePageQuery = <T extends { [k: string]: string }>(): T => {
-  const { query } = usePageContext();
-  return query as T;
+	const { query } = usePageContext();
+	return query as T;
 };

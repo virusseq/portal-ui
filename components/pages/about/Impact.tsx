@@ -19,30 +19,20 @@
  *
  */
 
-import { ReactElement } from 'react';
 import { css, useTheme } from '@emotion/react';
+import { ReactElement } from 'react';
 
-import { StyledLinkAsButton } from '../../Link';
-import defaultTheme from '../../theme';
+import defaultTheme from '#components/theme';
 
 const Impact = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	return (
 		<section
+			className="Impact"
 			css={css`
-				margin: 0 50px;
 
 				> * {
 					margin: 25px 0;
-				}
-
-				@media (min-width: 900px) {
-					max-width: calc(35% - 75px);
-					margin-right: 25px;
-				}
-
-				@media (min-width: 960px) {
-					max-width: calc(40% - 75px);
 				}
 			`}
 		>
@@ -58,8 +48,8 @@ const Impact = (): ReactElement => {
 			</h2>
 
 			<p>
-				Genomic-based tracking and analysis of the evolving traits of the SARS-CoV-2 virus across
-				Canada provides critical information for:
+				Genomic-based tracking and analysis of the evolving traits of the SARS-CoV-2 virus across Canada
+				provides critical information for:
 			</p>
 
 			<ul>
