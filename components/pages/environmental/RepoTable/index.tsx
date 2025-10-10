@@ -72,7 +72,11 @@ const getTableConfigs = ({
 						const valueIsURL = validateStringAsUrl(value);
 						// TODO: may want to validate the URL is an SRA one, if we have a pattern
 						return valueIsURL ? (
-							<StyledLink href={value} rel="noopener noreferrer" target="_blank">
+							<StyledLink
+								href={value}
+								rel="noopener noreferrer"
+								target="_blank"
+							>
 								{value}
 							</StyledLink>
 						) : (
@@ -268,12 +272,10 @@ const RepoTable = (): ReactElement => {
 					valueWhenEmpty: '',
 				},
 				{ function: handleBundleDownload, label: 'Metadata + File manifest' },
-		  ]
+			]
 		: [];
 
-	useArrangerTheme(
-		getTableConfigs({ apiHost: NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API, customExporters, theme }),
-	);
+	useArrangerTheme(getTableConfigs({ apiHost: NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API, customExporters, theme }));
 
 	return (
 		<article

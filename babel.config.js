@@ -4,7 +4,6 @@ module.exports = {
 			'module-resolver',
 			{
 				alias: {
-					'^#public': './public',
 					'^#virusseq': './components/pages/virusseq',
 					'^#(.+)': './\\1', // keep this as last alias, to allow others first
 				},

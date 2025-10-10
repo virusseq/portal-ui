@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2025 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -20,48 +20,41 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { ReactElement } from 'react';
+import { format } from 'date-fns';
 
-import defaultTheme from '#components/theme';
+import type defaultTheme from '#components/theme/index.ts';
 
-const Impact = (): ReactElement => {
+import { createMarkup } from './helpers.tsx';
+import { AnnouncementProps } from './types.ts';
+
+const Announcement = ({ date, message, title = '' }: AnnouncementProps) => {
 	const theme: typeof defaultTheme = useTheme();
-	return (
-		<section
-			className="Impact"
-			css={css`
 
-				> * {
-					margin: 25px 0;
-				}
-			`}
-		>
-			<h2
+	return (
+		<article>
+			<header
 				css={css`
-					color: ${theme.colors.primary};
-					font-size: 26px;
-					font-weight: normal;
-					position: relative;
+					& > * {
+						margin: 0;
+					}
 				`}
 			>
-				Impact on Canadians
-			</h2>
-
-			<p>
-				Genomic-based tracking and analysis of the evolving traits of the SARS-CoV-2 virus across Canada
-				provides critical information for:
-			</p>
-
-			<ul>
-				<li>Public health and policy decisions</li>
-				<li>Testing and tracing strategies</li>
-				<li>Virus detection and surveillance methods</li>
-				<li>Vaccine development and effectiveness</li>
-				<li>Drug discovery and effectiveness of treatment</li>
-				<li>Understanding susceptibility, disease severity and clinical outcomes</li>
-			</ul>
-		</section>
+				<h3
+					css={css`
+						font-size: 17px;
+					`}
+				>
+					{`${format(new Date(date), 'MMMM dd, yyyy')}${title ? ' - ' + title : ''}:`}
+				</h3>
+			</header>
+			<span
+				css={css`
+					${theme.typography.regular};
+				`}
+				dangerouslySetInnerHTML={createMarkup(message)}
+			/>
+		</article>
 	);
 };
 
-export default Impact;
+export default Announcement;
