@@ -20,18 +20,14 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import {
-	convertToDownloadManifest,
-	downloadFile,
-	type SubmissionManifest,
-} from '#/global/utils/fileManifest';
+import { convertToDownloadManifest, downloadFile, type SubmissionManifest } from '#/global/utils/fileManifest';
 import Collapsible from '#components/Collapsible';
 import StyledLink from '#components/Link';
 import Loader from '#components/Loader';
 import { Modal } from '#components/Modal';
-import { createZipFile } from '#components/pages/environmental/RepoTable/helper';
+import { countCsvLinesStream, createZipFile } from '#components/pages/environmental/RepoTable/helper';
 import defaultTheme, { type ThemeInterface } from '#components/theme';
 import { Checkmark, CoronaVirus, Storage } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
@@ -51,14 +47,13 @@ const AdvisorySection = () => (
 			`}
 		>
 			Your download has started. By downloading this data, you agree to{' '}
-			<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the Canadian
-			Public Health Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having
-			contributed data and follow all{' '}
+			<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the Canadian Public Health
+			Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having contributed data and follow all{' '}
 			<StyledLink href={INTERNAL_PATHS.POLICIES}>CVDP policies</StyledLink>.
 		</p>
 		<p>
-			Data that is being shared is the work of many individuals and should be treated as unpublished
-			data. If you wish to publish research using the data, contact us at{' '}
+			Data that is being shared is the work of many individuals and should be treated as unpublished data. If you
+			wish to publish research using the data, contact us at{' '}
 			<StyledLink
 				href="mailto:info@virusseq-dataportal.ca"
 				rel="noopener noreferrer"
@@ -130,7 +125,10 @@ const CompleteCheckmark = ({ theme = defaultTheme }: { theme?: ThemeInterface })
 			border-radius: 50%;
 		`}
 	>
-		<Checkmark size={17} fill={theme.colors.white} />
+		<Checkmark
+			size={17}
+			fill={theme.colors.white}
+		/>
 	</div>
 );
 
@@ -166,7 +164,11 @@ const DownloadInfoModalTitle = ({
 	>
 		{showDownloading ? (
 			<span className="status-container">
-				<Loader size={'20px'} margin={'0px'} /> <span>Preparing Download...</span>
+				<Loader
+					size={'20px'}
+					margin={'0px'}
+				/>{' '}
+				<span>Preparing Download...</span>
 			</span>
 		) : (
 			<span className="status-container">
@@ -187,7 +189,6 @@ const DownloadModal = ({
 	manifestFileName = 'manifest.txt',
 	metadataFileName = 'metadata-export.tsv',
 	onClose,
-	selectedRows = [],
 	zipArchiveFileName = 'download_bundle.zip',
 }: {
 	fileManifest?: SubmissionManifest[];
@@ -197,10 +198,10 @@ const DownloadModal = ({
 	manifestFileName?: string;
 	metadataFileName?: string;
 	onClose: () => void;
-	selectedRows: string[];
 	zipArchiveFileName?: string;
 }) => {
 	const theme: ThemeInterface = useTheme();
+	const [samplesCount, setSamplesCount] = useState(0);
 
 	const handleBundleDownload = useCallback(async () => {
 		const bundleDownload: { content: Blob; fileName: string }[] = [];
@@ -211,6 +212,7 @@ const DownloadModal = ({
 			bundleDownload.push({ content: manifestBlob, fileName: manifestFileName });
 		}
 		if (fileMetadata) {
+			countCsvLinesStream(fileMetadata).then((count) => setSamplesCount(count - 1));
 			bundleDownload.push({ content: fileMetadata, fileName: metadataFileName });
 			bundleDownload.push({
 				content: new Blob([plainTextSequencingFileInstructions], { type: 'text/plain' }),
@@ -220,14 +222,7 @@ const DownloadModal = ({
 
 		const zipBlob = await createZipFile(bundleDownload);
 		downloadFile(zipBlob, zipArchiveFileName);
-	}, [
-		fileManifest,
-		fileMetadata,
-		metadataFileName,
-		instructionsFileName,
-		zipArchiveFileName,
-		manifestFileName,
-	]);
+	}, [fileManifest, fileMetadata, metadataFileName, instructionsFileName, zipArchiveFileName, manifestFileName]);
 
 	const handleDownloadManifest = () => {
 		if (!fileManifest || fileManifest.length === 0) {
@@ -252,7 +247,12 @@ const DownloadModal = ({
 	return (
 		<Modal
 			onCloseClick={onClose}
-			title={<DownloadInfoModalTitle showDownloading={isLoading} theme={theme} />}
+			title={
+				<DownloadInfoModalTitle
+					showDownloading={isLoading}
+					theme={theme}
+				/>
+			}
 		>
 			<div
 				css={css`
@@ -281,7 +281,7 @@ const DownloadModal = ({
 				) : (
 					<>
 						<ArchiveStatDisplay
-							numOfSamples={selectedRows.length}
+							numOfSamples={samplesCount}
 							numOfSeqFiles={fileManifest?.length}
 						/>
 						<p>Download metadata and sequencing files instructions:</p>

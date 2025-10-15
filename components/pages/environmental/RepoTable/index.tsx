@@ -185,7 +185,6 @@ const RepoTable = (): ReactElement => {
 	const [showDownloadInfoModal, setShowDownloadInfoModal] = useState(false);
 	const [fileManifest, setFileManifest] = useState<SubmissionManifest[]>([]);
 	const [fileMetadata, setFileMetadata] = useState<Blob | null>(null);
-	const [selectedRows, setSelectedRows] = useState<string[]>([]);
 	const [isLoadingManifest, setIsLoadingManifest] = useState(false);
 	const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
 
@@ -220,22 +219,22 @@ const RepoTable = (): ReactElement => {
 	const handleBundleDownload: ExporterFunction = ({
 		sqon,
 		url,
-		selectedRows,
 		files,
 	}: {
 		sqon: SQON | null;
 		url: string;
-		selectedRows: string[];
 		files?: ExporterFileInterface[];
 	}) => {
-		if (!sqon) return;
+		if (!sqon) {
+			// Set default SQON to select all records
+			sqon = { op: 'not', content: [{ op: 'in', content: { value: '', fieldName: 'study_id' } }] };
+		}
 
 		const filteredSqonWithFiles = excludeRecordsWithoutFiles(sqon);
 
 		setShowDownloadInfoModal(true);
 		setIsLoadingManifest(true);
 		setIsLoadingMetadata(true);
-		setSelectedRows(selectedRows);
 
 		// Start fetching manifest
 		getManifestDataAsync(filteredSqonWithFiles)
@@ -298,7 +297,6 @@ const RepoTable = (): ReactElement => {
 					onClose={closeModal}
 					fileManifest={fileManifest}
 					fileMetadata={fileMetadata}
-					selectedRows={selectedRows}
 					isLoading={isLoadingManifest || isLoadingMetadata}
 					metadataFileName={`wastewater-metadata-export-${today}.tsv`}
 				/>
