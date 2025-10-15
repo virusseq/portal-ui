@@ -228,11 +228,6 @@ const RepoTable = (): ReactElement => {
 		selectedRows: string[];
 		files?: ExporterFileInterface[];
 	}) => {
-		if (!sqon) {
-			// Set default SQON to select all records
-			sqon = { op: 'not', content: [{ op: 'in', content: { value: '', fieldName: 'study_id' } }] };
-		}
-
 		const filteredSqonWithFiles = excludeRecordsWithoutFiles(sqon);
 
 		setShowDownloadInfoModal(true);
