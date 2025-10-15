@@ -27,10 +27,11 @@ import Collapsible from '#components/Collapsible';
 import StyledLink from '#components/Link';
 import Loader from '#components/Loader';
 import { Modal } from '#components/Modal';
-import { countCsvLinesStream, createZipFile } from '#components/pages/environmental/RepoTable/helper';
+import { createZipFile } from '#components/pages/environmental/RepoTable/helper';
 import defaultTheme, { type ThemeInterface } from '#components/theme';
 import { Checkmark, CoronaVirus, Storage } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
+import { fetchReleaseData } from '#global/hooks/useReleaseData/environmental';
 
 import { MetadataFileSection } from './MetadataFile';
 import { plainTextSequencingFileInstructions, SequencingFilesSection } from './SequencingFiles';
@@ -189,6 +190,7 @@ const DownloadModal = ({
 	manifestFileName = 'manifest.txt',
 	metadataFileName = 'metadata-export.tsv',
 	onClose,
+	selectedRows = [],
 	zipArchiveFileName = 'download_bundle.zip',
 }: {
 	fileManifest?: SubmissionManifest[];
@@ -198,10 +200,12 @@ const DownloadModal = ({
 	manifestFileName?: string;
 	metadataFileName?: string;
 	onClose: () => void;
+	selectedRows: string[];
 	zipArchiveFileName?: string;
 }) => {
 	const theme: ThemeInterface = useTheme();
-	const [samplesCount, setSamplesCount] = useState(0);
+
+	const [samplesCount, setSamplesCount] = useState(selectedRows.length);
 
 	const handleBundleDownload = useCallback(async () => {
 		const bundleDownload: { content: Blob; fileName: string }[] = [];
@@ -212,7 +216,6 @@ const DownloadModal = ({
 			bundleDownload.push({ content: manifestBlob, fileName: manifestFileName });
 		}
 		if (fileMetadata) {
-			countCsvLinesStream(fileMetadata).then((count) => setSamplesCount(count - 1));
 			bundleDownload.push({ content: fileMetadata, fileName: metadataFileName });
 			bundleDownload.push({
 				content: new Blob([plainTextSequencingFileInstructions], { type: 'text/plain' }),
@@ -241,8 +244,13 @@ const DownloadModal = ({
 	useEffect(() => {
 		if (!isLoading) {
 			handleBundleDownload();
+			if (selectedRows.length === 0) {
+				fetchReleaseData().then((data) =>
+					setSamplesCount(data?.filesByVariant?.reduce((sum, { count }) => sum + count, 0) ?? 0),
+				);
+			}
 		}
-	}, [isLoading, handleBundleDownload]);
+	}, [isLoading, handleBundleDownload, selectedRows]);
 
 	return (
 		<Modal

@@ -130,29 +130,6 @@ export const getManifestDataAsync = async (sqon: ExtendedSQON): Promise<Submissi
 	return extractFilesFromResponse(result);
 };
 
-export const countCsvLinesStream = async (blob: Blob): Promise<number> => {
-	const reader = blob.stream().getReader();
-	const decoder = new TextDecoder();
-	let lineCount = 0;
-	let partial = '';
-
-	for (; ;) {
-		const { done, value } = await reader.read();
-		if (done) break;
-
-		const chunk = decoder.decode(value, { stream: true });
-		const lines = (partial + chunk).split(/\r?\n/);
-		partial = lines.pop() || '';
-		lineCount += lines.filter((line) => line.trim().length > 0).length;
-	}
-
-	if (partial.trim().length > 0) {
-		lineCount++;
-	}
-
-	return lineCount;
-};
-
 export const getMetadataBlobAsync = async ({
 	sqon,
 	columns,
