@@ -117,11 +117,11 @@ const PageContent = (): ReactElement => {
 							<p>
 								To be granted a data submission account for your organization, please contact{' '}
 								<StyledLink
-									href="mailto:info@virusseq-dataportal.ca"
+									href="mailto:imicroseq-dataportal@lists.sfu.ca"
 									rel="noopener noreferrer"
 									target="_blank"
 								>
-									info@virusseq-dataportal.ca
+									imicroseq-dataportal@lists.sfu.ca
 								</StyledLink>{' '}
 								with an account request.
 							</p>
