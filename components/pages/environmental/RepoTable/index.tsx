@@ -228,8 +228,6 @@ const RepoTable = (): ReactElement => {
 		selectedRows: string[];
 		files?: ExporterFileInterface[];
 	}) => {
-		if (!sqon) return;
-
 		const filteredSqonWithFiles = excludeRecordsWithoutFiles(sqon);
 
 		setShowDownloadInfoModal(true);

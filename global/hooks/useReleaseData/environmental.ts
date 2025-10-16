@@ -81,7 +81,7 @@ export const arrangerFetcher = createArrangerFetcher({
 	ARRANGER_API: NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API,
 });
 
-const fetchReleaseData = async (sqon?: SQONType) => {
+export const fetchReleaseData = async (sqon?: SQONType) => {
 	return arrangerFetcher({
 		body: {
 			query: RELEASE_DATA_QUERY,
