@@ -113,14 +113,14 @@ const HeroBanner = (): ReactElement => {
 					`}
 				>
 					The iMicroSeq Data Portal is an inclusive Canadian database of microbial (including viral)
-					sequences. This Data Portal integrates genomic data from clinical and environmental
-					sources, including wastewater, to monitor and understand the evolution and spread of
-					microbes and viruses affecting public health, agriculture and the environment. The
-					iMicroSeq Data Portal is an open-access data platform for Canadian genomic surveillance
-					data and associated contextual metadata. It harmonizes, validates, and automates
-					submissions. The Portal will also submit data to selected international databases, when
-					desired by the data provider. These features enable more integrated analyses across
-					Canada.
+					sequences. This Data Portal integrates genomic data from clinical and environmental sources,
+					including wastewater, to monitor and understand the evolution and spread of microbes and viruses
+					affecting public health, agriculture, aquaculture, and the environment. The iMicroSeq Data Portal is
+					an open-access data platform for Canadian genomic surveillance data and associated contextual
+					metadata that harmonizes, validates, and automates submissions. The Portal will also submit data to
+					selected international databases, when desired by the data provider. This resource enables more
+					integrated analyses, including with cost effective wastewater data, supporting more wholistic,
+					robust and rapid responses to microbial threats.
 				</p>
 
 				<ReleaseDataClinical />

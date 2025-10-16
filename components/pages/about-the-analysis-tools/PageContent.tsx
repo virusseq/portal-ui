@@ -75,10 +75,10 @@ const PageContent = (): ReactElement => {
 					A selection of resources are noted below that enable further analyses of the{' '}
 					<InternalLink path={INTERNAL_PATHS.EXPLORER}>VirusSeq Data Portal Data</InternalLink>.
 					<br />
-					All of these resources are Open Source and freely available. If you have a resource you
-					would like to see listed here, or any feedback, please{' '}
+					All of these resources are Open Source and freely available. If you have a resource you would like
+					to see listed here, or any feedback, please{' '}
 					<StyledLink
-						href="mailto:info@virusseq-dataportal.ca"
+						href="mailto:imicroseq-dataportal@lists.sfu.ca"
 						rel="noopener noreferrer"
 						target="_blank"
 					>

@@ -56,11 +56,11 @@ const AdvisorySection = () => (
 			Data that is being shared is the work of many individuals and should be treated as unpublished data. If you
 			wish to publish research using the data, contact us at{' '}
 			<StyledLink
-				href="mailto:info@virusseq-dataportal.ca"
+				href="mailto:imicroseq-dataportal@lists.sfu.ca"
 				rel="noopener noreferrer"
 				target="_blank"
 			>
-				info@virusseq-dataportal.ca
+				imicroseq-dataportal@lists.sfu.ca
 			</StyledLink>{' '}
 			first to ensure that those who have generated the data can be involved in its analysis.
 		</p>

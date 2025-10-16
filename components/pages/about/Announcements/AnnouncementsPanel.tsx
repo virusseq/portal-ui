@@ -102,7 +102,7 @@ const AnnouncementsPanel = ({ announcements = [], className, css: customCSS }: A
 			>
 				If you have feature suggestions, feedback, or want to report a bug, please{' '}
 				<StyledLink
-					href="mailto:info@virusseq-dataportal.ca"
+					href="mailto:imicroseq-dataportal@lists.sfu.ca"
 					rel="noopener noreferrer"
 					target="_blank"
 				>

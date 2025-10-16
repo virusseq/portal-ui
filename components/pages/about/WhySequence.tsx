@@ -41,7 +41,7 @@ const WhySequence = (): ReactElement => (
 				position: relative;
 			`}
 		>
-			Why Sequence this Virus?
+			Why Sequence Microbes, including Viruses?
 		</h2>
 
 		<figure
@@ -65,10 +65,14 @@ const WhySequence = (): ReactElement => (
 				style={{ maxHeight: '200px' }}
 			/>
 			<figcaption>
-				Identify and track transmission trends at the regional, provincial, national and international scales.
+				Identify and track transmission trends of microbes at the regional, provincial, national, and
+				international scales.
 			</figcaption>
-			<figcaption>Aid detection of new clusters of cases/outbreaks.</figcaption>
-			<figcaption>Discover evolving viral characteristics that might impact.</figcaption>
+			<figcaption>Aid detection of new disease clusters and outbreaks.</figcaption>
+			<figcaption>
+				Discover evolving microbe characteristics that might impact public health, agriculture, and the
+				environment.
+			</figcaption>
 		</figure>
 	</section>
 );

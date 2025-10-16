@@ -136,11 +136,11 @@ const Footer = (): ReactElement => {
 					<li>
 						<span>Contact us at </span>
 						<StyledLink
-							href="mailto:info@virusseq-dataportal.ca"
+							href="mailto:imicroseq-dataportal@lists.sfu.ca"
 							rel="noopener noreferrer"
 							target="_blank"
 						>
-							info@virusseq-dataportal.ca
+							imicroseq-dataportal@lists.sfu.ca
 						</StyledLink>
 					</li>
 
