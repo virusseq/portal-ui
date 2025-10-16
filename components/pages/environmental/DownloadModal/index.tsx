@@ -22,11 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import { useCallback, useEffect } from 'react';
 
-import {
-	convertToDownloadManifest,
-	downloadFile,
-	type SubmissionManifest,
-} from '#/global/utils/fileManifest';
+import { convertToDownloadManifest, downloadFile, type SubmissionManifest } from '#/global/utils/fileManifest';
 import Collapsible from '#components/Collapsible';
 import StyledLink from '#components/Link';
 import Loader from '#components/Loader';
@@ -51,20 +47,19 @@ const AdvisorySection = () => (
 			`}
 		>
 			Your download has started. By downloading this data, you agree to{' '}
-			<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the Canadian
-			Public Health Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having
-			contributed data and follow all{' '}
+			<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the Canadian Public Health
+			Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having contributed data and follow all{' '}
 			<StyledLink href={INTERNAL_PATHS.POLICIES}>CVDP policies</StyledLink>.
 		</p>
 		<p>
-			Data that is being shared is the work of many individuals and should be treated as unpublished
-			data. If you wish to publish research using the data, contact us at{' '}
+			Data that is being shared is the work of many individuals and should be treated as unpublished data. If you
+			wish to publish research using the data, contact us at{' '}
 			<StyledLink
-				href="mailto:info@virusseq-dataportal.ca"
+				href="mailto:imicroseq-dataportal@lists.sfu.ca"
 				rel="noopener noreferrer"
 				target="_blank"
 			>
-				info@virusseq-dataportal.ca
+				imicroseq-dataportal@lists.sfu.ca
 			</StyledLink>{' '}
 			first to ensure that those who have generated the data can be involved in its analysis.
 		</p>
@@ -130,7 +125,10 @@ const CompleteCheckmark = ({ theme = defaultTheme }: { theme?: ThemeInterface })
 			border-radius: 50%;
 		`}
 	>
-		<Checkmark size={17} fill={theme.colors.white} />
+		<Checkmark
+			size={17}
+			fill={theme.colors.white}
+		/>
 	</div>
 );
 
@@ -166,7 +164,11 @@ const DownloadInfoModalTitle = ({
 	>
 		{showDownloading ? (
 			<span className="status-container">
-				<Loader size={'20px'} margin={'0px'} /> <span>Preparing Download...</span>
+				<Loader
+					size={'20px'}
+					margin={'0px'}
+				/>{' '}
+				<span>Preparing Download...</span>
 			</span>
 		) : (
 			<span className="status-container">
@@ -220,14 +222,7 @@ const DownloadModal = ({
 
 		const zipBlob = await createZipFile(bundleDownload);
 		downloadFile(zipBlob, zipArchiveFileName);
-	}, [
-		fileManifest,
-		fileMetadata,
-		metadataFileName,
-		instructionsFileName,
-		zipArchiveFileName,
-		manifestFileName,
-	]);
+	}, [fileManifest, fileMetadata, metadataFileName, instructionsFileName, zipArchiveFileName, manifestFileName]);
 
 	const handleDownloadManifest = () => {
 		if (!fileManifest || fileManifest.length === 0) {
@@ -252,7 +247,12 @@ const DownloadModal = ({
 	return (
 		<Modal
 			onCloseClick={onClose}
-			title={<DownloadInfoModalTitle showDownloading={isLoading} theme={theme} />}
+			title={
+				<DownloadInfoModalTitle
+					showDownloading={isLoading}
+					theme={theme}
+				/>
+			}
 		>
 			<div
 				css={css`
