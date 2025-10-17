@@ -84,9 +84,6 @@
 		"typescript": "^5.9.3",
 		"typescript-transform-paths": "^3.4.6"
 	},
-	"overrides": {
-		"date-fns": ""
-	},
 	"prettier": {
 		"organizeImportsSkipDestructiveCodeActions": true,
 		"printWidth": 120,
