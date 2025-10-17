@@ -61,7 +61,7 @@ const NavBar = (): ReactElement => {
 				position: sticky;
 				top: 0;
 				left: 0;
-				z-index: 1;
+				z-index: 10;
 				width: 100%;
 			`}
 		>
@@ -82,7 +82,11 @@ const NavBar = (): ReactElement => {
 							text-decoration: none;
 						`}
 					>
-						<img src="/images/navbar-logo.png" alt="VirusSeq logo" width="182" />
+						<img
+							src="/images/navbar-logo.png"
+							alt="VirusSeq logo"
+							width="182"
+						/>
 					</a>
 				</InternalLink>
 			</div>
@@ -111,7 +115,7 @@ const NavBar = (): ReactElement => {
 										active: router.asPath.startsWith(INTERNAL_PATHS.CLINICAL_EXPLORATION),
 									})}
 								>
-									Clinical cases
+									Clinical-VirusSeq
 								</StyledListLink>
 							</InternalLink>,
 							<InternalLink path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
@@ -120,7 +124,7 @@ const NavBar = (): ReactElement => {
 										active: router.asPath.startsWith(INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION),
 									})}
 								>
-									Environmental
+									Environmental-Wastewater
 								</StyledListLink>
 							</InternalLink>,
 						]}
@@ -198,9 +202,7 @@ const NavBar = (): ReactElement => {
 					/>
 
 					<InternalLink path={INTERNAL_PATHS.RELEASES}>
-						<StyledLink
-							className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}
-						>
+						<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}>
 							Data Releases
 						</StyledLink>
 					</InternalLink>
@@ -217,9 +219,7 @@ const NavBar = (): ReactElement => {
 						`}
 					>
 						<InternalLink path={INTERNAL_PATHS.SUBMISSION}>
-							<StyledLink
-								className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}
-							>
+							<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}>
 								Submission Dashboard
 							</StyledLink>
 						</InternalLink>
