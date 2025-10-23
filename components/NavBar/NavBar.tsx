@@ -33,7 +33,7 @@ import { INTERNAL_PATHS, ROOT_PATH } from '#global/utils/constants';
 
 import CurrentUser from './CurrentUser';
 import Dropdown from './Dropdown';
-import { linkStyles, StyledLink, StyledListLink } from './styles';
+import { linkStyles, StyledNavBarLink, StyledListLink } from './styles';
 
 /**
  * Portal ref of navBar. There is only one navBar in entire pagelayout.
@@ -201,10 +201,11 @@ const NavBar = (): ReactElement => {
 						urls={[INTERNAL_PATHS.ACKNOWLEDGEMENTS, INTERNAL_PATHS.TEAM]}
 					/>
 
-					<InternalLink path={INTERNAL_PATHS.RELEASES}>
-						<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}>
-							Data Releases
-						</StyledLink>
+					<InternalLink
+						active={router.asPath.startsWith(INTERNAL_PATHS.RELEASES)}
+						path={INTERNAL_PATHS.RELEASES}
+					>
+						<StyledNavBarLink>Data Releases</StyledNavBarLink>
 					</InternalLink>
 				</div>
 
@@ -218,10 +219,11 @@ const NavBar = (): ReactElement => {
 							width: 100%;
 						`}
 					>
-						<InternalLink path={INTERNAL_PATHS.SUBMISSION}>
-							<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}>
-								Submission Dashboard
-							</StyledLink>
+						<InternalLink
+							active={router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION)}
+							path={INTERNAL_PATHS.SUBMISSION}
+						>
+							<StyledNavBarLink>Submission Dashboard</StyledNavBarLink>
 						</InternalLink>
 
 						<Dropdown

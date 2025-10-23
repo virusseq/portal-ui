@@ -19,6 +19,7 @@
  *
  */
 
+import cx from 'classnames';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
@@ -76,13 +77,19 @@ export const StyledLinkAsButton = styled(StyledLink)`
 `;
 
 export const InternalLink = ({
+	active = false,
 	children,
 	path,
 }: {
+	active?: boolean;
 	children: ReactNode;
 	path: string;
 }): ReactElement => (
-	<Link href={getInternalLink({ path })} passHref>
+	<Link
+		href={getInternalLink({ path })}
+		passHref
+		className={cx({ active })}
+	>
 		{children}
 	</Link>
 );

@@ -69,7 +69,7 @@ export const newBadgeStyle = (theme?: typeof defaultTheme): SerializedStyles => 
 	margin-left: 4px;
 `;
 
-export const StyledLink = styled.a`
+export const StyledNavBarLink = styled.a`
 	${({ theme }: { theme?: typeof defaultTheme }) => linkStyles(theme)}
 `;
 
