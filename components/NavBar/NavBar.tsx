@@ -20,7 +20,6 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import cx from 'classnames';
 import { useRouter } from 'next/router';
 import { createRef, ReactElement } from 'react';
 
@@ -110,19 +109,13 @@ const NavBar = (): ReactElement => {
 						css={linkStyles}
 						data={[
 							<InternalLink path={INTERNAL_PATHS.CLINICAL_EXPLORATION}>
-								<StyledListLink
-									className={cx({
-										active: router.asPath.startsWith(INTERNAL_PATHS.CLINICAL_EXPLORATION),
-									})}
-								>
+								<StyledListLink active={router.asPath.startsWith(INTERNAL_PATHS.CLINICAL_EXPLORATION)}>
 									Clinical-VirusSeq
 								</StyledListLink>
 							</InternalLink>,
 							<InternalLink path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
 								<StyledListLink
-									className={cx({
-										active: router.asPath.startsWith(INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION),
-									})}
+									active={router.asPath.startsWith(INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION)}
 								>
 									Environmental-Wastewater
 								</StyledListLink>
@@ -136,11 +129,7 @@ const NavBar = (): ReactElement => {
 						css={linkStyles}
 						data={[
 							<InternalLink path={INTERNAL_PATHS.ABOUT_ANALYSIS_TOOLS}>
-								<StyledListLink
-									className={cx({
-										active: router.asPath.startsWith(INTERNAL_PATHS.ABOUT_ANALYSIS_TOOLS),
-									})}
-								>
+								<StyledListLink active={router.asPath.startsWith(INTERNAL_PATHS.ABOUT_ANALYSIS_TOOLS)}>
 									About the tools
 								</StyledListLink>
 							</InternalLink>,
@@ -181,18 +170,12 @@ const NavBar = (): ReactElement => {
 						css={linkStyles}
 						data={[
 							<InternalLink path={INTERNAL_PATHS.TEAM}>
-								<StyledListLink
-									className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.TEAM) })}
-								>
+								<StyledListLink active={router.asPath.startsWith(INTERNAL_PATHS.TEAM)}>
 									Meet the Team
 								</StyledListLink>
 							</InternalLink>,
 							<InternalLink path={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>
-								<StyledListLink
-									className={cx({
-										active: router.asPath.startsWith(INTERNAL_PATHS.ACKNOWLEDGEMENTS),
-									})}
-								>
+								<StyledListLink active={router.asPath.startsWith(INTERNAL_PATHS.ACKNOWLEDGEMENTS)}>
 									Acknowledgements
 								</StyledListLink>
 							</InternalLink>,
@@ -201,11 +184,10 @@ const NavBar = (): ReactElement => {
 						urls={[INTERNAL_PATHS.ACKNOWLEDGEMENTS, INTERNAL_PATHS.TEAM]}
 					/>
 
-					<InternalLink
-						active={router.asPath.startsWith(INTERNAL_PATHS.RELEASES)}
-						path={INTERNAL_PATHS.RELEASES}
-					>
-						<StyledNavBarLink>Data Releases</StyledNavBarLink>
+					<InternalLink path={INTERNAL_PATHS.RELEASES}>
+						<StyledNavBarLink active={router.asPath.startsWith(INTERNAL_PATHS.RELEASES)}>
+							Data Releases
+						</StyledNavBarLink>
 					</InternalLink>
 				</div>
 
@@ -219,11 +201,10 @@ const NavBar = (): ReactElement => {
 							width: 100%;
 						`}
 					>
-						<InternalLink
-							active={router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION)}
-							path={INTERNAL_PATHS.SUBMISSION}
-						>
-							<StyledNavBarLink>Submission Dashboard</StyledNavBarLink>
+						<InternalLink path={INTERNAL_PATHS.SUBMISSION}>
+							<StyledNavBarLink active={router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION)}>
+								Submission Dashboard
+							</StyledNavBarLink>
 						</InternalLink>
 
 						<Dropdown
@@ -231,17 +212,13 @@ const NavBar = (): ReactElement => {
 							data={[
 								userHasAccessToStudySvc && (
 									<InternalLink path={INTERNAL_PATHS.STUDIES}>
-										<StyledListLink
-											className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.STUDIES) })}
-										>
+										<StyledListLink active={router.asPath.startsWith(INTERNAL_PATHS.STUDIES)}>
 											Manage Studies
 										</StyledListLink>
 									</InternalLink>
 								),
 								<InternalLink path={INTERNAL_PATHS.USER}>
-									<StyledListLink
-										className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.USER) })}
-									>
+									<StyledListLink active={router.asPath.startsWith(INTERNAL_PATHS.USER)}>
 										Profile & Token
 									</StyledListLink>
 								</InternalLink>,

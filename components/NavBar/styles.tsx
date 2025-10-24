@@ -24,6 +24,15 @@ import styled from '@emotion/styled';
 
 import defaultTheme from '#components/theme';
 
+export const activeStyle = (theme?: typeof defaultTheme): SerializedStyles => css`
+	border-bottom-color: ${theme?.colors.accent};
+	color: ${theme?.colors.accent_light};
+
+	svg path {
+		fill: ${theme?.colors.accent_light};
+	}
+`;
+
 export const linkStyles = (theme?: typeof defaultTheme): SerializedStyles => css`
 	align-items: center;
 	border-bottom: 5px solid transparent;
@@ -45,14 +54,8 @@ export const linkStyles = (theme?: typeof defaultTheme): SerializedStyles => css
 		fill: ${theme?.colors.white};
 	}
 
-	&.active,
 	&:hover {
-		border-bottom-color: ${theme?.colors.accent};
-		color: ${theme?.colors.accent_light};
-
-		svg path {
-			fill: ${theme?.colors.accent_light};
-		}
+		${activeStyle(theme)}
 	}
 `;
 
@@ -69,12 +72,13 @@ export const newBadgeStyle = (theme?: typeof defaultTheme): SerializedStyles => 
 	margin-left: 4px;
 `;
 
-export const StyledNavBarLink = styled.a`
-	${({ theme }: { theme?: typeof defaultTheme }) => linkStyles(theme)}
+export const StyledNavBarLink = styled.a<{ active?: boolean }>`
+	${({ theme }) => linkStyles(theme)}
+	${({ active, theme }) => active && activeStyle(theme)}
 `;
 
-export const StyledListLink = styled.a`
-	${({ theme }: { theme?: typeof defaultTheme }) => css`
+export const StyledListLink = styled.a<{ active?: boolean }>`
+	${({ theme, active }) => css`
 		align-items: center;
 		background-color: ${theme?.colors.white};
 		border: 1px solid ${theme?.colors.grey_3};
@@ -93,10 +97,11 @@ export const StyledListLink = styled.a`
 			background-color: ${theme?.colors.grey_1};
 		}
 
-		&.active {
+		${active &&
+		css`
 			background-color: ${theme?.colors.grey_2};
 			color: ${theme?.colors.accent};
 			cursor: default;
-		}
+		`}
 	`}
 `;

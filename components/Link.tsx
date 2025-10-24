@@ -76,19 +76,10 @@ export const StyledLinkAsButton = styled(StyledLink)`
 	`}
 `;
 
-export const InternalLink = ({
-	active = false,
-	children,
-	path,
-}: {
-	active?: boolean;
-	children: ReactNode;
-	path: string;
-}): ReactElement => (
+export const InternalLink = ({ children, path }: { children: ReactNode; path: string }): ReactElement => (
 	<Link
 		href={getInternalLink({ path })}
 		passHref
-		className={cx({ active })}
 	>
 		{children}
 	</Link>
