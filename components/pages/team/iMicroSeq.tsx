@@ -23,6 +23,8 @@ import { css } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
+import OicrLogo from '#components/theme/icons/oicr';
+import OvertureLogoWithText from '#components/theme/icons/overture_logo_with_text';
 
 const IMicroSeqPortal = (): ReactElement => (
 	<section>
@@ -53,6 +55,56 @@ const IMicroSeqPortal = (): ReactElement => (
 					iMicroSeq Consortium
 				</StyledLink>
 				.
+			</p>
+
+			<span
+				css={css`
+					width: 190px;
+					margin: 0px 0 0 35px;
+					padding: 25px 20px;
+					border-radius: 10px;
+					border: solid 1px #dfdfe1;
+				`}
+			>
+				<StyledLink
+					href="https://overture.bio/"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					<OvertureLogoWithText
+						width={123}
+						style={css`
+							margin: -12px 0px 0px 4px;
+							object-fit: contain;
+						`}
+					/>
+				</StyledLink>
+				<StyledLink
+					href="https://oicr.on.ca"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					<OicrLogo
+						style={css`
+							margin: 10px 0 0 10px;
+						`}
+					/>
+				</StyledLink>
+			</span>
+		</div>
+		<div
+			css={css`
+				display: flex;
+			`}
+		>
+			<p>
+				<span
+					css={css`
+						font-weight: bold;
+					`}
+				>
+					Lead Development Team:{' '}
+				</span>
 			</p>
 		</div>
 		<div
