@@ -23,10 +23,8 @@ import { css } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
-import OicrLogo from '#components/theme/icons/oicr';
-import OvertureLogoWithText from '#components/theme/icons/overture_logo_with_text';
 
-const Portal = (): ReactElement => (
+const IMicroSeqPortal = (): ReactElement => (
 	<section>
 		<div
 			css={css`
@@ -39,65 +37,66 @@ const Portal = (): ReactElement => (
 						font-weight: bold;
 					`}
 				>
-					VirusSeq Data Portal:{' '}
+					iMicroSeq Data Portal:{' '}
 				</span>
-				The VirusSeq Data Portal was designed and developed by the{' '}
-				<StyledLink
-					href="https://softeng.oicr.on.ca"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					Genome Informatics Team
-				</StyledLink>{' '}
-				at the <StyledLink href="https://www.oicr.on.ca">Ontario Institute for Cancer Research</StyledLink>, led
-				by Dr. Mélanie Courtot, Director of Genome Informatics and Dr. Lincoln Stein, Head of Adaptive Oncology.
-				The software is powered by{' '}
+				The Canadian iMicroSeq Data Portal manages and facilitates data sharing of microbial data among
+				researchers, Canadian public health laboratories, and other groups interested in One Health and
+				accessing the data for research and innovation purposes. Development of this portal is a national,
+				team-based effort, led by researchers at Simon Fraser University and the Ontario Institute for Cancer
+				Research, with the support of McGill University, and in partnership with Indigenous community
+				participants in the{' '}
 				<StyledLink
 					href="https://www.overture.bio"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					Overture
+					iMicroSeq Consortium
 				</StyledLink>
-				, an open-source software suite for managing and sharing data at scale on compute clouds.
+				.
 			</p>
-
-			<span
-				css={css`
-					width: 190px;
-					margin: 0px 0 0 35px;
-					padding: 25px 20px;
-					border-radius: 10px;
-					border: solid 1px #dfdfe1;
-				`}
-			>
+		</div>
+		<div
+			css={css`
+				display: flex;
+			`}
+		>
+			<p>
+				Support for this database development was led by{' '}
 				<StyledLink
-					href="https://overture.bio/"
+					href="https://www.genomecanada.ca"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					<OvertureLogoWithText
-						width={123}
-						style={css`
-							margin: -12px 0px 0px 4px;
-							object-fit: contain;
-						`}
-					/>
+					Genome Canada
 				</StyledLink>
+				, in partnership with the
 				<StyledLink
-					href="https://oicr.on.ca"
+					href="https://www.canada.ca"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					<OicrLogo
-						style={css`
-							margin: 10px 0 0 10px;
-						`}
-					/>
+					Government of Canada
 				</StyledLink>
-			</span>
+				, The Portal team also gratefully acknowledges funding from the Canadian Institutes of Health Research (
+				<StyledLink
+					href="https://cihr-irsc.gc.ca/e/193.html"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					CIHR
+				</StyledLink>
+				) - Coronavirus Variants Rapid Response Network (
+				<StyledLink
+					href="https://covarrnet.ca/"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					CoVaRR-Net
+				</StyledLink>
+				), and the Public Health Agency of Canada.
+			</p>
 		</div>
 	</section>
 );
 
-export default Portal;
+export default IMicroSeqPortal;
