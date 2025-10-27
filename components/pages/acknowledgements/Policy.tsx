@@ -66,7 +66,7 @@ const Partners = (): ReactElement => {
 				others.
 			</p>
 
-			<h3>Acknowledgements for iMicroSeq environmental data</h3>
+			<h3>VirusSeq Data Portal / iMicroSeq clinical case data</h3>
 
 			<h2
 				css={css`
