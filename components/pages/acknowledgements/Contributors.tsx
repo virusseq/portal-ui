@@ -63,7 +63,10 @@ const Contributors = (): ReactElement => {
 				Viewed at {format(currentDatetime, 'MM/dd/yyyy, h:mm:ss aa')}
 			</p>
 
-			<LoaderWrapper loading={awaitingResponse} size="10px">
+			<LoaderWrapper
+				loading={awaitingResponse}
+				size="10px"
+			>
 				<p>
 					{contributorsList.map((contributor) => (
 						<React.Fragment key={contributor}>

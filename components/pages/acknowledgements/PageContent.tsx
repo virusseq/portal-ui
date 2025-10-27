@@ -70,7 +70,7 @@ const PageContent = (): ReactElement => {
 						margin-top: 10px 0 0;
 					`}
 				>
-					Updated at {format(Date.parse('19 Mar 2024 18:45:00'), 'MM/dd/yyyy, h:mm:ss aa')}
+					Updated at {format(Date.parse('27 Oct 2025 11:00:00'), 'MM/dd/yyyy, h:mm:ss aa')}
 				</p>
 
 				<section>
@@ -82,7 +82,8 @@ const PageContent = (): ReactElement => {
 						How to cite
 					</h2>
 					<p>
-						If you use the VirusSeq Data Portal, please cite{' '}
+						If you use the iMicroSeq Data Portal or the VirusSeq Data Portal, please cite the following,
+						pending further publication of this resource:{' '}
 						<span
 							css={css`
 								display: inline;
@@ -107,10 +108,10 @@ const PageContent = (): ReactElement => {
 				<Individuals />
 
 				<p>
-					Funding for the VirusSeq Data Portal has been provided by The Canadian COVID Genomics
-					Network (CanCOGeN), supported by Genome Canada and Innovation, Science and Economic
-					Development Canada (ISED), plus the Canadian Institutes of Health Research(CIHR) -
-					Coronavirus Variants Rapid Response Network (CoVaRR-Net)
+					Funding for the VirusSeq Data Portal has been provided by The Canadian COVID Genomics Network
+					(CanCOGeN), supported by Genome Canada and Innovation, Science and Economic Development Canada
+					(ISED), plus the Canadian Institutes of Health Research(CIHR) - Coronavirus Variants Rapid Response
+					Network (CoVaRR-Net)
 				</p>
 			</article>
 		</main>

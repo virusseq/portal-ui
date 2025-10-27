@@ -33,6 +33,41 @@ const Partners = (): ReactElement => {
 				margin: 5px 0 0;
 			`}
 		>
+			<h3>Acknowledgements for iMicroSeq environmental data</h3>
+
+			<h2
+				css={css`
+					${theme.typography.subheading};
+				`}
+			>
+				Policy on recognition of the work of data providers
+			</h2>
+
+			<p>
+				You may use the data from the Canadian iMicroSeq Data Portal to author results obtained from your
+				analyses of relevant data, provided that your published results acknowledge the contribution of
+				iMicroSeq and its partners. We suggest using the following acknowledgement sentence:{' '}
+				<strong>
+					"The results here are in whole, or in part based upon data hosted at the Canadian iMicroSeq Data
+					Portal:{' '}
+					<StyledLink
+						href="https://iMicroSeq-dataportal.ca/"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						https://iMicroSeq-dataportal.ca/
+					</StyledLink>
+					. We wish to acknowledge Genome Canada, the Canadian Public Health Laboratory Network (CPHLN), and
+					iMicroSeq consortium participants for their contribution to the Portal."
+				</strong>{' '}
+				You may redistribute the data available on this Data Portal under the same terms and conditions as
+				specified in this policy. You should not impose any additional or different terms or conditions on, or
+				apply any effective technological measures to the data, if doing so restricts the use of the data by
+				others.
+			</p>
+
+			<h3>Acknowledgements for iMicroSeq environmental data</h3>
+
 			<h2
 				css={css`
 					${theme.typography.subheading};
@@ -57,7 +92,7 @@ const Partners = (): ReactElement => {
 					</StyledLink>
 					. We wish to acknowledge the Canadian Public Health Laboratory Network (CPHLN), Genome Canada and
 					the CanCOGeN VirusSeq Consortium for their contribution to the Portal, see supplementary file for
-					detailed information"
+					detailed information."
 				</strong>{' '}
 				(supplementary file must be submitted as an addendum to your publication). You may redistribute the data
 				available on the Canadian VirusSeq Data Portal under the same terms and conditions as specified in this
@@ -69,11 +104,11 @@ const Partners = (): ReactElement => {
 				Please note that the data that is being shared is the work of many individuals and should be treated as
 				unpublished data. If you wish to publish research using these data, you are encouraged to contact us at{' '}
 				<StyledLink
-					href="mailto:imicroseq-dataportal@lists.sfu.ca"
+					href="mailto:info@virusseq-dataportal.ca"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					imicroseq-dataportal@lists.sfu.ca
+					info@virusseq-dataportal.ca
 				</StyledLink>{' '}
 				before analyzing the data to ensure that those who have generated the data may be involved in its
 				analysis. You are responsible for making the best efforts to collaborate with representatives of the
@@ -82,11 +117,11 @@ const Partners = (): ReactElement => {
 				COVID-19 related datasets. You may potentially have access to more data through formal collaborations
 				with the CPHLN and CanCOGeN VirusSeq members. You are encouraged to contact us at{' '}
 				<StyledLink
-					href="mailto:imicroseq-dataportal@lists.sfu.ca"
+					href="mailto:info@virusseq-dataportal.ca"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					imicroseq-dataportal@lists.sfu.ca
+					info@virusseq-dataportal.ca
 				</StyledLink>{' '}
 				to obtain additional information for this purpose.
 			</p>
