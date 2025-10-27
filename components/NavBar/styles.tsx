@@ -19,12 +19,12 @@
  *
  */
 
-import { css, SerializedStyles } from '@emotion/react';
+import { css, SerializedStyles, type Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import defaultTheme from '#components/theme';
 
-export const activeStyle = (theme?: typeof defaultTheme): SerializedStyles => css`
+export const activeStyle = (theme?: Theme): SerializedStyles => css`
 	border-bottom-color: ${theme?.colors.accent};
 	color: ${theme?.colors.accent_light};
 
@@ -33,7 +33,7 @@ export const activeStyle = (theme?: typeof defaultTheme): SerializedStyles => cs
 	}
 `;
 
-export const linkStyles = (theme?: typeof defaultTheme): SerializedStyles => css`
+export const linkStyles = (theme?: Theme): SerializedStyles => css`
 	align-items: center;
 	border-bottom: 5px solid transparent;
 	box-sizing: border-box;
@@ -73,7 +73,8 @@ export const newBadgeStyle = (theme?: typeof defaultTheme): SerializedStyles => 
 `;
 
 export const StyledNavBarLink = styled.a<{ active?: boolean }>`
-	${({ theme }) => linkStyles(theme)}
+	// Removing Parens causes TypeError, see https://stackoverflow.com/a/57763158
+	${linkStyles()}
 	${({ active, theme }) => active && activeStyle(theme)}
 `;
 
