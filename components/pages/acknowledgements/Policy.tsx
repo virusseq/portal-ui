@@ -25,6 +25,7 @@ import { ReactElement } from 'react';
 import StyledLink from '#components/Link';
 import defaultTheme from '#components/theme';
 
+export const iMicroSeqAnchor = 'iMicroSeqAcknowledgements';
 export const iMicroSeqHeader = 'Acknowledgements for iMicroSeq environmental data';
 export const iMicroSeqContent = (
 	<>
@@ -76,6 +77,7 @@ export const iMicroSeqContent = (
 	</>
 );
 
+export const virusSeqAnchor = 'virusSeqAcknowledgements';
 export const virusSeqHeader = 'VirusSeq Data Portal / iMicroSeq clinical case data';
 export const virusSeqContent = (
 	<>
@@ -130,7 +132,15 @@ export const virusSeqContent = (
 	</>
 );
 
-export const Policy = ({ header, content }: { header: string; content: ReactElement }): ReactElement => {
+export const Policy = ({
+	anchor,
+	content,
+	header,
+}: {
+	anchor: string;
+	content: ReactElement;
+	header: string;
+}): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
 	return (
 		<section
@@ -138,7 +148,7 @@ export const Policy = ({ header, content }: { header: string; content: ReactElem
 				margin: 5px 0 0;
 			`}
 		>
-			<h3>{header}</h3>
+			<h3 id={anchor}>{header}</h3>
 
 			<h2
 				css={css`

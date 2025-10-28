@@ -27,7 +27,15 @@ import StyledLink from '#components/Link';
 import defaultTheme from '#components/theme';
 
 import Individuals from './Individuals';
-import { iMicroSeqHeader, iMicroSeqContent, virusSeqContent, virusSeqHeader, Policy } from './Policy';
+import {
+	iMicroSeqHeader,
+	iMicroSeqContent,
+	virusSeqContent,
+	virusSeqHeader,
+	Policy,
+	iMicroSeqAnchor,
+	virusSeqAnchor,
+} from './Policy';
 
 const PageContent = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
@@ -102,13 +110,19 @@ const PageContent = (): ReactElement => {
 						</span>
 					</p>
 				</section>
+				<a href={`#${iMicroSeqAnchor}`}>Acknowledgements for iMicroSeq Environmental data</a>
+				<a href={`#${virusSeqAnchor}`}>
+					Acknowledgements for VirusSeq Data Portal / iMicroSeq clinical case data
+				</a>
 				<Policy
+					anchor={iMicroSeqAnchor}
 					header={iMicroSeqHeader}
 					content={iMicroSeqContent}
 				/>
 				{/* Commented out for testing without this section
         <Contributors /> */}
 				<Policy
+					anchor={virusSeqAnchor}
 					header={virusSeqHeader}
 					content={virusSeqContent}
 				/>
