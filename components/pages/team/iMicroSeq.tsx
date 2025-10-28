@@ -26,7 +26,7 @@ import StyledLink from '#components/Link';
 import OicrLogo from '#components/theme/icons/oicr';
 import OvertureLogoWithText from '#components/theme/icons/overture_logo_with_text';
 
-const IMicroSeqPortal = (): ReactElement => (
+const IMicroSeqContent = (): ReactElement => (
 	<section>
 		<div
 			css={css`
@@ -151,4 +151,4 @@ const IMicroSeqPortal = (): ReactElement => (
 	</section>
 );
 
-export default IMicroSeqPortal;
+export default IMicroSeqContent;

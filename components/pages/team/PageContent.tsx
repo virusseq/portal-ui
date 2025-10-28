@@ -26,7 +26,7 @@ import defaultTheme from '#components/theme';
 
 import Cloud from './Cloud';
 import Funding from './Funding';
-import IMicroSeq from './iMicroSeq';
+import IMicroSeqContent from './IMicroSeq';
 import Partners from './Partners';
 import Portal from './Portal';
 
@@ -74,7 +74,7 @@ const PageContent = (): ReactElement => {
 					A Made-in-Canada Data Solution
 				</p>
 
-				<IMicroSeq />
+				<IMicroSeqContent />
 				<Funding />
 				<Partners />
 				<Portal />
