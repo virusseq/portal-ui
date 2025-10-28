@@ -73,9 +73,7 @@ export const newBadgeStyle = (theme?: typeof defaultTheme): SerializedStyles => 
 `;
 
 export const StyledNavBarLink = styled.a<{ active?: boolean }>`
-	// Removing Parens causes TypeError, see https://stackoverflow.com/a/57763158
-	${linkStyles()}
-	${({ active, theme }) => active && activeStyle(theme)}
+	${({ active, theme }) => [linkStyles(theme), active && activeStyle(theme)]}
 `;
 
 export const StyledListLink = styled.a<{ active?: boolean }>`
