@@ -41,7 +41,7 @@ const Contributors = (): ReactElement => {
 					${theme.typography.subheading};
 				`}
 			>
-				The following members have contributed data to the Canadian VirusSeq Data Portal:
+				Contributors to the iMicroSeq Data Portal for environmental data
 			</h2>
 			<p
 				css={css`
