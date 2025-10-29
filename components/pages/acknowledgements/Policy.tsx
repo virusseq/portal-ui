@@ -144,11 +144,12 @@ export const Policy = ({
 	const theme: typeof defaultTheme = useTheme();
 	return (
 		<section
+			id={anchor}
 			css={css`
 				margin: 5px 0 0;
 			`}
 		>
-			<h3 id={anchor}>{header}</h3>
+			<h3>{header}</h3>
 
 			<h2
 				css={css`

@@ -111,20 +111,32 @@ const PageContent = (): ReactElement => {
 						</span>
 					</p>
 				</section>
-				<a href={`#${iMicroSeqAnchor}`}>Acknowledgements for iMicroSeq Environmental data</a>
-				<a href={`#${virusSeqAnchor}`}>
+				<a
+					css={css`
+						font-weight: bold;
+					`}
+					href={`#${iMicroSeqAnchor}`}
+				>
+					Acknowledgements for iMicroSeq Environmental data
+				</a>
+				<a
+					css={css`
+						font-weight: bold;
+					`}
+					href={`#${virusSeqAnchor}`}
+				>
 					Acknowledgements for VirusSeq Data Portal / iMicroSeq clinical case data
 				</a>
 				<Policy
 					anchor={iMicroSeqAnchor}
-					header={iMicroSeqHeader}
 					content={iMicroSeqContent}
+					header={iMicroSeqHeader}
 				/>
 				<Contributors />
 				<Policy
 					anchor={virusSeqAnchor}
-					header={virusSeqHeader}
 					content={virusSeqContent}
+					header={virusSeqHeader}
 				/>
 				<Individuals />
 				<p>
