@@ -36,6 +36,7 @@ import {
 	iMicroSeqAnchor,
 	virusSeqAnchor,
 } from './Policy';
+import Contributors from './Contributors';
 
 const PageContent = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
@@ -119,15 +120,13 @@ const PageContent = (): ReactElement => {
 					header={iMicroSeqHeader}
 					content={iMicroSeqContent}
 				/>
-				{/* Commented out for testing without this section
-        <Contributors /> */}
+				<Contributors />
 				<Policy
 					anchor={virusSeqAnchor}
 					header={virusSeqHeader}
 					content={virusSeqContent}
 				/>
 				<Individuals />
-
 				<p>
 					Funding for the VirusSeq Data Portal has been provided by The Canadian COVID Genomics Network
 					(CanCOGeN), supported by Genome Canada and Innovation, Science and Economic Development Canada
