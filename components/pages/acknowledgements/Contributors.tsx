@@ -24,6 +24,7 @@ import { format } from 'date-fns';
 import { ReactElement } from 'react';
 
 import defaultTheme from '#components/theme';
+import StyledLink from '#components/Link';
 
 const Contributors = (): ReactElement => {
 	const theme: typeof defaultTheme = useTheme();
@@ -64,7 +65,13 @@ const Contributors = (): ReactElement => {
 							Nagasawa, Michael R. Mulvey, and Chand S. Mangat. 2022. “RT-qPCR Detection of SARS-CoV-2
 							Mutations S 69–70 Del, S N501Y and N D3L Associated with Variants of Concern in Canadian
 							Wastewater Samples.” Science of The Total Environment 810 (March):151283.
-							https://doi.org/10.1016/j.scitotenv.2021.151283.
+							<StyledLink
+								href="https://doi.org/10.1016/j.scitotenv.2021.151283"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								https://doi.org/10.1016/j.scitotenv.2021.151283.
+							</StyledLink>
 						</li>
 					</ul>
 				</li>
@@ -74,15 +81,27 @@ const Contributors = (): ReactElement => {
 						<li>
 							Lin X, Glier M, Kuchinski K,Ross-Van Mierlo T, McVea D, Tyson JR, Prystajecky N, Ziels
 							RM.2021.Assessing Multiplex Tiling PCR Sequencing Approaches for Detecting Genomic Variants
-							of SARS-CoV-2 in Municipal Wastewater.
-							mSystems6:10.1128/msystems.01068-21.https://doi.org/10.1128/msystems.01068-21
+							of SARS-CoV-2 in Municipal Wastewater. mSystems6:10.1128/msystems.01068-21.
+							<StyledLink
+								href="https://doi.org/10.1128/msystems.01068-21"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								https://doi.org/10.1128/msystems.01068-21
+							</StyledLink>
 						</li>
 						<li>
 							Peterson, Shelley W., Ravinder Lidder, Jade Daigle, Quinn Wonitowy, Codey Dueck, Audra
 							Nagasawa, Michael R. Mulvey, and Chand S. Mangat. 2022. “RT-qPCR Detection of SARS-CoV-2
 							Mutations S 69–70 Del, S N501Y and N D3L Associated with Variants of Concern in Canadian
 							Wastewater Samples.” Science of The Total Environment 810 (March):151283.
-							https://doi.org/10.1016/j.scitotenv.2021.151283.
+							<StyledLink
+								href="https://doi.org/10.1016/j.scitotenv.2021.151283."
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								https://doi.org/10.1016/j.scitotenv.2021.151283.
+							</StyledLink>
 						</li>
 					</ul>
 					<li>
@@ -92,7 +111,14 @@ const Contributors = (): ReactElement => {
 								Yanaç, Kadir, Adeola Adegoke, Liqun Wang, Miguel Uyaguari, and Qiuyan Yuan. 2022.
 								“Detection of SARS-CoV-2 RNA throughout Wastewater Treatment Plants and a Modeling
 								Approach to Understand COVID-19 Infection Dynamics in Winnipeg, Canada.” Science of The
-								Total Environment 825 (June):153906. https://doi.org/10.1016/j.scitotenv.2022.153906.
+								Total Environment 825 (June):153906.
+								<StyledLink
+									href="https://doi.org/10.1016/j.scitotenv.2022.153906"
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									https://doi.org/10.1016/j.scitotenv.2022.153906.
+								</StyledLink>
 							</li>
 						</ul>
 					</li>
@@ -123,15 +149,27 @@ const Contributors = (): ReactElement => {
 								Gilbride KA,Graber TE, Islam G, Knockleby J, Ma S, McDougall H, McKay RM, Mloszewska A,
 								Oswald C,Servos M, Swinwood-Sky M, Ybazeta G, Habash M, Goodridge L.2022.Metagenomics of
 								Wastewater Influent from Wastewater Treatment Facilities across Ontario in the Era of
-								Emerging SARS-CoV-2 Variants of Concern. Microbiol Resour
-								Announc11:e00362-22.https://doi.org/10.1128/mra.00362-22
+								Emerging SARS-CoV-2 Variants of Concern. Microbiol Resour Announc11:e00362-22.
+								<StyledLink
+									href="https://doi.org/10.1128/mra.00362-22"
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									https://doi.org/10.1128/mra.00362-22
+								</StyledLink>
 							</li>
 							<li>
 								Peterson, Shelley W., Ravinder Lidder, Jade Daigle, Quinn Wonitowy, Codey Dueck, Audra
 								Nagasawa, Michael R. Mulvey, and Chand S. Mangat. 2022. “RT-qPCR Detection of SARS-CoV-2
 								Mutations S 69–70 Del, S N501Y and N D3L Associated with Variants of Concern in Canadian
 								Wastewater Samples.” Science of The Total Environment 810 (March):151283.
-								https://doi.org/10.1016/j.scitotenv.2021.151283.
+								<StyledLink
+									href="https://doi.org/10.1016/j.scitotenv.2021.151283."
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									https://doi.org/10.1016/j.scitotenv.2021.151283.
+								</StyledLink>
 							</li>
 						</ul>
 					</li>
@@ -142,7 +180,14 @@ const Contributors = (): ReactElement => {
 								N’Guessan, Arnaud, Alexandra Tsitouras, Fernando Sanchez-Quete, Eyerusalem Goitom, Sarah
 								J. Reiling, Jose Hector Galvez, Thanh Luan Nguyen, et al. 2022. “Detection of Prevalent
 								SARS-CoV-2 Variant Lineages in Wastewater and Clinical Sequences from Cities in Québec,
-								Canada.” medRxiv. https://doi.org/10.1101/2022.02.01.22270170.
+								Canada.” medRxiv.
+								<StyledLink
+									href="https://doi.org/10.1101/2022.02.01.22270170"
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									https://doi.org/10.1101/2022.02.01.22270170.
+								</StyledLink>
 							</li>
 						</ul>
 					</li>
@@ -160,7 +205,13 @@ const Contributors = (): ReactElement => {
 								Nagasawa, Michael R. Mulvey, and Chand S. Mangat. 2022. “RT-qPCR Detection of SARS-CoV-2
 								Mutations S 69–70 Del, S N501Y and N D3L Associated with Variants of Concern in Canadian
 								Wastewater Samples.” Science of The Total Environment 810 (March):151283.
-								https://doi.org/10.1016/j.scitotenv.2021.151283.
+								<StyledLink
+									href="https://doi.org/10.1016/j.scitotenv.2021.151283"
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									https://doi.org/10.1016/j.scitotenv.2021.151283.
+								</StyledLink>
 							</li>
 						</ul>
 					</li>
