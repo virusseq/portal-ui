@@ -24,22 +24,14 @@ import { format } from 'date-fns';
 import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
-import defaultTheme from '#components/theme';
 
-import Individuals from './Individuals';
-import {
-	iMicroSeqHeader,
-	iMicroSeqContent,
-	virusSeqContent,
-	virusSeqHeader,
-	Policy,
-	iMicroSeqAnchor,
-	virusSeqAnchor,
-} from './Policy';
+import { iMicroSeqPolicy, virusSeqPolicy } from './constants';
 import Contributors from './Contributors';
+import Individuals from './Individuals';
+import Policy from './Policy';
 
 const PageContent = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<main
@@ -76,7 +68,7 @@ const PageContent = (): ReactElement => {
 				<p
 					css={css`
 						font-style: italic;
-						margin-top: 10px 0 0;
+						margin-top: 10px;
 					`}
 				>
 					Updated at {format(Date.parse('27 Oct 2025 11:00:00'), 'MM/dd/yyyy, h:mm:ss aa')}
@@ -115,7 +107,7 @@ const PageContent = (): ReactElement => {
 					css={css`
 						font-weight: bold;
 					`}
-					href={`#${iMicroSeqAnchor}`}
+					href={`#${iMicroSeqPolicy.anchor}`}
 				>
 					Acknowledgements for iMicroSeq Environmental data
 				</a>
@@ -123,21 +115,13 @@ const PageContent = (): ReactElement => {
 					css={css`
 						font-weight: bold;
 					`}
-					href={`#${virusSeqAnchor}`}
+					href={`#${virusSeqPolicy.anchor}`}
 				>
 					Acknowledgements for VirusSeq Data Portal / iMicroSeq clinical case data
 				</a>
-				<Policy
-					anchor={iMicroSeqAnchor}
-					content={iMicroSeqContent}
-					header={iMicroSeqHeader}
-				/>
+				<Policy policy={iMicroSeqPolicy} />
 				<Contributors />
-				<Policy
-					anchor={virusSeqAnchor}
-					content={virusSeqContent}
-					header={virusSeqHeader}
-				/>
+				<Policy policy={virusSeqPolicy} />
 				<Individuals />
 				<p>
 					Funding for the VirusSeq Data Portal has been provided by The Canadian COVID Genomics Network
