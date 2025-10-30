@@ -44,7 +44,7 @@ const NavBar = (): ReactElement => {
 	const { logout, token, userHasAccessToStudySvc } = useAuthContext();
 	const { logEvent } = useTrackingContext();
 	const router = useRouter();
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	const handleLogout = () => logout(logEvent);
 
@@ -82,7 +82,11 @@ const NavBar = (): ReactElement => {
 							text-decoration: none;
 						`}
 					>
-						<img src="/images/navbar-logo.png" alt="VirusSeq logo" width="182" />
+						<img
+							src="/images/navbar-logo.png"
+							alt="VirusSeq logo"
+							width="182"
+						/>
 					</a>
 				</InternalLink>
 			</div>
@@ -198,9 +202,7 @@ const NavBar = (): ReactElement => {
 					/>
 
 					<InternalLink path={INTERNAL_PATHS.RELEASES}>
-						<StyledLink
-							className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}
-						>
+						<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}>
 							Data Releases
 						</StyledLink>
 					</InternalLink>
@@ -217,9 +219,7 @@ const NavBar = (): ReactElement => {
 						`}
 					>
 						<InternalLink path={INTERNAL_PATHS.SUBMISSION}>
-							<StyledLink
-								className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}
-							>
+							<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}>
 								Submission Dashboard
 							</StyledLink>
 						</InternalLink>

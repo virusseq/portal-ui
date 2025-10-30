@@ -23,7 +23,6 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import StyledLink, { InternalLink } from '#components/Link';
-import defaultTheme from '#components/theme';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
 import CoVizu from './CoVizu';
@@ -32,7 +31,7 @@ import MVP from './MVP';
 import ViralAI from './ViralAI';
 
 const PageContent = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<main

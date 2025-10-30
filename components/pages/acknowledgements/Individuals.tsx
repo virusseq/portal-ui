@@ -22,10 +22,8 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import defaultTheme from '#components/theme';
-
 const Individuals = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	return (
 		<section
 			css={css`
