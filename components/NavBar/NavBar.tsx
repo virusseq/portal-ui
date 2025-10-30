@@ -80,9 +80,30 @@ const NavBar = (): ReactElement => {
 							display: flex;
 							align-items: center;
 							text-decoration: none;
+							width: 165px;
+							height: 45px;
 						`}
 					>
-						<img src="/images/navbar-logo.png" alt="VirusSeq logo" width="182" />
+						<span
+							css={css`
+								width: inherit;
+								height: inherit;
+								background-color: ${theme.colors.white};
+								transform: skew(-20deg);
+							`}
+						>
+							<img
+								css={css`
+									left: 5%;
+									top: 5%;
+									position: relative;
+									transform: skew(20deg);
+								`}
+								src="/images/imicroseq-logo.png"
+								alt="iMicroSeq logo"
+								width="150"
+							/>
+						</span>
 					</a>
 				</InternalLink>
 			</div>
@@ -198,9 +219,7 @@ const NavBar = (): ReactElement => {
 					/>
 
 					<InternalLink path={INTERNAL_PATHS.RELEASES}>
-						<StyledLink
-							className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}
-						>
+						<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}>
 							Data Releases
 						</StyledLink>
 					</InternalLink>
@@ -217,9 +236,7 @@ const NavBar = (): ReactElement => {
 						`}
 					>
 						<InternalLink path={INTERNAL_PATHS.SUBMISSION}>
-							<StyledLink
-								className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}
-							>
+							<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}>
 								Submission Dashboard
 							</StyledLink>
 						</InternalLink>
