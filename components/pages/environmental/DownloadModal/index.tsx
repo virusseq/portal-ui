@@ -20,7 +20,7 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { convertToDownloadManifest, downloadFile, type SubmissionManifest } from '#/global/utils/fileManifest';
 import Collapsible from '#components/Collapsible';
@@ -31,9 +31,11 @@ import { createZipFile } from '#components/pages/environmental/RepoTable/helper'
 import defaultTheme, { type ThemeInterface } from '#components/theme';
 import { Checkmark, CoronaVirus, Storage } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
+import { fetchReleaseData } from '#global/hooks/useReleaseData/environmental';
 
 import { MetadataFileSection } from './MetadataFile';
 import { plainTextSequencingFileInstructions, SequencingFilesSection } from './SequencingFiles';
+import type { SQONType } from '@overture-stack/arranger-components';
 
 /**
  * Advisory section to display the data usage policy and acknowledgements.
@@ -189,6 +191,7 @@ const DownloadModal = ({
 	manifestFileName = 'manifest.txt',
 	metadataFileName = 'metadata-export.tsv',
 	onClose,
+	sqon,
 	selectedRows = [],
 	zipArchiveFileName = 'download_bundle.zip',
 }: {
@@ -200,9 +203,12 @@ const DownloadModal = ({
 	metadataFileName?: string;
 	onClose: () => void;
 	selectedRows: string[];
+	sqon: SQONType;
 	zipArchiveFileName?: string;
 }) => {
 	const theme: ThemeInterface = useTheme();
+
+	const [samplesCount, setSamplesCount] = useState(selectedRows.length);
 
 	const handleBundleDownload = useCallback(async () => {
 		const bundleDownload: { content: Blob; fileName: string }[] = [];
@@ -241,8 +247,15 @@ const DownloadModal = ({
 	useEffect(() => {
 		if (!isLoading) {
 			handleBundleDownload();
+			if (selectedRows.length === 0) {
+				fetchReleaseData(sqon).then((data) => {
+					const sumGenomesPerProvince = data?.filesByVariant?.reduce((sum, { count }) => sum + count, 0);
+					const approxGenomesCount = data?.genomesCount?.value;
+					setSamplesCount(sumGenomesPerProvince || approxGenomesCount || 0);
+				});
+			}
 		}
-	}, [isLoading, handleBundleDownload]);
+	}, [isLoading, handleBundleDownload, selectedRows, sqon]);
 
 	return (
 		<Modal
@@ -281,7 +294,7 @@ const DownloadModal = ({
 				) : (
 					<>
 						<ArchiveStatDisplay
-							numOfSamples={selectedRows.length}
+							numOfSamples={samplesCount}
 							numOfSeqFiles={fileManifest?.length}
 						/>
 						<p>Download metadata and sequencing files instructions:</p>
