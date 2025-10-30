@@ -35,6 +35,7 @@ import { fetchReleaseData } from '#global/hooks/useReleaseData/environmental';
 
 import { MetadataFileSection } from './MetadataFile';
 import { plainTextSequencingFileInstructions, SequencingFilesSection } from './SequencingFiles';
+import type { SQONType } from '@overture-stack/arranger-components';
 
 /**
  * Advisory section to display the data usage policy and acknowledgements.
@@ -190,6 +191,7 @@ const DownloadModal = ({
 	manifestFileName = 'manifest.txt',
 	metadataFileName = 'metadata-export.tsv',
 	onClose,
+	sqon,
 	selectedRows = [],
 	zipArchiveFileName = 'download_bundle.zip',
 }: {
@@ -201,6 +203,7 @@ const DownloadModal = ({
 	metadataFileName?: string;
 	onClose: () => void;
 	selectedRows: string[];
+	sqon: SQONType;
 	zipArchiveFileName?: string;
 }) => {
 	const theme: ThemeInterface = useTheme();
@@ -245,12 +248,14 @@ const DownloadModal = ({
 		if (!isLoading) {
 			handleBundleDownload();
 			if (selectedRows.length === 0) {
-				fetchReleaseData().then((data) =>
-					setSamplesCount(data?.filesByVariant?.reduce((sum, { count }) => sum + count, 0) ?? 0),
-				);
+				fetchReleaseData(sqon).then((data) => {
+					const sumGenomesPerProvince = data?.filesByVariant?.reduce((sum, { count }) => sum + count, 0);
+					const approxGenomesCount = data?.genomesCount?.value;
+					setSamplesCount(sumGenomesPerProvince || approxGenomesCount || 0);
+				});
 			}
 		}
-	}, [isLoading, handleBundleDownload, selectedRows]);
+	}, [isLoading, handleBundleDownload, selectedRows, sqon]);
 
 	return (
 		<Modal
