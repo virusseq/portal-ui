@@ -24,7 +24,7 @@ import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
 
-import { iMicroSeqPolicy, virusSeqPolicy } from './constants';
+import { iMicroSeqPolicy, virusSeqPolicy } from './policies';
 import Contributors from './Contributors';
 import Individuals from './Individuals';
 import Policy from './Policy';
