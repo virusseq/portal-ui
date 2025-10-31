@@ -41,14 +41,14 @@ const Portal = (): ReactElement => {
 							${theme.typography.subheading};
 						`}
 					>
-						COVID-MVP
+						VIRUS-MVP
 					</h2>
-
 					<p
 						css={css`
 							margin-bottom: 0;
 						`}
 					>
+						The{' '}
 						<StyledLink
 							css={css`
 								font-weight: bold;
@@ -57,8 +57,21 @@ const Portal = (): ReactElement => {
 							rel="noopener noreferrer"
 							target="_blank"
 						>
-							COVID-MVP
+							VIRUS-MVP framework
 						</StyledLink>{' '}
+						connects mutations with their functional impact. It includes an interactive heatmap-based
+						visualization that allows users to explore the mutational profile of a set of influenza virus,
+						Mpox virus (hmpxv1), and SARS-CoV-2 viral genomes or wastewater sequencing data, including the
+						underlying literature on the functional impact linked with each mutation. In case of genomes,
+						data can be grouped by any variable in provided metadata file (e.g., lineages, time,
+						geographical location). This includes{' '}
+						<StyledLink
+							href="https://www.biorxiv.org/content/10.1101/2022.06.07.493653v1"
+							rel="noopener noreferrer"
+							target="_blank"
+						>
+							COVID-MVP
+						</StyledLink>
 						(
 						<StyledLink
 							href="https://www.biorxiv.org/content/10.1101/2022.06.07.493653v1"
@@ -67,12 +80,7 @@ const Portal = (): ReactElement => {
 						>
 							Anwar et al., 2022
 						</StyledLink>
-						) a part of the VIRUS-MVP framework, connects mutations with their functional impact. It
-						includes an interactive heatmap-based visualization that allows users to explore the
-						mutational profile of a set of SARS-CoV-2 genomes or wastewater sequencing data,
-						including the underlying literature on the functional impact linked with each mutation.
-						In case of genomes, data can be grouped by any variable in provided metadata file (e.g.,
-						lineages, time, geographical location).
+						)
 					</p>
 				</span>
 
@@ -90,15 +98,18 @@ const Portal = (): ReactElement => {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						<img alt="COVID-MVP logo" src="/images/covid-mvp-logo.png" width="65" />
+						<img
+							alt="COVID-MVP logo"
+							src="/images/covid-mvp-logo.png"
+							width="65"
+						/>
 					</StyledLink>
 				</span>
 			</div>
 
 			<p>
-				Functional annotation is a standardized and a continuous effort that is primarily performed
-				by curators with help from the Computational Analysis, Modelling and Evolutionary Outcomes
-				Group (
+				Functional annotation is a standardized and a continuous effort that is primarily performed by curators
+				with help from the Computational Analysis, Modelling and Evolutionary Outcomes Group (
 				<StyledLink
 					href="https://covarrnet.ca/computational-analysis-modelling-and-evolutionary-outcomes-cameo/"
 					rel="noopener noreferrer"
@@ -107,11 +118,14 @@ const Portal = (): ReactElement => {
 					CAMEO
 				</StyledLink>
 				) initiative of the Coronavirus Variants Rapid Response Network (
-				<StyledLink href="https://covarrnet.ca/" rel="noopener noreferrer" target="_blank">
+				<StyledLink
+					href="https://covarrnet.ca/"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
 					CoVaRR-Net
 				</StyledLink>
-				), however, the scientific community can also provide input by using the issue tracking
-				system of the{' '}
+				), however, the scientific community can also provide input by using the issue tracking system of the{' '}
 				<StyledLink
 					href="https://github.com/nodrogluap/pokay"
 					rel="noopener noreferrer"

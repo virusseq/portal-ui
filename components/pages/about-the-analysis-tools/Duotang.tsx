@@ -68,9 +68,9 @@ const Portal = (): ReactElement => {
 							Gill et al., 2024
 						</StyledLink>
 						) is an online web notebook that was built to explore Canadian SARS-CoV-2 genomic and
-						epidemiological data with the aim of investigating viral evolution and spread. It was
-						dubbed ‘Duotang’, in reference to Canadian slang (a generalized trademark in Canada) for
-						‘workbook’ used in schools.
+						epidemiological data with the aim of investigating viral evolution and spread. It was dubbed
+						‘Duotang’, in reference to Canadian slang (a generalized trademark in Canada) for ‘workbook’
+						used in schools.
 					</p>
 				</span>
 
@@ -88,7 +88,11 @@ const Portal = (): ReactElement => {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						<img alt="Duotang logo" src="/images/duotang-logo.png" width="60" />
+						<img
+							alt="Duotang logo"
+							src="/images/duotang-logo.png"
+							width="60"
+						/>
 					</StyledLink>
 				</span>
 			</div>
@@ -102,20 +106,23 @@ const Portal = (): ReactElement => {
 				>
 					CAMEO
 				</StyledLink>{' '}
-				team (Computational Analysis, Modelling and Evolutionary Outcomes Group) associated with the
-				Coronavirus Variants Rapid Response Network (
-				<StyledLink href="https://covarrnet.ca/" rel="noopener noreferrer" target="_blank">
+				team (Computational Analysis, Modelling and Evolutionary Outcomes Group) associated with the Coronavirus
+				Variants Rapid Response Network (
+				<StyledLink
+					href="https://covarrnet.ca/"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
 					CoVaRR-Net
 				</StyledLink>
 				) for sharing with collaborators, including public health labs and industry.
 			</p>
 
 			<p>
-				These analyses are freely available and open source, enabling code reuse by public health
-				authorities and other researchers for their own use. Canadian genomic data is pulled from
-				the VirusSeq Data Portal and ViralAI, coupled with additional epidemiological data obtained
-				from various public sources, to keep these analyses up-to-date. Updates are transparently
-				made available through the Duotang{' '}
+				These analyses are freely available and open source, enabling code reuse by public health authorities
+				and other researchers for their own use. Canadian genomic data is pulled from the VirusSeq Data Portal
+				and ViralAI, coupled with additional epidemiological data obtained from various public sources, to keep
+				these analyses up-to-date. Updates are transparently made available through the Duotang{' '}
 				<StyledLink
 					href="https://github.com/CoVaRR-NET/duotang"
 					rel="noopener noreferrer"
