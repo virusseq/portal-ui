@@ -24,12 +24,11 @@ import { ReactElement, useEffect, useState } from 'react';
 import urlJoin from 'url-join';
 
 import StyledLink, { StyledLinkAsButton } from '#components/Link';
-import defaultTheme from '#components/theme';
 import { getConfig } from '#global/config';
 
 const PageContent = (): ReactElement => {
 	const [origin, setOrigin] = useState('');
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const {
 		NEXT_PUBLIC_EGO_API_URL,
 		NEXT_PUBLIC_EGO_CLIENT_ID,

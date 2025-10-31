@@ -23,13 +23,12 @@ import { css, useTheme } from '@emotion/react';
 import cx from 'classnames';
 
 import StyledLink from '#components/Link.tsx';
-import type defaultTheme from '#components/theme/index.ts';
 
 import Announcement from './Announcement.tsx';
 import type { AnnouncementObj, AnnouncementPanelProps } from './types.ts';
 
 const AnnouncementsPanel = ({ announcements = [], className, css: customCSS }: AnnouncementPanelProps) => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<aside

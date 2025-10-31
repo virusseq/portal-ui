@@ -26,7 +26,6 @@ import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
 import NoScopes from '#components/NoScopes';
 import { PaginationToolBar } from '#components/Pagination';
-import defaultTheme from '#components/theme';
 import { CoronaVirus } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useMuseData from '#global/hooks/useMuseData';
@@ -41,7 +40,7 @@ const PreviousSubmissions = ({
 	pageSize?: number;
 	paginationEnabled?: boolean;
 }): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { token, userHasClinicalAccess } = useAuthContext();
 	const { awaitingResponse, fetchPreviousSubmissions } = useMuseData('PreviousSubmissions');
 	const [previousSubmissions, setPreviousSubmissions] = useState<SubmissionPaginatedResponse>({
@@ -93,7 +92,10 @@ const PreviousSubmissions = ({
 			`}
 		>
 			{userHasClinicalAccess ? (
-				<LoaderWrapper loading={awaitingResponse} message="Retrieving your submissions.">
+				<LoaderWrapper
+					loading={awaitingResponse}
+					message="Retrieving your submissions."
+				>
 					{previousSubmissions.data.length > 0 || !previousSubmissions.first ? (
 						<>
 							<GenericTable

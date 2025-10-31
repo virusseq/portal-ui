@@ -24,7 +24,6 @@ import Router from 'next/router';
 import { ReactElement, useEffect } from 'react';
 
 import { InternalLink as Link, StyledLinkAsButton } from '#components/Link';
-import defaultTheme from '#components/theme';
 import useAuthContext from '#global/hooks/useAuthContext';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 import getInternalLink from '#global/utils/getInternalLink';
@@ -33,7 +32,7 @@ import PreviousClinicalSubmissions from './Clinical/PreviousSubmissions';
 import PreviousEnvironmentalSubmissions from './Environmental/PreviousSubmissions';
 
 const PageContent = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { userHasClinicalAccess, userHasEnvironmentalAccess } = useAuthContext();
 
 	useEffect(() => {
