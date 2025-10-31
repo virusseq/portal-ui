@@ -75,27 +75,29 @@ const NavBar = (): ReactElement => {
 				`}
 			>
 				<InternalLink path={ROOT_PATH}>
-					<div
-						css={css`
-							align-items: center;
-							background-color: ${theme.colors.white};
-							display: flex;
-							height: 45px;
-							justify-content: center;
-							text-decoration: none;
-							transform: skew(-20deg);
-							width: 165px;
-						`}
-					>
-						<img
+					<a>
+						<div
 							css={css`
-								transform: skew(20deg);
+								align-items: center;
+								background-color: ${theme.colors.white};
+								display: flex;
+								height: 45px;
+								justify-content: center;
+								text-decoration: none;
+								transform: skew(-20deg);
+								width: 165px;
 							`}
-							src="/images/imicroseq-logo.png"
-							alt="iMicroSeq logo"
-							width="150"
-						/>
-					</div>
+						>
+							<img
+								css={css`
+									transform: skew(20deg);
+								`}
+								src="/images/imicroseq-logo.png"
+								alt="iMicroSeq logo"
+								width="150"
+							/>
+						</div>
+					</a>
 				</InternalLink>
 			</div>
 			<div
