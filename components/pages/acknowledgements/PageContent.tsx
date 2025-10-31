@@ -20,7 +20,6 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { format } from 'date-fns';
 import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
@@ -71,7 +70,7 @@ const PageContent = (): ReactElement => {
 						margin-top: 10px;
 					`}
 				>
-					Updated at {format(Date.parse('27 Oct 2025 11:00:00'), 'MM/dd/yyyy, h:mm:ss aa')}
+					Updated at 10/31/2025, 14:00:00 PM
 				</p>
 
 				<section>
