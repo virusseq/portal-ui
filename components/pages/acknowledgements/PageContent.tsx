@@ -102,22 +102,25 @@ const PageContent = (): ReactElement => {
 						</span>
 					</p>
 				</section>
-				<a
-					css={css`
-						font-weight: bold;
-					`}
-					href={`#${iMicroSeqPolicy.anchor}`}
-				>
-					Acknowledgements for iMicroSeq Environmental data
-				</a>
-				<a
-					css={css`
-						font-weight: bold;
-					`}
-					href={`#${virusSeqPolicy.anchor}`}
-				>
-					Acknowledgements for VirusSeq Data Portal / iMicroSeq clinical case data
-				</a>
+				<nav>
+					<a
+						css={css`
+							font-weight: bold;
+						`}
+						href={`#${iMicroSeqPolicy.anchor}`}
+					>
+						Acknowledgements for iMicroSeq Environmental data
+					</a>
+					<br />
+					<a
+						css={css`
+							font-weight: bold;
+						`}
+						href={`#${virusSeqPolicy.anchor}`}
+					>
+						Acknowledgements for VirusSeq Data Portal / iMicroSeq clinical case data
+					</a>
+				</nav>
 				<Policy policy={iMicroSeqPolicy} />
 				<Contributors />
 				<Policy policy={virusSeqPolicy} />
