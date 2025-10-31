@@ -72,7 +72,7 @@ const PageContent = (): ReactElement => {
 					`}
 				>
 					A selection of resources are noted below that enable further analyses of the{' '}
-					<InternalLink path={INTERNAL_PATHS.EXPLORER}>VirusSeq Data Portal Data</InternalLink>.
+					<InternalLink path={INTERNAL_PATHS.EXPLORER}>iMicroSeq Data</InternalLink>.
 					<br />
 					All of these resources are Open Source and freely available. If you have a resource you would like
 					to see listed here, or any feedback, please{' '}
@@ -86,10 +86,10 @@ const PageContent = (): ReactElement => {
 					.
 				</p>
 
-				<Duotang />
 				<MVP />
-				<CoVizu />
+				<Duotang />
 				<ViralAI />
+				<CoVizu />
 			</article>
 		</main>
 	);

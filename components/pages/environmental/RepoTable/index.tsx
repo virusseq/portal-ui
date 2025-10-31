@@ -25,6 +25,7 @@ import {
 	Table,
 	TableContextProvider,
 	Toolbar,
+	useArrangerData,
 	useArrangerTheme,
 } from '@overture-stack/arranger-components';
 import {
@@ -186,6 +187,7 @@ const RepoTable = (): ReactElement => {
 	const [fileManifest, setFileManifest] = useState<SubmissionManifest[]>([]);
 	const [fileMetadata, setFileMetadata] = useState<Blob | null>(null);
 	const [selectedRows, setSelectedRows] = useState<string[]>([]);
+	const { sqon } = useArrangerData({ callerName: 'Environmental-RepoTable' });
 	const [isLoadingManifest, setIsLoadingManifest] = useState(false);
 	const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
 
@@ -228,8 +230,6 @@ const RepoTable = (): ReactElement => {
 		selectedRows: string[];
 		files?: ExporterFileInterface[];
 	}) => {
-		if (!sqon) return;
-
 		const filteredSqonWithFiles = excludeRecordsWithoutFiles(sqon);
 
 		setShowDownloadInfoModal(true);
@@ -299,6 +299,7 @@ const RepoTable = (): ReactElement => {
 					fileManifest={fileManifest}
 					fileMetadata={fileMetadata}
 					selectedRows={selectedRows}
+					sqon={sqon}
 					isLoading={isLoadingManifest || isLoadingMetadata}
 					metadataFileName={`wastewater-metadata-export-${today}.tsv`}
 				/>
