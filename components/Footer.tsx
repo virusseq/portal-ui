@@ -26,7 +26,7 @@ import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
-import StyledLink, { InternalLink } from './Link';
+import StyledLink, { EmailLink, InternalLink } from './Link';
 import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
 
 const Footer = (): ReactElement => {
@@ -150,13 +150,9 @@ const Footer = (): ReactElement => {
 				>
 					<li>
 						<span>Contact us at </span>
-						<StyledLink
-							href="mailto:imicroseq-dataportal@lists.sfu.ca"
-							rel="noopener noreferrer"
-							target="_blank"
-						>
+						<EmailLink email="imicroseq-dataportal@lists.sfu.ca">
 							imicroseq-dataportal@lists.sfu.ca
-						</StyledLink>
+						</EmailLink>
 					</li>
 
 					<li>

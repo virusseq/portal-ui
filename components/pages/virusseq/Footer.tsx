@@ -22,7 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import StyledLink, { InternalLink } from '#components/Link';
+import StyledLink, { EmailLink, InternalLink } from '#components/Link';
 import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
@@ -131,13 +131,7 @@ const Footer = (): ReactElement => {
 					</li>
 
 					<li>
-						<StyledLink
-							href="mailto:info@virusseq-dataportal.ca"
-							rel="noopener noreferrer"
-							target="_blank"
-						>
-							Contact Us
-						</StyledLink>
+						<EmailLink email="info@virusseq-dataportal.ca">Contact Us</EmailLink>
 					</li>
 				</ul>
 				<span>

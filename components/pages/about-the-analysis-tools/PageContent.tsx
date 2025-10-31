@@ -22,7 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import StyledLink, { InternalLink } from '#components/Link';
+import { EmailLink, InternalLink } from '#components/Link';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
 import CoVizu from './CoVizu';
@@ -76,14 +76,7 @@ const PageContent = (): ReactElement => {
 					<br />
 					All of these resources are Open Source and freely available. If you have a resource you would like
 					to see listed here, or any feedback, please{' '}
-					<StyledLink
-						href="mailto:imicroseq-dataportal@lists.sfu.ca"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						Contact Us
-					</StyledLink>
-					.
+					<EmailLink email="imicroseq-dataportal@lists.sfu.ca">Contact Us</EmailLink>. .
 				</p>
 
 				<MVP />

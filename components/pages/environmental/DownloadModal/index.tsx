@@ -20,11 +20,12 @@
  */
 
 import { css, useTheme } from '@emotion/react';
+import type { SQONType } from '@overture-stack/arranger-components';
 import { useCallback, useEffect, useState } from 'react';
 
 import { convertToDownloadManifest, downloadFile, type SubmissionManifest } from '#/global/utils/fileManifest';
 import Collapsible from '#components/Collapsible';
-import StyledLink from '#components/Link';
+import StyledLink, { EmailLink } from '#components/Link';
 import Loader from '#components/Loader';
 import { Modal } from '#components/Modal';
 import { createZipFile } from '#components/pages/environmental/RepoTable/helper';
@@ -35,7 +36,6 @@ import { fetchReleaseData } from '#global/hooks/useReleaseData/environmental';
 
 import { MetadataFileSection } from './MetadataFile';
 import { plainTextSequencingFileInstructions, SequencingFilesSection } from './SequencingFiles';
-import type { SQONType } from '@overture-stack/arranger-components';
 
 /**
  * Advisory section to display the data usage policy and acknowledgements.
@@ -56,14 +56,8 @@ const AdvisorySection = () => (
 		<p>
 			Data that is being shared is the work of many individuals and should be treated as unpublished data. If you
 			wish to publish research using the data, contact us at{' '}
-			<StyledLink
-				href="mailto:imicroseq-dataportal@lists.sfu.ca"
-				rel="noopener noreferrer"
-				target="_blank"
-			>
-				imicroseq-dataportal@lists.sfu.ca
-			</StyledLink>{' '}
-			first to ensure that those who have generated the data can be involved in its analysis.
+			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink> first to
+			ensure that those who have generated the data can be involved in its analysis.
 		</p>
 	</>
 );

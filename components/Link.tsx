@@ -75,14 +75,21 @@ export const StyledLinkAsButton = styled(StyledLink)`
 	`}
 `;
 
-export const InternalLink = ({
-	children,
-	path,
-}: {
-	children: ReactNode;
-	path: string;
-}): ReactElement => (
-	<Link href={getInternalLink({ path })} passHref>
+export const EmailLink = ({ children, email }: { children: ReactNode; email: string }): ReactElement => (
+	<StyledLink
+		href={`mailto:${email}`}
+		rel="noopener noreferrer"
+		target="_blank"
+	>
+		{children}
+	</StyledLink>
+);
+
+export const InternalLink = ({ children, path }: { children: ReactNode; path: string }): ReactElement => (
+	<Link
+		href={getInternalLink({ path })}
+		passHref
+	>
 		{children}
 	</Link>
 );

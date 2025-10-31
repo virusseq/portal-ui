@@ -23,7 +23,7 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useState } from 'react';
 import urlJoin from 'url-join';
 
-import StyledLink, { StyledLinkAsButton } from '#components/Link';
+import { EmailLink, StyledLinkAsButton } from '#components/Link';
 import { getConfig } from '#global/config';
 
 const PageContent = (): ReactElement => {
@@ -115,13 +115,9 @@ const PageContent = (): ReactElement => {
 						<li>
 							<p>
 								To be granted a data submission account for your organization, please contact{' '}
-								<StyledLink
-									href="mailto:imicroseq-dataportal@lists.sfu.ca"
-									rel="noopener noreferrer"
-									target="_blank"
-								>
+								<EmailLink email="imicroseq-dataportal@lists.sfu.ca">
 									imicroseq-dataportal@lists.sfu.ca
-								</StyledLink>{' '}
+								</EmailLink>{' '}
 								with an account request.
 							</p>
 							<StyledLinkAsButton
