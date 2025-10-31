@@ -25,10 +25,9 @@ import { ReactElement } from 'react';
 import StyledLink, { InternalLink } from '#components/Link';
 import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
-import defaultTheme from '#virusseq/theme';
 
 const Footer = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<div
@@ -59,10 +58,18 @@ const Footer = (): ReactElement => {
 					}
 				`}
 			>
-				<a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
+				<a
+					href="https://www.genomecanada.ca/"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
 					<GenomeCanadaLogo width={80} />
 				</a>
-				<img src="/images/cancogen-logo.png" alt="Cancogen logo" width="100" />
+				<img
+					src="/images/cancogen-logo.png"
+					alt="Cancogen logo"
+					width="100"
+				/>
 				<a
 					css={css`
 						margin-left: 1rem;
@@ -71,7 +78,11 @@ const Footer = (): ReactElement => {
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					<img src="/images/covarrnet-logo.png" alt="CoVaRRNet logo" width="120" />
+					<img
+						src="/images/covarrnet-logo.png"
+						alt="CoVaRRNet logo"
+						width="120"
+					/>
 				</a>
 			</section>
 
@@ -165,7 +176,10 @@ const Footer = (): ReactElement => {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						<OvertureLogoWithText width={100} height={18} />
+						<OvertureLogoWithText
+							width={100}
+							height={18}
+						/>
 					</a>
 				</span>
 
@@ -183,7 +197,10 @@ const Footer = (): ReactElement => {
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					<GitHubLogo height={20} width={20} />
+					<GitHubLogo
+						height={20}
+						width={20}
+					/>
 					<span
 						css={css`
 							margin-left: 5px;

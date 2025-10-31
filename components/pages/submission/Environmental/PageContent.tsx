@@ -24,7 +24,6 @@ import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
 
 import Navigator from '#components//Navigator';
-import defaultTheme from '#components/theme';
 import useAuthContext from '#global/hooks/useAuthContext';
 
 import SubmissionDetails from './Details';
@@ -35,7 +34,7 @@ const PageContent = (): ReactElement => {
 	const {
 		query: { slug = [] },
 	} = useRouter();
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { userHasClinicalAccess, userHasEnvironmentalAccess } = useAuthContext();
 
 	// Submission ID
@@ -59,7 +58,10 @@ const PageContent = (): ReactElement => {
 			) : (
 				<>
 					{userHasClinicalAccess && userHasEnvironmentalAccess && (
-						<Navigator path="/submission" text="All Submissions" />
+						<Navigator
+							path="/submission"
+							text="All Submissions"
+						/>
 					)}
 					<h1 className="view-title">Environmental Data Submissions</h1>
 

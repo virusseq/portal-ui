@@ -23,7 +23,6 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import { InternalLink as Link, StyledLinkAsButton } from '#components/Link';
-import defaultTheme from '#components/theme';
 import { MapleLeaf } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
@@ -36,7 +35,7 @@ import ReleaseDataEnvironmental from './environmental/ReleaseData';
  ** */
 
 const HeroBanner = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<article

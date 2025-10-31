@@ -61,14 +61,11 @@ const GenericTable = ({
 	emptyValue = '',
 	style,
 }: GenericTableProps): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const memoisedColumns = useMemo(() => columns, []);
 	// const memoisedData = useMemo(() => data, []);
 	const sortBy = useMemo(
-		() =>
-			typeof sortable !== 'boolean' && sortable?.defaultSortBy
-				? { sortBy: sortable.defaultSortBy }
-				: {},
+		() => (typeof sortable !== 'boolean' && sortable?.defaultSortBy ? { sortBy: sortable.defaultSortBy } : {}),
 		[],
 	);
 
@@ -181,7 +178,10 @@ const GenericTable = ({
 					return (
 						<tr {...row.getRowProps()}>
 							{row.cells.map((cell) => (
-								<td {...cell.getCellProps()} className={`tableBodyCell-${cell.column.id}`}>
+								<td
+									{...cell.getCellProps()}
+									className={`tableBodyCell-${cell.column.id}`}
+								>
 									{cell.value && String(cell.value).length > 0 ? cell.render('Cell') : emptyValue}
 								</td>
 							))}

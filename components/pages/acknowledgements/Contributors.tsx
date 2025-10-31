@@ -23,11 +23,10 @@ import { css, useTheme } from '@emotion/react';
 import { format } from 'date-fns';
 import { ReactElement } from 'react';
 
-import defaultTheme from '#components/theme';
 import StyledLink from '#components/Link';
 
 const Contributors = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const currentDatetime = new Date();
 
 	return (

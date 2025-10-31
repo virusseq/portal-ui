@@ -27,12 +27,11 @@ import useAuthContext from '#global/hooks/useAuthContext';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
 import StyledLink, { InternalLink } from './Link';
-import defaultTheme from './theme';
 import { GenomeCanadaLogo, GitHubLogo, OvertureLogoWithText } from './theme/icons';
 
 const Footer = (): ReactElement => {
 	const { NEXT_PUBLIC_ENABLE_LOGIN, NEXT_PUBLIC_ENABLE_REGISTRATION } = getConfig();
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { token } = useAuthContext();
 
 	return (
@@ -64,10 +63,22 @@ const Footer = (): ReactElement => {
 					}
 				`}
 			>
-				<a href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
-					<GenomeCanadaLogo height={60} width={80} viewBox="0 15 94 26" />
+				<a
+					href="https://www.genomecanada.ca/"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					<GenomeCanadaLogo
+						height={60}
+						width={80}
+						viewBox="0 15 94 26"
+					/>
 				</a>
-				<img src="/images/cancogen-logo.png" alt="Cancogen logo" width="85" />
+				<img
+					src="/images/cancogen-logo.png"
+					alt="Cancogen logo"
+					width="85"
+				/>
 				<a
 					css={css`
 						margin-left: 1rem;
@@ -76,7 +87,11 @@ const Footer = (): ReactElement => {
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					<img src="/images/covarrnet-logo.png" alt="CoVaRRNet logo" width="100" />
+					<img
+						src="/images/covarrnet-logo.png"
+						alt="CoVaRRNet logo"
+						width="100"
+					/>
 				</a>
 			</section>
 
@@ -198,7 +213,10 @@ const Footer = (): ReactElement => {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						<OvertureLogoWithText width={90} height={18} />
+						<OvertureLogoWithText
+							width={90}
+							height={18}
+						/>
 					</a>
 				</span>
 
@@ -217,7 +235,10 @@ const Footer = (): ReactElement => {
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					<GitHubLogo height={15} width={15} />
+					<GitHubLogo
+						height={15}
+						width={15}
+					/>
 					<span
 						css={css`
 							margin-left: 0.3rem;
