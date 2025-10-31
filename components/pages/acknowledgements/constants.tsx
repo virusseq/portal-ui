@@ -26,7 +26,7 @@ import StyledLink from '#components/Link';
 export type PolicyProps = { anchor: string; content: ReactNode; heading: string };
 
 export const iMicroSeqPolicy: PolicyProps = {
-	anchor: 'iMicroSeqAcknowledgements',
+	anchor: 'imicro-seq-acknowledgements',
 	heading: 'Acknowledgements for iMicroSeq environmental data',
 	content: (
 		<>
@@ -82,7 +82,7 @@ export const iMicroSeqPolicy: PolicyProps = {
 };
 
 export const virusSeqPolicy = {
-	anchor: 'virusSeqAcknowledgements',
+	anchor: 'virus-seq-acknowledgements',
 	heading: 'VirusSeq Data Portal / iMicroSeq clinical case data',
 	content: (
 		<>
