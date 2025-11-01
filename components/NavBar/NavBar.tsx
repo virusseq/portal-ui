@@ -75,14 +75,28 @@ const NavBar = (): ReactElement => {
 				`}
 			>
 				<InternalLink path={ROOT_PATH}>
-					<a
-						css={css`
-							display: flex;
-							align-items: center;
-							text-decoration: none;
-						`}
-					>
-						<img src="/images/navbar-logo.png" alt="VirusSeq logo" width="182" />
+					<a>
+						<div
+							css={css`
+								align-items: center;
+								background-color: ${theme.colors.white};
+								display: flex;
+								height: 45px;
+								justify-content: center;
+								text-decoration: none;
+								transform: skew(-20deg);
+								width: 165px;
+							`}
+						>
+							<img
+								css={css`
+									transform: skew(20deg);
+								`}
+								src="/images/imicroseq-logo.png"
+								alt="iMicroSeq logo"
+								width="150"
+							/>
+						</div>
 					</a>
 				</InternalLink>
 			</div>
@@ -198,9 +212,7 @@ const NavBar = (): ReactElement => {
 					/>
 
 					<InternalLink path={INTERNAL_PATHS.RELEASES}>
-						<StyledLink
-							className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}
-						>
+						<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}>
 							Data Releases
 						</StyledLink>
 					</InternalLink>
@@ -217,9 +229,7 @@ const NavBar = (): ReactElement => {
 						`}
 					>
 						<InternalLink path={INTERNAL_PATHS.SUBMISSION}>
-							<StyledLink
-								className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}
-							>
+							<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}>
 								Submission Dashboard
 							</StyledLink>
 						</InternalLink>
