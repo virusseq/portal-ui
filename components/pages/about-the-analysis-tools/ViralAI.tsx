@@ -23,10 +23,9 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
-import defaultTheme from '#components/theme';
 
 const Portal = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<section>
@@ -60,8 +59,8 @@ const Portal = (): ReactElement => {
 						</StyledLink>{' '}
 						makes data uniformly accessible through a user-friendly graphical interface and powerful
 						programmatic interfaces, integrating data across different sources from around the world
-						alongside VirusSeq, such as NCBI Sequence Read Archive (SRA) and European Center for
-						Disease Prevention and Control, among others.
+						alongside VirusSeq, such as NCBI Sequence Read Archive (SRA) and European Center for Disease
+						Prevention and Control, among others.
 					</p>
 				</span>
 
@@ -79,23 +78,26 @@ const Portal = (): ReactElement => {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						<img alt="COVID-MVP logo" src="/images/viral-ai.png" width="90" />
+						<img
+							alt="COVID-MVP logo"
+							src="/images/viral-ai.png"
+							width="90"
+						/>
 					</StyledLink>
 				</span>
 			</div>
 
 			<p>
-				Over one million viral sequences have been added with corresponding assemblies, variant
-				calls, and lineage assignments, all harmonized through an open source bioinformatics
-				pipeline. The Viral AI platform includes Explorer, a federated data hub that makes it easier
-				for researchers to find, access, and analyze shared data.
+				Over one million viral sequences have been added with corresponding assemblies, variant calls, and
+				lineage assignments, all harmonized through an open source bioinformatics pipeline. The Viral AI
+				platform includes Explorer, a federated data hub that makes it easier for researchers to find, access,
+				and analyze shared data.
 			</p>
 
 			<p>
-				With Explorer, researchers can search and perform analyses across a universe of connected
-				datasets through a single user interface. The VirusSeq Data Portal data is made available in
-				Explorer for researchers to discover, access, and analyze alongside the other connected data
-				sets.
+				With Explorer, researchers can search and perform analyses across a universe of connected datasets
+				through a single user interface. The VirusSeq Data Portal data is made available in Explorer for
+				researchers to discover, access, and analyze alongside the other connected data sets.
 			</p>
 		</section>
 	);

@@ -25,7 +25,6 @@ import { useRouter } from 'next/router';
 import { MouseEventHandler, ReactElement, ReactNode, SyntheticEvent, useEffect, useRef, useState } from 'react';
 
 import { TransparentButton } from '#components/Button';
-import defaultTheme from '#components/theme';
 import { ChevronDown } from '#components/theme/icons';
 import { type INTERNAL_PATH_VALUES } from '#global/utils/constants';
 
@@ -49,7 +48,7 @@ const Dropdown = ({
 	urls?: INTERNAL_PATH_VALUES[];
 }): ReactElement => {
 	const [open, setOpen] = useState(false);
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const node: any = useRef();
 	const router = useRouter();
 

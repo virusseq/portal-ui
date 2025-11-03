@@ -25,7 +25,6 @@ import { ReactElement } from 'react';
 import { InternalLink as Link, StyledLinkAsButton } from '#components/Link';
 import { MapleLeaf } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
-import defaultTheme from '#virusseq/theme';
 
 import ReleaseData from './ReleaseData';
 
@@ -35,7 +34,7 @@ import ReleaseData from './ReleaseData';
  ** */
 
 const HeroBanner = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<article
@@ -111,16 +110,15 @@ const HeroBanner = (): ReactElement => {
 						font-weight: normal;
 					`}
 				>
-					The goal of the CanCOGeN VirusSeq project was to sequence up to 150,000 viral samples from
-					Canadians testing positive for COVID-19. The VirusSeq Data Portal is an open-source and
-					open-access data portal for all Canadian SARS-CoV-2 sequences and associated non-personal
-					contextual data. It harmonizes, validates and automates submission to international
-					databases.
+					The goal of the CanCOGeN VirusSeq project was to sequence up to 150,000 viral samples from Canadians
+					testing positive for COVID-19. The VirusSeq Data Portal is an open-source and open-access data
+					portal for all Canadian SARS-CoV-2 sequences and associated non-personal contextual data. It
+					harmonizes, validates and automates submission to international databases.
 				</p>
 
 				<p>
-					The expansion of the VirusSeq Data Portal that includes environmental Wastewater data is
-					available at the iMicroSeq Data portal
+					The expansion of the VirusSeq Data Portal that includes environmental Wastewater data is available
+					at the iMicroSeq Data portal
 				</p>
 
 				<ReleaseData />

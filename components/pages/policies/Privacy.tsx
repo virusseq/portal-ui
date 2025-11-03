@@ -21,7 +21,7 @@
 
 import { ReactElement } from 'react';
 
-import StyledLink from '#components/Link';
+import { EmailLink } from '#components/Link';
 
 const Usage = (): ReactElement => (
 	<section>
@@ -118,14 +118,7 @@ const Usage = (): ReactElement => (
 			If possible, the CVDP website will work to promptly erase/delete this personal information, except for where
 			required by law (e.g. for records for auditing records). To request the erasure/deletion of your personal
 			information, you may contact us at{' '}
-			<StyledLink
-				href="mailto:imicroseq-dataportal@lists.sfu.ca"
-				rel="noopener noreferrer"
-				target="_blank"
-			>
-				imicroseq-dataportal@lists.sfu.ca
-			</StyledLink>
-			.
+			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>.
 		</p>
 
 		<h2>Privacy policy revisions</h2>
@@ -142,14 +135,7 @@ const Usage = (): ReactElement => (
 		<p>
 			Your privacy and concerns are important to us. We welcome you to contact us with your comments, questions,
 			complaints, and or suggestions about our policy or a privacy-related issue. Please contact us at{' '}
-			<StyledLink
-				href="mailto:imicroseq-dataportal@lists.sfu.ca"
-				rel="noopener noreferrer"
-				target="_blank"
-			>
-				imicroseq-dataportal@lists.sfu.ca
-			</StyledLink>
-			.
+			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>.
 		</p>
 	</section>
 );

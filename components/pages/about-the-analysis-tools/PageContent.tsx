@@ -22,8 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import StyledLink, { InternalLink } from '#components/Link';
-import defaultTheme from '#components/theme';
+import { EmailLink, InternalLink } from '#components/Link';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
 import CoVizu from './CoVizu';
@@ -32,7 +31,7 @@ import MVP from './MVP';
 import ViralAI from './ViralAI';
 
 const PageContent = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<main
@@ -77,14 +76,7 @@ const PageContent = (): ReactElement => {
 					<br />
 					All of these resources are Open Source and freely available. If you have a resource you would like
 					to see listed here, or any feedback, please{' '}
-					<StyledLink
-						href="mailto:imicroseq-dataportal@lists.sfu.ca"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						Contact Us
-					</StyledLink>
-					.
+					<EmailLink email="imicroseq-dataportal@lists.sfu.ca">Contact Us</EmailLink>. .
 				</p>
 
 				<MVP />

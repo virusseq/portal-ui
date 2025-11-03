@@ -21,7 +21,7 @@
 
 import { css } from '@emotion/react';
 
-import StyledLink from '#components/Link';
+import StyledLink, { EmailLink } from '#components/Link';
 import Loader from '#components/Loader';
 import { Modal } from '#components/Modal';
 import defaultTheme from '#components/theme';
@@ -159,13 +159,7 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
 				<p>
 					Data that is being shared is the work of many individuals and should be treated as unpublished data.
 					If you wish to publish research using the data, contact us at{' '}
-					<StyledLink
-						href="mailto:imicroseq-dataportal@lists.sfu.ca"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						imicroseq-dataportal@lists.sfu.ca
-					</StyledLink>{' '}
+					<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>{' '}
 					first to ensure that those who have generated the data can be involved in its analysis.
 				</p>
 			</div>

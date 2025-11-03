@@ -22,6 +22,8 @@
 import { ReactElement } from 'react';
 import { css } from '@emotion/react';
 
+import { EmailLink } from '#components/Link';
+
 import ErrorNotification from './ErrorNotification';
 
 const NoScopes = (): ReactElement => (
@@ -45,7 +47,7 @@ const NoScopes = (): ReactElement => (
 		<p>
 			{'You are not authorized to submit data into the Canadian VirusSeq Data Portal. '}
 			{'In order to obtain the correct permissions, please contact '}
-			<a href="mailto:imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</a>
+			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>
 			{' with the following information. Permission should be granted within 2 business days.'}
 		</p>
 		<ol

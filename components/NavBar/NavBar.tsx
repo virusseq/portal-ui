@@ -25,7 +25,6 @@ import { useRouter } from 'next/router';
 import { createRef, ReactElement } from 'react';
 
 import { InternalLink } from '#components/Link';
-import defaultTheme from '#components/theme';
 import { Avatar } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useTrackingContext from '#global/hooks/useTrackingContext';
@@ -44,7 +43,7 @@ const NavBar = (): ReactElement => {
 	const { logout, token, userHasAccessToStudySvc } = useAuthContext();
 	const { logEvent } = useTrackingContext();
 	const router = useRouter();
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	const handleLogout = () => logout(logEvent);
 

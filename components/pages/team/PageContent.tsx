@@ -22,15 +22,13 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import defaultTheme from '#components/theme';
-
 import Cloud from './Cloud';
 import Funding from './Funding';
 import Parners from './Partners';
 import Portal from './Portal';
 
 const PageContent = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<main

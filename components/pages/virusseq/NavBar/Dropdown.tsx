@@ -27,7 +27,6 @@ import { MouseEventHandler, ReactElement, ReactNode, SyntheticEvent, useEffect, 
 import { TransparentButton } from '#components/Button';
 import { ChevronDown } from '#components/theme/icons';
 import { type INTERNAL_PATH_VALUES } from '#global/utils/constants';
-import defaultTheme from '#virusseq/theme';
 
 const Dropdown = ({
 	children,
@@ -49,7 +48,7 @@ const Dropdown = ({
 	urls?: INTERNAL_PATH_VALUES[];
 }): ReactElement => {
 	const [open, setOpen] = useState(false);
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const node: any = useRef();
 	const router = useRouter();
 
