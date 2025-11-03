@@ -23,13 +23,12 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useState } from 'react';
 import urlJoin from 'url-join';
 
-import StyledLink, { StyledLinkAsButton } from '#components/Link';
-import defaultTheme from '#components/theme';
+import { EmailLink, StyledLinkAsButton } from '#components/Link';
 import { getConfig } from '#global/config';
 
 const PageContent = (): ReactElement => {
 	const [origin, setOrigin] = useState('');
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const {
 		NEXT_PUBLIC_EGO_API_URL,
 		NEXT_PUBLIC_EGO_CLIENT_ID,
@@ -116,13 +115,9 @@ const PageContent = (): ReactElement => {
 						<li>
 							<p>
 								To be granted a data submission account for your organization, please contact{' '}
-								<StyledLink
-									href="mailto:info@virusseq-dataportal.ca"
-									rel="noopener noreferrer"
-									target="_blank"
-								>
-									info@virusseq-dataportal.ca
-								</StyledLink>{' '}
+								<EmailLink email="imicroseq-dataportal@lists.sfu.ca">
+									imicroseq-dataportal@lists.sfu.ca
+								</EmailLink>{' '}
 								with an account request.
 							</p>
 							<StyledLinkAsButton

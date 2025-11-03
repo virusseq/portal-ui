@@ -25,7 +25,6 @@ import { useRouter } from 'next/router';
 import { createRef, ReactElement } from 'react';
 
 import { InternalLink } from '#components/Link';
-import defaultTheme from '#components/theme';
 import { Avatar } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useTrackingContext from '#global/hooks/useTrackingContext';
@@ -33,7 +32,7 @@ import { INTERNAL_PATHS, ROOT_PATH } from '#global/utils/constants';
 
 import CurrentUser from './CurrentUser';
 import Dropdown from './Dropdown';
-import { linkStyles, StyledLink, StyledListLink } from './styles';
+import { linkStyles, StyledNavBarLink, StyledListLink } from './styles';
 
 /**
  * Portal ref of navBar. There is only one navBar in entire pagelayout.
@@ -44,7 +43,7 @@ const NavBar = (): ReactElement => {
 	const { logout, token, userHasAccessToStudySvc } = useAuthContext();
 	const { logEvent } = useTrackingContext();
 	const router = useRouter();
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	const handleLogout = () => logout(logEvent);
 
@@ -75,14 +74,28 @@ const NavBar = (): ReactElement => {
 				`}
 			>
 				<InternalLink path={ROOT_PATH}>
-					<a
-						css={css`
-							display: flex;
-							align-items: center;
-							text-decoration: none;
-						`}
-					>
-						<img src="/images/navbar-logo.png" alt="VirusSeq logo" width="182" />
+					<a>
+						<div
+							css={css`
+								align-items: center;
+								background-color: ${theme.colors.white};
+								display: flex;
+								height: 45px;
+								justify-content: center;
+								text-decoration: none;
+								transform: skew(-20deg);
+								width: 165px;
+							`}
+						>
+							<img
+								css={css`
+									transform: skew(20deg);
+								`}
+								src="/images/imicroseq-logo.png"
+								alt="iMicroSeq logo"
+								width="150"
+							/>
+						</div>
 					</a>
 				</InternalLink>
 			</div>
@@ -111,7 +124,7 @@ const NavBar = (): ReactElement => {
 										active: router.asPath.startsWith(INTERNAL_PATHS.CLINICAL_EXPLORATION),
 									})}
 								>
-									Clinical cases
+									Clinical-VirusSeq
 								</StyledListLink>
 							</InternalLink>,
 							<InternalLink path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
@@ -120,7 +133,7 @@ const NavBar = (): ReactElement => {
 										active: router.asPath.startsWith(INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION),
 									})}
 								>
-									Environmental
+									Environmental-Wastewater
 								</StyledListLink>
 							</InternalLink>,
 						]}
@@ -198,11 +211,9 @@ const NavBar = (): ReactElement => {
 					/>
 
 					<InternalLink path={INTERNAL_PATHS.RELEASES}>
-						<StyledLink
-							className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}
-						>
+						<StyledNavBarLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}>
 							Data Releases
-						</StyledLink>
+						</StyledNavBarLink>
 					</InternalLink>
 				</div>
 
@@ -217,11 +228,11 @@ const NavBar = (): ReactElement => {
 						`}
 					>
 						<InternalLink path={INTERNAL_PATHS.SUBMISSION}>
-							<StyledLink
+							<StyledNavBarLink
 								className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.SUBMISSION) })}
 							>
 								Submission Dashboard
-							</StyledLink>
+							</StyledNavBarLink>
 						</InternalLink>
 
 						<Dropdown

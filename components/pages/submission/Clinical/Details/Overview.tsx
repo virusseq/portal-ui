@@ -26,7 +26,6 @@ import urlJoin from 'url-join';
 
 import Navigator from '#components//Navigator';
 import { LoaderMessage } from '#components/Loader';
-import defaultTheme from '#components/theme';
 import { Calendar, CoronaVirus, File } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useMuseData, { SubmissionDataType } from '#global/hooks/useMuseData';
@@ -34,7 +33,7 @@ import useMuseData, { SubmissionDataType } from '#global/hooks/useMuseData';
 import { SubmissionDetailsProps } from './types';
 
 const Overview = ({ ID, setTotalUploads }: SubmissionDetailsProps): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { token, userHasClinicalAccess, userHasEnvironmentalAccess } = useAuthContext();
 	const [{ createdAt, originalFileNames, totalRecords, ...submissionData }, setSubmissionData] =
 		useState<SubmissionDataType>({} as SubmissionDataType);
@@ -52,11 +51,11 @@ const Overview = ({ ID, setTotalUploads }: SubmissionDetailsProps): ReactElement
 									A.slice(-3).toLowerCase() === 'tsv'
 										? -1
 										: B.slice(-3).toLowerCase() === 'tsv'
-										? 1
-										: 0,
+											? 1
+											: 0,
 								),
-						  }),
-						  setTotalUploads?.(thisSubmission.totalRecords))
+							}),
+							setTotalUploads?.(thisSubmission.totalRecords))
 						: console.error('Unhandled error fetching submission overview', thisSubmission);
 				});
 		}
@@ -77,12 +76,21 @@ const Overview = ({ ID, setTotalUploads }: SubmissionDetailsProps): ReactElement
 						flex-wrap: wrap;
 					`}
 				>
-					<Navigator path="/submission" text="All Submissions" />
+					<Navigator
+						path="/submission"
+						text="All Submissions"
+					/>
 					&nbsp;/&nbsp;
-					<Navigator path="/submission/clinical" text="New Submission" />
+					<Navigator
+						path="/submission/clinical"
+						text="New Submission"
+					/>
 				</section>
 			) : (
-				<Navigator path="/submission/clinical" text="New Submission" />
+				<Navigator
+					path="/submission/clinical"
+					text="New Submission"
+				/>
 			)}
 
 			<section
@@ -138,7 +146,11 @@ const Overview = ({ ID, setTotalUploads }: SubmissionDetailsProps): ReactElement
 			</section>
 
 			{awaitingResponse ? (
-				<LoaderMessage inline message="Loading data..." size="20px" />
+				<LoaderMessage
+					inline
+					message="Loading data..."
+					size="20px"
+				/>
 			) : (
 				originalFileNames?.length > 0 && (
 					<ul

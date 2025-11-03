@@ -48,7 +48,7 @@ const Overview = ({
 	status?: string;
 	totalRecords: string;
 }): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { userHasClinicalAccess, userHasEnvironmentalAccess } = useAuthContext();
 
 	return (
@@ -66,12 +66,21 @@ const Overview = ({
 						flex-wrap: wrap;
 					`}
 				>
-					<Navigator path="/submission" text="All Submissions" />
+					<Navigator
+						path="/submission"
+						text="All Submissions"
+					/>
 					&nbsp;/&nbsp;
-					<Navigator path="/submission/environmental" text="New Submission" />
+					<Navigator
+						path="/submission/environmental"
+						text="New Submission"
+					/>
 				</section>
 			) : (
-				<Navigator path="/submission/environmental" text="New Submission" />
+				<Navigator
+					path="/submission/environmental"
+					text="New Submission"
+				/>
 			)}
 
 			<section
@@ -122,13 +131,12 @@ const Overview = ({
 								{`Viral Genomes: ${totalRecords}`}
 							</p>
 						)}
-						{status &&
-							(status === SubmissionStatus.CLOSED || status === SubmissionStatus.INVALID) && (
-								<p>
-									<Info size={16} />
-									{`Status: Submission failed. Data has errors`}
-								</p>
-							)}
+						{status && (status === SubmissionStatus.CLOSED || status === SubmissionStatus.INVALID) && (
+							<p>
+								<Info size={16} />
+								{`Status: Submission failed. Data has errors`}
+							</p>
+						)}
 						{status && (status === SubmissionStatus.OPEN || status === SubmissionStatus.VALID) && (
 							<p>
 								<Warning size={16} />
@@ -149,7 +157,11 @@ const Overview = ({
 			</section>
 
 			{loading ? (
-				<LoaderMessage inline message="Loading data..." size="20px" />
+				<LoaderMessage
+					inline
+					message="Loading data..."
+					size="20px"
+				/>
 			) : (
 				missingUploadFiles &&
 				missingUploadFiles?.length > 0 && (
@@ -174,7 +186,10 @@ const Overview = ({
 								white-space: nowrap;
 							`}
 						>
-							<Info size={16} fill={theme.colors.primary} />
+							<Info
+								size={16}
+								fill={theme.colors.primary}
+							/>
 							&nbsp; Missing files
 						</h2>
 						<p>

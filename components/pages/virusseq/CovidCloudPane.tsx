@@ -24,10 +24,9 @@ import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
 import { ChevronDown } from '#components/theme/icons';
-import defaultTheme from '#virusseq/theme';
 
 const CovidCloudPane = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<article
@@ -46,7 +45,11 @@ const CovidCloudPane = (): ReactElement => {
 				width: calc(100% - 100px);
 			`}
 		>
-			<img src="/images/viral-ai.png" alt="logo for Viral AI" width="180" />
+			<img
+				src="/images/viral-ai.png"
+				alt="logo for Viral AI"
+				width="180"
+			/>
 			<p
 				css={css`
 					margin: 20px 0;
@@ -61,11 +64,10 @@ const CovidCloudPane = (): ReactElement => {
 				>
 					VirusSeq data on Viral AI
 				</StyledLink>{' '}
-				, a federated network for genomic variant surveillance and infectious disease research.
-				Viral AI was designed to deliver equitable access to software infrastructure, accelerate
-				international data sharing, and empower scientists and public health officials with globally
-				representative datasets they need to mitigate current and future infectious disease
-				outbreaks.
+				, a federated network for genomic variant surveillance and infectious disease research. Viral AI was
+				designed to deliver equitable access to software infrastructure, accelerate international data sharing,
+				and empower scientists and public health officials with globally representative datasets they need to
+				mitigate current and future infectious disease outbreaks.
 			</p>
 			<a
 				css={css`

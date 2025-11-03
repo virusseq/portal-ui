@@ -22,8 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import StyledLink, { InternalLink } from '#components/Link';
-import defaultTheme from '#components/theme';
+import { EmailLink, InternalLink } from '#components/Link';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
 import CoVizu from './CoVizu';
@@ -32,7 +31,7 @@ import MVP from './MVP';
 import ViralAI from './ViralAI';
 
 const PageContent = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<main
@@ -73,24 +72,17 @@ const PageContent = (): ReactElement => {
 					`}
 				>
 					A selection of resources are noted below that enable further analyses of the{' '}
-					<InternalLink path={INTERNAL_PATHS.EXPLORER}>VirusSeq Data Portal Data</InternalLink>.
+					<InternalLink path={INTERNAL_PATHS.EXPLORER}>iMicroSeq Data</InternalLink>.
 					<br />
-					All of these resources are Open Source and freely available. If you have a resource you
-					would like to see listed here, or any feedback, please{' '}
-					<StyledLink
-						href="mailto:info@virusseq-dataportal.ca"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						Contact Us
-					</StyledLink>
-					.
+					All of these resources are Open Source and freely available. If you have a resource you would like
+					to see listed here, or any feedback, please{' '}
+					<EmailLink email="imicroseq-dataportal@lists.sfu.ca">Contact Us</EmailLink>. .
 				</p>
 
-				<Duotang />
 				<MVP />
-				<CoVizu />
+				<Duotang />
 				<ViralAI />
+				<CoVizu />
 			</article>
 		</main>
 	);

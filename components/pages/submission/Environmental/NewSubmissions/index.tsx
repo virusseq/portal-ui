@@ -28,8 +28,6 @@ import { ButtonElement as Button } from '#components/Button';
 import ErrorNotification from '#components/ErrorNotification';
 import StyledLink from '#components/Link';
 import { LoaderWrapper } from '#components/Loader';
-import defaultTheme from '#components/theme';
-import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData from '#global/hooks/useEnvironmentalData';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
@@ -47,12 +45,7 @@ import {
 	type BatchError,
 	type SubmissionFile,
 } from './types';
-import {
-	getFileExtension,
-	minFiles,
-	validationParameters,
-	validationReducer,
-} from './validationHelpers';
+import { getFileExtension, minFiles, validationParameters, validationReducer } from './validationHelpers';
 
 const noUploadError: NoUploadError = {
 	status: '',
@@ -72,11 +65,7 @@ export const SequencingMetadataDefaults = {
 	FILE_TYPE: 'TAR' as const,
 };
 
-const buildFormData = (
-	organizationName: string,
-	selectedCsv: SubmissionFile,
-	oneOrMoreTar: SubmissionFile[],
-) => {
+const buildFormData = (organizationName: string, selectedCsv: SubmissionFile, oneOrMoreTar: SubmissionFile[]) => {
 	const formData = new FormData();
 	formData.append(SubmitParams.ORGANIZATION, organizationName);
 	formData.append(SubmitParams.ENTITY_NAME, 'sample');
@@ -100,17 +89,11 @@ const buildFormData = (
 };
 
 const NewSubmissions = (): ReactElement => {
-	const {
-		token,
-		userHasEnvironmentalAccess,
-		userIsEnvironmentalAdmin,
-		userEnvironmentalWriteScopes,
-	} = useAuthContext();
-	const theme: typeof defaultTheme = useTheme();
+	const { token, userHasEnvironmentalAccess, userIsEnvironmentalAdmin, userEnvironmentalWriteScopes } =
+		useAuthContext();
+	const theme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
-	const [filesSubmissionInstructions, setFilesSubmissionInstructions] = useState<
-		SubmissionManifest[]
-	>([]);
+	const [filesSubmissionInstructions, setFilesSubmissionInstructions] = useState<SubmissionManifest[]>([]);
 	const [submissionId, setSubmissionId] = useState<string>('');
 	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
@@ -133,9 +116,7 @@ const NewSubmissions = (): ReactElement => {
 
 	const handleSubmit = async () => {
 		if (!thereAreFiles || !token || !userHasEnvironmentalAccess) {
-			const errorMessage = `no ${
-				token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'
-			} to submit`;
+			const errorMessage = `no ${token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'} to submit`;
 			setSubmitError(errorMessage);
 			return;
 		}
@@ -153,9 +134,7 @@ const NewSubmissions = (): ReactElement => {
 		const hasWriteAccessToOrganization =
 			userIsEnvironmentalAdmin || userEnvironmentalWriteScopes.includes(organizationName);
 		if (!hasWriteAccessToOrganization) {
-			setSubmitError(
-				`User does not have permission to upload data for organization ${organizationName}`,
-			);
+			setSubmitError(`User does not have permission to upload data for organization ${organizationName}`);
 			return;
 		}
 
@@ -200,10 +179,7 @@ const NewSubmissions = (): ReactElement => {
 
 				default: {
 					console.error(response);
-					setSubmitError(
-						'Your upload request has failed. Please try again later.',
-						'Internal Server Error',
-					);
+					setSubmitError('Your upload request has failed. Please try again later.', 'Internal Server Error');
 					break;
 				}
 			}
@@ -256,15 +232,14 @@ const NewSubmissions = (): ReactElement => {
 			<h1 className="view-title">Start a New Submission</h1>
 
 			<p>
-				Waste water metadata is submitted as a <span className="code">.csv</span> file. The file
-				name must match the Study name for the Submission. (e.g. QC.csv, etc.). Only one `.csv` is
-				permitted per submission.
+				Waste water metadata is submitted as a <span className="code">.csv</span> file. The file name must match
+				the Study name for the Submission. (e.g. QC.csv, etc.). Only one `.csv` is permitted per submission.
 			</p>
 
 			<p>
-				Waste water Viral genome data must be submitted as a <span className="code">.tar.xz</span>{' '}
-				file. Multiple genome files can be uploaded in a single submission. The file name must match
-				the SRA accession for the submission. (e.g. SRS12345678-ABC123.tar.xz, etc.)
+				Waste water Viral genome data must be submitted as a <span className="code">.tar.xz</span> file.
+				Multiple genome files can be uploaded in a single submission. The file name must match the SRA accession
+				for the submission. (e.g. SRS12345678-ABC123.tar.xz, etc.)
 			</p>
 
 			<h2>To format your waste water sequence metadata:</h2>
@@ -289,13 +264,11 @@ const NewSubmissions = (): ReactElement => {
 					>
 						DataHarmonizer
 					</StyledLink>{' '}
-					is a tool that can be used to help validate the accepted values for each field in your
-					metadata CSV locally before submitting. Download the tool and follow the instructions on
-					the Github repository to pre-validate each field in your metadata before submission.
+					is a tool that can be used to help validate the accepted values for each field in your metadata CSV
+					locally before submitting. Download the tool and follow the instructions on the Github repository to
+					pre-validate each field in your metadata before submission.
 				</li>
-				<li>
-					If you are using Excel or Google sheets, make sure all characters are UTF-8 encoded.
-				</li>
+				<li>If you are using Excel or Google sheets, make sure all characters are UTF-8 encoded.</li>
 			</ol>
 
 			<DropZone
@@ -341,7 +314,10 @@ const NewSubmissions = (): ReactElement => {
 							`}
 						>
 							{uploadError?.batchErrors.map(({ message, type }) => (
-								<ErrorMessage type={type} values={message} />
+								<ErrorMessage
+									type={type}
+									values={message}
+								/>
 							))}
 						</ul>
 					)}

@@ -31,10 +31,9 @@ import { getConfig } from '#global/config';
 import useReleaseData from '#global/hooks/useReleaseData/clinical';
 import { ReleaseClinicalDataProps } from '#global/hooks/useReleaseData/types';
 import useSingularityData from '#global/hooks/useSingularityData';
-import defaultTheme from '#virusseq/theme';
 
 const ReleaseData = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { NEXT_PUBLIC_RELEASE_DATE } = getConfig();
 	const [releaseData, loadingArrangerData] = useReleaseData();
 	const { fetchTotalCounts } = useSingularityData();
@@ -75,8 +74,7 @@ const ReleaseData = (): ReactElement => {
 	} = releaseDataProps || releaseData;
 
 	// either we're waiting on arranger or singularity data
-	const showLoader =
-		(releaseDataProps === undefined && loadingArrangerData) || isLoadingSingularityData;
+	const showLoader = (releaseDataProps === undefined && loadingArrangerData) || isLoadingSingularityData;
 
 	const releaseDate =
 		!!NEXT_PUBLIC_RELEASE_DATE &&

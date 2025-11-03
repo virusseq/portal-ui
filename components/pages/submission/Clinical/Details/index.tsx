@@ -25,7 +25,6 @@ import { ReactElement, useEffect, useReducer, useState } from 'react';
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
 import { getPaginationRange, PaginationToolBar } from '#components/Pagination';
-import defaultTheme from '#components/theme';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useMuseData, { UploadDataType } from '#global/hooks/useMuseData';
 
@@ -35,7 +34,7 @@ import { SubmissionDetailsProps } from './types';
 import { uploadsStatusDictionary, uploadsStatusReducer } from './uploadStatusHelpers';
 
 const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const [totalUploads, setTotalUploads] = useState(0);
 	const [dataIsPending, setDataIsPending] = useState(false);
 	const [page, setPage] = useState(1);
@@ -43,10 +42,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const [firstRecord, setFirstRecord] = useState(1);
 	const [lastRecord, setLastRecord] = useState(1);
 	const [recordsPaginated, setRecordsPaginated] = useState<UploadDataType[]>([]);
-	const [submissionDetails, submissionDetailsDispatch] = useReducer(
-		uploadsStatusReducer,
-		uploadsStatusDictionary,
-	);
+	const [submissionDetails, submissionDetailsDispatch] = useReducer(uploadsStatusReducer, uploadsStatusDictionary);
 
 	const { token } = useAuthContext();
 	const { awaitingResponse, fetchMuseData, fetchEventStream } = useMuseData('SubmissionsDetails');
@@ -70,9 +66,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					});
 
 					setDataIsPending(
-						uploadsData.some(({ status }: UploadDataType) =>
-							['QUEUED', 'PROCESSING'].includes(status),
-						),
+						uploadsData.some(({ status }: UploadDataType) => ['QUEUED', 'PROCESSING'].includes(status)),
 					);
 				} else {
 					// handle rare edge case
@@ -134,9 +128,15 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				width: 100%;
 			`}
 		>
-			<Overview ID={ID} setTotalUploads={setTotalUploads} />
+			<Overview
+				ID={ID}
+				setTotalUploads={setTotalUploads}
+			/>
 
-			<LoaderWrapper loading={awaitingResponse} size="10px">
+			<LoaderWrapper
+				loading={awaitingResponse}
+				size="10px"
+			>
 				{totalUploads > 0 && (
 					<>
 						<p

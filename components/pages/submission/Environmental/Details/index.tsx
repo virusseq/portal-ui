@@ -25,7 +25,6 @@ import { ReactElement, useCallback, useEffect, useReducer, useState } from 'reac
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
 import { getPaginationRange, PaginationToolBar } from '#components/Pagination';
-import defaultTheme from '#components/theme';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData, {
 	SubmissionStatus,
@@ -62,7 +61,7 @@ const getPendingUploadFileManifests = (files?: SubmissionFile[]) => {
 };
 
 const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const [submissionRecordCount, setSubmissionRecordCount] = useState(0);
 	const [submissionData, setSubmissionData] = useState<SubmissionData>();
 	const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>();
@@ -72,22 +71,14 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const [lastPage, setLastPage] = useState(1);
 	const [firstRecord, setFirstRecord] = useState(1);
 	const [lastRecord, setLastRecord] = useState(1);
-	const [submissionDetails, submissionDetailsDispatch] = useReducer(
-		uploadsStatusReducer,
-		uploadsStatusDictionary,
-	);
+	const [submissionDetails, submissionDetailsDispatch] = useReducer(uploadsStatusReducer, uploadsStatusDictionary);
 	const [recordsPaginated, setRecordsPaginated] = useState<UploadData[]>([]);
 	const [openGuideModal, setOpenGuideModal] = useState(false);
 	const [pendingUploadManifests, setPendingUploadManifests] = useState<SubmissionManifest[]>([]);
 
 	const { token } = useAuthContext();
-	const {
-		awaitingResponse,
-		fetchSubmissionById,
-		formatUploadData,
-		commitSubmission,
-		getAnalysisIds,
-	} = useEnvironmentalData('SubmissionsDetails');
+	const { awaitingResponse, fetchSubmissionById, formatUploadData, commitSubmission, getAnalysisIds } =
+		useEnvironmentalData('SubmissionsDetails');
 
 	const pageSize = 50;
 
@@ -201,15 +192,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	}, [token, ID]);
 
 	const trackPendingData = useCallback(
-		async ({
-			tries = 1,
-			delay = 1000,
-			signal,
-		}: {
-			tries?: number;
-			delay?: number;
-			signal?: AbortSignal;
-		}) => {
+		async ({ tries = 1, delay = 1000, signal }: { tries?: number; delay?: number; signal?: AbortSignal }) => {
 			const pageSize = 20;
 			const failedGetSystemId: UploadData[] = [];
 			try {
@@ -218,18 +201,12 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					.filter(({ status }) => status !== UploadStatus.COMPLETE);
 
 				// Filter out records to get their analysis IDs
-				const recordsMissingSystemId = processingRecords
-					.filter(({ systemId }) => !systemId)
-					.slice(0, pageSize);
+				const recordsMissingSystemId = processingRecords.filter(({ systemId }) => !systemId).slice(0, pageSize);
 
 				if (recordsMissingSystemId.length) {
-					const resultRecordsWithSystemId = await getAnalysisIds(
-						organization,
-						recordsMissingSystemId,
-						{
-							signal,
-						},
-					);
+					const resultRecordsWithSystemId = await getAnalysisIds(organization, recordsMissingSystemId, {
+						signal,
+					});
 
 					resultRecordsWithSystemId.forEach((record) => {
 						submissionDetailsDispatch({
@@ -355,7 +332,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				status={submissionStatus}
 			/>
 
-			<LoaderWrapper loading={awaitingResponse} size="10px">
+			<LoaderWrapper
+				loading={awaitingResponse}
+				size="10px"
+			>
 				{submissionRecordCount > 0 && (
 					<>
 						<p

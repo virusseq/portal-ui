@@ -24,16 +24,10 @@ import { Dispatch, ReactElement, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { ButtonElement as Button } from '#components/Button';
-import defaultTheme from '#components/theme';
 import DragAndDrop from '#components/theme/icons/DragAndDrop';
 
 import { computeMd5 } from './fileUtils';
-import {
-	acceptedFileExtensions,
-	SubmissionFile,
-	ValidationAction,
-	ValidationParameters,
-} from './types';
+import { acceptedFileExtensions, SubmissionFile, ValidationAction, ValidationParameters } from './types';
 import { getFileExtension, validator } from './validationHelpers';
 
 const acceptedExtensionsString = Object.values(acceptedFileExtensions)
@@ -49,7 +43,7 @@ const DropZone = ({
 	validationState: ValidationParameters;
 	validationDispatch: Dispatch<ValidationAction>;
 }): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	const {
 		getRootProps,

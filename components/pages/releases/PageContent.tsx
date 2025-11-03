@@ -22,14 +22,12 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import defaultTheme from '#components/theme';
-
 import Description from './Description';
 import Policy from './Policy';
 import ReleasesTable from './ReleasesTable';
 
 const PageContent = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	return (
 		<main
 			css={css`

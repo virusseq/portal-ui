@@ -24,7 +24,6 @@ import { Dispatch, ReactElement, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { ButtonElement as Button } from '#components/Button';
-import defaultTheme from '#components/theme';
 import DragAndDrop from '#components/theme/icons/DragAndDrop';
 
 import { ValidationActionType, ValidationParametersType } from './types';
@@ -39,7 +38,7 @@ const DropZone = ({
 	validationState: ValidationParametersType;
 	validationDispatch: Dispatch<ValidationActionType>;
 }): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	const {
 		getRootProps,
@@ -51,8 +50,7 @@ const DropZone = ({
 		accept: '.fa,.gz,.fasta,.tsv,text/tab-separated-values',
 		disabled,
 		onDrop: useCallback(
-			(acceptedFiles: File[]) =>
-				acceptedFiles.forEach(validator(validationState, validationDispatch)),
+			(acceptedFiles: File[]) => acceptedFiles.forEach(validator(validationState, validationDispatch)),
 			[validationDispatch, validationState],
 		),
 	});

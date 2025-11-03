@@ -22,15 +22,12 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import defaultTheme from '#components/theme';
-
 const Impact = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	return (
 		<section
 			className="Impact"
 			css={css`
-
 				> * {
 					margin: 25px 0;
 				}
@@ -48,17 +45,24 @@ const Impact = (): ReactElement => {
 			</h2>
 
 			<p>
-				Genomic-based tracking and analysis of the evolving traits of the SARS-CoV-2 virus across Canada
-				provides critical information for:
+				Genomic-based tracking and analysis of microbes, including viruses, across Canada provides critical
+				information for:
 			</p>
 
 			<ul>
-				<li>Public health and policy decisions</li>
-				<li>Testing and tracing strategies</li>
-				<li>Virus detection and surveillance methods</li>
-				<li>Vaccine development and effectiveness</li>
-				<li>Drug discovery and effectiveness of treatment</li>
-				<li>Understanding susceptibility, disease severity and clinical outcomes</li>
+				<li>Early detection of emerging pathogens and outbreaks.</li>
+				<li>Accurate microbial detection methods.</li>
+				<li>Understanding transmission dynamics of infectious diseases.</li>
+				<li>Improving detection, source attribution, surveillance, and control strategies.</li>
+				<li>Enhancing public health decisions through real-time data integration.</li>
+				<li>
+					Monitoring antimicrobial resistance trends and variant evolution, relevant for public health and
+					agriculture.
+				</li>
+				<li>
+					Modeling microbial changes in the environment needed for environmental risk assessment and
+					predicting climate change impacts.
+				</li>
 			</ul>
 		</section>
 	);

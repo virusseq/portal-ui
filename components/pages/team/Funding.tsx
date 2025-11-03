@@ -23,11 +23,10 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
-import defaultTheme from '#components/theme';
 import { GenomeCanadaLogo } from '#components/theme/icons';
 
 const Funding = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<section>
@@ -58,13 +57,16 @@ const Funding = (): ReactElement => {
 							Genome Canada
 						</StyledLink>
 						, in partnership with the{' '}
-						<StyledLink href="https://www.canada.ca" rel="noopener noreferrer" target="_blank">
+						<StyledLink
+							href="https://www.canada.ca"
+							rel="noopener noreferrer"
+							target="_blank"
+						>
 							Government of Canada
 						</StyledLink>
-						, leads the development of the Canadian VirusSeq Data Portal that manages and
-						facilitates data sharing of SARS-CoV-2 genome sequences among Canadian public health
-						laboratories, researchers and other groups interested in accessing the data for research
-						and innovation purposes.
+						, leads the development of the Canadian VirusSeq Data Portal that manages and facilitates data
+						sharing of SARS-CoV-2 genome sequences among Canadian public health laboratories, researchers
+						and other groups interested in accessing the data for research and innovation purposes.
 					</p>
 				</span>
 
@@ -81,7 +83,11 @@ const Funding = (): ReactElement => {
 						width: 190px;
 					`}
 				>
-					<StyledLink href="https://www.genomecanada.ca/" rel="noopener noreferrer" target="_blank">
+					<StyledLink
+						href="https://www.genomecanada.ca/"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
 						<GenomeCanadaLogo
 							height={75}
 							style={css`
@@ -119,9 +125,8 @@ const Funding = (): ReactElement => {
 			</div>
 
 			<p>
-				The rapid funding opportunity was announced on February 12, 2021 by the Public Health Agency
-				of Canada (PHAC) for the Genome Canada-led Canadian COVID Genomics Network (CanCOGeN) to
-				directly support{' '}
+				The rapid funding opportunity was announced on February 12, 2021 by the Public Health Agency of Canada
+				(PHAC) for the Genome Canada-led Canadian COVID Genomics Network (CanCOGeN) to directly support{' '}
 				<StyledLink
 					href="https://www.canada.ca/en/public-health/news/2021/02/government-of-canada-invests-53-million-to-address-covid-19-virus-variants-of-concern.html"
 					rel="noopener noreferrer"
@@ -129,15 +134,15 @@ const Funding = (): ReactElement => {
 				>
 					Canada’s Variants of Concern Strategy
 				</StyledLink>
-				. The VirusSeq initiative is working with PHAC’s National Microbiology Laboratory, Health
-				Canada, the Canadian Institutes of Health Research, as well as other provincial and
-				territorial partners to support the strategy. Together, these partners have quickly scaled
-				up genomic sequencing, surveillance and research efforts to detect new variants, increase
-				real-time data sharing capacity, and inform appropriate public health and policy responses.
+				. The VirusSeq initiative is working with PHAC’s National Microbiology Laboratory, Health Canada, the
+				Canadian Institutes of Health Research, as well as other provincial and territorial partners to support
+				the strategy. Together, these partners have quickly scaled up genomic sequencing, surveillance and
+				research efforts to detect new variants, increase real-time data sharing capacity, and inform
+				appropriate public health and policy responses.
 			</p>
 			<p>
-				The Canadian VirusSeq Data Portal team gratefully acknowledges funding from the Canadian
-				Institutes of Health Research (
+				The Canadian VirusSeq Data Portal team gratefully acknowledges funding from the Canadian Institutes of
+				Health Research (
 				<StyledLink
 					href="https://cihr-irsc.gc.ca/e/193.html"
 					rel="noopener noreferrer"
@@ -146,16 +151,20 @@ const Funding = (): ReactElement => {
 					CIHR
 				</StyledLink>
 				) - Coronavirus Variants Rapid Response Network (
-				<StyledLink href="https://covarrnet.ca/" rel="noopener noreferrer" target="_blank">
+				<StyledLink
+					href="https://covarrnet.ca/"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
 					CoVaRR-Net
 				</StyledLink>
 				), which has enabled ongoing development.
 			</p>
 			<p>
-				Genome Canada acts as a data custodian with overall responsibility for and oversight of the
-				data within the Canadian VirusSeq Data Portal. Innovative data solutions and partnerships
-				like this one harness the power of genomics to develop tools that help Canada contain this
-				pandemic more quickly and be better prepared for future public health challenges.
+				Genome Canada acts as a data custodian with overall responsibility for and oversight of the data within
+				the Canadian VirusSeq Data Portal. Innovative data solutions and partnerships like this one harness the
+				power of genomics to develop tools that help Canada contain this pandemic more quickly and be better
+				prepared for future public health challenges.
 			</p>
 		</section>
 	);

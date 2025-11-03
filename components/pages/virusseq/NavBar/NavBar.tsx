@@ -27,7 +27,6 @@ import { createRef, ReactElement, useEffect } from 'react';
 import { InternalLink } from '#components/Link';
 import useTrackingContext from '#global/hooks/useTrackingContext';
 import { INTERNAL_PATHS } from '#global/utils/constants';
-import defaultTheme from '#virusseq/theme';
 
 import Dropdown from './Dropdown';
 import { linkStyles, StyledLink, StyledListLink } from './styles';
@@ -40,7 +39,7 @@ export const navBarRef = createRef<HTMLDivElement>();
 const NavBar = (): ReactElement => {
 	const { logEvent } = useTrackingContext();
 	const router = useRouter();
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	useEffect(() => {
 		logEvent({
@@ -74,7 +73,11 @@ const NavBar = (): ReactElement => {
 					margin-right: 70px;
 				`}
 			>
-				<img src="/images/navbar-logo.png" alt="VirusSeq logo" width="182" />
+				<img
+					src="/images/navbar-logo.png"
+					alt="VirusSeq logo"
+					width="182"
+				/>
 			</div>
 
 			<div
@@ -189,9 +192,7 @@ const NavBar = (): ReactElement => {
 					/>
 
 					<InternalLink path={INTERNAL_PATHS.RELEASES}>
-						<StyledLink
-							className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}
-						>
+						<StyledLink className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.RELEASES) })}>
 							Data Releases
 						</StyledLink>
 					</InternalLink>

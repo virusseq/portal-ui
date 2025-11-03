@@ -26,7 +26,6 @@ import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
 import NoScopes from '#components/NoScopes';
 import { PaginationToolBar } from '#components/Pagination';
-import defaultTheme from '#components/theme';
 import { CoronaVirus } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData from '#global/hooks/useEnvironmentalData';
@@ -41,10 +40,9 @@ const PreviousSubmissions = ({
 	pageSize?: number;
 	paginationEnabled?: boolean;
 }): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { token, userHasEnvironmentalAccess, user } = useAuthContext();
-	const { awaitingResponse, fetchPreviousSubmissions } =
-		useEnvironmentalData('PreviousSubmissions');
+	const { awaitingResponse, fetchPreviousSubmissions } = useEnvironmentalData('PreviousSubmissions');
 	const [previousSubmissions, setPreviousSubmissions] = useState<SubmissionPaginatedResponse>({
 		data: [],
 		first: true,
@@ -73,9 +71,7 @@ const PreviousSubmissions = ({
 
 	const goToFirstPage = () => {
 		if (previousSubmissions.first) return;
-		fetchPreviousSubmissions({ username: user?.email, page: 1, pageSize }).then(
-			setPreviousSubmissions,
-		);
+		fetchPreviousSubmissions({ username: user?.email, page: 1, pageSize }).then(setPreviousSubmissions);
 	};
 
 	const goToPrevPage = () => {
@@ -112,7 +108,10 @@ const PreviousSubmissions = ({
 			`}
 		>
 			{userHasEnvironmentalAccess ? (
-				<LoaderWrapper loading={awaitingResponse} message="Retrieving your submissions.">
+				<LoaderWrapper
+					loading={awaitingResponse}
+					message="Retrieving your submissions."
+				>
 					{previousSubmissions.size > 0 ? (
 						<>
 							<GenericTable

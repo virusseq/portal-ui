@@ -21,17 +21,16 @@
 
 import { css, useTheme } from '@emotion/react';
 import { format, isValid } from 'date-fns';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useState } from 'react';
 
 import Loader from '#components/Loader';
-import defaultTheme from '#components/theme';
 import { CoronaVirus, CrossHairs } from '#components/theme/icons';
 import { getConfig } from '#global/config';
 import useReleaseData from '#global/hooks/useReleaseData/environmental';
 import { ReleaseEnvironmentalDataProps } from '#global/hooks/useReleaseData/types';
 
 const ReleaseData = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { NEXT_PUBLIC_RELEASE_DATE } = getConfig();
 	const [releaseData, loadingArrangerData] = useReleaseData();
 

@@ -22,10 +22,8 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import defaultTheme from '#virusseq/theme';
-
 const Impact = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<section
@@ -58,8 +56,8 @@ const Impact = (): ReactElement => {
 			</h2>
 
 			<p>
-				Genomic-based tracking and analysis of the evolving traits of the SARS-CoV-2 virus across
-				Canada provides critical information for:
+				Genomic-based tracking and analysis of the evolving traits of the SARS-CoV-2 virus across Canada
+				provides critical information for:
 			</p>
 
 			<ul>

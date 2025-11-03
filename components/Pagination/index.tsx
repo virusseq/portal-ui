@@ -23,7 +23,6 @@ import { css, useTheme } from '@emotion/react';
 import type { ReactElement } from 'react';
 
 import { UnStyledButton } from '#components/Button';
-import defaultTheme from '#components/theme';
 
 export const getPaginationRange = (page: number, pageSize: number, dataLength: number) => {
 	const start = (page - 1) * pageSize;
@@ -52,7 +51,7 @@ export const PaginationToolBar = ({
 	page: number;
 	align?: 'left' | 'right';
 }): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	const PageButton = ({
 		direction,
@@ -110,11 +109,27 @@ export const PaginationToolBar = ({
 				float: ${align};
 			`}
 		>
-			<PageButton direction={'DOUBLE_LEFT'} onClick={goToFirstPage} disabled={isFirst} />
-			<PageButton direction={'LEFT'} onClick={goToPrevPage} disabled={isFirst} />
+			<PageButton
+				direction={'DOUBLE_LEFT'}
+				onClick={goToFirstPage}
+				disabled={isFirst}
+			/>
+			<PageButton
+				direction={'LEFT'}
+				onClick={goToPrevPage}
+				disabled={isFirst}
+			/>
 			<PageNumber num={page ? page : 1} />
-			<PageButton direction={'RIGHT'} onClick={goToNextPage} disabled={isLast} />
-			<PageButton direction={'DOUBLE_RIGHT'} onClick={goToLastPage} disabled={isLast} />
+			<PageButton
+				direction={'RIGHT'}
+				onClick={goToNextPage}
+				disabled={isLast}
+			/>
+			<PageButton
+				direction={'DOUBLE_RIGHT'}
+				onClick={goToLastPage}
+				disabled={isLast}
+			/>
 		</div>
 	);
 };

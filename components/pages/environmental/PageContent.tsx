@@ -26,7 +26,6 @@ import stringify from 'fast-json-stable-stringify';
 import { isEqual } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 
-import defaultTheme from '#components/theme';
 import useUrlParamState from '#global/hooks/useUrlParamsState';
 
 import Facets from './Facets';
@@ -39,7 +38,7 @@ import RepoTable from './RepoTable';
 // };
 
 const PageContent = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { sqon, setSQON } = useArrangerData({ callerName: 'Environmental-PageContent' });
 	const [firstRender, setFirstRender] = useState<boolean>(true);
 	const [currentFilters, setCurrentFilters] = useUrlParamState<SQONType | null>('filters', null, {
@@ -83,9 +82,7 @@ const PageContent = (): ReactElement => {
 						background-color: ${theme.colors.white};
 						z-index: 1;
 						${theme.shadow.right};
-						height: calc(
-							100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px
-						);
+						height: calc(100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px);
 						overflow-y: scroll;
 					`}
 				>
@@ -96,9 +93,7 @@ const PageContent = (): ReactElement => {
 						display: flex;
 						flex-direction: column;
 						width: 100%;
-						height: calc(
-							100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px
-						);
+						height: calc(100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px);
 						overflow-y: scroll;
 					`}
 				>

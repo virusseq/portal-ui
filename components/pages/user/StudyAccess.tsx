@@ -22,12 +22,10 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useState } from 'react';
 
-import defaultTheme from '#components/theme';
-import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
 
 const StyledList = ({ children }: { children: React.ReactNode }) => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	return (
 		<ul
 			css={css`
@@ -69,7 +67,7 @@ const StudiesSection = ({ title, isAdmin, hasAccess, scopes }: StudiesSectionPro
 };
 
 const StudyAccess = (): ReactElement | null => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const {
 		userClinicalWriteScopes,
 		userIsClinicalAdmin,
