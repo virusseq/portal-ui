@@ -125,7 +125,7 @@ const NavBar = (): ReactElement => {
 										active: router.asPath.startsWith(INTERNAL_PATHS.CLINICAL_EXPLORATION),
 									})}
 								>
-									Clinical cases
+									Clinical-VirusSeq
 								</StyledListLink>
 							</InternalLink>,
 							<InternalLink path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
@@ -134,7 +134,7 @@ const NavBar = (): ReactElement => {
 										active: router.asPath.startsWith(INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION),
 									})}
 								>
-									Environmental
+									Environmental-Wastewater
 								</StyledListLink>
 							</InternalLink>,
 						]}
