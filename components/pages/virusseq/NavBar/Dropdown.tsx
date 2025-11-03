@@ -135,7 +135,7 @@ const Dropdown = ({
 						position: absolute;
 						right: 0;
 						top: calc(100% + 5px);
-						z-index: 666;
+						z-index: 20;
 
 						li {
 							box-sizing: border-box;
