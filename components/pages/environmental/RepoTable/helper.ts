@@ -61,11 +61,11 @@ export type ExtendedCombinationOperator = {
 
 export type ExtendedSQON = ExtendedFilterOperator | ExtendedCombinationOperator | SQON;
 
-export const excludeRecordsWithoutFiles = (sqon: SQON): ExtendedSQON => {
+export const excludeRecordsWithoutFiles = (sqon: SQON | null): ExtendedSQON => {
 	return {
 		op: 'and',
 		content: [
-			sqon,
+			...(sqon ? [sqon] : []),
 			{
 				op: 'not-in',
 				content: { fieldName: 'files.fileName', value: [] },
@@ -142,7 +142,7 @@ export const getMetadataBlobAsync = async ({
 	documentType: string;
 	fileType: 'tsv' | string;
 	maxRows: number;
-	sqon: SQON;
+	sqon: SQON | null;
 	url: string;
 }): Promise<Blob> => {
 	// Arranger Request in url form params
