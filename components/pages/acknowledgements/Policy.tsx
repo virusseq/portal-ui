@@ -24,7 +24,7 @@ import { ReactNode } from 'react';
 
 export type PolicyProps = { anchor: string; content: ReactNode; heading: string };
 
-const Policy = ({ policy: { anchor, content, heading } }: { policy: PolicyProps }): JSX.Element => {
+const Policy = ({ policy: { anchor, content, heading } }: { policy: PolicyProps }) => {
 	const theme = useTheme();
 	return (
 		<section
