@@ -112,8 +112,8 @@ const getErrorMessage = ({ type, statusCode }: ErrorResponse) => {
 		case TokenErrorType.NO_VALID_PERMISSIONS_ERROR:
 			return (
 				<span>
-					You do not have permissions to generate an Access token. Your permissions may have changed
-					recently. Please contact the <DMSAdminContact /> to gain the correct permissions.
+					You do not have permissions to generate an Access token. Your permissions may have changed recently.
+					Please contact the <DMSAdminContact /> to gain the correct permissions.
 				</span>
 			);
 		default:
@@ -127,7 +127,7 @@ const ApiTokenInfo = (): ReactElement => {
 	const [isCopyingToken, setIsCopyingToken] = useState(false);
 	const [copySuccess, setCopySuccess] = useState(false);
 	const [requestError, setRequestError] = useState<ErrorResponse | null>(null);
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	// still need to display any errors for the generate request, as permissions may have changed in between
 	// the time a user signed in and when they attempted to generate a token
@@ -186,8 +186,7 @@ const ApiTokenInfo = (): ReactElement => {
 			>
 				<li>Your access token is used to submit data through a command line client.</li>
 				<li>
-					Your access token is associated with your user credentials and should NEVER be shared with
-					anyone.
+					Your access token is associated with your user credentials and should NEVER be shared with anyone.
 				</li>
 				<li>Your access token lasts only for 24 hours.</li>
 			</ol>
@@ -269,7 +268,10 @@ const ApiTokenInfo = (): ReactElement => {
 						open={copySuccess}
 						arrow
 						html={
-							<TooltipContainer theme={theme} id="tooltip">
+							<TooltipContainer
+								theme={theme}
+								id="tooltip"
+							>
 								Copied!
 							</TooltipContainer>
 						}
@@ -293,7 +295,10 @@ const ApiTokenInfo = (): ReactElement => {
 									visibility: ${copySuccess ? 'visible' : 'hidden'};
 								`}
 							>
-								<Checkmark size={20} fill={theme.colors.white} />
+								<Checkmark
+									size={20}
+									fill={theme.colors.white}
+								/>
 							</span>
 							<span
 								css={css`

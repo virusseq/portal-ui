@@ -20,17 +20,17 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { format } from 'date-fns';
 import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
-import defaultTheme from '#components/theme';
 
+import { iMicroSeqPolicy, virusSeqPolicy } from './policies';
+import Contributors from './Contributors';
 import Individuals from './Individuals';
 import Policy from './Policy';
 
 const PageContent = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<main
@@ -67,10 +67,10 @@ const PageContent = (): ReactElement => {
 				<p
 					css={css`
 						font-style: italic;
-						margin-top: 10px 0 0;
+						margin-top: 10px;
 					`}
 				>
-					Updated at {format(Date.parse('19 Mar 2024 18:45:00'), 'MM/dd/yyyy, h:mm:ss aa')}
+					Updated at 10/31/2025, 14:00:00 PM
 				</p>
 
 				<section>
@@ -82,7 +82,8 @@ const PageContent = (): ReactElement => {
 						How to cite
 					</h2>
 					<p>
-						If you use the VirusSeq Data Portal, please cite{' '}
+						If you use the iMicroSeq Data Portal or the VirusSeq Data Portal, please cite the following,
+						pending further publication of this resource:{' '}
 						<span
 							css={css`
 								display: inline;
@@ -101,16 +102,34 @@ const PageContent = (): ReactElement => {
 						</span>
 					</p>
 				</section>
-				<Policy />
-				{/* Commented out for testing without this section
-        <Contributors /> */}
+				<nav>
+					<a
+						css={css`
+							font-weight: bold;
+						`}
+						href={`#${iMicroSeqPolicy.anchor}`}
+					>
+						Acknowledgements for iMicroSeq Environmental data
+					</a>
+					<br />
+					<a
+						css={css`
+							font-weight: bold;
+						`}
+						href={`#${virusSeqPolicy.anchor}`}
+					>
+						Acknowledgements for VirusSeq Data Portal / iMicroSeq clinical case data
+					</a>
+				</nav>
+				<Policy policy={iMicroSeqPolicy} />
+				<Contributors />
+				<Policy policy={virusSeqPolicy} />
 				<Individuals />
-
 				<p>
-					Funding for the VirusSeq Data Portal has been provided by The Canadian COVID Genomics
-					Network (CanCOGeN), supported by Genome Canada and Innovation, Science and Economic
-					Development Canada (ISED), plus the Canadian Institutes of Health Research(CIHR) -
-					Coronavirus Variants Rapid Response Network (CoVaRR-Net)
+					Funding for the VirusSeq Data Portal has been provided by The Canadian COVID Genomics Network
+					(CanCOGeN), supported by Genome Canada and Innovation, Science and Economic Development Canada
+					(ISED), plus the Canadian Institutes of Health Research(CIHR) - Coronavirus Variants Rapid Response
+					Network (CoVaRR-Net)
 				</p>
 			</article>
 		</main>

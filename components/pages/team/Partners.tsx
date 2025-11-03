@@ -23,10 +23,9 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
-import defaultTheme from '#components/theme';
 
 const Partners = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	return (
 		<section
 			css={css`

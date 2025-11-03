@@ -23,11 +23,10 @@ import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
 import StyledLink from '#components/Link';
-import defaultTheme from '#components/theme';
 import { GenomeCanadaLogo } from '#components/theme/icons';
 
 const Funding = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<section>
@@ -127,7 +126,7 @@ const Funding = (): ReactElement => {
 
 			<p>
 				The rapid funding opportunity was announced on February 12, 2021 by the Public Health Agency of Canada
-				(PHAC) for the Genome Canada-led Canadian COVID Genomics Network (CanCOGeN) to directly support
+				(PHAC) for the Genome Canada-led Canadian COVID Genomics Network (CanCOGeN) to directly support{' '}
 				<StyledLink
 					href="https://www.canada.ca/en/public-health/news/2021/02/government-of-canada-invests-53-million-to-address-covid-19-virus-variants-of-concern.html"
 					rel="noopener noreferrer"

@@ -22,14 +22,13 @@
 import { css, useTheme } from '@emotion/react';
 import cx from 'classnames';
 
-import StyledLink from '#components/Link.tsx';
-import type defaultTheme from '#components/theme/index.ts';
+import { EmailLink } from '#components/Link.tsx';
 
 import Announcement from './Announcement.tsx';
 import type { AnnouncementObj, AnnouncementPanelProps } from './types.ts';
 
 const AnnouncementsPanel = ({ announcements = [], className, css: customCSS }: AnnouncementPanelProps) => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<aside
@@ -101,14 +100,7 @@ const AnnouncementsPanel = ({ announcements = [], className, css: customCSS }: A
 				`}
 			>
 				If you have feature suggestions, feedback, or want to report a bug, please{' '}
-				<StyledLink
-					href="mailto:imicroseq-dataportal@lists.sfu.ca"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					contact us
-				</StyledLink>
-				.
+				<EmailLink email="imicroseq-dataportal@lists.sfu.ca">contact us</EmailLink>.
 			</footer>
 		</aside>
 	);

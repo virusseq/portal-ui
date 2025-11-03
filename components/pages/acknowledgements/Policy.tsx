@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ *  Copyright (c) 2025 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -20,78 +20,32 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
 
-import StyledLink from '#components/Link';
-import defaultTheme from '#components/theme';
+export type PolicyProps = { anchor: string; content: ReactNode; heading: string };
 
-const Partners = (): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+const Policy = ({ policy: { anchor, content, heading } }: { policy: PolicyProps }) => {
+	const theme = useTheme();
 	return (
 		<section
+			id={anchor}
 			css={css`
 				margin: 5px 0 0;
 			`}
 		>
-			<h2
+			<h2>{heading}</h2>
+
+			<h3
 				css={css`
 					${theme.typography.subheading};
 				`}
 			>
 				Policy on recognition of the work of data providers
-			</h2>
+			</h3>
 
-			<p>
-				You may use the data from the Canadian VirusSeq Data Portal to author results obtained from your
-				analyses of relevant data, provided that your published results acknowledge the contribution of VirusSeq
-				and its partners. We suggest using the following acknowledgement sentence:{' '}
-				<strong>
-					"The results here are in whole, or in part based upon data hosted at the Canadian VirusSeq Data
-					Portal:{' '}
-					<StyledLink
-						href="https://virusseq-dataportal.ca/"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						https://virusseq-dataportal.ca/
-					</StyledLink>
-					. We wish to acknowledge the Canadian Public Health Laboratory Network (CPHLN), Genome Canada and
-					the CanCOGeN VirusSeq Consortium for their contribution to the Portal, see supplementary file for
-					detailed information"
-				</strong>{' '}
-				(supplementary file must be submitted as an addendum to your publication). You may redistribute the data
-				available on the Canadian VirusSeq Data Portal under the same terms and conditions as specified in this
-				policy. You should not impose any additional or different terms or conditions on, or apply any effective
-				technological measures to the data, if doing so restricts the use of the data by others.
-			</p>
-
-			<p>
-				Please note that the data that is being shared is the work of many individuals and should be treated as
-				unpublished data. If you wish to publish research using these data, you are encouraged to contact us at{' '}
-				<StyledLink
-					href="mailto:imicroseq-dataportal@lists.sfu.ca"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					imicroseq-dataportal@lists.sfu.ca
-				</StyledLink>{' '}
-				before analyzing the data to ensure that those who have generated the data may be involved in its
-				analysis. You are responsible for making the best efforts to collaborate with representatives of the
-				data providers responsible for obtaining the specimens and to involve them in your analyses and
-				research. The metadata available on the Canadian VirusSeq Data Portal comprises a subset of the Canadian
-				COVID-19 related datasets. You may potentially have access to more data through formal collaborations
-				with the CPHLN and CanCOGeN VirusSeq members. You are encouraged to contact us at{' '}
-				<StyledLink
-					href="mailto:imicroseq-dataportal@lists.sfu.ca"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					imicroseq-dataportal@lists.sfu.ca
-				</StyledLink>{' '}
-				to obtain additional information for this purpose.
-			</p>
+			{content}
 		</section>
 	);
 };
 
-export default Partners;
+export default Policy;

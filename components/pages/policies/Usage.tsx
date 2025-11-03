@@ -21,7 +21,7 @@
 
 import { ReactElement } from 'react';
 
-import StyledLink from '#components/Link';
+import StyledLink, { EmailLink } from '#components/Link';
 
 const Usage = (): ReactElement => (
 	<section>
@@ -183,14 +183,7 @@ const Usage = (): ReactElement => (
 			the CVDP policy on Recognition of the work of data submitters. Users should not attempt to make use of the
 			portal data to attempt to re-identify specific individuals. In the unlikely case you come across identifying
 			data, please swiftly report the event, indicating the problematic dataset, at{' '}
-			<StyledLink
-				href="mailto:imicroseq-dataportal@lists.sfu.ca"
-				rel="noopener noreferrer"
-				target="_blank"
-			>
-				imicroseq-dataportal@lists.sfu.ca
-			</StyledLink>
-			.
+			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>.
 		</p>
 
 		<h2>Data standards guidelines</h2>
@@ -199,14 +192,7 @@ const Usage = (): ReactElement => (
 			As data needs change over time, the data standard implemented by the Data Portal evolves (additional fields
 			and terms may be added, requirements may be updated, etc). This may alter the database schema as well as the
 			types of information provided by data stewards. For more information, please contact Dr. Emma Griffiths at{' '}
-			<StyledLink
-				href="mailto:ega12@sfu.ca"
-				rel="noopener noreferrer"
-				target="_blank"
-			>
-				ega12@sfu.ca
-			</StyledLink>
-			.
+			<EmailLink email="ega12@sfu.ca">ega12@sfu.ca</EmailLink>.
 		</p>
 
 		<h2>Recognition of the work of the data submitters</h2>
@@ -228,16 +214,10 @@ const Usage = (): ReactElement => (
 		<p>
 			Please note that the data that is being shared is the work of many individuals and should be treated as
 			unpublished data. If you wish to publish research using the data, contact us at{' '}
-			<StyledLink
-				href="mailto:imicroseq-dataportal@lists.sfu.ca"
-				rel="noopener noreferrer"
-				target="_blank"
-			>
-				imicroseq-dataportal@lists.sfu.ca
-			</StyledLink>{' '}
-			first to ensure that those who have generated the data can be involved in its analysis. You are responsible
-			for making the best efforts to collaborate with representatives of the Originating Laboratory responsible
-			for obtaining the specimen(s) and involve them in such analyses and further research using such Data.
+			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink> first to
+			ensure that those who have generated the data can be involved in its analysis. You are responsible for
+			making the best efforts to collaborate with representatives of the Originating Laboratory responsible for
+			obtaining the specimen(s) and involve them in such analyses and further research using such Data.
 		</p>
 
 		<h2>Intellectual Property</h2>
