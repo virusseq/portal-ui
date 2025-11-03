@@ -22,15 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import cx from 'classnames';
 import { useRouter } from 'next/router';
-import {
-	MouseEventHandler,
-	ReactElement,
-	ReactNode,
-	SyntheticEvent,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
+import { MouseEventHandler, ReactElement, ReactNode, SyntheticEvent, useEffect, useRef, useState } from 'react';
 
 import { TransparentButton } from '#components/Button';
 import { ChevronDown } from '#components/theme/icons';
@@ -121,10 +113,10 @@ const Dropdown = ({
 					${open
 						? css`
 								transform: rotate(180deg) translateY(-2px);
-						  `
+							`
 						: css`
 								transform: translateY(1px);
-						  `}
+							`}
 				`}
 			/>
 
@@ -132,7 +124,9 @@ const Dropdown = ({
 				<ul
 					css={css`
 						background: ${theme.colors.white};
-						box-shadow: 0 8px 21px 0 rgba(0, 0, 0, 0.1), 0 6px 12px 0 rgba(0, 0, 0, 0.1);
+						box-shadow:
+							0 8px 21px 0 rgba(0, 0, 0, 0.1),
+							0 6px 12px 0 rgba(0, 0, 0, 0.1);
 						color: ${theme.colors.grey_6};
 						list-style: none;
 						margin: 0;
@@ -142,7 +136,7 @@ const Dropdown = ({
 						position: absolute;
 						right: 0;
 						top: calc(100% + 5px);
-						z-index: 666;
+						z-index: 20;
 
 						li {
 							box-sizing: border-box;
@@ -160,7 +154,10 @@ const Dropdown = ({
 					{data
 						.filter((x) => x)
 						.map((dataItem: ReactNode, index) => (
-							<li key={index} onClick={handleClickOnItem}>
+							<li
+								key={index}
+								onClick={handleClickOnItem}
+							>
 								{dataItem}
 							</li>
 						))}
