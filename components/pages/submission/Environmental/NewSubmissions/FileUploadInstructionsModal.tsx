@@ -22,11 +22,7 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement, useEffect, useState } from 'react';
 
-import {
-	convertToUploadManifest,
-	downloadFile,
-	type SubmissionManifest,
-} from '#/global/utils/fileManifest';
+import { convertToUploadManifest, downloadFile, type SubmissionManifest } from '#/global/utils/fileManifest';
 import Button from '#components/Button';
 import { Modal } from '#components/Modal';
 import defaultTheme from '#components/theme';
@@ -75,7 +71,10 @@ const FileUploadInstructionsModal = ({
 	}, [token]);
 
 	return (
-		<Modal title={'Genomic files upload instructions'} onCloseClick={onClose}>
+		<Modal
+			title={'Genomic files upload instructions'}
+			onCloseClick={onClose}
+		>
 			<div
 				css={css`
 					padding: 20px;
@@ -96,24 +95,9 @@ const FileUploadInstructionsModal = ({
 				`}
 			>
 				<p>
-					Follow the steps below to upload the genomic files. Make sure you have the necessary files
-					ready and that you have Docker installed on your machine.
-				</p>
-				<h2>1. Download manifest file:</h2>
-				<p>
-					Click the button below to download the manifest file in TSV format. This file is required
-					for the upload process and contains the necessary information about your files.
-				</p>
-				<p>
-					<strong>Note:</strong> File must be downloaded in the same directory as the files you want
-					to upload.
-				</p>
-				<Button onClick={handleDownload}>Download Manifest</Button>
-				<h2>2. Uploading Files Using the Score Client Docker Image:</h2>
-				<p>
-					<strong>Note:</strong> Ensure that Docker is installed and running on your local machine
-					before proceeding. If Docker is not installed, you can follow the installation
-					instructions on the official{' '}
+					Follow the steps below to upload the genomic files. Make sure you have the necessary files ready and
+					that you have Docker installed on your machine. If Docker is not installed, you can follow the
+					installation instructions on the official{' '}
 					<a
 						css={css`
 							align-items: center;
@@ -125,17 +109,31 @@ const FileUploadInstructionsModal = ({
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						Docker website
+						Docker website.
 					</a>
-					.
+				</p>
+				<h2>1. Download manifest file:</h2>
+				<p>
+					Click the button below to download the manifest file in TSV format. This file is required for the
+					upload process and contains the necessary information about your files.
 				</p>
 				<p>
-					<strong>Note:</strong> Ensure that the manifest file is in the same directory as the files
-					you want to upload.
+					<strong>Note:</strong> File must be downloaded in the same directory as the files you want to
+					upload.
+				</p>
+				<Button onClick={handleDownload}>Download Manifest</Button>
+				<h2>2. Uploading Files Using the Score Client Docker Image:</h2>
+				<p>
+					<strong>Note:</strong> Ensure that Docker is installed and running on your local machine before
+					proceeding.
 				</p>
 				<p>
-					Open a terminal, navigate to the same directory as the files you want to upload, and run
-					the following command to start the Score client Docker container:
+					<strong>Note:</strong> Ensure that the manifest file is in the same directory as the files you want
+					to upload.
+				</p>
+				<p>
+					Open a terminal, navigate to the same directory as the files you want to upload, and run the
+					following command to start the Score client Docker container:
 				</p>
 				<pre
 					css={css`
