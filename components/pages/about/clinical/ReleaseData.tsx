@@ -22,14 +22,12 @@
 import { css, useTheme } from '@emotion/react';
 import { format, isValid } from 'date-fns';
 import { ReactElement, useEffect, useState } from 'react';
-// import Highcharts from 'highcharts';
-// import HighchartsReact from 'highcharts-react-official';
 
 import Loader from '#components/Loader';
 import { CoronaVirus, CrossHairs, File, Storage } from '#components/theme/icons';
 import { getConfig } from '#global/config';
+import { ReleaseClinicalDataProps, ReleaseEnvironmentalDataProps } from '#global/hooks/useReleaseData/types';
 import useReleaseData from '#global/hooks/useReleaseData/clinical';
-import { ReleaseClinicalDataProps } from '#global/hooks/useReleaseData/types';
 import useSingularityData from '#global/hooks/useSingularityData';
 
 const ReleaseData = (): ReactElement => {
@@ -40,6 +38,9 @@ const ReleaseData = (): ReactElement => {
 
 	const [isLoadingSingularityData, setIsLoadingSingularityData] = useState<boolean>(true);
 	const [releaseDataProps, setReleaseDataProps] = useState<ReleaseClinicalDataProps>();
+	const [releaseEnvDataProps] = useState<ReleaseEnvironmentalDataProps>();
+
+	console.log('releaseData', releaseData);
 
 	useEffect(() => {
 		fetchTotalCounts()
@@ -82,20 +83,20 @@ const ReleaseData = (): ReactElement => {
 			? new Date(NEXT_PUBLIC_RELEASE_DATE)
 			: Number(NEXT_PUBLIC_RELEASE_DATE) && new Date(Number(NEXT_PUBLIC_RELEASE_DATE)));
 
+	console.log('releaseEnvDataProps', releaseEnvDataProps);
+	// const { organizationCount = 0 } = releaseEnvDataProps;
+	const organizationCount = 0;
+
 	return (
 		<main
 			css={css`
 				display: flex;
-				// flex-wrap: wrap;
 			`}
 		>
 			<aside
 				css={css`
 					margin-right: 30px;
-
-					/* @media (max-width: 639px) { */
 					width: 100%;
-					/* } */
 				`}
 			>
 				{releaseDate && isValid(releaseDate) && (
@@ -121,7 +122,6 @@ const ReleaseData = (): ReactElement => {
 					css={css`
 						border: 1px solid ${theme.colors.primary_light};
 						display: flex;
-						/* flex-direction: column; */
 						margin-bottom: 0;
 						padding: 10px;
 						width: 100%;
@@ -133,10 +133,6 @@ const ReleaseData = (): ReactElement => {
 							padding-left: 25px;
 							position: relative;
 							white-space: nowrap;
-
-							/* &:not(:first-of-type) {
-                margin-top: 10px;
-              } */
 						}
 
 						svg {
@@ -161,7 +157,12 @@ const ReleaseData = (): ReactElement => {
 							<li>
 								<CoronaVirus />
 								<span>{genomesCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
-								<span>{genomesCount?.value?.toLocaleString('en-CA')}</span>Viral Genomes
+								<span>{genomesCount?.value?.toLocaleString('en-CA')} # Samples (Clinical)</span>
+							</li>
+							<li>
+								<CoronaVirus />
+								<span>{genomesCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
+								<span>{genomesCount?.value?.toLocaleString('en-CA')} # Samples (Environmental)</span>
 							</li>
 							<li>
 								<CrossHairs
@@ -169,7 +170,15 @@ const ReleaseData = (): ReactElement => {
 										margin-left: -1px;
 									`}
 								/>
-								<span>{studyCount?.toLocaleString('en-CA')}</span>Studies
+								<span>{organizationCount?.toLocaleString('en-CA')} Provinces</span>
+							</li>
+							<li>
+								<CrossHairs
+									style={css`
+										margin-left: -1px;
+									`}
+								/>
+								<span>{studyCount?.toLocaleString('en-CA')} Sites</span>
 							</li>
 							<li>
 								<Storage />
@@ -180,74 +189,6 @@ const ReleaseData = (): ReactElement => {
 					)}
 				</ul>
 			</aside>
-
-			{/* <figure
-        css={css`
-          ${getChartStyles(theme)}
-        `}
-      >
-        <h3
-            css={css`
-              font-size: 17px;
-              font-weight: normal;
-              margin-left: 80px;
-              margin-top: 0;
-            `}
-          >
-          <figcaption>Files by Variant Type</figcaption>
-        </h3>
-
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={{
-            chart: {
-              height: 140,
-              type: 'column',
-            },
-            credits: {
-              enabled: false,
-            },
-            legend: {
-              align: 'right',
-              x: -30,
-              verticalAlign: 'top',
-              y: 25,
-              floating: true,
-              shadow: false
-            },
-            plotOptions: {
-              column: {
-                stacking: 'normal',
-                dataLabels: {
-                  enabled: true,
-                },
-              },
-            },
-            series: [{
-              name: 'CoViD-19',
-              data: Object.values(filesByVariant).map(province => province.count)
-            }],
-            title: {
-              text: '',
-            },
-            tooltip: {
-              enabled: false,
-            //   headerFormat: '<b>{point.x}</b><br/>',
-            //   pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-            },
-            xAxis: {
-              categories: Object.keys(filesByVariant).map(abbreviation => abbreviation.toUpperCase()),
-              reversed: true,
-            },
-            yAxis: {
-              min: 0,
-              title: {
-                  text: '# files'
-              },
-          },
-          }}
-        />
-        </figure> */}
 		</main>
 	);
 };
