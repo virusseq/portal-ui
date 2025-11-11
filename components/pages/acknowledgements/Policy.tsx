@@ -19,18 +19,19 @@
  *
  */
 
-import { css, useTheme } from '@emotion/react';
+import { css, type SerializedStyles, useTheme } from '@emotion/react';
 import { ReactNode } from 'react';
 
 export type PolicyProps = { anchor: string; content: ReactNode; heading: string };
 
-const Policy = ({ policy: { anchor, content, heading } }: { policy: PolicyProps }) => {
+const Policy = ({ style, policy: { anchor, content, heading } }: { style?: SerializedStyles; policy: PolicyProps }) => {
 	const theme = useTheme();
 	return (
 		<section
 			id={anchor}
 			css={css`
 				margin: 5px 0 0;
+				${style}
 			`}
 		>
 			<h2>{heading}</h2>
