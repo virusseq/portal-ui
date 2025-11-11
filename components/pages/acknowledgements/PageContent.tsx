@@ -121,7 +121,12 @@ const PageContent = (): ReactElement => {
 						Acknowledgements for VirusSeq Data Portal / iMicroSeq clinical case data
 					</a>
 				</nav>
-				<Policy policy={iMicroSeqPolicy} />
+				<Policy
+					policy={iMicroSeqPolicy}
+					style={css`
+						scroll-margin-top: 65px;
+					`}
+				/>
 				<Contributors />
 				<Policy policy={virusSeqPolicy} />
 				<Individuals />
