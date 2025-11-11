@@ -28,19 +28,22 @@ import { CoronaVirus, CrossHairs, File, Storage } from '#components/theme/icons'
 import { getConfig } from '#global/config';
 import { ReleaseClinicalDataProps, ReleaseEnvironmentalDataProps } from '#global/hooks/useReleaseData/types';
 import useReleaseData from '#global/hooks/useReleaseData/clinical';
+import useEnvironmentalData from '#global/hooks/useReleaseData/environmental';
 import useSingularityData from '#global/hooks/useSingularityData';
 
 const ReleaseData = (): ReactElement => {
 	const theme = useTheme();
 	const { NEXT_PUBLIC_RELEASE_DATE } = getConfig();
 	const [releaseData, loadingArrangerData] = useReleaseData();
+	const [releaseEnvData, loadingEnvData] = useEnvironmentalData();
 	const { fetchTotalCounts } = useSingularityData();
 
 	const [isLoadingSingularityData, setIsLoadingSingularityData] = useState<boolean>(true);
 	const [releaseDataProps, setReleaseDataProps] = useState<ReleaseClinicalDataProps>();
 	const [releaseEnvDataProps] = useState<ReleaseEnvironmentalDataProps>();
 
-	console.log('releaseData', releaseData);
+	const isLoadingReleaseData = releaseDataProps === undefined && loadingArrangerData;
+	const isLoadingEnvironmentData = releaseEnvDataProps === undefined && loadingEnvData;
 
 	useEffect(() => {
 		fetchTotalCounts()
@@ -61,7 +64,6 @@ const ReleaseData = (): ReactElement => {
 				setIsLoadingSingularityData(false);
 			})
 			.catch(() => {
-				console.error('fetchTotalCounts failed, use Arranger fallback');
 				setReleaseDataProps(undefined);
 				setIsLoadingSingularityData(false);
 			});
@@ -74,18 +76,17 @@ const ReleaseData = (): ReactElement => {
 		studyCount = 0,
 	} = releaseDataProps || releaseData;
 
+	const { genomesCount: environmentGenomeCount = { value: 0, type: 'APPROXIMATE' }, organizationCount = 0 } =
+		releaseEnvDataProps || releaseEnvData;
+
 	// either we're waiting on arranger or singularity data
-	const showLoader = (releaseDataProps === undefined && loadingArrangerData) || isLoadingSingularityData;
+	const showLoader = isLoadingReleaseData || isLoadingSingularityData || isLoadingEnvironmentData;
 
 	const releaseDate =
 		!!NEXT_PUBLIC_RELEASE_DATE &&
 		(Number.isNaN(Number(NEXT_PUBLIC_RELEASE_DATE))
 			? new Date(NEXT_PUBLIC_RELEASE_DATE)
 			: Number(NEXT_PUBLIC_RELEASE_DATE) && new Date(Number(NEXT_PUBLIC_RELEASE_DATE)));
-
-	console.log('releaseEnvDataProps', releaseEnvDataProps);
-	// const { organizationCount = 0 } = releaseEnvDataProps;
-	const organizationCount = 0;
 
 	return (
 		<main
@@ -131,6 +132,7 @@ const ReleaseData = (): ReactElement => {
 							align-items: center;
 							display: flex;
 							padding-left: 25px;
+							margin-left: 10px;
 							position: relative;
 							white-space: nowrap;
 						}
@@ -161,8 +163,10 @@ const ReleaseData = (): ReactElement => {
 							</li>
 							<li>
 								<CoronaVirus />
-								<span>{genomesCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
-								<span>{genomesCount?.value?.toLocaleString('en-CA')} # Samples (Environmental)</span>
+								<span>{environmentGenomeCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
+								<span>
+									{environmentGenomeCount?.value?.toLocaleString('en-CA')} # Samples (Environmental)
+								</span>
 							</li>
 							<li>
 								<CrossHairs
