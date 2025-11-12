@@ -59,25 +59,6 @@ export const iMicroSeqPolicy: PolicyProps = {
 					consortium participants."
 				</strong>{' '}
 			</p>
-			<p>
-				You may redistribute the data available on this Data Portal under the same terms and conditions as
-				specified in this policy. You should not impose any additional or different terms or conditions on, or
-				apply any effective technological measures to the data, if doing so restricts the use of the data by
-				others.
-			</p>
-
-			<p>
-				If you wish to publish research using these data, you are encouraged to contact us at{' '}
-				<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>{' '}
-				before analyzing the data to ensure that those who have generated the data may be involved in its
-				analysis. You are responsible for making the best efforts to collaborate with representatives of the
-				data providers responsible for obtaining the specimens and to involve them in your analyses and
-				research. The metadata available on the Canadian VirusSeq Data Portal comprises a subset of the Canadian
-				COVID-19 related datasets. You may potentially have access to more data through formal collaborations
-				with the CPHLN and CanCOGeN VirusSeq members. You are encouraged to contact us at{' '}
-				<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink> to
-				obtain additional information for this purpose.
-			</p>
 		</>
 	),
 };
