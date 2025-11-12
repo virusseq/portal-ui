@@ -21,6 +21,7 @@
 
 import { css, useTheme } from '@emotion/react';
 import { useCallback, useEffect, useState } from 'react';
+import type { SQONType } from '@overture-stack/arranger-components';
 
 import { convertToDownloadManifest, downloadFile, type SubmissionManifest } from '#/global/utils/fileManifest';
 import Collapsible from '#components/Collapsible';
@@ -35,7 +36,6 @@ import { fetchReleaseData } from '#global/hooks/useReleaseData/environmental';
 
 import { MetadataFileSection } from './MetadataFile';
 import { plainTextSequencingFileInstructions, SequencingFilesSection } from './SequencingFiles';
-import type { SQONType } from '@overture-stack/arranger-components';
 
 /**
  * Advisory section to display the data usage policy and acknowledgements.
@@ -48,22 +48,8 @@ const AdvisorySection = () => (
 				margin-top: 25px;
 			`}
 		>
-			Your download has started. By downloading this data, you agree to{' '}
-			<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the Canadian Public Health
-			Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having contributed data and follow all{' '}
-			<StyledLink href={INTERNAL_PATHS.POLICIES}>CVDP policies</StyledLink>.
-		</p>
-		<p>
-			Data that is being shared is the work of many individuals and should be treated as unpublished data. If you
-			wish to publish research using the data, contact us at{' '}
-			<StyledLink
-				href="mailto:info@virusseq-dataportal.ca"
-				rel="noopener noreferrer"
-				target="_blank"
-			>
-				info@virusseq-dataportal.ca
-			</StyledLink>{' '}
-			first to ensure that those who have generated the data can be involved in its analysis.
+			Your download has started. By downloading this data, you agree to the policies listed under{' '}
+			<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledgements</StyledLink>.
 		</p>
 	</>
 );
@@ -293,6 +279,7 @@ const DownloadModal = ({
 					</>
 				) : (
 					<>
+						<AdvisorySection />
 						<ArchiveStatDisplay
 							numOfSamples={samplesCount}
 							numOfSeqFiles={fileManifest?.length}
@@ -313,7 +300,6 @@ const DownloadModal = ({
 						</Collapsible>
 					</>
 				)}
-				<AdvisorySection />
 			</div>
 		</Modal>
 	);
