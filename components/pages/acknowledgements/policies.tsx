@@ -50,7 +50,7 @@ export const iMicroSeqPolicy: PolicyProps = {
 					</StyledLink>{' '}
 					with the support of Genome Canada and{' '}
 					<StyledLink
-						href="http://iMicroSeq.ca"
+						href="https://iMicroSeq.ca"
 						rel="noopener noreferrer"
 						target="_blank"
 					>
