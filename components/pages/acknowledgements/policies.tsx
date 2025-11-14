@@ -47,8 +47,8 @@ export const iMicroSeqPolicy: PolicyProps = {
 						target="_blank"
 					>
 						https://iMicroSeq-dataportal.ca/
-					</StyledLink>
-					with the support of Genome Canada and
+					</StyledLink>{' '}
+					with the support of Genome Canada and{' '}
 					<StyledLink
 						href="http://iMicroSeq.ca"
 						rel="noopener noreferrer"
