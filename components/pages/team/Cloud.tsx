@@ -48,14 +48,17 @@ const Cloud = (): ReactElement => (
 				>
 					VirusSeq data on Viral AI
 				</StyledLink>{' '}
-				, a federated network for genomic variant surveillance and infectious disease research.
-				Viral AI helps researchers to find, visualize, and analyze genomics, epidemiological and
-				other datasets related to COVID-19. Viral AI was designed to deliver equitable access to
-				software infrastructure, accelerate international data sharing, and empower scientists and
-				public health officials witih globally representative datasets they need to mitigate current
-				and future infectious disease outbreaks. The Viral AI network shares Canadian and
-				international data over APIs developed by the{' '}
-				<StyledLink href="https://www.ga4gh.org" rel="noopener noreferrer" target="_blank">
+				, a federated network for genomic variant surveillance and infectious disease research. Viral AI helps
+				researchers to find, visualize, and analyze genomics, epidemiological and other datasets related to
+				COVID-19. Viral AI was designed to deliver equitable access to software infrastructure, accelerate
+				international data sharing, and empower scientists and public health officials witih globally
+				representative datasets they need to mitigate current and future infectious disease outbreaks. The Viral
+				AI network shares Canadian and international data over APIs developed by the{' '}
+				<StyledLink
+					href="https://www.ga4gh.org"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
 					Global Alliance for Genomics & Health
 				</StyledLink>{' '}
 				. Viral AI was developed in partnership with a{' '}
@@ -66,8 +69,8 @@ const Cloud = (): ReactElement => (
 				>
 					consortium of Canadian experts
 				</StyledLink>{' '}
-				in infectious disease, ethics, policy, cloud computing, and artificial intelligence, and
-				supported by Canada’s{' '}
+				in infectious disease, ethics, policy, cloud computing, and artificial intelligence, and supported by
+				Canada’s{' '}
 				<StyledLink
 					href="https://www.digitalsupercluster.ca/"
 					rel="noopener noreferrer"
@@ -102,7 +105,11 @@ const Cloud = (): ReactElement => (
 						`}
 					/>
 				</StyledLink>
-				<StyledLink href="https://www.dnastack.com" rel="noopener noreferrer" target="_blank">
+				<StyledLink
+					href="https://www.dnastack.com"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
 					<img
 						src="images/dnastack-logo-typeface.png"
 						alt="Dnastack company logo"
