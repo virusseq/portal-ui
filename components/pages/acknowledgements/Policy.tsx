@@ -24,7 +24,7 @@ import { ReactNode } from 'react';
 
 export type PolicyProps = { anchor: string; content: ReactNode; heading: string };
 
-const Policy = ({ style, policy: { anchor, content, heading } }: { style?: SerializedStyles; policy: PolicyProps }) => {
+const Policy = ({ policy: { anchor, content, heading }, style }: { policy: PolicyProps; style?: SerializedStyles }) => {
 	const theme = useTheme();
 	return (
 		<section
