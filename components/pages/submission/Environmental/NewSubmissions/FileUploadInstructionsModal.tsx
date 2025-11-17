@@ -96,7 +96,21 @@ const FileUploadInstructionsModal = ({
 			>
 				<p>
 					Follow the steps below to upload the genomic files. Make sure you have the necessary files ready and
-					that you have Docker installed on your machine.
+					that you have Docker installed on your machine. If Docker is not installed, you can follow the
+					installation instructions on the official{' '}
+					<a
+						css={css`
+							align-items: center;
+							color: ${theme.colors.primary};
+							font-weight: bold;
+							text-decoration: none;
+						`}
+						href="https://docs.docker.com/get-docker/"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						Docker website.
+					</a>
 				</p>
 				<h2>1. Download manifest file:</h2>
 				<p>
@@ -111,21 +125,7 @@ const FileUploadInstructionsModal = ({
 				<h2>2. Uploading Files Using the Score Client Docker Image:</h2>
 				<p>
 					<strong>Note:</strong> Ensure that Docker is installed and running on your local machine before
-					proceeding. If Docker is not installed, you can follow the installation instructions on the official{' '}
-					<a
-						css={css`
-							align-items: center;
-							color: ${theme.colors.primary};
-							font-weight: bold;
-							text-decoration: none;
-						`}
-						href="https://docs.docker.com/get-docker/"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						Docker website
-					</a>
-					.
+					proceeding.
 				</p>
 				<p>
 					<strong>Note:</strong> Ensure that the manifest file is in the same directory as the files you want
