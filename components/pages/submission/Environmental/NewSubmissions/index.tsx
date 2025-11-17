@@ -100,7 +100,7 @@ const NewSubmissions = (): ReactElement => {
 	const { oneCsv, oneOrMoreTar, readyToUpload } = validationState;
 	const [openGuideModal, setOpenGuideModal] = useState(false);
 
-	const { awaitingResponse, submitData } = useEnvironmentalData('NewSubmissions');
+	const { awaitingResponse, submitData, downloadMetadataTemplateUrl } = useEnvironmentalData('NewSubmissions');
 
 	const setSubmitError = (
 		description: string,
@@ -232,44 +232,73 @@ const NewSubmissions = (): ReactElement => {
 			<h1 className="view-title">Start a New Submission</h1>
 
 			<p>
-				Waste water metadata is submitted as a <span className="code">.csv</span> file. The file name must match
-				the Study name for the Submission. (e.g. QC.csv, etc.). Only one `.csv` is permitted per submission.
+				You can submit either microbial nucleic acid sequence data or qPCR/amplicon data from wastewater and
+				other water through this submission portal.
+			</p>
+			<p>
+				If you would like some help with a large submission, please don't hesitate to contact us at&nbsp;
+				<StyledLink
+					href="mailto:info@virusseq-dataportal.ca"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					info@virusseq-dataportal.ca
+				</StyledLink>
 			</p>
 
 			<p>
-				Waste water Viral genome data must be submitted as a <span className="code">.tar.xz</span> file.
-				Multiple genome files can be uploaded in a single submission. The file name must match the SRA accession
-				for the submission. (e.g. SRS12345678-ABC123.tar.xz, etc.)
+				<strong>For qPCR/amplicon data,</strong> you should submit a single <span className="code">.csv</span>
+				&nbsp; file comprising your qPCR values and associated metadata. The qPCR data template is
+				available&nbsp;
+				<StyledLink
+					href={downloadMetadataTemplateUrl}
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					here
+				</StyledLink>
+				&nbsp; or, use the&nbsp;
+				<StyledLink
+					href="https://github.com/Public-Health-Bioinformatics/DataHarmonizer"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					DataHarmonizer
+				</StyledLink>
+				&nbsp; , which is a tool that can be used to help validate the accepted values for each field in your
+				CSV locally before submitting. Download the tool and follow the instructions on the GitHub repository to
+				pre-validate each field in your CSV before submission. The file name must match the Study name for the
+				Submission (e.g., QC.csv, etc.). Only one <span className="code">.csv</span> is permitted per
+				submission.
 			</p>
 
-			<h2>To format your waste water sequence metadata:</h2>
-
-			<ol>
-				<li>
-					Download the{' '}
-					<StyledLink
-						href="https://github.com/virusseq/metadata-schemas/blob/main/virusseq_metadata_template.tsv"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						metadata CSV Template
-					</StyledLink>{' '}
-					.
-				</li>
-				<li>
-					<StyledLink
-						href="https://github.com/Public-Health-Bioinformatics/DataHarmonizer"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						DataHarmonizer
-					</StyledLink>{' '}
-					is a tool that can be used to help validate the accepted values for each field in your metadata CSV
-					locally before submitting. Download the tool and follow the instructions on the Github repository to
-					pre-validate each field in your metadata before submission.
-				</li>
-				<li>If you are using Excel or Google sheets, make sure all characters are UTF-8 encoded.</li>
-			</ol>
+			<p>
+				<strong>For nucleic acid sequence data,</strong> you should submit a&nbsp;
+				<span className="code">.tar.xz</span> file containing the sequence data (FASTQ formatted), plus a single
+				<span className="code">.csv</span> file containing the associated metadata. To format the metadata,
+				there is a template available&nbsp;
+				<StyledLink
+					href={downloadMetadataTemplateUrl}
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					here
+				</StyledLink>
+				&nbsp; or, use the&nbsp;
+				<StyledLink
+					href="https://github.com/Public-Health-Bioinformatics/DataHarmonizer"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					DataHarmonizer
+				</StyledLink>
+				, which is a tool that can be used to help validate the accepted values for each field in your metadata
+				locally before submitting. Download the tool and follow the instructions on the GitHub repository to
+				pre-validate each field in your CSV before submission. Multiple sequence files can be uploaded in a
+				single submission. The filename of the sequence files should match the&nbsp;
+				<strong>"specimen collector sample ID"</strong>
+				column in the CSV.
+			</p>
 
 			<DropZone
 				disabled={!userHasEnvironmentalAccess}
