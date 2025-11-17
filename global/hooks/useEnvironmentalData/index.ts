@@ -22,11 +22,7 @@
 import { useState } from 'react';
 import urlJoin from 'url-join';
 
-import {
-	EventType,
-	EventTypeToKey,
-	UploadStatus,
-} from '#components/pages/submission/Environmental/Details/types';
+import { EventType, EventTypeToKey, UploadStatus } from '#components/pages/submission/Environmental/Details/types';
 import type { CreateSubmissionResult } from '#components/pages/submission/Environmental/NewSubmissions/types';
 import type { SubmissionPaginatedResponse } from '#components/pages/submission/Environmental/PreviousSubmissions/types';
 import { getConfig } from '#global/config';
@@ -118,6 +114,14 @@ const useEnvironmentalData = (origin: string) => {
 		});
 	};
 
+	const downloadMetadataTemplateUrl = urlJoin(
+		NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
+		'dictionary/category',
+		NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_CATEGORY_ID,
+		'templates',
+		'?fileType=csv',
+	);
+
 	const wait = (delay: number) => {
 		return new Promise((resolve) => setTimeout(resolve, delay));
 	};
@@ -129,11 +133,7 @@ const useEnvironmentalData = (origin: string) => {
 	 */
 	const fetchSubmissionById = async (
 		id: string,
-		{
-			signal,
-			tries = 1,
-			delay = 1000,
-		}: { signal?: AbortSignal; tries?: number; delay?: number } = {},
+		{ signal, tries = 1, delay = 1000 }: { signal?: AbortSignal; tries?: number; delay?: number } = {},
 	): Promise<Submission> => {
 		const onError = async (err: unknown) => {
 			const triesLeft = tries - 1;
@@ -212,10 +212,7 @@ const useEnvironmentalData = (origin: string) => {
 
 		const isUploadPending = submission.files?.some((f) => !f.isUploaded) ?? false;
 
-		const incompleteStatuses: SubmissionStatus[] = [
-			SubmissionStatus.CLOSED,
-			SubmissionStatus.INVALID,
-		];
+		const incompleteStatuses: SubmissionStatus[] = [SubmissionStatus.CLOSED, SubmissionStatus.INVALID];
 
 		// Formatting Insert records
 		const insertRecords =
@@ -250,10 +247,7 @@ const useEnvironmentalData = (origin: string) => {
 			submission.data[EventTypeToKey.UPDATE]?.sample?.map<UploadData>((item, index) => {
 				const errors = submission.errors[EventTypeToKey.UPDATE]?.sample || [];
 				const errorDetails = getErrorDetailsMessage(errors, index);
-				const updateDetails = [
-					JSON.stringify({ old: item.old }),
-					JSON.stringify({ new: item.new }),
-				];
+				const updateDetails = [JSON.stringify({ old: item.old }), JSON.stringify({ new: item.new })];
 
 				let recordStatus: UploadStatus = UploadStatus.PROCESSING;
 				if (errorDetails.length) {
@@ -400,8 +394,7 @@ const useEnvironmentalData = (origin: string) => {
 		// Map records to include `systemId` and update status
 		return records.map((record) => {
 			const matchingRecord = queryResponse.records.find(
-				(resp: any) =>
-					resp.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME] === record.submitterSampleId,
+				(resp: any) => resp.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME] === record.submitterSampleId,
 			);
 			if (matchingRecord) {
 				record.status = UploadStatus.COMPLETE;
@@ -424,9 +417,7 @@ const useEnvironmentalData = (origin: string) => {
 
 		const message = errorDetails.map((err) => {
 			const valuePart = err.fieldValue ? `- Value: '${err.fieldValue}'` : '';
-			const errorsPart = err.errors
-				? `- Details: '${err.errors[0].message.replace(/\.+$/, '')}'`
-				: '';
+			const errorsPart = err.errors ? `- Details: '${err.errors[0].message.replace(/\.+$/, '')}'` : '';
 
 			return `${err.reason} - Field: '${err.fieldName}' ${valuePart} ${errorsPart}`;
 		});
@@ -475,6 +466,7 @@ const useEnvironmentalData = (origin: string) => {
 	return {
 		awaitingResponse,
 		commitSubmission,
+		downloadMetadataTemplateUrl,
 		fetchPreviousSubmissions,
 		fetchSubmissionById,
 		formatUploadData,
