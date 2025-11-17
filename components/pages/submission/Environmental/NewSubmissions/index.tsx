@@ -28,7 +28,6 @@ import { ButtonElement as Button } from '#components/Button';
 import ErrorNotification from '#components/ErrorNotification';
 import StyledLink from '#components/Link';
 import { LoaderWrapper } from '#components/Loader';
-import defaultTheme from '#components/theme';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData from '#global/hooks/useEnvironmentalData';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
@@ -92,7 +91,7 @@ const buildFormData = (organizationName: string, selectedCsv: SubmissionFile, on
 const NewSubmissions = (): ReactElement => {
 	const { token, userHasEnvironmentalAccess, userIsEnvironmentalAdmin, userEnvironmentalWriteScopes } =
 		useAuthContext();
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [filesSubmissionInstructions, setFilesSubmissionInstructions] = useState<SubmissionManifest[]>([]);
 	const [submissionId, setSubmissionId] = useState<string>('');

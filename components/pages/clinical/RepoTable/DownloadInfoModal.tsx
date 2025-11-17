@@ -21,7 +21,7 @@
 
 import { css } from '@emotion/react';
 
-import StyledLink from '#components/Link';
+import StyledLink, { EmailLink } from '#components/Link';
 import Loader from '#components/Loader';
 import { Modal } from '#components/Modal';
 import defaultTheme from '#components/theme';
@@ -41,17 +41,14 @@ const CompleteCheckmark = () => (
 			border-radius: 50%;
 		`}
 	>
-		<Checkmark size={17} fill={defaultTheme.colors.white} />
+		<Checkmark
+			size={17}
+			fill={defaultTheme.colors.white}
+		/>
 	</div>
 );
 
-const ArchiveStatDisplay = ({
-	numOfSamples = 0,
-	id = '',
-}: {
-	numOfSamples?: number;
-	id?: string;
-}) => {
+const ArchiveStatDisplay = ({ numOfSamples = 0, id = '' }: { numOfSamples?: number; id?: string }) => {
 	return (
 		<div
 			css={css`
@@ -107,7 +104,11 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
 		>
 			{showDownloading && (
 				<>
-					<Loader size={'20px'} margin={'0px'} /> <span>Preparing Download...</span>
+					<Loader
+						size={'20px'}
+						margin={'0px'}
+					/>{' '}
+					<span>Preparing Download...</span>
 				</>
 			)}
 			{archive?.status === 'COMPLETE' && (
@@ -124,7 +125,10 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
 	);
 
 	return (
-		<Modal onCloseClick={onClose} title={DownloadTitle}>
+		<Modal
+			onCloseClick={onClose}
+			title={DownloadTitle}
+		>
 			<div
 				css={css`
 					width: 700px;
@@ -136,7 +140,10 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
 					<Loader size={'25px'} />
 				) : (
 					archive.status !== 'FAILED' && (
-						<ArchiveStatDisplay numOfSamples={archive?.numOfSamples} id={archive?.id} />
+						<ArchiveStatDisplay
+							numOfSamples={archive?.numOfSamples}
+							id={archive?.id}
+						/>
 					)
 				)}
 				<p
@@ -145,21 +152,14 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
 					`}
 				>
 					Your download has started. By downloading this data, you agree to{' '}
-					<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the Canadian
-					Public Health Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having
-					contributed data and follow all{' '}
-					<StyledLink href={INTERNAL_PATHS.POLICIES}>CVDP policies</StyledLink>.
+					<StyledLink href={INTERNAL_PATHS.ACKNOWLEDGEMENTS}>acknowledge</StyledLink> the Canadian Public
+					Health Laboratory Network (CPHLN), CanCOGeN VirusSeq, all laboratories having contributed data and
+					follow all <StyledLink href={INTERNAL_PATHS.POLICIES}>CVDP policies</StyledLink>.
 				</p>
 				<p>
-					Data that is being shared is the work of many individuals and should be treated as
-					unpublished data. If you wish to publish research using the data, contact us at{' '}
-					<StyledLink
-						href="mailto:info@virusseq-dataportal.ca"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						info@virusseq-dataportal.ca
-					</StyledLink>{' '}
+					Data that is being shared is the work of many individuals and should be treated as unpublished data.
+					If you wish to publish research using the data, contact us at{' '}
+					<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>{' '}
 					first to ensure that those who have generated the data can be involved in its analysis.
 				</p>
 			</div>

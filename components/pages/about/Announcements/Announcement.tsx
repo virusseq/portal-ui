@@ -22,13 +22,11 @@
 import { css, useTheme } from '@emotion/react';
 import { format } from 'date-fns';
 
-import type defaultTheme from '#components/theme/index.ts';
-
 import { createMarkup } from './helpers.tsx';
 import { AnnouncementProps } from './types.ts';
 
 const Announcement = ({ date, message, title = '' }: AnnouncementProps) => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
 	return (
 		<article>

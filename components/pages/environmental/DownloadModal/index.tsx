@@ -20,8 +20,8 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { useCallback, useEffect, useState } from 'react';
 import type { SQONType } from '@overture-stack/arranger-components';
+import { useCallback, useEffect, useState } from 'react';
 
 import { convertToDownloadManifest, downloadFile, type SubmissionManifest } from '#/global/utils/fileManifest';
 import Collapsible from '#components/Collapsible';

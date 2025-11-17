@@ -23,7 +23,6 @@ import { useTheme } from '@emotion/react';
 import { MouseEventHandler, ReactElement } from 'react';
 
 import { UnStyledButton } from '#components/Button';
-import defaultTheme from '#components/theme';
 import { Bin, File } from '#components/theme/icons';
 
 import { getFileExtension } from './validationHelpers';
@@ -39,13 +38,15 @@ const FileRow = ({
 	file: File;
 	handleRemove?: MouseEventHandler<HTMLButtonElement>;
 }): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 
-	const iconFill =
-		getFileExtension(name) === 'tsv' ? theme.colors.secondary_dark : theme.colors.accent3_dark;
+	const iconFill = getFileExtension(name) === 'tsv' ? theme.colors.secondary_dark : theme.colors.accent3_dark;
 
 	return (
-		<tr data-type={getFileExtension(name)} data-upload={active}>
+		<tr
+			data-type={getFileExtension(name)}
+			data-upload={active}
+		>
 			<td>
 				<File fill={iconFill} />
 				{` ${name}`}

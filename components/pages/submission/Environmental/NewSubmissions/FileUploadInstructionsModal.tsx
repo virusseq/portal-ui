@@ -53,7 +53,7 @@ const FileUploadInstructionsModal = ({
 	onClose: () => void;
 	submissionManifest: SubmissionManifest[];
 }): ReactElement => {
-	const theme: typeof defaultTheme = useTheme();
+	const theme = useTheme();
 	const { token } = useAuthContext();
 
 	const handleDownload = () => {
