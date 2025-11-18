@@ -76,8 +76,11 @@ const ReleaseData = (): ReactElement => {
 		studyCount = 0,
 	} = releaseDataProps || releaseData;
 
-	const { genomesCount: environmentGenomeCount = { value: 0, type: 'APPROXIMATE' }, organizationCount = 0 } =
-		releaseEnvDataProps || releaseEnvData;
+	const {
+		genomesCount: environmentGenomeCount = { value: 0, type: 'APPROXIMATE' },
+		organizationCount = 0,
+		siteCount = 0,
+	} = releaseEnvDataProps || releaseEnvData;
 
 	// either we're waiting on arranger or singularity data
 	const showLoader = isLoadingReleaseData || isLoadingSingularityData || isLoadingEnvironmentData;
@@ -182,7 +185,7 @@ const ReleaseData = (): ReactElement => {
 										margin-left: -1px;
 									`}
 								/>
-								<span>{studyCount?.toLocaleString('en-CA')} Sites</span>
+								<span>{siteCount} Sites</span>
 							</li>
 							<li>
 								<Storage />

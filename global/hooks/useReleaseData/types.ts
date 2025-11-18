@@ -39,6 +39,7 @@ export type ReleaseEnvironmentalDataProps = {
 	filesByVariant?: Array<ProvinceStats>;
 	organizationCount?: number;
 	genomesCount?: Count;
+	siteCount?: number;
 };
 
 export type ReleaseClinicalDataProps = {
