@@ -46,13 +46,13 @@ const IMicroSeqContent = (): ReactElement => (
 				accessing the data for research and innovation purposes. Development of this portal is a national,
 				team-based effort, led by researchers at Simon Fraser University and the Ontario Institute for Cancer
 				Research, with the support of McGill University, and in partnership with Indigenous community
-				participants in the{' '}
+				participants in the iMicroSeq Consortium. A full list of members can be found here:{' '}
 				<StyledLink
-					href="https://www.overture.bio"
+					href="https://ednasurveillance.ca/projects/surveillance-program-projects/imicroseq/imicroseq-team/"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					iMicroSeq Consortium
+					https://ednasurveillance.ca/projects/surveillance-program-projects/imicroseq/imicroseq-team/
 				</StyledLink>
 				.
 			</p>
@@ -97,7 +97,7 @@ const IMicroSeqContent = (): ReactElement => (
 				display: flex;
 			`}
 		>
-			<p>
+			<p style={{ marginBottom: 0 }}>
 				<span
 					css={css`
 						font-weight: bold;
@@ -105,6 +105,23 @@ const IMicroSeqContent = (): ReactElement => (
 				>
 					Lead Development Team:{' '}
 				</span>
+				<ul>
+					<li>Fiona Brinkman</li>
+					<li>Emma Griffiths</li>
+					<li>Melanie Courtot</li>
+
+					<li>Charlie Barclay</li>
+					<li>Bhavik Bhagat</li>
+					<li>Guillaume Bourque José</li>
+					<li>Héctor Gálvez López</li>
+					<li>Erin Gill</li>
+					<li>Justin Jia</li>
+					<li>Justin Richardsson</li>
+					<li>Edmund Su</li>
+					<li>Leonardo Rivera</li>
+					<li>Dan DeMaria</li>
+					<li>Nima Tehrani</li>
+				</ul>
 			</p>
 		</div>
 		<div
@@ -113,7 +130,7 @@ const IMicroSeqContent = (): ReactElement => (
 			`}
 		>
 			<p>
-				Support for this database development was led by{' '}
+				Support for this database development is led by{' '}
 				<StyledLink
 					href="https://www.genomecanada.ca"
 					rel="noopener noreferrer"
@@ -121,7 +138,7 @@ const IMicroSeqContent = (): ReactElement => (
 				>
 					Genome Canada
 				</StyledLink>
-				, in partnership with the
+				, and Genome British Columbia, in partnership with the{' '}
 				<StyledLink
 					href="https://www.canada.ca"
 					rel="noopener noreferrer"
@@ -129,7 +146,10 @@ const IMicroSeqContent = (): ReactElement => (
 				>
 					Government of Canada
 				</StyledLink>
-				, The Portal team also gratefully acknowledges funding from the Canadian Institutes of Health Research (
+				. We are additionally grateful for the support of our project partners including the Public Health
+				Agency of Canada, Simon Fraser University, DNAstack, Koonkie, CANUE, CARD, OICR, and SD4Health. The
+				Portal team also gratefully acknowledges earlier funding from the Canadian Institutes of Health Research
+				(
 				<StyledLink
 					href="https://cihr-irsc.gc.ca/e/193.html"
 					rel="noopener noreferrer"

@@ -24,7 +24,7 @@ import { ReactElement } from 'react';
 
 import Cloud from './Cloud';
 import Funding from './Funding';
-import IMicroSeqContent from './IMicroSeq';
+import IMicroSeqContent from './iMicroSeq';
 import Partners from './Partners';
 import Portal from './Portal';
 
