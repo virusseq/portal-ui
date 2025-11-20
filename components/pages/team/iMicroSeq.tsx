@@ -166,7 +166,7 @@ const IMicroSeqContent = (): ReactElement => (
 				>
 					CoVaRR-Net
 				</StyledLink>
-				), and the Public Health Agency of Canada.
+				).
 			</p>
 		</div>
 	</section>
