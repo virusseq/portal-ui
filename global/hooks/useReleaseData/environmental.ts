@@ -102,7 +102,7 @@ export const fetchReleaseData = async (sqon?: SQONType) => {
 				data__specimen_collector_sample_id: { cardinality: genomesCardinality = 0 } = {},
 				organization: { bucket_count: organizationCount = 0 } = {},
 			} = aggregations;
-			console.log('organismBuckets', organisms);
+
 			const filesByVariant = recordsbyProvince(provinces);
 
 			const genomesCount: Count = {
