@@ -56,6 +56,11 @@ query releaseEnvironmentalDataQuery ($sqon: JSON) {
       organization {
         bucket_count
       }
+			data__organism {
+        buckets {
+          doc_count
+        }
+      }
     }
   }
   }
@@ -93,10 +98,11 @@ export const fetchReleaseData = async (sqon?: SQONType) => {
 		if (aggregations) {
 			const {
 				data__geo_loc_name_state_province_territory: { buckets: provinces = [] } = {},
+				data__organism: { buckets: organisms } = {},
 				data__specimen_collector_sample_id: { cardinality: genomesCardinality = 0 } = {},
 				organization: { bucket_count: organizationCount = 0 } = {},
 			} = aggregations;
-
+			console.log('organismBuckets', organisms);
 			const filesByVariant = recordsbyProvince(provinces);
 
 			const genomesCount: Count = {
@@ -104,12 +110,14 @@ export const fetchReleaseData = async (sqon?: SQONType) => {
 				type: 'APPROXIMATE',
 			};
 
+			const organismCount = organisms.length;
 			const siteCount = provinces.length;
 
 			return {
 				filesByVariant,
 				organizationCount,
 				genomesCount,
+				organismCount,
 				siteCount,
 			};
 		}

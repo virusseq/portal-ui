@@ -73,12 +73,11 @@ const ReleaseData = (): ReactElement => {
 		fileCount = 0,
 		fileSize = { unit: 'B', value: '0' },
 		genomesCount = { value: 0, type: 'APPROXIMATE' },
-		studyCount = 0,
 	} = releaseDataProps || releaseData;
 
 	const {
 		genomesCount: environmentGenomeCount = { value: 0, type: 'APPROXIMATE' },
-		organizationCount = 0,
+		organismCount = 0,
 		siteCount = 0,
 	} = releaseEnvDataProps || releaseEnvData;
 
@@ -177,7 +176,7 @@ const ReleaseData = (): ReactElement => {
 										margin-left: -1px;
 									`}
 								/>
-								<span>{organizationCount?.toLocaleString('en-CA')} Provinces</span>
+								<span>{organismCount?.toLocaleString('en-CA')} Organisms</span>
 							</li>
 							<li>
 								<CrossHairs
