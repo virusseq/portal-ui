@@ -26,7 +26,7 @@ import { InternalLink as Link, StyledLinkAsButton } from '#components/Link';
 import { MapleLeaf } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
-import ReleaseData from './clinical/ReleaseData';
+import ReleaseData from './ReleaseData';
 
 /** Layout notes:
   - Article is the full-width background for the hero banner
