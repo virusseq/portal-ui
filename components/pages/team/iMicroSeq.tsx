@@ -106,9 +106,11 @@ const IMicroSeqContent = (): ReactElement => (
 					Lead Development Team:{' '}
 				</span>
 				<ul>
-					<li>Fiona Brinkman</li>
-					<li>Emma Griffiths</li>
-					<li>Melanie Courtot</li>
+					<li>Fiona Brinkman - iMicroSeq Project co-Lead, and co-Lead of Data Portal Development</li>
+					<li>Emma Griffiths - iMicroSeq Project co-Lead, and Lead of Contextual Data Standards</li>
+					<li>
+						Melanie Courtot - iMicroSeq co-Lead of Data Portal Development (Lead, Database Architecture)
+					</li>
 				</ul>
 				<ul>
 					<li>Charlie Barclay</li>
@@ -122,6 +124,7 @@ const IMicroSeqContent = (): ReactElement => (
 					<li>Leonardo Rivera</li>
 					<li>Dan DeMaria</li>
 					<li>Nima Tehrani</li>
+					<li>Geoff Winsor</li>
 				</ul>
 			</p>
 		</div>
