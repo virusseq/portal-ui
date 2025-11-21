@@ -71,7 +71,6 @@ const useSingularityData = () => {
 							.then((parsedStream: string) => {
 								setAwaitingResponse(false);
 								// TODO: create dev mode
-								// console.log('parsedStream', parsedStream)
 								return parsedStream && (JSON.parse(parsedStream) as ContributorsResponse);
 							})
 							.catch((error: Error | string) => {
@@ -107,7 +106,7 @@ const useSingularityData = () => {
 	const fetchCompletedArchiveAllInfos = (req?: ArchivesFetchReq): Promise<ArchivesFetchRes> => {
 		const params = req
 			? '?' +
-			  Object.entries(req)
+				Object.entries(req)
 					.filter(([k, v]) => v !== undefined)
 					.map(([k, v]) => `${k}=${v}`)
 					.join('&')

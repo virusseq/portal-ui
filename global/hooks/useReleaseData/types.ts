@@ -37,8 +37,10 @@ export type AggBuckets = {
 
 export type ReleaseEnvironmentalDataProps = {
 	filesByVariant?: Array<ProvinceStats>;
-	organizationCount?: number;
 	genomesCount?: Count;
+	organismCount?: number;
+	organizationCount?: number;
+	siteCount?: number;
 };
 
 export type ReleaseClinicalDataProps = {

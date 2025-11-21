@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2025 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  *  This program and the accompanying materials are made available under the terms of
  *  the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -21,25 +21,68 @@
 
 import { css, useTheme } from '@emotion/react';
 import { format, isValid } from 'date-fns';
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 import Loader from '#components/Loader';
-import { CoronaVirus, CrossHairs } from '#components/theme/icons';
+import { CoronaVirus, CrossHairs, File, Storage } from '#components/theme/icons';
 import { getConfig } from '#global/config';
-import useReleaseData from '#global/hooks/useReleaseData/environmental';
-import { ReleaseEnvironmentalDataProps } from '#global/hooks/useReleaseData/types';
+import { ReleaseClinicalDataProps, ReleaseEnvironmentalDataProps } from '#global/hooks/useReleaseData/types';
+import useReleaseData from '#global/hooks/useReleaseData/clinical';
+import useEnvironmentalData from '#global/hooks/useReleaseData/environmental';
+import useSingularityData from '#global/hooks/useSingularityData';
 
 const ReleaseData = (): ReactElement => {
 	const theme = useTheme();
 	const { NEXT_PUBLIC_RELEASE_DATE } = getConfig();
 	const [releaseData, loadingArrangerData] = useReleaseData();
+	const [releaseEnvData, loadingEnvData] = useEnvironmentalData();
+	const { fetchTotalCounts } = useSingularityData();
 
-	const [releaseDataProps] = useState<ReleaseEnvironmentalDataProps>();
+	const [isLoadingSingularityData, setIsLoadingSingularityData] = useState<boolean>(true);
+	const [releaseDataProps, setReleaseDataProps] = useState<ReleaseClinicalDataProps>();
+	const [releaseEnvDataProps] = useState<ReleaseEnvironmentalDataProps>();
 
-	const { genomesCount = { value: 0, type: 'APPROXIMATE' }, organizationCount = 0 } = releaseData;
+	const isLoadingReleaseData = releaseDataProps === undefined && loadingArrangerData;
+	const isLoadingEnvironmentData = releaseEnvDataProps === undefined && loadingEnvData;
+
+	useEffect(() => {
+		fetchTotalCounts()
+			.then((counts) => {
+				const [fileValue, fileUnit] = counts.fileSizeHumanReadable.split(' ');
+				setReleaseDataProps({
+					fileCount: counts.files,
+					genomesCount: {
+						value: counts.samples,
+						type: 'EXACT',
+					},
+					fileSize: {
+						unit: fileUnit,
+						value: fileValue,
+					},
+					studyCount: counts.studies,
+				});
+				setIsLoadingSingularityData(false);
+			})
+			.catch(() => {
+				setReleaseDataProps(undefined);
+				setIsLoadingSingularityData(false);
+			});
+	}, []);
+
+	const {
+		fileCount = 0,
+		fileSize = { unit: 'B', value: '0' },
+		genomesCount = { value: 0, type: 'APPROXIMATE' },
+	} = releaseDataProps || releaseData;
+
+	const {
+		genomesCount: environmentGenomeCount = { value: 0, type: 'APPROXIMATE' },
+		organismCount = 0,
+		siteCount = 0,
+	} = releaseEnvDataProps || releaseEnvData;
 
 	// either we're waiting on arranger or singularity data
-	const showLoader = releaseDataProps === undefined && loadingArrangerData;
+	const showLoader = isLoadingReleaseData || isLoadingSingularityData || isLoadingEnvironmentData;
 
 	const releaseDate =
 		!!NEXT_PUBLIC_RELEASE_DATE &&
@@ -51,16 +94,12 @@ const ReleaseData = (): ReactElement => {
 		<main
 			css={css`
 				display: flex;
-				// flex-wrap: wrap;
 			`}
 		>
 			<aside
 				css={css`
 					margin-right: 30px;
-
-					/* @media (max-width: 639px) { */
 					width: 100%;
-					/* } */
 				`}
 			>
 				{releaseDate && isValid(releaseDate) && (
@@ -86,7 +125,6 @@ const ReleaseData = (): ReactElement => {
 					css={css`
 						border: 1px solid ${theme.colors.primary_light};
 						display: flex;
-						/* flex-direction: column; */
 						margin-bottom: 0;
 						padding: 10px;
 						width: 100%;
@@ -96,12 +134,9 @@ const ReleaseData = (): ReactElement => {
 							align-items: center;
 							display: flex;
 							padding-left: 25px;
+							margin-left: 10px;
 							position: relative;
 							white-space: nowrap;
-
-							/* &:not(:first-of-type) {
-                margin-top: 10px;
-              } */
 						}
 
 						svg {
@@ -120,9 +155,20 @@ const ReleaseData = (): ReactElement => {
 					) : (
 						<>
 							<li>
+								<File />
+								<span>{fileCount?.toLocaleString('en-CA')}</span>Files
+							</li>
+							<li>
 								<CoronaVirus />
 								<span>{genomesCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
-								<span>{genomesCount?.value?.toLocaleString('en-CA')}</span>Viral Genomes
+								<span>{genomesCount?.value?.toLocaleString('en-CA')} # Samples (Clinical)</span>
+							</li>
+							<li>
+								<CoronaVirus />
+								<span>{environmentGenomeCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
+								<span>
+									{environmentGenomeCount?.value?.toLocaleString('en-CA')} # Samples (Environmental)
+								</span>
 							</li>
 							<li>
 								<CrossHairs
@@ -130,7 +176,20 @@ const ReleaseData = (): ReactElement => {
 										margin-left: -1px;
 									`}
 								/>
-								<span>{organizationCount?.toLocaleString('en-CA')}</span>Provinces
+								<span>{organismCount?.toLocaleString('en-CA')} Organisms</span>
+							</li>
+							<li>
+								<CrossHairs
+									style={css`
+										margin-left: -1px;
+									`}
+								/>
+								<span>{siteCount} Sites</span>
+							</li>
+							<li>
+								<Storage />
+								<span>{fileSize?.value}</span>
+								{fileSize?.unit}
 							</li>
 						</>
 					)}
