@@ -24,7 +24,8 @@ import { ReactElement } from 'react';
 
 import Cloud from './Cloud';
 import Funding from './Funding';
-import Parners from './Partners';
+import IMicroSeqContent from './iMicroSeq';
+import Partners from './Partners';
 import Portal from './Portal';
 
 const PageContent = (): ReactElement => {
@@ -71,8 +72,9 @@ const PageContent = (): ReactElement => {
 					A Made-in-Canada Data Solution
 				</p>
 
+				<IMicroSeqContent />
 				<Funding />
-				<Parners />
+				<Partners />
 				<Portal />
 				<Cloud />
 			</article>
