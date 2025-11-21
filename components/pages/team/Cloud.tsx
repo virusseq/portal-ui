@@ -51,7 +51,7 @@ const Cloud = (): ReactElement => (
 				, a federated network for genomic variant surveillance and infectious disease research. Viral AI helps
 				researchers to find, visualize, and analyze genomics, epidemiological and other datasets related to
 				COVID-19. Viral AI was designed to deliver equitable access to software infrastructure, accelerate
-				international data sharing, and empower scientists and public health officials witih globally
+				international data sharing, and empower scientists and public health officials with globally
 				representative datasets they need to mitigate current and future infectious disease outbreaks. The Viral
 				AI network shares Canadian and international data over APIs developed by the{' '}
 				<StyledLink
