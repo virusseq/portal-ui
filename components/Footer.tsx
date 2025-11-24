@@ -57,32 +57,32 @@ const Footer = (): ReactElement => {
 			<div
 				css={css`
 					display: flex;
-					margin: 1em;
+					width: 100%;
+					margin: 0.5em;
 				`}
 			>
 				<section
 					css={css`
-						align-items: center;
 						display: flex;
 						font-size: 14px;
 						text-align: center;
+						padding: 0 1.5em;
 					`}
 				>
 					We acknowledge this work unfolds across the unceded traditional territories of First Nations, Métis
-					and Inuit Peoples, from coast to coast to coast.
-					<br />
-					We honour their enduring relationships with land, water, and all life. Our work will be informed by
-					active consultations with Indigenous communities.
-					<br />
+					and Inuit Peoples, from coast to coast to coast. We honour their enduring relationships with land,
+					water, and all life. Our work will be informed by active consultations with Indigenous communities.
 					We further accept the programs’ responsibilities to uphold Indigenous rights, move forward with
-					Reconciliation, form respectful partnerships,
-					<br />
-					and ensure our work supports the well-being of present and future generations.
+					Reconciliation, form respectful partnerships, and ensure our work supports the well-being of present
+					and future generations.
 				</section>
 			</div>
 			<div
 				css={css`
 					display: flex;
+					justify-content: space-around;
+					margin: 0.5em;
+					width: 100%;
 				`}
 			>
 				<section
