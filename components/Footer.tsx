@@ -79,7 +79,7 @@ const Footer = (): ReactElement => {
 			<div
 				css={css`
 					display: flex;
-					justify-content: space-around;
+					justify-content: space-between;
 					margin: 0.5em;
 					width: 100%;
 				`}
@@ -147,7 +147,7 @@ const Footer = (): ReactElement => {
 						`}
 					>
 						If you use the VirusSeq Data Portal, please cite{' '}
-						<span css={css``}>Gill et al (2024) Microbial Genomics.</span>{' '}
+						<span>Gill et al (2024) Microbial Genomics.</span>{' '}
 						<StyledLink
 							href="https://doi.org/10.1099/mgen.0.001293"
 							rel="noopener noreferrer"
