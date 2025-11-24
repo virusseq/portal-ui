@@ -26,8 +26,7 @@ import { InternalLink as Link, StyledLinkAsButton } from '#components/Link';
 import { MapleLeaf } from '#components/theme/icons';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
-import ReleaseDataClinical from './clinical/ReleaseData';
-import ReleaseDataEnvironmental from './environmental/ReleaseData';
+import ReleaseData from './ReleaseData';
 
 /** Layout notes:
   - Article is the full-width background for the hero banner
@@ -122,7 +121,7 @@ const HeroBanner = (): ReactElement => {
 					robust and rapid responses to microbial threats.
 				</p>
 
-				<ReleaseDataClinical />
+				<ReleaseData />
 
 				<div
 					css={css`
@@ -146,7 +145,7 @@ const HeroBanner = (): ReactElement => {
 								}
 							`}
 						>
-							Explore the Data
+							Explore Clinical-VirusSeq Data
 						</StyledLinkAsButton>
 					</Link>
 
@@ -167,17 +166,10 @@ const HeroBanner = (): ReactElement => {
 								}
 							`}
 						>
-							Download the Data
+							Download Clinical-VirusSeq Data
 						</StyledLinkAsButton>
 					</Link>
-				</div>
-				<ReleaseDataEnvironmental />
 
-				<div
-					css={css`
-						display: flex;
-					`}
-				>
 					<Link path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
 						<StyledLinkAsButton
 							css={css`
@@ -195,7 +187,7 @@ const HeroBanner = (): ReactElement => {
 								}
 							`}
 						>
-							Explore the Data
+							Explore Environmental-Wastewater
 						</StyledLinkAsButton>
 					</Link>
 				</div>

@@ -56,6 +56,11 @@ query releaseEnvironmentalDataQuery ($sqon: JSON) {
       organization {
         bucket_count
       }
+			data__organism {
+        buckets {
+          doc_count
+        }
+      }
     }
   }
   }
@@ -93,6 +98,7 @@ export const fetchReleaseData = async (sqon?: SQONType) => {
 		if (aggregations) {
 			const {
 				data__geo_loc_name_state_province_territory: { buckets: provinces = [] } = {},
+				data__organism: { buckets: organisms } = {},
 				data__specimen_collector_sample_id: { cardinality: genomesCardinality = 0 } = {},
 				organization: { bucket_count: organizationCount = 0 } = {},
 			} = aggregations;
@@ -104,25 +110,24 @@ export const fetchReleaseData = async (sqon?: SQONType) => {
 				type: 'APPROXIMATE',
 			};
 
+			const organismCount = organisms.length;
+			const siteCount = provinces.length;
+
 			return {
 				filesByVariant,
 				organizationCount,
 				genomesCount,
+				organismCount,
+				siteCount,
 			};
 		}
 	});
 };
 
-const tuneGenomesAggs = async (
-	sqon?: SQONType,
-	currentReleaseData?: ReleaseEnvironmentalDataProps,
-) => {
+const tuneGenomesAggs = async (sqon?: SQONType, currentReleaseData?: ReleaseEnvironmentalDataProps) => {
 	const currentGenomesValue = currentReleaseData?.genomesCount?.value;
 
-	if (
-		currentGenomesValue &&
-		currentGenomesValue >= NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MAX_BUCKET_COUNTS
-	) {
+	if (currentGenomesValue && currentGenomesValue >= NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MAX_BUCKET_COUNTS) {
 		console.error('genomesValue is too high to do a bucket_count query');
 		return Promise.resolve(currentReleaseData);
 	}
@@ -135,10 +140,9 @@ const tuneGenomesAggs = async (
 		endpointTag: 'TuneGenomesAggs',
 	}).then(({ data: { analysis: { aggregations = {} } = {} } }) => {
 		if (aggregations && currentReleaseData?.genomesCount) {
-			const { data__specimen_collector_sample_id: { bucket_count: genomnesCount = 0 } = {} } =
-				aggregations;
+			const { data__specimen_collector_sample_id: { bucket_count: genomesCount = 0 } = {} } = aggregations;
 
-			currentReleaseData.genomesCount.value = genomnesCount;
+			currentReleaseData.genomesCount.value = genomesCount;
 			currentReleaseData.genomesCount.type = 'EXACT';
 		}
 		return { ...currentReleaseData };
