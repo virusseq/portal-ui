@@ -37,6 +37,7 @@ const Footer = (): ReactElement => {
 	return (
 		<footer
 			css={css`
+				height: ${theme.dimensions.footer.height}px;
 				background-color: ${theme.colors.white};
 				border-top: 1px solid ${theme.colors.grey_3};
 				${theme.shadow.default};
