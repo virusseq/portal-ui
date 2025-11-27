@@ -24,7 +24,7 @@ const dimensions = {
 		height: 64,
 	},
 	footer: {
-		height: 75,
+		height: 150,
 	},
 	facets: {
 		width: 250,
