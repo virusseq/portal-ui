@@ -71,7 +71,7 @@ const HeroBanner = (): ReactElement => {
 				css={css`
 					display: flex;
 					flex-direction: column;
-					justify-content: space-between;
+					justify-content: center;
 					max-width: 1550px;
 					width: 100%;
 
