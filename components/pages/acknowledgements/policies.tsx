@@ -95,14 +95,14 @@ export const virusSeqPolicy = {
 			<p>
 				Please note that the data that is being shared is the work of many individuals and should be treated as
 				unpublished data. If you wish to publish research using these data, you are encouraged to contact us at{' '}
-				<EmailLink email="info@virusseq-dataportal.ca">info@virusseq-dataportal.ca</EmailLink> before analyzing
-				the data to ensure that those who have generated the data may be involved in its analysis. You are
-				responsible for making the best efforts to collaborate with representatives of the data providers
+				<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink> before
+				analyzing the data to ensure that those who have generated the data may be involved in its analysis. You
+				are responsible for making the best efforts to collaborate with representatives of the data providers
 				responsible for obtaining the specimens and to involve them in your analyses and research. The metadata
 				available on the Canadian VirusSeq Data Portal comprises a subset of the Canadian COVID-19 related
 				datasets. You may potentially have access to more data through formal collaborations with the CPHLN and
 				CanCOGeN VirusSeq members. You are encouraged to contact us at{' '}
-				<EmailLink email="info@virusseq-dataportal.ca">info@virusseq-dataportal.ca</EmailLink> to obtain
+				<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink> to obtain
 				additional information for this purpose.
 			</p>
 		</>

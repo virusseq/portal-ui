@@ -100,7 +100,7 @@ const AnnouncementsPanel = ({ announcements = [], className, css: customCSS }: A
 				`}
 			>
 				If you have feature suggestions, feedback, or want to report a bug, please{' '}
-				<EmailLink email="imicroseq-dataportal@lists.sfu.ca">contact us</EmailLink>.
+				<EmailLink email="info@imicroseq-dataportal.ca">contact us</EmailLink>.
 			</footer>
 		</aside>
 	);

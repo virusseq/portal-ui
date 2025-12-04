@@ -181,9 +181,7 @@ const Footer = (): ReactElement => {
 					>
 						<li>
 							<span>Contact us at </span>
-							<EmailLink email="imicroseq-dataportal@lists.sfu.ca">
-								imicroseq-dataportal@lists.sfu.ca
-							</EmailLink>
+							<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>
 						</li>
 
 						<li>

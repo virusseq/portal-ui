@@ -47,7 +47,7 @@ const NoScopes = (): ReactElement => (
 		<p>
 			{'You are not authorized to submit data into the Canadian VirusSeq Data Portal. '}
 			{'In order to obtain the correct permissions, please contact '}
-			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>
+			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>
 			{' with the following information. Permission should be granted within 2 business days.'}
 		</p>
 		<ol

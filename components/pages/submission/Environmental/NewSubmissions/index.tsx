@@ -238,11 +238,11 @@ const NewSubmissions = (): ReactElement => {
 			<p>
 				If you would like some help with a large submission, please don't hesitate to contact us at&nbsp;
 				<StyledLink
-					href="mailto:info@virusseq-dataportal.ca"
+					href="mailto:info@imicroseq-dataportal.ca"
 					rel="noopener noreferrer"
 					target="_blank"
 				>
-					info@virusseq-dataportal.ca
+					info@imicroseq-dataportal.ca
 				</StyledLink>
 			</p>
 

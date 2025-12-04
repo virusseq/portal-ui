@@ -183,7 +183,7 @@ const Usage = (): ReactElement => (
 			the CVDP policy on Recognition of the work of data submitters. Users should not attempt to make use of the
 			portal data to attempt to re-identify specific individuals. In the unlikely case you come across identifying
 			data, please swiftly report the event, indicating the problematic dataset, at{' '}
-			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>.
+			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>.
 		</p>
 
 		<h2>Data standards guidelines</h2>
@@ -214,10 +214,10 @@ const Usage = (): ReactElement => (
 		<p>
 			Please note that the data that is being shared is the work of many individuals and should be treated as
 			unpublished data. If you wish to publish research using the data, contact us at{' '}
-			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink> first to
-			ensure that those who have generated the data can be involved in its analysis. You are responsible for
-			making the best efforts to collaborate with representatives of the Originating Laboratory responsible for
-			obtaining the specimen(s) and involve them in such analyses and further research using such Data.
+			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink> first to ensure
+			that those who have generated the data can be involved in its analysis. You are responsible for making the
+			best efforts to collaborate with representatives of the Originating Laboratory responsible for obtaining the
+			specimen(s) and involve them in such analyses and further research using such Data.
 		</p>
 
 		<h2>Intellectual Property</h2>

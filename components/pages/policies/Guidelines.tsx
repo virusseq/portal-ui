@@ -32,11 +32,11 @@ const Usage = (): ReactElement => (
 		<p>
 			Individuals and organizations interested in submitting data to the CVDP must first apply for data submission
 			authorization through{' '}
-			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>.
-			Registration can be completed with an email of choice. Afterwards, a verification email will be sent to the
-			user. Once authorized, users can upload data via an account provided to them. Through this account, users
-			can review the status of submission and review or reattempt any failed submissions. More detailed
-			instructions for data submission can be found post-registration.
+			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>. Registration can
+			be completed with an email of choice. Afterwards, a verification email will be sent to the user. Once
+			authorized, users can upload data via an account provided to them. Through this account, users can review
+			the status of submission and review or reattempt any failed submissions. More detailed instructions for data
+			submission can be found post-registration.
 		</p>
 
 		<p>
@@ -57,7 +57,7 @@ const Usage = (): ReactElement => (
 
 		<p>
 			The CVDP operates a helpdesk based on a ticketing system. You may contact the helpdesk at{' '}
-			<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>.
+			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>.
 		</p>
 	</section>
 );
