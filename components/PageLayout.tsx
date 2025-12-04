@@ -27,21 +27,14 @@ import Footer from './Footer';
 import PageHead from './Head';
 import NavBar from './NavBar';
 
-const PageLayout = ({
-	children,
-	subtitle,
-}: {
-	children: ReactNode;
-	subtitle?: string;
-}): ReactElement => {
+const PageLayout = ({ children, subtitle }: { children: ReactNode; subtitle?: string }): ReactElement => {
 	return (
 		<>
 			<PageHead subtitle={subtitle}></PageHead>
 			<div
 				css={(theme) => css`
 					display: grid;
-					grid-template-rows: ${theme.dimensions.navbar.height}px 1fr ${theme.dimensions.footer
-							.height}px;
+					grid-template-rows: ${theme.dimensions.navbar.height}px 1fr;
 					height: 100%;
 					${theme.typography.regular}
 					color: ${theme.colors.black};
@@ -66,7 +59,10 @@ export const ErrorPageLayout = ({
 }): ReactElement => {
 	return (
 		<PageLayout subtitle={subtitle}>
-			<ErrorNotification size="lg" title={errorTitle}>
+			<ErrorNotification
+				size="lg"
+				title={errorTitle}
+			>
 				{children}
 			</ErrorNotification>
 		</PageLayout>

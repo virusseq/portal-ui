@@ -33,11 +33,6 @@ import Facets from './Facets';
 import QueryBar from './QueryBar';
 import RepoTable from './RepoTable';
 
-// const defaultFilters = {
-//   op: 'and',
-//   content: [],
-// };
-
 const PageContent = (): ReactElement => {
 	const theme = useTheme();
 	const { sqon, setSQON } = useArrangerData({ callerName: 'Explorer-PageContent' });
@@ -83,7 +78,7 @@ const PageContent = (): ReactElement => {
 						background-color: ${theme.colors.white};
 						z-index: 1;
 						${theme.shadow.right};
-						height: calc(100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px);
+						height: calc(100vh - ${theme.dimensions.navbar.height}px);
 						overflow-y: scroll;
 					`}
 				>
@@ -94,7 +89,7 @@ const PageContent = (): ReactElement => {
 						display: flex;
 						flex-direction: column;
 						width: 100%;
-						height: calc(100vh - ${theme.dimensions.footer.height + theme.dimensions.navbar.height}px);
+						height: calc(100vh - ${theme.dimensions.navbar.height}px);
 						overflow-y: scroll;
 					`}
 				>
