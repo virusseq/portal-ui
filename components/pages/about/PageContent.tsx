@@ -57,11 +57,10 @@ const PageContent = (): ReactElement => {
 
 	return (
 		<main
-			css={(theme) => css`
+			css={() => css`
 				align-items: center;
 				display: flex;
 				flex-direction: column;
-				padding-bottom: ${theme.dimensions.footer.height}px;
 			`}
 		>
 			<HeroBanner />

@@ -48,7 +48,6 @@ const Footer = (): ReactElement => {
 				z-index: 10;
 				overflow: hidden;
 				padding: 0 15px;
-				position: fixed;
 				bottom: 0px;
 				left: 0px;
 				right: 0px;
