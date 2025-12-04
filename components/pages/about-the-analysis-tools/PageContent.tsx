@@ -76,7 +76,7 @@ const PageContent = (): ReactElement => {
 					<br />
 					All of these resources are Open Source and freely available. If you have a resource you would like
 					to see listed here, or any feedback, please{' '}
-					<EmailLink email="imicroseq-dataportal@lists.sfu.ca">Contact Us</EmailLink>. .
+					<EmailLink email="info@imicroseq-dataportal.ca">Contact Us</EmailLink>. .
 				</p>
 
 				<MVP />

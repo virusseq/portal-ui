@@ -159,8 +159,8 @@ const DownloadInfoModal = ({ onClose, archive }: Props) => {
 				<p>
 					Data that is being shared is the work of many individuals and should be treated as unpublished data.
 					If you wish to publish research using the data, contact us at{' '}
-					<EmailLink email="imicroseq-dataportal@lists.sfu.ca">imicroseq-dataportal@lists.sfu.ca</EmailLink>{' '}
-					first to ensure that those who have generated the data can be involved in its analysis.
+					<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink> first to
+					ensure that those who have generated the data can be involved in its analysis.
 				</p>
 			</div>
 		</Modal>

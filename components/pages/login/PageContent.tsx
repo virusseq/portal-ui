@@ -115,9 +115,7 @@ const PageContent = (): ReactElement => {
 						<li>
 							<p>
 								To be granted a data submission account for your organization, please contact{' '}
-								<EmailLink email="imicroseq-dataportal@lists.sfu.ca">
-									imicroseq-dataportal@lists.sfu.ca
-								</EmailLink>{' '}
+								<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>{' '}
 								with an account request.
 							</p>
 							<StyledLinkAsButton
