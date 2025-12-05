@@ -58,13 +58,8 @@ const PageContent = () => {
 	const showDeleteModal = submitterToRemove.studyId !== '' && submitterToRemove.submitter !== '';
 
 	const notifier = useNotifier();
-	const {
-		awaitingResponse,
-		fetchStudies,
-		createStudy,
-		addSubmitterToStudy,
-		removeSubmitterFromStudy,
-	} = useStudiesSvcData();
+	const { awaitingResponse, fetchStudies, createStudy, addSubmitterToStudy, removeSubmitterFromStudy } =
+		useStudiesSvcData();
 
 	const updateTable = async () => {
 		const res = await fetchStudies();
@@ -101,11 +96,7 @@ const PageContent = () => {
 		});
 	}
 
-	function afterSubmitSuccess(
-		onSuccessNotifyState: NotificationType,
-		studyId = '',
-		submitters: string[] = [],
-	) {
+	function afterSubmitSuccess(onSuccessNotifyState: NotificationType, studyId = '', submitters: string[] = []) {
 		updateTable();
 		notifier.addNotification({
 			success: true,
@@ -129,11 +120,7 @@ const PageContent = () => {
 		closeAllModals();
 		const { success, error } = await addSubmitterToStudy(currentFormData);
 		if (success) {
-			afterSubmitSuccess(
-				NotificationType.SUBMITTERS_ADDED,
-				currentFormData.studyId,
-				currentFormData.submitters,
-			);
+			afterSubmitSuccess(NotificationType.SUBMITTERS_ADDED, currentFormData.studyId, currentFormData.submitters);
 		} else {
 			afterSubmitError(error);
 		}
@@ -159,15 +146,15 @@ const PageContent = () => {
 			css={css`
 				display: flex;
 				flex-direction: column;
-				padding-top: 10px;
-				padding-left: 60px;
-				padding-right: 60px;
-				padding-bottom: ${defaultTheme.dimensions.footer.height + 60}px;
 				overflow: auto;
+				padding: 10px 60px 60px;
 			`}
 		>
 			{showCreateStudyModal && (
-				<CreateStudyModal onClose={closeAllModals} submitData={submitCreateStudy} />
+				<CreateStudyModal
+					onClose={closeAllModals}
+					submitData={submitCreateStudy}
+				/>
 			)}
 			{showAddSubmitterModal && (
 				<AddSubmitterModal
@@ -215,7 +202,10 @@ const PageContent = () => {
 					>
 						Create a Study
 					</Button>
-					<Button disabled={awaitingResponse} onClick={() => setShowAddSubmitterModal(true)}>
+					<Button
+						disabled={awaitingResponse}
+						onClick={() => setShowAddSubmitterModal(true)}
+					>
 						Add Data Submitters
 					</Button>
 				</div>

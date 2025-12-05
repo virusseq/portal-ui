@@ -58,55 +58,48 @@ const PageContent = (): ReactElement => {
 	}, [currentFilters, firstRender, setCurrentFilters, sqon]);
 
 	return (
-		<div
+		<main
 			css={css`
+				display: flex;
 				flex: 1;
+				flex-direction: row;
+				margin-left: 0;
 				width: 100vw;
 			`}
 		>
+			<aside
+				css={css`
+					background-color: ${theme.colors.white};
+					flex: 0 0 ${theme.dimensions.facets.width}px;
+					flex-direction: column;
+					height: calc(100vh - ${theme.dimensions.navbar.height}px);
+					overflow-y: scroll;
+					${theme.shadow.right};
+					z-index: 1;
+				`}
+			>
+				<Facets />
+			</aside>
 			<div
 				css={css`
 					display: flex;
-					flex-direction: row;
-					margin-left: 0;
+					flex-direction: column;
+					width: 100%;
 				`}
 			>
 				<div
 					css={css`
-						flex: 0 0 ${theme.dimensions.facets.width}px;
-						flex-direction: column;
-						background-color: ${theme.colors.white};
-						z-index: 1;
-						${theme.shadow.right};
-						height: calc(100vh - ${theme.dimensions.navbar.height}px);
-						overflow-y: scroll;
+						flex: 8.5;
+						margin: 0 15px 0 15px;
+						max-width: calc(100vw - ${theme.dimensions.facets.width + 10}px);
 					`}
 				>
-					<Facets />
-				</div>
-				<div
-					css={css`
-						display: flex;
-						flex-direction: column;
-						width: 100%;
-						height: calc(100vh - ${theme.dimensions.navbar.height}px);
-						overflow-y: scroll;
-					`}
-				>
-					<div
-						css={css`
-							flex: 8.5;
-							margin: 0 15px 0 15px;
-							max-width: calc(100vw - ${theme.dimensions.facets.width + 10}px);
-						`}
-					>
-						<QueryBar />
-						<DataAnalysis />
-						<RepoTable />
-					</div>
+					<QueryBar />
+					<DataAnalysis />
+					<RepoTable />
 				</div>
 			</div>
-		</div>
+		</main>
 	);
 };
 

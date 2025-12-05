@@ -33,10 +33,9 @@ import DataCuratorBadge from './DataCuratorBadge';
 import StudyAccess from './StudyAccess';
 
 const StyledPageLayout = styled(PageLayout)`
-	${({ theme }: { theme?: typeof defaultTheme }) =>
-		css`
-			background-color: ${theme?.colors.white};
-		`}
+	${({ theme }: { theme?: typeof defaultTheme }) => css`
+		background-color: ${theme?.colors.white};
+	`}
 `;
 
 const FlexDiv = styled('div')`
@@ -82,7 +81,7 @@ const UserComponent = (): ReactElement => {
 			<FlexDiv
 				css={(theme) => css`
 					justify-content: center;
-					padding: 40px 0 calc(${theme.dimensions.footer.height}px + 30px);
+					padding: 40px 0 60px;
 				`}
 			>
 				{user && (

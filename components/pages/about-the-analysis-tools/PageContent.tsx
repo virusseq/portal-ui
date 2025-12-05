@@ -39,7 +39,7 @@ const PageContent = (): ReactElement => {
 				align-items: center;
 				display: flex;
 				flex-direction: column;
-				padding-bottom: ${theme.dimensions.footer.height}px;
+				padding-bottom: 30px;
 			`}
 		>
 			<article
