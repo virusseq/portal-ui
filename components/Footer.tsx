@@ -37,46 +37,41 @@ const Footer = (): ReactElement => {
 	return (
 		<footer
 			css={css`
-				height: ${theme.dimensions.footer.height}px;
+				align-items: center;
 				background-color: ${theme.colors.white};
 				border-top: 1px solid ${theme.colors.grey_3};
-				${theme.shadow.default};
+				bottom: 0px;
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
-				align-items: center;
-				z-index: 10;
+				height: ${theme.dimensions.footer.height}px;
+				left: 0px;
 				overflow: hidden;
 				padding: 0 15px;
-				bottom: 0px;
-				left: 0px;
+				position: relative;
 				right: 0px;
+				${theme.shadow.default};
+				z-index: 10;
 			`}
 		>
-			<div
+			<section
 				css={css`
 					display: flex;
-					width: 100%;
+					font-size: 14px;
 					margin: 0.5em;
+					padding: 0 1.5em;
+					text-align: center;
+					width: 100%;
 				`}
 			>
-				<section
-					css={css`
-						display: flex;
-						font-size: 14px;
-						text-align: center;
-						padding: 0 1.5em;
-					`}
-				>
-					We acknowledge this work unfolds across the unceded traditional territories of First Nations, Métis
-					and Inuit Peoples, from coast to coast to coast. We honour their enduring relationships with land,
-					water, and all life. Our work will be informed by active consultations with Indigenous communities.
-					We further accept the programs’ responsibilities to uphold Indigenous rights, move forward with
-					Reconciliation, form respectful partnerships, and ensure our work supports the well-being of present
-					and future generations.
-				</section>
-			</div>
-			<div
+				We acknowledge this work unfolds across the unceded traditional territories of First Nations, Métis and
+				Inuit Peoples, from coast to coast to coast. We honour their enduring relationships with land, water,
+				and all life. Our work will be informed by active consultations with Indigenous communities. We further
+				accept the programs’ responsibilities to uphold Indigenous rights, move forward with Reconciliation,
+				form respectful partnerships, and ensure our work supports the well-being of present and future
+				generations.
+			</section>
+			<article
 				css={css`
 					display: flex;
 					justify-content: space-between;
@@ -161,6 +156,7 @@ const Footer = (): ReactElement => {
 						css={css`
 							display: flex;
 							margin: 0;
+							min-width: 520px;
 							padding: 0;
 
 							& li {
@@ -274,7 +270,7 @@ const Footer = (): ReactElement => {
 						</span>
 					</a>
 				</section>
-			</div>
+			</article>
 		</footer>
 	);
 };

@@ -33,11 +33,11 @@ const PageLayout = ({ children, subtitle }: { children: ReactNode; subtitle?: st
 			<PageHead subtitle={subtitle}></PageHead>
 			<div
 				css={(theme) => css`
-					display: grid;
-					grid-template-rows: ${theme.dimensions.navbar.height}px 1fr;
-					height: 100%;
-					${theme.typography.regular}
 					color: ${theme.colors.black};
+					display: grid;
+					${theme.typography.regular}
+					grid-template-rows: ${theme.dimensions.navbar.height}px 1fr;
+					min-height: 100%;
 				`}
 			>
 				<NavBar />
