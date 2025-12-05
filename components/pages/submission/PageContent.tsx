@@ -50,7 +50,7 @@ const PageContent = (): ReactElement => {
 	return (
 		<main
 			css={css`
-				padding: 40px 30px calc(${theme.dimensions.footer.height}px + 30px);
+				padding: 40px 30px 60px;
 				position: relative;
 
 				.view-title {

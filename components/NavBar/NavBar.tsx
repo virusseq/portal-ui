@@ -48,7 +48,7 @@ const NavBar = (): ReactElement => {
 	const handleLogout = () => logout(logEvent);
 
 	return (
-		<div
+		<header
 			ref={navBarRef}
 			css={css`
 				display: flex;
@@ -271,7 +271,7 @@ const NavBar = (): ReactElement => {
 					</div>
 				)}
 			</div>
-		</div>
+		</header>
 	);
 };
 
