@@ -296,8 +296,7 @@ const NewSubmissions = (): ReactElement => {
 				locally before submitting. Download the tool and follow the instructions on the GitHub repository to
 				pre-validate each field in your CSV before submission. Multiple sequence files can be uploaded in a
 				single submission. The filename of the sequence files should match the&nbsp;
-				<strong>"specimen collector sample ID"</strong>
-				column in the CSV.
+				<strong>“genomic sequence file name”</strong> column in the CSV.
 			</p>
 
 			<DropZone
