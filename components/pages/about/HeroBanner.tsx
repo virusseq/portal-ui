@@ -187,7 +187,7 @@ const HeroBanner = (): ReactElement => {
 								}
 							`}
 						>
-							Explore Environmental-Wastewater
+							Explore Environmental-Wastewater Data
 						</StyledLinkAsButton>
 					</Link>
 				</div>
