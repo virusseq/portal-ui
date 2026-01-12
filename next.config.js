@@ -60,6 +60,7 @@ module.exports = withPlugins([withTranspileModules], {
 			process.env.NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MANIFEST_COLUMNS || '',
 		NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MAX_BUCKET_COUNTS:
 			process.env.NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MAX_BUCKET_COUNTS || 1000,
+		NEXT_PUBLIC_ARRANGER_WASTEWATER_FILTERS: process.env.NEXT_PUBLIC_ARRANGER_WASTEWATER_FILTERS || '',
 		// using ASSET_PREFIX for the public runtime BASE_PATH because basePath in the top level config was not working
 		// with the dms reverse proxy setup
 		NEXT_PUBLIC_BASE_PATH: process.env.ASSET_PREFIX || '/',

@@ -21,22 +21,35 @@
 
 import { css, useTheme } from '@emotion/react';
 import {
+	ColumnsSelectButton,
+	DownloadButton,
 	Pagination,
 	Table,
 	TableContextProvider,
 	Toolbar,
 	useArrangerData,
 	useArrangerTheme,
+	type SQONType,
 } from '@overture-stack/arranger-components';
+import ArrangerToolbarButton from '@overture-stack/arranger-components/dist/Button/index.js';
 import {
 	CustomColumnMappingInterface,
 	CustomExporterInput,
 	type ExporterFileInterface,
 	type ExporterFunction,
 } from '@overture-stack/arranger-components/dist/Table/DownloadButton/types';
+import { toggleSQON } from '@overture-stack/arranger-components/dist/SQONViewer/utils';
 import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/ThemeContext/types';
+import type { RecursivePartial } from '@overture-stack/arranger-components/dist/utils/types.js';
 import type { SQON } from '@overture-stack/sqon-builder';
-import { ReactElement, useState } from 'react';
+import {
+	ReactElement,
+	useState,
+	type Dispatch,
+	type ElementType,
+	type MouseEventHandler,
+	type SetStateAction,
+} from 'react';
 import urlJoin from 'url-join';
 
 import StyledLink from '#components/Link';
@@ -50,16 +63,68 @@ import type { SubmissionManifest } from '#global/utils/fileManifest';
 import { excludeRecordsWithoutFiles, getManifestDataAsync, getMetadataBlobAsync } from './helper';
 
 const COLUMNS_DROPDOWN_TOOLTIP = 'Column selection does \\a not affect downloads.';
+const WASTEWATER_FILTER_TOOLTIP = 'Selects all the wastewater \\associated filters.';
 
 const downloadButtonCustomProps = { exportSelectedRowsField: '_id' };
+
+type WastewaterClickHandler = () => MouseEventHandler | undefined;
+
+const wastewaterClickHandler =
+	({
+		filters = [],
+		setSQON,
+		sqon,
+	}: {
+		filters: string[];
+		setSQON: Dispatch<SetStateAction<SQONType>>;
+		sqon: SQONType;
+	}) =>
+	() => {
+		filters.length &&
+			setSQON(
+				toggleSQON(
+					{
+						op: 'and',
+						content: [
+							{
+								op: 'in',
+								content: {
+									fieldName: 'data.environmental_material',
+									value: filters,
+								},
+							},
+						],
+					},
+					sqon,
+				),
+			);
+
+		return undefined; // because TypeScript
+	};
+
+const WastewaterFilter = (handleClickForWastewater: WastewaterClickHandler, theme: Record<string, string>) => () => {
+	return (
+		<ArrangerToolbarButton
+			css={css`
+				margin-right: 2rem;
+			`}
+			onClick={handleClickForWastewater}
+			theme={theme}
+		>
+			Wastewater Filter
+		</ArrangerToolbarButton>
+	);
+};
 
 const getTableConfigs = ({
 	apiHost = '',
 	customExporters,
+	handleClickForWastewater,
 	theme,
 }: {
 	apiHost?: string;
 	customExporters?: CustomExporterInput;
+	handleClickForWastewater: WastewaterClickHandler;
 	theme: ThemeInterface;
 }): UseThemeContextProps => ({
 	callerName: 'RepoTable',
@@ -170,6 +235,18 @@ const getTableConfigs = ({
 						flex-direction: row-reverse;
 					}
 				`,
+				tools: [
+					WastewaterFilter(handleClickForWastewater, {
+						background: theme.colors.white,
+						borderColor: theme.colors.grey_5,
+						fontColor: theme.colors.primary,
+						hoverBackground: theme.colors.secondary_light,
+						tooltipAlign: 'top left',
+						tooltipText: WASTEWATER_FILTER_TOOLTIP,
+					}),
+					ColumnsSelectButton,
+					DownloadButton,
+				] as RecursivePartial<ElementType>[],
 			},
 		},
 	},
@@ -180,6 +257,7 @@ const RepoTable = (): ReactElement => {
 	const {
 		NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API,
 		NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MANIFEST_COLUMNS,
+		NEXT_PUBLIC_ARRANGER_WASTEWATER_FILTERS,
 		NEXT_PUBLIC_ENABLE_DOWNLOADS,
 	} = getConfig();
 
@@ -187,7 +265,7 @@ const RepoTable = (): ReactElement => {
 	const [fileManifest, setFileManifest] = useState<SubmissionManifest[]>([]);
 	const [fileMetadata, setFileMetadata] = useState<Blob | null>(null);
 	const [selectedRows, setSelectedRows] = useState<string[]>([]);
-	const { sqon } = useArrangerData({ callerName: 'Environmental-RepoTable' });
+	const { sqon, setSQON } = useArrangerData({ callerName: 'Environmental-RepoTable' });
 	const [isLoadingManifest, setIsLoadingManifest] = useState(false);
 	const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
 
@@ -199,7 +277,7 @@ const RepoTable = (): ReactElement => {
 
 	const today = new Date().toISOString();
 	const tsvExportColumns = NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_MANIFEST_COLUMNS.split(',')
-		.filter((field) => field.trim()) // break it into arrays, and ensure there's no empty field names
+		.filter((field) => field.trim()) // ensure there's no empty field names
 		.map((fieldName) => fieldName.replace(/['"]+/g, '').trim())
 		.map((fieldName): Partial<CustomColumnMappingInterface> => {
 			return {
@@ -275,7 +353,24 @@ const RepoTable = (): ReactElement => {
 			]
 		: [];
 
-	useArrangerTheme(getTableConfigs({ apiHost: NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API, customExporters, theme }));
+	const wastewaterFilters = NEXT_PUBLIC_ARRANGER_WASTEWATER_FILTERS.split(',')
+		.filter((value) => value.trim()) // remove empties
+		.map((value) => value.trim()); // remove blankspace
+
+	const handleClickForWastewater = wastewaterClickHandler({
+		filters: wastewaterFilters,
+		setSQON,
+		sqon,
+	});
+
+	useArrangerTheme(
+		getTableConfigs({
+			apiHost: NEXT_PUBLIC_ARRANGER_ENVIRONMENTAL_API,
+			customExporters,
+			handleClickForWastewater,
+			theme,
+		}),
+	);
 
 	return (
 		<article
