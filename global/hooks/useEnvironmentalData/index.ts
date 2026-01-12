@@ -131,7 +131,7 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param id
 	 * @returns
 	 */
-	const fetchSubmissionById = async (
+	const fetchSubmissionDetailsById = async (
 		id: string,
 		{ signal, tries = 1, delay = 1000 }: { signal?: AbortSignal; tries?: number; delay?: number } = {},
 	): Promise<Submission> => {
@@ -141,12 +141,12 @@ const useEnvironmentalData = (origin: string) => {
 				throw err;
 			}
 			await wait(delay);
-			return fetchSubmissionById(id, { signal, tries: triesLeft, delay });
+			return fetchSubmissionDetailsById(id, { signal, tries: triesLeft, delay });
 		};
 
 		try {
 			const submissionResponse = await handleRequest({
-				url: urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id),
+				url: urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id, 'details'),
 				method: 'GET',
 				signal,
 			});
@@ -468,7 +468,7 @@ const useEnvironmentalData = (origin: string) => {
 		commitSubmission,
 		downloadMetadataTemplateUrl,
 		fetchPreviousSubmissions,
-		fetchSubmissionById,
+		fetchSubmissionDetailsById,
 		formatUploadData,
 		getActiveSubmission,
 		getAnalysisIds,
