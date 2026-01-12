@@ -77,7 +77,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const [pendingUploadManifests, setPendingUploadManifests] = useState<SubmissionManifest[]>([]);
 
 	const { token } = useAuthContext();
-	const { awaitingResponse, fetchSubmissionById, formatUploadData, commitSubmission, getAnalysisIds } =
+	const { awaitingResponse, fetchSubmissionDetailsById, formatUploadData, commitSubmission, getAnalysisIds } =
 		useEnvironmentalData('SubmissionsDetails');
 
 	const pageSize = 50;
@@ -130,7 +130,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		const controller = new AbortController();
 		async function getDetailsSubmission() {
 			try {
-				const submissionResponse = await fetchSubmissionById(ID, {
+				const submissionResponse = await fetchSubmissionDetailsById(ID, {
 					signal: controller.signal,
 					tries: 3,
 				});
