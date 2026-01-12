@@ -181,6 +181,12 @@ const Footer = (): ReactElement => {
 						</li>
 
 						<li>
+							<InternalLink path={INTERNAL_PATHS.FAQS}>
+								<StyledLink>FAQs</StyledLink>
+							</InternalLink>
+						</li>
+
+						<li>
 							<InternalLink path={INTERNAL_PATHS.POLICIES}>
 								<StyledLink>Policies</StyledLink>
 							</InternalLink>

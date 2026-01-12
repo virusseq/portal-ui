@@ -34,6 +34,7 @@ const SIMPLE_INTERNAL_PATHS = {
 	ABOUT_ANALYSIS_TOOLS: '/about-the-analysis-tools',
 	ACKNOWLEDGEMENTS: '/acknowledgements',
 	EXPLORER: '/explorer',
+	FAQS: '/frequently-asked-questions',
 	LOGIN: '/login',
 	POLICIES: '/policies',
 	RELEASES: '/releases',
@@ -96,8 +97,7 @@ export const getProvince = ({
 	short?: string;
 }): { abbreviation: string; name: string } =>
 	CANADA_PROVINCES.find(
-		({ abbreviation, name }) =>
-			short?.toUpperCase() === abbreviation || long?.toLowerCase() === name.toLowerCase(),
+		({ abbreviation, name }) => short?.toUpperCase() === abbreviation || long?.toLowerCase() === name.toLowerCase(),
 	) || { abbreviation: '', name: `${long || short} not found` };
 
 // external covizu links
