@@ -21,13 +21,11 @@
 
 import { ReactElement } from 'react';
 
-import { EmailLink } from '#components/Link';
-
 const DEF = (): ReactElement => (
 	<section>
-		<h1>Placeholder Questions About the DEF (another category)</h1>
+		<h2>Placeholder Questions About the DEF (another category)</h2>
 
-		<h2>Isn't F a bad letter?</h2>
+		<h3>Isn't F a bad letter?</h3>
 
 		<p>Depends on context and usage ;)</p>
 
@@ -64,7 +62,7 @@ const DEF = (): ReactElement => (
 			<li>Date and time of activities.</li>
 		</ul>
 
-		<h2>What else should we know about DEF?</h2>
+		<h3>What else should we know about DEF?</h3>
 
 		<p>
 			Third-party contractors and or agents may be involved in maintaining and improving the functions (e.g., IT

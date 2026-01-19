@@ -21,42 +21,29 @@
 
 import { ReactElement } from 'react';
 
-import { EmailLink } from '#components/Link';
+import { EmailLink, InternalLink } from '#components/Link';
+import { INTERNAL_PATHS } from '#global/utils/constants.ts';
 
 const ABC = (): ReactElement => (
 	<section>
-		<h1>Placeholder Questions About the ABC (Category)</h1>
+		{/* <h2>Placeholder Questions About the ABC (Category)</h2> */}
 
-		<h2>what is ABC?</h2>
+		<h3>Why are options in the filters showing up in the order they are?</h3>
+
+		<p>Filter options are ordered by the total number of samples per option, from highest to lowest.</p>
+
+		<h3>Is this data free to use?</h3>
 
 		<p>
-			Copypasta from policies. Individuals and organizations interested in submitting data to the CVDP must first
-			apply for data submission authorization through{' '}
-			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>. Registration can
-			be completed with an email of choice. Afterwards, a verification email will be sent to the user. Once
-			authorized, users can upload data via an account provided to them. Through this account, users can review
-			the status of submission and review or reattempt any failed submissions. More detailed instructions for data
-			submission can be found post-registration.
+			This data portal currently focuses on open and reusable data that meets FAIR policies, with best practices
+			for data security and privacy. Please see the iMicroSeq{' '}
+			<InternalLink path={INTERNAL_PATHS.POLICIES}>Policies</InternalLink> page for details.
 		</p>
 
-		<p>
-			With registration, the CVDP will collect the user’s email address used, first and last name, user name, and
-			password. Please refer to the CVDP Privacy Policy for more details on how the collection, storage, and
-			processing of any user data.
-		</p>
-
-		<h2>and what about C makes A not B?</h2>
+		<h3>If I have any concerns, who should I contact?</h3>
 
 		<p>
-			More copypasta. Submitters are responsible for not submitting any sensitive or personal information to the
-			CVDP. “Dehosting” and other relevant risk mitigation procedures are recommended to minimize the risk of
-			submitting any sensitive or identifiable data.
-		</p>
-
-		<h2>excelent, is CBA the same?</h2>
-
-		<p>
-			Copypasta. The CVDP operates a helpdesk based on a ticketing system. You may contact the helpdesk at{' '}
+			Please contact us at{' '}
 			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>.
 		</p>
 	</section>

@@ -22,8 +22,9 @@
 import { css, useTheme } from '@emotion/react';
 import { ReactElement } from 'react';
 
-import ABC from './abc';
-import DEF from './def';
+// randomly named "sections/categories", in case the FAQs grows that much
+import ABC from './abc'; // will need actual name eventually
+// import DEF from './def';
 
 const PageContent = (): ReactElement => {
 	const theme = useTheme();
@@ -50,14 +51,13 @@ const PageContent = (): ReactElement => {
 						font-weight: bold;
 					}
 
-					h1 {
-						color: ${theme.colors.primary};
-						font-size: 26px;
+					h2 {
+						font-size: 24px;
 						font-weight: normal;
 						margin: 0;
 					}
 
-					h2 {
+					h3 {
 						${theme.typography.subheading};
 					}
 
@@ -82,8 +82,18 @@ const PageContent = (): ReactElement => {
 					}
 				`}
 			>
+				<h1
+					css={css`
+						${theme.typography.baseFont};
+						color: ${theme.colors.primary};
+						font-size: 28px;
+						font-weight: normal;
+					`}
+				>
+					Frequently Asked Questions
+				</h1>
 				<ABC />
-				<DEF />
+				{/* <DEF /> */}
 			</article>
 		</main>
 	);
