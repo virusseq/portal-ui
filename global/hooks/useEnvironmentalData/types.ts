@@ -19,17 +19,15 @@
  *
  */
 
-import type {
-	EventType,
-	UploadStatus,
-} from '#components/pages/submission/Environmental/Details/types';
+import type { EventType, UploadStatus } from '#components/pages/submission/Environmental/Details/types';
 
-export type SubmissionData = {
+export type SubmissionOverview = {
 	createdAt: string;
-	submissionFiles?: string[];
+	submissionFiles: SubmissionFile[];
+	organization: string;
 	submissionId: string;
 	totalRecords: number;
-	status: string;
+	status: SubmissionStatus;
 };
 
 export type UploadData = {
@@ -43,14 +41,7 @@ export type UploadData = {
 	submitterSampleId: string;
 };
 
-export type DataRecordValue =
-	| string
-	| string[]
-	| number
-	| number[]
-	| boolean
-	| boolean[]
-	| undefined;
+export type DataRecordValue = string | string[] | number | number[] | boolean | boolean[] | undefined;
 export type DataRecord = Record<string, DataRecordValue>;
 export type SubmissionInsertData = {
 	batchName: string;
@@ -128,30 +119,33 @@ export type SubmissionFile = {
 	objectId: string;
 };
 
-// Submission object returned by Submission Service
-export type Submission = {
-	id: number;
-	data: {
-		inserts: Record<string, SubmissionInsertData>;
-		updates: Record<string, SubmissionUpdateData[]>;
-		deletes: Record<string, SubmissionDeleteData[]>;
-	};
-	dictionary: {
-		name: string;
-		version: string;
-	};
-	dictionaryCategory: {
-		id: number;
-		name: string;
-	};
-	errors: Record<string, SchemaErrors>;
-	files?: SubmissionFile[];
-	organization: string;
-	status: SubmissionStatus;
-	createdAt: string;
-	createdBy: string;
-	updatedAt: string;
-	updatedBy: string;
+// Object returned by Submission for each record in the submission
+type SubmissionInsertRecord = {
+	type: 'INSERTS';
+	entityName: string;
+	value: DataRecord;
+	index: number;
+};
+
+type SubmissionUpdateRecord = {
+	type: 'UPDATES';
+	entityName: string;
+	value: SubmissionUpdateData;
+	index: number;
+};
+
+type SubmissionDeleteRecord = {
+	type: 'DELETES';
+	entityName: string;
+	value: SubmissionDeleteData;
+	index: number;
+};
+
+type SubmissionRecord = SubmissionInsertRecord | SubmissionUpdateRecord | SubmissionDeleteRecord;
+
+export type SubmissionRecordsResponse = {
+	data: SubmissionRecord[];
+	errors: ErrorDetails[];
 };
 
 export type SubmissionSummary = {
@@ -160,6 +154,7 @@ export type SubmissionSummary = {
 		inserts: Record<string, SubmissionInsertDataSummary>;
 		updates: Record<string, SubmissionUpdateDataSummary>;
 		deletes: Record<string, SubmissionDeleteDataSummary>;
+		total: number;
 	};
 	dictionary: {
 		name: string;

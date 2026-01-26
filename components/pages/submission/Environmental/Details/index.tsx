@@ -28,7 +28,7 @@ import { getPaginationRange, PaginationToolBar } from '#components/Pagination';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData, {
 	SubmissionStatus,
-	type SubmissionData,
+	type SubmissionOverview,
 	type SubmissionFile,
 	type UploadData,
 } from '#global/hooks/useEnvironmentalData';
@@ -62,23 +62,25 @@ const getPendingUploadFileManifests = (files?: SubmissionFile[]) => {
 
 const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const theme = useTheme();
-	const [submissionRecordCount, setSubmissionRecordCount] = useState(0);
-	const [submissionData, setSubmissionData] = useState<SubmissionData>();
-	const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>();
-	const [organization, setOrganization] = useState('');
+	const [submissionOverview, setSubmissionOverview] = useState<SubmissionOverview>();
 	const [dataIsPending, setDataIsPending] = useState(false);
 	const [page, setPage] = useState(1);
 	const [lastPage, setLastPage] = useState(1);
 	const [firstRecord, setFirstRecord] = useState(1);
 	const [lastRecord, setLastRecord] = useState(1);
-	const [submissionDetails, submissionDetailsDispatch] = useReducer(uploadsStatusReducer, uploadsStatusDictionary);
-	const [recordsPaginated, setRecordsPaginated] = useState<UploadData[]>([]);
+	const [submissionRecords, submissionRecordsDispatch] = useReducer(uploadsStatusReducer, uploadsStatusDictionary);
 	const [openGuideModal, setOpenGuideModal] = useState(false);
 	const [pendingUploadManifests, setPendingUploadManifests] = useState<SubmissionManifest[]>([]);
 
 	const { token } = useAuthContext();
-	const { awaitingResponse, fetchSubmissionDetailsById, formatUploadData, commitSubmission, getAnalysisIds } =
-		useEnvironmentalData('SubmissionsDetails');
+	const {
+		awaitingResponse,
+		fetchSubmissionRecords,
+		fetchSubmissionSummaryById,
+		formatUploadData,
+		commitSubmission,
+		getAnalysisIds,
+	} = useEnvironmentalData('SubmissionsDetails');
 
 	const pageSize = 50;
 
@@ -86,17 +88,17 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	 * Marks all records with `PROCESSING` status as `COMPLETE` in the submission details.
 	 */
 	const completeAllProcessingRecords = useCallback(() => {
-		Object.values(submissionDetails)
+		Object.values(submissionRecords)
 			.flat()
 			.filter(({ status }) => status === UploadStatus.PROCESSING)
 			.forEach((analysis) => {
 				analysis.status = UploadStatus.COMPLETE;
-				submissionDetailsDispatch({
+				submissionRecordsDispatch({
 					type: UploadDetailsAction.UPDATE,
 					upload: analysis,
 				});
 			});
-	}, [submissionDetails, submissionDetailsDispatch]);
+	}, [submissionRecords, submissionRecordsDispatch]);
 
 	/**
 	 * Commit submission to Submission Service.
@@ -108,7 +110,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		async (signal?: AbortSignal) => {
 			const commitSubmissionResponse = await commitSubmission(ID, { signal });
 			if (commitSubmissionResponse.status === UploadStatus.PROCESSING) {
-				setSubmissionStatus(SubmissionStatus.COMMITTED);
+				setSubmissionOverview((prev) => (prev ? { ...prev, status: SubmissionStatus.COMMITTED } : prev));
 				setPendingUploadManifests([]);
 			}
 		},
@@ -126,28 +128,25 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	 *
 	 * If the fetch fails, it sets the submission status to `INVALID`.
 	 */
-	const fetchSubmissionDetails = useCallback(async () => {
+	const loadSubmissionInformation = useCallback(async () => {
 		const controller = new AbortController();
 		async function getDetailsSubmission() {
 			try {
-				const submissionResponse = await fetchSubmissionDetailsById(ID, {
+				const submissionResponse = await fetchSubmissionSummaryById(ID, {
 					signal: controller.signal,
 					tries: 3,
 				});
 
-				const { organization, createdAt, id, status, files } = submissionResponse;
-				const formattedData = formatUploadData(submissionResponse);
-				const totalRecordsCount = formattedData.length;
-
-				// Set organization
-				setOrganization(organization);
+				const { organization, createdAt, id, status, files, data } = submissionResponse;
+				const totalRecordsCount = data.total;
 
 				// Data to display in Overview table
-				setSubmissionData({
+				setSubmissionOverview({
 					createdAt,
-					submissionFiles: files?.map(({ fileName }) => fileName),
+					submissionFiles: files || [],
 					submissionId: id.toString(),
 					totalRecords: totalRecordsCount,
+					organization,
 					status,
 				});
 
@@ -155,48 +154,29 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 				setPendingUploadManifests(filesNotUploaded);
 
-				// Data to display in Main Table
-				submissionDetailsDispatch({
-					type: UploadDetailsAction.NEW,
-					uploads: formattedData,
-				});
-
 				// Total amount of records uploading
-				setSubmissionRecordCount(totalRecordsCount);
-
 				const totalPages = Math.ceil(totalRecordsCount / pageSize);
-
 				setLastPage(totalPages);
-
-				// Submission validity
-				setSubmissionStatus(status);
-
-				// Track update status
-				setDataIsPending(
-					formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING) ||
-						filesNotUploaded.length > 0,
-				);
 			} catch (error) {
-				setSubmissionStatus(SubmissionStatus.INVALID);
+				setSubmissionOverview((prev) => (prev ? { ...prev, status: SubmissionStatus.INVALID } : prev));
 				console.error('Error fetching submission:', error);
 			}
 		}
 
-		if (token && submissionRecordCount === 0) {
+		if (token && !submissionOverview) {
 			getDetailsSubmission();
 		}
 		return () => {
 			// Abort the request when the component unmounts or when a dependency changes
 			controller.abort();
 		};
-	}, [token, ID]);
+	}, [token, ID, submissionOverview]);
 
 	const trackPendingData = useCallback(
 		async ({ tries = 1, delay = 1000, signal }: { tries?: number; delay?: number; signal?: AbortSignal }) => {
-			const pageSize = 20;
 			const failedGetSystemId: UploadData[] = [];
 			try {
-				const processingRecords = Object.values(submissionDetails)
+				const processingRecords = Object.values(submissionRecords)
 					.flat()
 					.filter(({ status }) => status !== UploadStatus.COMPLETE);
 
@@ -204,12 +184,16 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				const recordsMissingSystemId = processingRecords.filter(({ systemId }) => !systemId).slice(0, pageSize);
 
 				if (recordsMissingSystemId.length) {
-					const resultRecordsWithSystemId = await getAnalysisIds(organization, recordsMissingSystemId, {
-						signal,
-					});
+					const resultRecordsWithSystemId = await getAnalysisIds(
+						submissionOverview?.organization || '',
+						recordsMissingSystemId,
+						{
+							signal,
+						},
+					);
 
 					resultRecordsWithSystemId.forEach((record) => {
-						submissionDetailsDispatch({
+						submissionRecordsDispatch({
 							type: UploadDetailsAction.UPDATE,
 							upload: record,
 						});
@@ -251,28 +235,21 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				}
 			}
 		},
-		[
-			submissionDetails,
-			getAnalysisIds,
-			organization,
-			submissionDetailsDispatch,
-			setDataIsPending,
-			completeAllProcessingRecords,
-		],
+		[submissionRecords, getAnalysisIds, submissionRecordsDispatch, setDataIsPending, completeAllProcessingRecords],
 	);
 
 	// gets the initial status for all the uploads
 	useEffect(() => {
-		if (token && submissionRecordCount === 0) {
-			fetchSubmissionDetails();
+		if (token && !submissionOverview) {
+			loadSubmissionInformation();
 		}
-	}, [token, ID, submissionRecordCount, fetchSubmissionDetails]);
+	}, [token, ID, submissionOverview]);
 
 	// get status updates if any are available from Submission Service
 	useEffect(() => {
 		const controller = new AbortController();
-		if (dataIsPending) {
-			switch (submissionStatus) {
+		if (dataIsPending && submissionOverview) {
+			switch (submissionOverview?.status) {
 				case SubmissionStatus.VALID:
 				case SubmissionStatus.OPEN:
 					// Trigger submission commit when the current status is 'VALID' or 'OPEN'
@@ -288,33 +265,53 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			// Abort the request when the component unmounts or when a dependency changes
 			controller.abort();
 		};
-	}, [dataIsPending, submissionStatus]);
-
-	const paginateRecords = (records: UploadData[], page: number, pageSize: number) => {
-		const total = records.length;
-		const totalPages = Math.ceil(total / pageSize);
-
-		// Ensure page is within valid range
-		const currentPage = Math.max(1, Math.min(page, totalPages));
-
-		const startIndex = (currentPage - 1) * pageSize;
-		const endIndex = startIndex + pageSize;
-
-		return records.slice(startIndex, endIndex);
-	};
+	}, [dataIsPending, submissionOverview]);
 
 	useEffect(() => {
-		const fullRecordList = Object.values(submissionDetails).flat();
-		if (fullRecordList.length) {
-			const paginated = paginateRecords(fullRecordList, page, pageSize);
-			setRecordsPaginated(paginated);
+		const controller = new AbortController();
+		async function loadPage() {
+			try {
+				const submissionRecordsResponse = await fetchSubmissionRecords(ID, {
+					signal: controller.signal,
+					tries: 3,
+					page,
+					pageSize,
+				});
+				const formattedData = formatUploadData({
+					records: submissionRecordsResponse,
+					submissionId: ID,
+					organization: submissionOverview?.organization || '',
+					submissionStatus: submissionOverview?.status || SubmissionStatus.INVALID,
+					files: submissionOverview?.submissionFiles,
+				});
 
-			const { first, last } = getPaginationRange(page, pageSize, paginated.length);
+				const { first, last } = getPaginationRange(page, pageSize, submissionRecordsResponse.data.length || 0);
+				setFirstRecord(first);
+				setLastRecord(last);
 
-			setFirstRecord(first);
-			setLastRecord(last);
+				submissionRecordsDispatch({
+					type: UploadDetailsAction.NEW,
+					uploads: formattedData,
+				});
+				// Track update status
+				setDataIsPending(formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING));
+			} catch (error) {
+				if (!controller.signal.aborted) {
+					// optional: dispatch error state or log
+					console.error('Failed to load submission records', error);
+				}
+			}
 		}
-	}, [page, submissionDetails]);
+
+		if (page && submissionOverview) {
+			loadPage();
+		}
+
+		return () => {
+			// Abort the request when the component unmounts or when a dependency changes
+			controller.abort();
+		};
+	}, [page, submissionOverview, ID]);
 
 	return (
 		<article
@@ -323,20 +320,20 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			`}
 		>
 			<Overview
-				createdAt={submissionData?.createdAt}
+				createdAt={submissionOverview?.createdAt}
 				loading={awaitingResponse}
-				totalRecords={submissionRecordCount.toString()}
+				totalRecords={submissionOverview?.totalRecords.toString() || '0'}
 				id={ID}
 				missingUploadFiles={pendingUploadManifests.map((f) => f.fileName)}
 				handleMissingUploadFiles={() => setOpenGuideModal(true)}
-				status={submissionStatus}
+				status={submissionOverview?.status.toString()}
 			/>
 
 			<LoaderWrapper
 				loading={awaitingResponse}
 				size="10px"
 			>
-				{submissionRecordCount > 0 && (
+				{submissionOverview && submissionOverview.totalRecords > 0 && (
 					<>
 						<p
 							css={css`
@@ -345,11 +342,11 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 								margin: 10px 0;
 							`}
 						>
-							{firstRecord} - {lastRecord} of {submissionRecordCount} Viral Genomes
+							{firstRecord} - {lastRecord} of {submissionOverview.totalRecords} Viral Genomes
 						</p>
 						<GenericTable
 							columns={columns}
-							data={recordsPaginated}
+							data={Object.values(submissionRecords).flat()}
 							emptyValue={'-'}
 							sortable={{
 								defaultSortBy: [
