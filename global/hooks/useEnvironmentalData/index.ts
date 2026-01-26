@@ -33,7 +33,8 @@ import {
 	SubmissionStatus,
 	type CommitSubmissionResult,
 	type ErrorDetails,
-	type Submission,
+	type SubmissionFile,
+	type SubmissionRecordsResponse,
 	type SubmissionSummary,
 	type UploadData,
 } from './types';
@@ -127,26 +128,26 @@ const useEnvironmentalData = (origin: string) => {
 	};
 
 	/**
-	 * Fetch Submission details by its unique ID
+	 * Fetch Submission Summary by its unique ID
 	 * @param id
 	 * @returns
 	 */
-	const fetchSubmissionDetailsById = async (
+	const fetchSubmissionSummaryById = async (
 		id: string,
 		{ signal, tries = 1, delay = 1000 }: { signal?: AbortSignal; tries?: number; delay?: number } = {},
-	): Promise<Submission> => {
+	): Promise<SubmissionSummary> => {
 		const onError = async (err: unknown) => {
 			const triesLeft = tries - 1;
 			if (!triesLeft) {
 				throw err;
 			}
 			await wait(delay);
-			return fetchSubmissionDetailsById(id, { signal, tries: triesLeft, delay });
+			return fetchSubmissionSummaryById(id, { signal, tries: triesLeft, delay });
 		};
 
 		try {
 			const submissionResponse = await handleRequest({
-				url: urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id, 'details'),
+				url: urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id),
 				method: 'GET',
 				signal,
 			});
@@ -155,6 +156,56 @@ const useEnvironmentalData = (origin: string) => {
 				!submissionResponse?.data ||
 				!Object.values(EventTypeToKey).some((status) => status in submissionResponse.data)
 			) {
+				throw new Error('Unexpected response getting submission details', submissionResponse);
+			}
+			return submissionResponse;
+		} catch (error) {
+			return onError(error);
+		}
+	};
+
+	/**
+	 * Fetch Submission records with pagination support
+	 * @param id
+	 * @returns
+	 */
+	const fetchSubmissionRecords = async (
+		id: string,
+		{
+			signal,
+			tries = 1,
+			delay = 10000,
+			page = 1,
+			pageSize = 20,
+		}: { signal?: AbortSignal; tries?: number; delay?: number; page?: number; pageSize?: number } = {},
+	): Promise<SubmissionRecordsResponse> => {
+		const onError = async (err: unknown) => {
+			const triesLeft = tries - 1;
+			if (!triesLeft) {
+				throw err;
+			}
+			await wait(delay);
+			return fetchSubmissionRecords(id, { signal, tries: triesLeft, delay, page, pageSize });
+		};
+
+		try {
+			const queryParams = new URLSearchParams({
+				page: page.toString(),
+				pageSize: pageSize.toString(),
+			});
+			const submissionResponse = await handleRequest({
+				url: urlJoin(
+					NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
+					'submission',
+					id,
+					'details',
+					`?${queryParams.toString()}`,
+				),
+				method: 'GET',
+				signal,
+			});
+
+			if (!submissionResponse?.data) {
 				throw new Error('Unexpected response getting submission details', submissionResponse);
 			}
 			return submissionResponse;
@@ -199,6 +250,27 @@ const useEnvironmentalData = (origin: string) => {
 		};
 	};
 
+	const resolveUploadStatus = (
+		errorDetails: string[],
+		status: SubmissionStatus,
+		isUploadPending: boolean,
+		finalOnCommitted = false,
+	): UploadStatus => {
+		if (errorDetails.length) {
+			return UploadStatus.ERROR;
+		}
+
+		if (status === SubmissionStatus.CLOSED || status === SubmissionStatus.INVALID || isUploadPending) {
+			return UploadStatus.INCOMPLETE;
+		}
+
+		if (finalOnCommitted && status === SubmissionStatus.COMMITTED) {
+			return UploadStatus.COMPLETE;
+		}
+
+		return UploadStatus.PROCESSING;
+	};
+
 	/**
 	 * Formats the submission data into an array  of`UploadData` objects
 	 * representing the formatted upload data
@@ -206,97 +278,77 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param submission
 	 * @returns
 	 */
-	const formatUploadData = (submission: Submission): UploadData[] => {
-		const organization = submission.organization;
-		const submissionId = submission.id.toString();
+	const formatUploadData = ({
+		records,
+		organization,
+		submissionId,
+		files,
+		submissionStatus,
+	}: {
+		records: SubmissionRecordsResponse;
+		organization: string;
+		submissionId: string;
+		files?: SubmissionFile[];
+		submissionStatus: SubmissionStatus;
+	}): UploadData[] => {
+		const isUploadPending = files?.some((f) => !f.isUploaded) ?? false;
 
-		const isUploadPending = submission.files?.some((f) => !f.isUploaded) ?? false;
+		return records.data.map((item) => {
+			const errorDetails = getErrorDetailsMessage(records.errors, item.index);
 
-		const incompleteStatuses: SubmissionStatus[] = [SubmissionStatus.CLOSED, SubmissionStatus.INVALID];
+			switch (item.type) {
+				case 'INSERTS': {
+					const identifier = item.value[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString() ?? '';
 
-		// Formatting Insert records
-		const insertRecords =
-			submission.data[EventTypeToKey.INSERT]?.sample?.records?.map<UploadData>((item, index) => {
-				const errors = submission.errors[EventTypeToKey.INSERT]?.sample || [];
-				const errorDetails = getErrorDetailsMessage(errors, index);
-				const identifier = item[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
-
-				let recordStatus: UploadStatus = UploadStatus.PROCESSING;
-				if (errorDetails.length) {
-					recordStatus = UploadStatus.ERROR;
-				} else if (incompleteStatuses.includes(submission.status)) {
-					recordStatus = UploadStatus.INCOMPLETE;
-				} else if (isUploadPending) {
-					recordStatus = UploadStatus.INCOMPLETE;
+					return {
+						submitterSampleId: identifier,
+						submissionId,
+						eventType: EventType.INSERT,
+						details: errorDetails,
+						organization,
+						originalFilePair: [],
+						status: resolveUploadStatus(errorDetails, submissionStatus, isUploadPending),
+						systemId: '',
+					};
 				}
 
-				return {
-					submitterSampleId: identifier || '',
-					submissionId: submissionId,
-					eventType: EventType.INSERT,
-					details: errorDetails,
-					organization: organization,
-					originalFilePair: [],
-					status: recordStatus,
-					systemId: '',
-				};
-			}) ?? [];
+				case 'UPDATES': {
+					const updateDetails = [
+						JSON.stringify({ old: item.value.old }),
+						JSON.stringify({ new: item.value.new }),
+					];
 
-		// Formatting Update records
-		const updateRecords =
-			submission.data[EventTypeToKey.UPDATE]?.sample?.map<UploadData>((item, index) => {
-				const errors = submission.errors[EventTypeToKey.UPDATE]?.sample || [];
-				const errorDetails = getErrorDetailsMessage(errors, index);
-				const updateDetails = [JSON.stringify({ old: item.old }), JSON.stringify({ new: item.new })];
+					const status = resolveUploadStatus(errorDetails, submissionStatus, false);
 
-				let recordStatus: UploadStatus = UploadStatus.PROCESSING;
-				if (errorDetails.length) {
-					recordStatus = UploadStatus.ERROR;
-				} else if (incompleteStatuses.includes(submission.status)) {
-					recordStatus = UploadStatus.INCOMPLETE;
+					return {
+						submitterSampleId: '',
+						submissionId,
+						eventType: EventType.UPDATE,
+						details: status === UploadStatus.PROCESSING ? updateDetails : errorDetails,
+						organization,
+						originalFilePair: [''],
+						status,
+						systemId: item.value.systemId,
+					};
 				}
 
-				return {
-					submitterSampleId: '', // Sample ID will be retrieved later
-					submissionId: submissionId,
-					eventType: EventType.UPDATE,
-					details: recordStatus === UploadStatus.PROCESSING ? updateDetails : errorDetails,
-					organization: organization,
-					originalFilePair: [''],
-					status: recordStatus,
-					systemId: item.systemId,
-				};
-			}) ?? [];
+				case 'DELETES': {
+					const identifier =
+						item.value.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString() ?? '';
 
-		// Formatting Delete records
-		const deleteRecords =
-			submission.data[EventTypeToKey.DELETE]?.sample?.map<UploadData>((item, index) => {
-				const identifier = item.data[NEXT_PUBLIC_ENVIRONMENTAL_SAMPLE_ID_FIELD_NAME]?.toString();
-				const errors = submission.errors[EventTypeToKey.DELETE]?.sample || [];
-				const errorDetails = getErrorDetailsMessage(errors, index);
-
-				let recordStatus: UploadStatus = UploadStatus.PROCESSING;
-				if (errorDetails.length) {
-					recordStatus = UploadStatus.ERROR;
-				} else if (incompleteStatuses.includes(submission.status)) {
-					recordStatus = UploadStatus.INCOMPLETE;
-				} else if (submission.status === SubmissionStatus.COMMITTED) {
-					recordStatus = UploadStatus.COMPLETE;
+					return {
+						submitterSampleId: identifier,
+						submissionId,
+						eventType: EventType.DELETE,
+						details: errorDetails,
+						organization,
+						originalFilePair: [''],
+						status: resolveUploadStatus(errorDetails, submissionStatus, false, true),
+						systemId: item.value.systemId,
+					};
 				}
-
-				return {
-					submitterSampleId: identifier || '',
-					submissionId: submissionId,
-					eventType: EventType.DELETE,
-					details: errorDetails,
-					organization: organization,
-					originalFilePair: [''],
-					status: recordStatus,
-					systemId: item.systemId,
-				};
-			}) ?? [];
-
-		return [...insertRecords, ...updateRecords, ...deleteRecords];
+			}
+		});
 	};
 
 	/**
@@ -468,7 +520,8 @@ const useEnvironmentalData = (origin: string) => {
 		commitSubmission,
 		downloadMetadataTemplateUrl,
 		fetchPreviousSubmissions,
-		fetchSubmissionDetailsById,
+		fetchSubmissionSummaryById,
+		fetchSubmissionRecords,
 		formatUploadData,
 		getActiveSubmission,
 		getAnalysisIds,
