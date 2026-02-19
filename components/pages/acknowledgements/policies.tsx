@@ -24,7 +24,7 @@ import StyledLink, { EmailLink } from '#components/Link';
 import { type PolicyProps } from './Policy';
 
 export const iMicroSeqPolicy: PolicyProps = {
-	anchor: 'imicro-seq-acknowledgements',
+	anchor: 'imicroseq-acknowledgements',
 	heading: 'Acknowledgements for iMicroSeq environmental data',
 	content: (
 		<>
@@ -63,8 +63,8 @@ export const iMicroSeqPolicy: PolicyProps = {
 	),
 };
 
-export const virusSeqPolicy = {
-	anchor: 'virus-seq-acknowledgements',
+export const virusSeqPolicy: PolicyProps = {
+	anchor: 'virusseq-acknowledgements',
 	heading: 'VirusSeq Data Portal / iMicroSeq clinical case data',
 	content: (
 		<>

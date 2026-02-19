@@ -24,10 +24,10 @@ import { ReactElement } from 'react';
 import StyledLink, { EmailLink } from '#components/Link';
 
 const Usage = (): ReactElement => (
-	<section>
-		<h1>Website and Data Usage Policies</h1>
+	<>
+		<h2>Usage policy</h2>
 
-		<h2>General</h2>
+		<h3>General</h3>
 
 		<p>
 			The Canadian VirusSeq Data Portal (CVDP, also referred to as "the Portal") is an open-access data portal
@@ -57,7 +57,7 @@ const Usage = (): ReactElement => (
 			or metadata to the CVDP, do not include any data that could reveal the personal identity of the source.
 		</p>
 
-		<h2>Disclaimer</h2>
+		<h3>Disclaimer</h3>
 
 		<p>
 			COVID-19 is an emerging and rapidly evolving situation. To promote responsive, collaborative, research and
@@ -73,7 +73,7 @@ const Usage = (): ReactElement => (
 			submitted.
 		</p>
 
-		<h2>Data available</h2>
+		<h3>Data available</h3>
 
 		<p>
 			Currently, the CVDP exclusively focuses on providing access to data types that do not constitute "personal
@@ -175,7 +175,7 @@ const Usage = (): ReactElement => (
 			</li>
 		</ul>
 
-		<h2>Data users guidelines</h2>
+		<h3>Data users guidelines</h3>
 
 		<p>
 			Access to the data provided within the CVDP is provided in a completely open manner, and at no cost to
@@ -186,7 +186,7 @@ const Usage = (): ReactElement => (
 			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>.
 		</p>
 
-		<h2>Data standards guidelines</h2>
+		<h3>Data standards guidelines</h3>
 
 		<p>
 			As data needs change over time, the data standard implemented by the Data Portal evolves (additional fields
@@ -195,7 +195,7 @@ const Usage = (): ReactElement => (
 			<EmailLink email="ega12@sfu.ca">ega12@sfu.ca</EmailLink>.
 		</p>
 
-		<h2>Recognition of the work of the data submitters</h2>
+		<h3>Recognition of the work of the data submitters</h3>
 
 		<p>
 			You may use the data from the CVDP to author results obtained from your analyses of relevant data, provided
@@ -220,7 +220,7 @@ const Usage = (): ReactElement => (
 			specimen(s) and involve them in such analyses and further research using such Data.
 		</p>
 
-		<h2>Intellectual Property</h2>
+		<h3>Intellectual Property</h3>
 
 		<p>
 			The CVDP is designed to provide and encourage access within the scientific community to the most up-to-date
@@ -230,7 +230,7 @@ const Usage = (): ReactElement => (
 			CVDP is not in a position to assess the validity of such claims and therefore cannot provide comment or
 			unrestricted permission concerning the use, copying, or distribution of the information it contains.
 		</p>
-	</section>
+	</>
 );
 
 export default Usage;

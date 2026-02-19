@@ -88,6 +88,7 @@
 		"date-fns": ""
 	},
 	"prettier": {
+		"objectWrap": "preserve",
 		"organizeImportsSkipDestructiveCodeActions": true,
 		"printWidth": 120,
 		"semi": true,

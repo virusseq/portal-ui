@@ -70,7 +70,7 @@ const PageContent = (): ReactElement => {
 						margin-top: 10px;
 					`}
 				>
-					Updated at 10/31/2025, 14:00:00 PM
+					Updated on 2025/10/31, at 14:00:00
 				</p>
 
 				<section>
@@ -103,24 +103,29 @@ const PageContent = (): ReactElement => {
 					</p>
 				</section>
 				<nav>
-					<a
+					<StyledLink
 						css={css`
 							font-weight: bold;
 						`}
 						href={`#${iMicroSeqPolicy.anchor}`}
+						rel="noopener noreferrer"
 					>
 						Acknowledgements for iMicroSeq Environmental data
-					</a>
+					</StyledLink>
+
 					<br />
-					<a
+
+					<StyledLink
 						css={css`
 							font-weight: bold;
 						`}
 						href={`#${virusSeqPolicy.anchor}`}
+						rel="noopener noreferrer"
 					>
 						Acknowledgements for VirusSeq Data Portal / iMicroSeq clinical case data
-					</a>
+					</StyledLink>
 				</nav>
+
 				<Policy
 					policy={iMicroSeqPolicy}
 					style={css`
@@ -128,8 +133,10 @@ const PageContent = (): ReactElement => {
 					`}
 				/>
 				<Contributors />
+
 				<Policy policy={virusSeqPolicy} />
 				<Individuals />
+
 				<p>
 					Funding for the VirusSeq Data Portal has been provided by The Canadian COVID Genomics Network
 					(CanCOGeN), supported by Genome Canada and Innovation, Science and Economic Development Canada

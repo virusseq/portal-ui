@@ -24,10 +24,10 @@ import { ReactElement } from 'react';
 import { EmailLink } from '#components/Link';
 
 const Usage = (): ReactElement => (
-	<section>
-		<h1>Data Submitters Guidelines</h1>
+	<>
+		<h2>Data Submitters Guidelines</h2>
 
-		<h2>Registration</h2>
+		<h3>Registration</h3>
 
 		<p>
 			Individuals and organizations interested in submitting data to the CVDP must first apply for data submission
@@ -45,7 +45,7 @@ const Usage = (): ReactElement => (
 			processing of any user data.
 		</p>
 
-		<h2>Sensitive and or Identifiable Data</h2>
+		<h3>Sensitive and or Identifiable Data</h3>
 
 		<p>
 			Submitters are responsible for not submitting any sensitive or personal information to the CVDP. “Dehosting”
@@ -53,13 +53,13 @@ const Usage = (): ReactElement => (
 			sensitive or identifiable data.
 		</p>
 
-		<h2>Helpdesk</h2>
+		<h3>Helpdesk</h3>
 
 		<p>
 			The CVDP operates a helpdesk based on a ticketing system. You may contact the helpdesk at{' '}
 			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>.
 		</p>
-	</section>
+	</>
 );
 
 export default Usage;

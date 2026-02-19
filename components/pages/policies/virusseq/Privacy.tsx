@@ -24,8 +24,8 @@ import { ReactElement } from 'react';
 import { EmailLink } from '#components/Link';
 
 const Usage = (): ReactElement => (
-	<section>
-		<h1>Privacy Policy</h1>
+	<>
+		<h2>Privacy Policy</h2>
 
 		<p>
 			The CVDP is committed to protecting the privacy and security of the personal information and data of its
@@ -40,7 +40,7 @@ const Usage = (): ReactElement => (
 			requirements.
 		</p>
 
-		<h2>Purpose, use, and collection of information</h2>
+		<h3>Purpose, use, and collection of information</h3>
 
 		<p>
 			The central purpose of this website and the CVDP is to facilitate scientific research by providing
@@ -82,7 +82,7 @@ const Usage = (): ReactElement => (
 			<li>Date and time of activities.</li>
 		</ul>
 
-		<h2>Distribution of information to third parties</h2>
+		<h3>Distribution of information to third parties</h3>
 
 		<p>
 			Third-party contractors and or agents may be involved in maintaining and improving the functions (e.g., IT
@@ -93,7 +93,7 @@ const Usage = (): ReactElement => (
 			the CVDP.
 		</p>
 
-		<h2>Cookies</h2>
+		<h3>Cookies</h3>
 
 		<p>
 			This website uses ‘Cookies’. Cookies may collect information such as your email address, username, or keep
@@ -103,7 +103,7 @@ const Usage = (): ReactElement => (
 			restrict your access to the CVDP website but may affect the normal functioning of various features.
 		</p>
 
-		<h2>Hyperlinks and other privacy policies</h2>
+		<h3>Hyperlinks and other privacy policies</h3>
 
 		<p>
 			If you follow a hyperlink from the CVDP website onto the website(s) of another entity, that entity may
@@ -111,7 +111,7 @@ const Usage = (): ReactElement => (
 			a scenario, and we advise you to appropriately consult the privacy policies of these other entities.
 		</p>
 
-		<h2>Right to be “forgotten”</h2>
+		<h3>Right to be “forgotten”</h3>
 
 		<p>
 			Users may request the erasure/deletion of any personal information they have provided to the CVDP website.
@@ -121,7 +121,7 @@ const Usage = (): ReactElement => (
 			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>.
 		</p>
 
-		<h2>Privacy policy revisions</h2>
+		<h3>Privacy policy revisions</h3>
 
 		<p>
 			This privacy policy was last revised on May 31, 2021. These policies are subject to change and we encourage
@@ -130,14 +130,14 @@ const Usage = (): ReactElement => (
 			implemented, so that the user may be fully aware of any changes before using the CVDP website.
 		</p>
 
-		<h2>Contact us</h2>
+		<h3>Contact us</h3>
 
 		<p>
 			Your privacy and concerns are important to us. We welcome you to contact us with your comments, questions,
 			complaints, and or suggestions about our policy or a privacy-related issue. Please contact us at{' '}
 			<EmailLink email="info@imicroseq-dataportal.ca">info@imicroseq-dataportal.ca</EmailLink>.
 		</p>
-	</section>
+	</>
 );
 
 export default Usage;
