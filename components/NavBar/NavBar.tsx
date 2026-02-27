@@ -154,6 +154,13 @@ const NavBar = (): ReactElement => {
 								</StyledListLink>
 							</InternalLink>,
 							<StyledListLink
+								href="https://dashboard.imicroseq-dataportal.ca"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								Visualize environmental/wastewater data
+							</StyledListLink>,
+							<StyledListLink
 								href="https://filogeneti.ca/covizu/index.html"
 								rel="noopener noreferrer"
 								target="_blank"
