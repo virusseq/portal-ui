@@ -110,7 +110,7 @@ const QueryBar = () => {
 			gutterWidth={2}
 			css={(theme) => css`
 				min-height: 48px;
-				margin: 10px 0;
+				margin: 10px 0 0;
 				background-color: ${theme.colors.white};
 				border-radius: 5px;
 				${theme.shadow.default};

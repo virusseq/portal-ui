@@ -48,7 +48,7 @@ const DataAnalysis = (): ReactElement => {
 				css={(theme) => css`
 					align-items: center !important;
 					min-height: 48px;
-					margin: 10px 0;
+					margin: 10px 0 0;
 					background-color: ${theme.colors.white};
 					border-radius: 5px;
 					${theme.shadow.default};
@@ -116,6 +116,7 @@ const DataAnalysis = (): ReactElement => {
 					</ul>
 				)}
 			</Row>
+
 			<Row
 				component="ul"
 				gutterWidth={10}
@@ -128,13 +129,17 @@ const DataAnalysis = (): ReactElement => {
 						${isFetchingData && 'display: flex;'}
 						background-color: ${theme.colors.white};
 						border-radius: 5px;
-						margin: 0 0 10px;
+						margin: 0;
 						min-height: 100px;
 						${theme.shadow.default};
 					}
 				`}
 			>
-				<Col component="li" md={7} lg={8}>
+				<Col
+					component="li"
+					md={7}
+					lg={8}
+				>
 					<figure>
 						{isFetchingData ? (
 							<Loader size="20px" />
@@ -285,7 +290,11 @@ const DataAnalysis = (): ReactElement => {
           </figure>
         </Col>*/}
 
-				<Col component="li" md={5} lg={4}>
+				<Col
+					component="li"
+					md={5}
+					lg={4}
+				>
 					<figure
 						css={(theme) => css`
 							display: flex;

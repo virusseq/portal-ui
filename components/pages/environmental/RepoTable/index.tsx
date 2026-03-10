@@ -378,7 +378,7 @@ const RepoTable = (): ReactElement => {
 				border-radius: 5px;
 				background-color: ${theme.colors.white};
 				padding: 8px;
-				margin-bottom: 12px;
+				margin: 10px 0;
 				${theme.shadow.default};
 			`}
 		>

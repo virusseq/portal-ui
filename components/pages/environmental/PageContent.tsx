@@ -88,19 +88,13 @@ const PageContent = (): ReactElement => {
 				css={css`
 					display: flex;
 					flex-direction: column;
+					margin: 0 15px;
+					max-width: calc(100vw - ${theme.dimensions.facets.width + 30}px);
 					width: 100%;
 				`}
 			>
-				<div
-					css={css`
-						flex: 8.5;
-						margin: 0 15px 0 15px;
-						max-width: calc(100vw - ${theme.dimensions.facets.width + 10}px);
-					`}
-				>
-					<QueryBar />
-					<RepoTable />
-				</div>
+				<QueryBar />
+				<RepoTable />
 			</div>
 		</main>
 	);

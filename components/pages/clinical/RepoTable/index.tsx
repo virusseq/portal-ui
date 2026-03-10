@@ -174,8 +174,7 @@ const getTableConfigs = ({
 });
 
 const RepoTable = (): ReactElement => {
-	const { fetchLatestArchiveAllInfo, findArchiveById, startArchiveBuildBySetId } =
-		useSingularityData();
+	const { fetchLatestArchiveAllInfo, findArchiveById, startArchiveBuildBySetId } = useSingularityData();
 
 	const theme = useTheme();
 	const { logEvent } = useTrackingContext();
@@ -282,12 +281,10 @@ const RepoTable = (): ReactElement => {
 					valueWhenEmpty: '',
 				},
 				{ function: handleBundleDownload, label: 'Metadata & Fasta files' },
-		  ]
+			]
 		: [];
 
-	useArrangerTheme(
-		getTableConfigs({ apiHost: NEXT_PUBLIC_ARRANGER_CLINICAL_API, customExporters, theme }),
-	);
+	useArrangerTheme(getTableConfigs({ apiHost: NEXT_PUBLIC_ARRANGER_CLINICAL_API, customExporters, theme }));
 
 	return (
 		<article
@@ -295,7 +292,7 @@ const RepoTable = (): ReactElement => {
 				border-radius: 5px;
 				background-color: ${theme.colors.white};
 				padding: 8px;
-				margin-bottom: 12px;
+				margin: 10px 0;
 				${theme.shadow.default};
 			`}
 		>
@@ -305,7 +302,12 @@ const RepoTable = (): ReactElement => {
 				<Pagination />
 			</TableContextProvider>
 
-			{showDownloadInfoModal && <DownloadInfoModal onClose={closeModal} archive={archive} />}
+			{showDownloadInfoModal && (
+				<DownloadInfoModal
+					onClose={closeModal}
+					archive={archive}
+				/>
+			)}
 		</article>
 	);
 };
