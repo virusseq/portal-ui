@@ -68,7 +68,9 @@ const WhySequence = (): ReactElement => (
 				Identify and track transmission trends of microbes at the regional, provincial, national, and
 				international scales.
 			</figcaption>
-			<figcaption>Aid detection of new disease clusters and outbreaks.</figcaption>
+			<figcaption>
+				Aid detection of new disease clusters, outbreaks, and environmental impacts or benefits.
+			</figcaption>
 			<figcaption>
 				Discover evolving microbe characteristics that might impact public health, agriculture, and the
 				environment.

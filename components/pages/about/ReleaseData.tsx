@@ -155,10 +155,6 @@ const ReleaseData = (): ReactElement => {
 					) : (
 						<>
 							<li>
-								<File />
-								<span>{fileCount?.toLocaleString('en-CA')}</span>Files
-							</li>
-							<li>
 								<CoronaVirus />
 								<span>{genomesCount?.type === 'APPROXIMATE' ? '~' : ''}</span>
 								<span>{genomesCount?.value?.toLocaleString('en-CA')} # Samples (Clinical)</span>
@@ -169,27 +165,6 @@ const ReleaseData = (): ReactElement => {
 								<span>
 									{environmentGenomeCount?.value?.toLocaleString('en-CA')} # Samples (Environmental)
 								</span>
-							</li>
-							<li>
-								<CrossHairs
-									style={css`
-										margin-left: -1px;
-									`}
-								/>
-								<span>{organismCount?.toLocaleString('en-CA')} Organisms</span>
-							</li>
-							<li>
-								<CrossHairs
-									style={css`
-										margin-left: -1px;
-									`}
-								/>
-								<span>{siteCount} Sites</span>
-							</li>
-							<li>
-								<Storage />
-								<span>{fileSize?.value}</span>
-								{fileSize?.unit}
 							</li>
 						</>
 					)}
