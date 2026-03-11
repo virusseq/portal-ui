@@ -105,7 +105,7 @@ const NavBar = (): ReactElement => {
 										active: router.asPath.startsWith(INTERNAL_PATHS.CLINICAL_EXPLORATION),
 									})}
 								>
-									Clinical cases
+									Clinical case data
 								</StyledListLink>
 							</InternalLink>,
 							<InternalLink path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
@@ -114,11 +114,11 @@ const NavBar = (): ReactElement => {
 										active: router.asPath.startsWith(INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION),
 									})}
 								>
-									Environmental
+									Environmental data
 								</StyledListLink>
 							</InternalLink>,
 						]}
-						label="Explore Data"
+						label="Explore iMicroSeq Data"
 						urls={[INTERNAL_PATHS.VISUALIZATION]}
 					/>
 
@@ -134,19 +134,19 @@ const NavBar = (): ReactElement => {
 									About the tools
 								</StyledListLink>
 							</InternalLink>,
-							<InternalLink path={INTERNAL_PATHS.VISUALIZATION}>
-								<StyledListLink
-									className={cx({ active: router.asPath.startsWith(INTERNAL_PATHS.VISUALIZATION) })}
-								>
-									CoVizu
-								</StyledListLink>
-							</InternalLink>,
 							<StyledListLink
-								href="https://covidmvp.cidgoh.ca/"
+								href="https://virusmvp.org"
 								rel="noopener noreferrer"
 								target="_blank"
 							>
-								Covid-MVP
+								Virus-MVP
+							</StyledListLink>,
+							<StyledListLink
+								href="https://covarr-net.github.io/duotang/duotang.html"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								CoVarrNet-Duotang
 							</StyledListLink>,
 							<StyledListLink
 								href="https://viral.ai/collections/virusseq/overview"
@@ -156,11 +156,11 @@ const NavBar = (): ReactElement => {
 								ViralAI
 							</StyledListLink>,
 							<StyledListLink
-								href="https://covarr-net.github.io/duotang/duotang.html"
+								href="https://filogeneti.ca/covizu/index.html"
 								rel="noopener noreferrer"
 								target="_blank"
 							>
-								CoVarrNet-Duotang
+								CoVizu
 							</StyledListLink>,
 						]}
 						label="Analysis Tools"

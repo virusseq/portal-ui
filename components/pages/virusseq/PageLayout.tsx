@@ -22,7 +22,8 @@
 import { css } from '@emotion/react';
 import { ReactElement, ReactNode } from 'react';
 
-import Footer from './Footer';
+import Footer from '#components/Footer';
+
 import PageHead from './Head';
 import NavBar from './NavBar';
 
@@ -39,8 +40,7 @@ const PageLayout = ({
 			<div
 				css={(theme) => css`
 					display: grid;
-					grid-template-rows: ${theme.dimensions.navbar.height}px 1fr ${theme.dimensions.footer
-							.height}px;
+					grid-template-rows: ${theme.dimensions.navbar.height}px 1fr ${theme.dimensions.footer.height}px;
 					height: 100%;
 					${theme.typography.regular}
 					color: ${theme.colors.black};

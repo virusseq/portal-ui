@@ -110,15 +110,14 @@ const HeroBanner = (): ReactElement => {
 						font-weight: normal;
 					`}
 				>
-					The goal of the CanCOGeN VirusSeq project was to sequence up to 150,000 viral samples from Canadians
-					testing positive for COVID-19. The VirusSeq Data Portal is an open-source and open-access data
-					portal for all Canadian SARS-CoV-2 sequences and associated non-personal contextual data. It
-					harmonizes, validates and automates submission to international databases.
+					The VirusSeq Data Portal has expanded to become the iMicroSeq Data Portal, with a focus on
+					supporting integrative analyses of a broader range of microbial data (i.e. viruses, bacteria,
+					including antimicrobial resistance data).
 				</p>
 
 				<p>
-					The expansion of the VirusSeq Data Portal that includes environmental Wastewater data is available
-					at the iMicroSeq Data portal
+					Note when you choose “Exploring iMicroSeq data” above you have the option to view only clinical data
+					from the VirusSeq Data Portal or environmental data associated with the iMicroSeq Data Portal.
 				</p>
 
 				<ReleaseData />
@@ -128,7 +127,7 @@ const HeroBanner = (): ReactElement => {
 						display: flex;
 					`}
 				>
-					<Link path={INTERNAL_PATHS.EXPLORER}>
+					<Link path={INTERNAL_PATHS.CLINICAL_EXPLORATION}>
 						<StyledLinkAsButton
 							css={css`
 								${theme.typography.button};
@@ -145,7 +144,28 @@ const HeroBanner = (): ReactElement => {
 								}
 							`}
 						>
-							Explore the Data
+							Explore clinical case data
+						</StyledLinkAsButton>
+					</Link>
+
+					<Link path={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>
+						<StyledLinkAsButton
+							css={css`
+								${theme.typography.button};
+								background-color: ${theme.colors.accent3};
+								border-color: ${theme.colors.accent3};
+								line-height: 20px;
+								margin-right: 15px;
+								padding: 8px 20px;
+								width: fit-content;
+
+								&:hover {
+									color: ${theme.colors.white};
+									background-color: ${theme.colors.accent3_dark};
+								}
+							`}
+						>
+							Explore environmental data
 						</StyledLinkAsButton>
 					</Link>
 
