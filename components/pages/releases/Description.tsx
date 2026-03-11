@@ -26,17 +26,22 @@ const Description = () => {
 	return (
 		<>
 			<p>
-				The VirusSeq Data Portal regularly releases submitted data. Each release bundle contains 2
-				files: a <b>TSV file containing all submitted metadata</b> as of that release date-time, as
-				well as a <b>FASTA file containing all the corresponding sequences</b>. The latest release
-				is available in the <StyledLink href={INTERNAL_PATHS.EXPLORER}>data explorer</StyledLink>.
+				For iMicroSeq Environmental-Wastewater data, we encourage you to{' '}
+				<StyledLink href={INTERNAL_PATHS.ENVIRONMENTAL_EXPLORATION}>explore</StyledLink> the data (including
+				with filters) and select the data you wish to download.
 			</p>
 			<p>
-				The counts for changes (e.g. "# Updated") are dynamically calculated to indicate how the
-				data evolves over time. While they're are generally accurate, they may be slightly off in
-				rare scenarios, such as when changes happen while a new release archive is being created.
-				Furthermore, in the event of a data schema update, these numbers will reflect the total
-				sample count (or most of it).
+				For iMicroSeq Clinical-VirusSeq data, you can similarly download targeted datasets. Additionally, the
+				portal regularly releases "bundles" of submitted data. Each release bundle contains 2 files: a{' '}
+				<b>TSV file containing all submitted metadata</b> as of that release date-time, as well as a{' '}
+				<b>FASTA file containing all the corresponding sequences</b>. The latest release is available in the{' '}
+				<StyledLink href={INTERNAL_PATHS.CLINICAL_EXPLORATION}>clinical data explorer</StyledLink>.
+			</p>
+			<p>
+				The counts for changes (e.g. "# Updated") are dynamically calculated to indicate how the data evolves
+				over time. While they're are generally accurate, they may be slightly off in rare scenarios, such as
+				when changes happen while a new release archive is being created. Furthermore, in the event of a data
+				schema update, these numbers will reflect the total sample count (or most of it).
 			</p>
 		</>
 	);

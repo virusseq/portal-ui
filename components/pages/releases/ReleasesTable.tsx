@@ -270,8 +270,7 @@ const ReleasesTable = (): ReactElement => {
 						<>
 							{offset + 1} to{' '}
 							{offset +
-								(Math.min(Number(tableData?.size), (tableData?.totalReleases || 0) - offset) ||
-									0)}{' '}
+								(Math.min(Number(tableData?.size), (tableData?.totalReleases || 0) - offset) || 0)}{' '}
 							of {tableData?.totalReleases}
 						</>
 					) : (
@@ -329,9 +328,15 @@ const ReleasesTable = (): ReactElement => {
 			>
 				<div>
 					Show{' '}
-					<select value={tableData?.size || 20} onChange={updatePageSize}>
+					<select
+						value={tableData?.size || 20}
+						onChange={updatePageSize}
+					>
 						{[5, 10, 20, 30, 40, 50].map((pageSize) => (
-							<option key={pageSize} value={pageSize}>
+							<option
+								key={pageSize}
+								value={pageSize}
+							>
 								{pageSize}
 							</option>
 						))}
@@ -351,9 +356,17 @@ const ReleasesTable = (): ReactElement => {
 						onClick={goToFirstPage}
 						disabled={tableData?.first}
 					/>
-					<PageButton direction={'LEFT'} onClick={goToPrevPage} disabled={tableData?.first} />
+					<PageButton
+						direction={'LEFT'}
+						onClick={goToPrevPage}
+						disabled={tableData?.first}
+					/>
 					<PageNumber num={tableData?.page ? tableData?.page + 1 : 1} />
-					<PageButton direction={'RIGHT'} onClick={goToNextPage} disabled={tableData?.last} />
+					<PageButton
+						direction={'RIGHT'}
+						onClick={goToNextPage}
+						disabled={tableData?.last}
+					/>
 					<PageButton
 						direction={'DOUBLE_RIGHT'}
 						onClick={goToLastPage}

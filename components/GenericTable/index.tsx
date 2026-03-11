@@ -182,7 +182,9 @@ const GenericTable = ({
 									{...cell.getCellProps()}
 									className={`tableBodyCell-${cell.column.id}`}
 								>
-									{cell.value && String(cell.value).length > 0 ? cell.render('Cell') : emptyValue}
+									{cell.value && String(cell.value).length > 0
+										? cell.render('Cell')
+										: emptyValue || cell.render('Cell')}
 								</td>
 							))}
 						</tr>
