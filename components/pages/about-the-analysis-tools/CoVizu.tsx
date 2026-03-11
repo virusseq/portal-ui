@@ -52,7 +52,7 @@ const Portal = (): ReactElement => {
 							css={css`
 								font-weight: bold;
 							`}
-							href="https://virusseq-dataportal.ca/visualization"
+							href="https://filogeneti.ca/covizu/index.html"
 							rel="noopener noreferrer"
 							target="_blank"
 						>
@@ -90,12 +90,12 @@ const Portal = (): ReactElement => {
 					`}
 				>
 					<StyledLink
-						href="https://virusmvp.org/covid-mvp/"
+						href="https://filogeneti.ca/covizu/index.html"
 						rel="noopener noreferrer"
 						target="_blank"
 					>
 						<img
-							alt="COVID-MVP logo"
+							alt="CoVizu logo"
 							src="/images/covizu-logo.png"
 							width="60"
 						/>

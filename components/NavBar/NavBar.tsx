@@ -138,7 +138,7 @@ const NavBar = (): ReactElement => {
 							</InternalLink>,
 						]}
 						label="Explore Data"
-						urls={[INTERNAL_PATHS.VISUALIZATION]}
+						urls={[INTERNAL_PATHS.EXPLORER]}
 					/>
 
 					<Dropdown
@@ -161,18 +161,18 @@ const NavBar = (): ReactElement => {
 								Visualize environmental/wastewater data
 							</StyledListLink>,
 							<StyledListLink
-								href="https://filogeneti.ca/covizu/index.html"
+								href="https://virusmvp.org"
 								rel="noopener noreferrer"
 								target="_blank"
 							>
-								CoVizu
+								Virus-MVP
 							</StyledListLink>,
 							<StyledListLink
-								href="https://covidmvp.cidgoh.ca/"
+								href="https://covarr-net.github.io/duotang/duotang.html"
 								rel="noopener noreferrer"
 								target="_blank"
 							>
-								Covid-MVP
+								CoVarrNet-Duotang
 							</StyledListLink>,
 							<StyledListLink
 								href="https://viral.ai/collections/virusseq/overview"
@@ -182,11 +182,11 @@ const NavBar = (): ReactElement => {
 								ViralAI
 							</StyledListLink>,
 							<StyledListLink
-								href="https://covarr-net.github.io/duotang/duotang.html"
+								href="https://filogeneti.ca/covizu/index.html"
 								rel="noopener noreferrer"
 								target="_blank"
 							>
-								CoVarrNet-Duotang
+								CoVizu
 							</StyledListLink>,
 						]}
 						label="Analysis Tools"

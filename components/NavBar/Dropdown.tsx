@@ -53,6 +53,7 @@ const Dropdown = ({
 	const router = useRouter();
 
 	const hasData = data?.length > 0;
+	// TODO: this logic needs work so we can pass parent dropdown urls, and have a child page highlight the whole thing
 	const internalUrlIsActive = urls.includes(router.asPath as INTERNAL_PATH_VALUES);
 
 	const handleClickOnButton = async (event?: SyntheticEvent<HTMLButtonElement, Event>) => {

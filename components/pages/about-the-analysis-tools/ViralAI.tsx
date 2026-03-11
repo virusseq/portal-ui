@@ -74,12 +74,12 @@ const Portal = (): ReactElement => {
 					`}
 				>
 					<StyledLink
-						href="https://virusmvp.org/covid-mvp/"
+						href="https://viral.ai/collections/virusseq/overview"
 						rel="noopener noreferrer"
 						target="_blank"
 					>
 						<img
-							alt="COVID-MVP logo"
+							alt="ViralAI logo"
 							src="/images/viral-ai.png"
 							width="90"
 						/>

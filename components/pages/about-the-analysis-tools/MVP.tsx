@@ -52,7 +52,7 @@ const Portal = (): ReactElement => {
 							css={css`
 								font-weight: bold;
 							`}
-							href="https://virusmvp.org/covid-mvp/"
+							href="https://virusmvp.org"
 							rel="noopener noreferrer"
 							target="_blank"
 						>
@@ -93,12 +93,12 @@ const Portal = (): ReactElement => {
 					`}
 				>
 					<StyledLink
-						href="https://virusmvp.org/covid-mvp/"
+						href="https://virusmvp.org"
 						rel="noopener noreferrer"
 						target="_blank"
 					>
 						<img
-							alt="COVID-MVP logo"
+							alt="VIRUS-MVP logo"
 							src="/images/covid-mvp-logo.png"
 							width="65"
 						/>
