@@ -25,10 +25,10 @@ import { useRouter } from 'next/router';
 import { createRef, ReactElement, useEffect } from 'react';
 
 import { InternalLink } from '#components/Link';
+import Dropdown from '#components/NavBar/Dropdown';
 import useTrackingContext from '#global/hooks/useTrackingContext';
 import { INTERNAL_PATHS } from '#global/utils/constants';
 
-import Dropdown from './Dropdown';
 import { linkStyles, StyledLink, StyledListLink } from './styles';
 
 /**

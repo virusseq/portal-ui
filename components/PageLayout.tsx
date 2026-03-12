@@ -26,11 +26,15 @@ import ErrorNotification from './ErrorNotification';
 import Footer from './Footer';
 import PageHead from './Head';
 import NavBar from './NavBar';
+import SystemAlerts from './SystemAlerts';
 
 const PageLayout = ({ children, subtitle }: { children: ReactNode; subtitle?: string }): ReactElement => {
 	return (
 		<>
-			<PageHead subtitle={subtitle}></PageHead>
+			<PageHead subtitle={subtitle} />
+
+			<SystemAlerts />
+
 			<div
 				css={(theme) => css`
 					color: ${theme.colors.black};
@@ -41,7 +45,9 @@ const PageLayout = ({ children, subtitle }: { children: ReactNode; subtitle?: st
 				`}
 			>
 				<NavBar />
+
 				{children}
+
 				<Footer />
 			</div>
 		</>

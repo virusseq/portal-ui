@@ -28,7 +28,6 @@ import { PageContext } from '#global/hooks/usePageContext';
 import { TrackingProvider } from '#global/hooks/useTrackingContext';
 import { ClientSideGetInitialPropsContext } from '#global/utils/pages/types';
 
-import SystemAlerts from './SystemAlerts';
 import defaultTheme from './theme';
 
 /**
@@ -85,8 +84,8 @@ const Root = ({
 				<PageContext.Provider value={pageContext}>
 					<TrackingProvider>
 						<ThemeProvider theme={defaultTheme}>
-							<SystemAlerts />
 							<div ref={modalPortalRef} />
+
 							{children}
 						</ThemeProvider>
 					</TrackingProvider>

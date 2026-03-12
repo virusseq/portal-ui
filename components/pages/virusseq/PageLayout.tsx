@@ -23,40 +23,36 @@ import { css } from '@emotion/react';
 import { ReactElement, ReactNode } from 'react';
 
 import Footer from '#components/Footer';
-import { SystemAlert } from '#components/SystemAlerts';
+import SystemAlerts, { SystemAlert } from '#components/SystemAlerts';
 
 import PageHead from './Head';
 import NavBar from './NavBar';
 
-const PageLayout = ({
-	children,
-	subtitle,
-}: {
-	children: ReactNode;
-	subtitle?: string;
-}): ReactElement => {
+const PageLayout = ({ children, subtitle }: { children: ReactNode; subtitle?: string }): ReactElement => {
 	return (
 		<>
-			<PageHead subtitle={subtitle}></PageHead>
+			<PageHead subtitle={subtitle} />
+
+			{/* <SystemAlerts /> */}
+			{/* TODO: custom banner for launch. remove me later */}
+			<SystemAlert
+				alert={{
+					id: 'virusseq-transition-banner',
+					message:
+						'The VirusSeq Data Portal is expanding into the iMicroSeq Data Portal, which contains additional microbial data. While there were no updates during migration (Feb 5- Mar 12), updates can now proceed. We apologize for any impacts. If you have any problems or feedback, please contact <a href="mailto:info@imicroseq-dataportal.ca" target="_blank">info@imicroseq-dataportal.ca</a>.',
+				}}
+				key={'virusseq-transition-banner'}
+			/>
+
 			<div
 				css={(theme) => css`
 					display: grid;
-					grid-template-rows: 1fr ${theme.dimensions.navbar.height}px 1fr ${theme.dimensions.footer.height}px;
+					grid-template-rows: ${theme.dimensions.navbar.height}px 1fr ${theme.dimensions.footer.height}px;
 					height: 100%;
 					${theme.typography.regular}
 					color: ${theme.colors.black};
 				`}
 			>
-				{/* TODO: custom banner for launch. remove me later */}
-				<SystemAlert
-					alert={{
-						id: 'virusseq-transition-banner',
-						message:
-							'The VirusSeq Data Portal is expanding into the iMicroSeq Data Portal, which contains additional microbial data. While there were no updates during migration (Feb 5- Mar 12), updates can now proceed. We apologize for any impacts. If you have any problems or feedback, please contact info@imicroseq-dataportal.ca.',
-					}}
-					key={'virusseq-transition-banner'}
-				/>
-
 				<NavBar />
 
 				{children}
