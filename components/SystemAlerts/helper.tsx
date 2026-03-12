@@ -29,11 +29,11 @@ import { Info, Error } from '#components/theme/icons';
 type AlertLevel = 'error' | 'warning' | 'info';
 
 export type AlertDef = {
-	level: AlertLevel;
-	title: string;
-	message?: string;
-	dismissable: boolean;
+	dismissable?: boolean;
 	id: string;
+	level?: AlertLevel;
+	message: string;
+	title?: string;
 };
 
 const isAlertLevel = (level: any): level is AlertLevel => {
@@ -41,7 +41,7 @@ const isAlertLevel = (level: any): level is AlertLevel => {
 };
 
 export const isAlertDef = (obj: any): obj is AlertDef => {
-	return obj.id && obj.title && obj.dismissable !== undefined && isAlertLevel(obj.level);
+	return obj.id && obj.message; // TODO: make this better while remaining flexible
 };
 
 export const isAlertDefs = (obj: any): obj is AlertDef[] => {
@@ -56,7 +56,7 @@ type AlertVariant = {
 
 type SystemAlertProps = {
 	alert: AlertDef;
-	onClose: () => void;
+	onClose?: () => void;
 };
 
 const ALERT_VARIANTS: Record<AlertLevel, AlertVariant> = {
@@ -92,7 +92,7 @@ function createMarkup(msg: string) {
 }
 
 export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onClose }) => {
-	const { backgroundColor, textColor, icon } = ALERT_VARIANTS[alert.level];
+	const { backgroundColor, textColor, icon } = ALERT_VARIANTS[isAlertLevel(alert.level) ? alert.level : 'info']; // TODO: Abstract alert levels into reusable Const
 	return (
 		<div
 			css={css`
@@ -101,6 +101,7 @@ export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onCl
 				justify-content: space-between;
 				align-items: flex-start;
 				background-color: ${backgroundColor};
+				border-top: 1px solid #eee;
 			`}
 		>
 			<div
@@ -116,15 +117,18 @@ export const SystemAlert: React.ComponentType<SystemAlertProps> = ({ alert, onCl
 					{icon}
 				</div>
 				<div>
-					<div
-						css={css`
-							color: ${textColor};
-							margin-top: ${alert.message ? '0px' : '6px'};
-							${defaultTheme.typography.heading}
-						`}
-					>
-						{alert.title}
-					</div>
+					{alert.title && (
+						<div
+							css={css`
+								color: ${textColor};
+								margin-top: ${alert.message ? '0px' : '6px'};
+								${defaultTheme.typography.heading}
+							`}
+						>
+							{alert.title}
+						</div>
+					)}
+
 					{alert.message && (
 						<div
 							css={css`

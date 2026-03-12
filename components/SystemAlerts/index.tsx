@@ -25,7 +25,7 @@ import { getConfig } from '#global/config';
 
 import { AlertDef, isAlertDefs, SystemAlert } from './helper';
 
-const SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY = 'SYSTEM_ALERTS_DISMISSED_IDS';
+const SYSTEM_ALERTS_LOCAL_STORAGE_KEY = 'SYSTEM_ALERTS_DISMISSED_IDS';
 
 const SystemAlerts = () => {
 	const getParsedSystemAlerts = () => {
@@ -48,10 +48,10 @@ const SystemAlerts = () => {
 	const [dismissedAlertIds, setDismissedAlertIds] = useState<Array<string>>([]);
 
 	const getLocalStorage = () => {
-		return JSON.parse(localStorage.getItem(SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY) || '[]');
+		return JSON.parse(localStorage.getItem(SYSTEM_ALERTS_LOCAL_STORAGE_KEY) || '[]');
 	};
 	const setLocalStorage = (ids: string[]) => {
-		localStorage.setItem(SYSTEM_ALERTS_LOCAL_SOTRAGE_KEY, JSON.stringify(ids));
+		localStorage.setItem(SYSTEM_ALERTS_LOCAL_STORAGE_KEY, JSON.stringify(ids));
 	};
 
 	useEffect(() => {
@@ -73,10 +73,15 @@ const SystemAlerts = () => {
 	return (
 		<>
 			{displayAlerts.map((sa) => (
-				<SystemAlert alert={sa} key={sa.id} onClose={() => handleClose(sa.id)} />
+				<SystemAlert
+					alert={sa}
+					key={sa.id}
+					onClose={() => handleClose(sa.id)}
+				/>
 			))}
 		</>
 	);
 };
 
 export default SystemAlerts;
+export { SystemAlert } from './helper';
