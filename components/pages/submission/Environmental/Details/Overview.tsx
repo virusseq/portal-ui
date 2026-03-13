@@ -27,7 +27,7 @@ import Navigator from '#components//Navigator';
 import StyledLink from '#components/Link';
 import { LoaderMessage } from '#components/Loader';
 import defaultTheme from '#components/theme';
-import { Calendar, CoronaVirus, Ellipsis, File, Info, Success, Warning } from '#components/theme/icons';
+import { Calendar, CoronaVirus, Ellipsis, File, Info, Success } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import { SubmissionStatus } from '#global/hooks/useEnvironmentalData/types';
 

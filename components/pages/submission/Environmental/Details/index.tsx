@@ -20,7 +20,7 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { ReactElement, useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useReducer, useState } from 'react';
 
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';

@@ -22,7 +22,7 @@
 import { useState } from 'react';
 import urlJoin from 'url-join';
 
-import { EventType, EventTypeToKey, UploadStatus } from '#components/pages/submission/Environmental/Details/types';
+import { EventType, UploadStatus } from '#components/pages/submission/Environmental/Details/types';
 import type { CreateSubmissionResult } from '#components/pages/submission/Environmental/NewSubmissions/types';
 import type { SubmissionPaginatedResponse } from '#components/pages/submission/Environmental/PreviousSubmissions/types';
 import { getConfig } from '#global/config';
