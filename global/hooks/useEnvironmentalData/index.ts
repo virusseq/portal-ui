@@ -132,36 +132,25 @@ const useEnvironmentalData = (origin: string) => {
 	 * @param id
 	 * @returns
 	 */
-	const fetchSubmissionSummaryById = async (
-		id: string,
-		{ signal, tries = 1, delay = 1000 }: { signal?: AbortSignal; tries?: number; delay?: number } = {},
-	): Promise<SubmissionSummary> => {
-		const onError = async (err: unknown) => {
-			const triesLeft = tries - 1;
-			if (!triesLeft) {
-				throw err;
-			}
-			await wait(delay);
-			return fetchSubmissionSummaryById(id, { signal, tries: triesLeft, delay });
+	const fetchSubmissionSummaryById = (id: string, callBack: CallableFunction): EventSource => {
+		const eventSource = new EventSource(urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id));
+
+		eventSource.onmessage = function (event: MessageEvent) {
+			callBack(JSON.parse(event.data));
 		};
 
-		try {
-			const submissionResponse = await handleRequest({
-				url: urlJoin(NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL, 'submission', id),
-				method: 'GET',
-				signal,
-			});
-
-			if (
-				!submissionResponse?.data ||
-				!Object.values(EventTypeToKey).some((status) => status in submissionResponse.data)
-			) {
-				throw new Error('Unexpected response getting submission details', submissionResponse);
+		eventSource.onopen = (event) => {
+			console.log('Connection to Submission Service EventSource Established: Awaiting further details', event);
+		};
+		eventSource.onerror = (error) => {
+			if (eventSource.readyState === EventSource.CLOSED) {
+				// Fatal error (e.g., 404, 500, or CORS failure)
+				console.error('Connection failed permanently.', error);
 			}
-			return submissionResponse;
-		} catch (error) {
-			return onError(error);
-		}
+			eventSource.close(); // Clean up resources
+		};
+
+		return eventSource;
 	};
 
 	/**
