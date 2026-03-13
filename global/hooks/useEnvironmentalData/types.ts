@@ -101,6 +101,7 @@ export const SubmissionStatus = {
 	VALID: 'VALID',
 	INVALID: 'INVALID',
 	CLOSED: 'CLOSED',
+	COMMITTING: 'COMMITTING',
 	COMMITTED: 'COMMITTED',
 } as const;
 

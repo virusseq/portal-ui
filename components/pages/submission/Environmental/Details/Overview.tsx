@@ -27,7 +27,7 @@ import Navigator from '#components//Navigator';
 import StyledLink from '#components/Link';
 import { LoaderMessage } from '#components/Loader';
 import defaultTheme from '#components/theme';
-import { Calendar, CoronaVirus, File, Info, Success, Warning } from '#components/theme/icons';
+import { Calendar, CoronaVirus, Ellipsis, File, Info, Success } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import { SubmissionStatus } from '#global/hooks/useEnvironmentalData/types';
 
@@ -137,19 +137,31 @@ const Overview = ({
 								{`Status: Submission failed. Data has errors`}
 							</p>
 						)}
-						{status && (status === SubmissionStatus.OPEN || status === SubmissionStatus.VALID) && (
+						{status && status === SubmissionStatus.OPEN && (
 							<p>
-								<Warning size={16} />
-								{`Status: Submission incomplete`}
+								<Ellipsis size={16} />
+								{`Status: Validation in progress`}
 								{missingUploadFiles &&
 									missingUploadFiles?.length > 0 &&
 									'. Required files have not been uploaded'}
 							</p>
 						)}
+						{status && status === SubmissionStatus.VALID && (
+							<p>
+								<Ellipsis size={16} />
+								{`Status: Validation completed without any error`}
+							</p>
+						)}
+						{status && status === SubmissionStatus.COMMITTING && (
+							<p>
+								<Ellipsis size={16} />
+								{`Status: The Submission is being persisted`}
+							</p>
+						)}
 						{status && status === SubmissionStatus.COMMITTED && (
 							<p>
 								<Success size={16} />
-								{`Status: Submission complete`}
+								{`Status: Submission completed`}
 							</p>
 						)}
 					</div>
