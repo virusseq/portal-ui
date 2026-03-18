@@ -27,7 +27,7 @@ import Navigator from '#components//Navigator';
 import StyledLink from '#components/Link';
 import { LoaderMessage } from '#components/Loader';
 import defaultTheme from '#components/theme';
-import { Calendar, CoronaVirus, File, Info, Success, Warning } from '#components/theme/icons';
+import { Calendar, CoronaVirus, Ellipsis, File, Info, Success } from '#components/theme/icons';
 import useAuthContext from '#global/hooks/useAuthContext';
 import { SubmissionStatus } from '#global/hooks/useEnvironmentalData/types';
 
@@ -101,59 +101,73 @@ const Overview = ({
 					Data Submission: {id}
 				</h1>
 
-				{loading || (
-					<div
-						css={css`
+				<div
+					css={css`
+						display: flex;
+						font-weight: bold;
+						margin-top: 9px;
+
+						p {
+							align-items: center;
 							display: flex;
-							font-weight: bold;
-							margin-top: 9px;
+							margin: 0 60px 0 0;
+						}
 
-							p {
-								align-items: center;
-								display: flex;
-								margin: 0 60px 0 0;
-							}
-
-							svg {
-								margin-right: 5px;
-							}
-						`}
-					>
-						{createdAt && (
-							<p>
-								<Calendar size={16} />
-								{`Submitted on: ${format(new Date(createdAt), 'yyyy-MM-dd')}`}
-							</p>
-						)}
-						{totalRecords && (
-							<p>
-								<CoronaVirus size={16} />
-								{`Viral Genomes: ${totalRecords}`}
-							</p>
-						)}
-						{status && (status === SubmissionStatus.CLOSED || status === SubmissionStatus.INVALID) && (
-							<p>
-								<Info size={16} />
-								{`Status: Submission failed. Data has errors`}
-							</p>
-						)}
-						{status && (status === SubmissionStatus.OPEN || status === SubmissionStatus.VALID) && (
-							<p>
-								<Warning size={16} />
-								{`Status: Submission incomplete`}
-								{missingUploadFiles &&
-									missingUploadFiles?.length > 0 &&
-									'. Required files have not been uploaded'}
-							</p>
-						)}
-						{status && status === SubmissionStatus.COMMITTED && (
-							<p>
-								<Success size={16} />
-								{`Status: Submission complete`}
-							</p>
-						)}
-					</div>
-				)}
+						svg {
+							margin-right: 5px;
+						}
+					`}
+				>
+					{createdAt && (
+						<p>
+							<Calendar size={16} />
+							{`Submitted on: ${format(new Date(createdAt), 'yyyy-MM-dd')}`}
+						</p>
+					)}
+					{totalRecords && (
+						<p>
+							<CoronaVirus size={16} />
+							{`Viral Genomes: ${totalRecords}`}
+						</p>
+					)}
+					{status && (status === SubmissionStatus.CLOSED || status === SubmissionStatus.INVALID) && (
+						<p>
+							<Info size={16} />
+							{`Status: Submission failed. Data has errors`}
+						</p>
+					)}
+					{status && status === SubmissionStatus.OPEN && (
+						<p>
+							<LoaderMessage
+								inline
+								message="Status: Validation in progress"
+								size="10px"
+							/>
+							{missingUploadFiles &&
+								missingUploadFiles?.length > 0 &&
+								'. Required files have not been uploaded'}
+						</p>
+					)}
+					{status && status === SubmissionStatus.VALID && (
+						<p>
+							<Ellipsis size={16} />
+							{`Status: Validation completed without any error`}
+						</p>
+					)}
+					{status && status === SubmissionStatus.COMMITTING && (
+						<LoaderMessage
+							inline
+							message="Status: The Submission is being persisted"
+							size="10px"
+						/>
+					)}
+					{status && status === SubmissionStatus.COMMITTED && (
+						<p>
+							<Success size={16} />
+							{`Status: Submission completed`}
+						</p>
+					)}
+				</div>
 			</section>
 
 			{loading ? (
