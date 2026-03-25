@@ -140,6 +140,18 @@ const Overview = ({
 						<p>
 							<LoaderMessage
 								inline
+								message="Status: Validation has not started"
+								size="10px"
+							/>
+							{missingUploadFiles &&
+								missingUploadFiles?.length > 0 &&
+								'. Required files have not been uploaded'}
+						</p>
+					)}
+					{status && status === SubmissionStatus.VALIDATING && (
+						<p>
+							<LoaderMessage
+								inline
 								message="Status: Validation in progress"
 								size="10px"
 							/>
