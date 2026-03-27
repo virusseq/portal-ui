@@ -31,6 +31,7 @@ import useEnvironmentalData, {
 	type SubmissionOverview,
 	type SubmissionFile,
 	type UploadData,
+	type SubmissionSummary,
 } from '#global/hooks/useEnvironmentalData';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
 
@@ -110,67 +111,49 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		async (signal?: AbortSignal) => {
 			const commitSubmissionResponse = await commitSubmission(ID, { signal });
 			if (commitSubmissionResponse.status === UploadStatus.PROCESSING) {
-				setSubmissionOverview((prev) => (prev ? { ...prev, status: SubmissionStatus.COMMITTED } : prev));
+				setSubmissionOverview((prev) => (prev ? { ...prev, status: SubmissionStatus.COMMITTING } : prev));
 				setPendingUploadManifests([]);
 			}
 		},
 		[commitSubmission, ID],
 	);
 
-	/**
-	 * Fetches and initializes submission details from the backend.
-	 * This function:
-	 * - Retrieves the submission by ID with retry and abort support.
-	 * - Formats and stores data for both overview and detailed upload views.
-	 * - Automatically commits the submission if its status is `VALID`.
-	 * - Initializes state such as organization, total records count, upload status,
-	 *   and pending file upload manifests.
-	 *
-	 * If the fetch fails, it sets the submission status to `INVALID`.
-	 */
-	const loadSubmissionInformation = useCallback(async () => {
-		const controller = new AbortController();
-		async function getDetailsSubmission() {
+	const loadSubmissionRecords = useCallback(
+		async (signal?: AbortSignal) => {
 			try {
-				const submissionResponse = await fetchSubmissionSummaryById(ID, {
-					signal: controller.signal,
+				const submissionRecordsResponse = await fetchSubmissionRecords(ID, {
+					signal: signal,
 					tries: 3,
+					page,
+					pageSize,
+				});
+				const formattedData = formatUploadData({
+					records: submissionRecordsResponse,
+					submissionId: ID,
+					organization: submissionOverview?.organization || '',
+					submissionStatus: submissionOverview?.status || SubmissionStatus.INVALID,
+					files: submissionOverview?.submissionFiles,
 				});
 
-				const { organization, createdAt, id, status, files, data } = submissionResponse;
-				const totalRecordsCount = data.total;
+				const { first, last } = getPaginationRange(page, pageSize, submissionRecordsResponse.data.length || 0);
+				setFirstRecord(first);
+				setLastRecord(last);
 
-				// Data to display in Overview table
-				setSubmissionOverview({
-					createdAt,
-					submissionFiles: files || [],
-					submissionId: id.toString(),
-					totalRecords: totalRecordsCount,
-					organization,
-					status,
+				submissionRecordsDispatch({
+					type: UploadDetailsAction.NEW,
+					uploads: formattedData,
 				});
-
-				const filesNotUploaded = getPendingUploadFileManifests(files);
-
-				setPendingUploadManifests(filesNotUploaded);
-
-				// Total amount of records uploading
-				const totalPages = Math.ceil(totalRecordsCount / pageSize);
-				setLastPage(totalPages);
+				// Track update status
+				setDataIsPending(formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING));
 			} catch (error) {
-				setSubmissionOverview((prev) => (prev ? { ...prev, status: SubmissionStatus.INVALID } : prev));
-				console.error('Error fetching submission:', error);
+				if (signal && !signal.aborted) {
+					// optional: dispatch error state or log
+					console.error('Failed to load submission records', error);
+				}
 			}
-		}
-
-		if (token && !submissionOverview) {
-			getDetailsSubmission();
-		}
-		return () => {
-			// Abort the request when the component unmounts or when a dependency changes
-			controller.abort();
-		};
-	}, [token, ID, submissionOverview]);
+		},
+		[fetchSubmissionRecords, formatUploadData, ID, page, submissionOverview],
+	);
 
 	const trackPendingData = useCallback(
 		async ({ tries = 1, delay = 1000, signal }: { tries?: number; delay?: number; signal?: AbortSignal }) => {
@@ -240,26 +223,67 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 
 	// gets the initial status for all the uploads
 	useEffect(() => {
-		if (token && !submissionOverview) {
-			loadSubmissionInformation();
-		}
-	}, [token, ID, submissionOverview]);
+		let eStream: EventSource | null;
+		async function getDetailsSubmission() {
+			eStream = fetchSubmissionSummaryById(ID, (messageData: SubmissionSummary) => {
+				const { organization, createdAt, id, status, files, data } = messageData;
+				const totalRecordsCount = data.total;
 
-	// get status updates if any are available from Submission Service
+				// Data to display in Overview table
+				setSubmissionOverview({
+					createdAt,
+					submissionFiles: files || [],
+					submissionId: id.toString(),
+					totalRecords: totalRecordsCount,
+					organization,
+					status,
+				});
+
+				const filesNotUploaded = getPendingUploadFileManifests(files);
+
+				setPendingUploadManifests(filesNotUploaded);
+
+				// Total amount of records uploading
+				const totalPages = Math.ceil(totalRecordsCount / pageSize);
+				setLastPage(totalPages);
+			});
+		}
+		if (token && !submissionOverview) {
+			getDetailsSubmission();
+		}
+		// close any pending streams
+		return () => eStream?.close?.();
+	}, [token, ID]);
+
+	// Handle Submission status updates
 	useEffect(() => {
 		const controller = new AbortController();
-		if (dataIsPending && submissionOverview) {
-			switch (submissionOverview?.status) {
-				case SubmissionStatus.VALID:
-				case SubmissionStatus.OPEN:
-					// Trigger submission commit when the current status is 'VALID' or 'OPEN'
-					commit(controller.signal);
-					break;
 
-				case SubmissionStatus.COMMITTED:
-					trackPendingData({ tries: 3 });
-					break;
-			}
+		if (!submissionOverview || submissionOverview.totalRecords === 0) {
+			return;
+		}
+
+		if (Object.values(submissionRecords).flat().length === 0) {
+			// Handle first load of submission records
+			loadSubmissionRecords(controller.signal);
+			return;
+		}
+
+		if (!dataIsPending) {
+			return;
+		}
+
+		switch (submissionOverview.status) {
+			case SubmissionStatus.VALID:
+				// Trigger submission commit when the current status is 'VALID'
+				commit(controller.signal);
+				break;
+			case SubmissionStatus.INVALID:
+				loadSubmissionRecords(controller.signal);
+				break;
+			case SubmissionStatus.COMMITTED:
+				trackPendingData({ tries: 3 });
+				break;
 		}
 		return () => {
 			// Abort the request when the component unmounts or when a dependency changes
@@ -267,51 +291,20 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		};
 	}, [dataIsPending, submissionOverview]);
 
+	// Handle pagination
 	useEffect(() => {
 		const controller = new AbortController();
-		async function loadPage() {
-			try {
-				const submissionRecordsResponse = await fetchSubmissionRecords(ID, {
-					signal: controller.signal,
-					tries: 3,
-					page,
-					pageSize,
-				});
-				const formattedData = formatUploadData({
-					records: submissionRecordsResponse,
-					submissionId: ID,
-					organization: submissionOverview?.organization || '',
-					submissionStatus: submissionOverview?.status || SubmissionStatus.INVALID,
-					files: submissionOverview?.submissionFiles,
-				});
-
-				const { first, last } = getPaginationRange(page, pageSize, submissionRecordsResponse.data.length || 0);
-				setFirstRecord(first);
-				setLastRecord(last);
-
-				submissionRecordsDispatch({
-					type: UploadDetailsAction.NEW,
-					uploads: formattedData,
-				});
-				// Track update status
-				setDataIsPending(formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING));
-			} catch (error) {
-				if (!controller.signal.aborted) {
-					// optional: dispatch error state or log
-					console.error('Failed to load submission records', error);
-				}
-			}
+		if (!submissionOverview || submissionOverview.totalRecords === 0) {
+			return;
 		}
 
-		if (page && submissionOverview) {
-			loadPage();
-		}
+		loadSubmissionRecords(controller.signal);
 
 		return () => {
 			// Abort the request when the component unmounts or when a dependency changes
 			controller.abort();
 		};
-	}, [page, submissionOverview, ID]);
+	}, [page]);
 
 	return (
 		<article

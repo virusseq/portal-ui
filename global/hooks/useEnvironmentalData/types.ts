@@ -98,9 +98,11 @@ export type SchemaErrors = Record<string, ErrorDetails[]>;
 // Status of a Submission retuned by Submission Service
 export const SubmissionStatus = {
 	OPEN: 'OPEN',
+	VALIDATING: 'VALIDATING',
 	VALID: 'VALID',
 	INVALID: 'INVALID',
 	CLOSED: 'CLOSED',
+	COMMITTING: 'COMMITTING',
 	COMMITTED: 'COMMITTED',
 } as const;
 
