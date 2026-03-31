@@ -147,7 +147,6 @@ const useEnvironmentalData = (origin: string) => {
 				// Fatal error (e.g., 404, 500, or CORS failure)
 				console.error('Connection failed permanently.', error);
 			}
-			eventSource.close(); // Clean up resources
 		};
 
 		return eventSource;

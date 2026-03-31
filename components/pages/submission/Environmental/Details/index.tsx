@@ -20,7 +20,7 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { ReactElement, useCallback, useEffect, useReducer, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 
 import GenericTable from '#components/GenericTable';
 import { LoaderWrapper } from '#components/Loader';
@@ -73,6 +73,8 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const [openGuideModal, setOpenGuideModal] = useState(false);
 	const [pendingUploadManifests, setPendingUploadManifests] = useState<SubmissionManifest[]>([]);
 
+	const submissionSummaryStreamRef = useRef<EventSource | null>(null);
+
 	const { token } = useAuthContext();
 	const {
 		awaitingResponse,
@@ -104,20 +106,25 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	/**
 	 * Commit submission to Submission Service.
 	 * If the Submission is successfully commited (i.e. 'PROCESSING' status)
-	 * this function will update the submission status to `COMMITTED` and clears the list
-	 * of pending upload file manifests.
+	 * and the stream connection is closed, it will re-open the stream to listen for further updates after commit.
 	 */
 	const commit = useCallback(
 		async (signal?: AbortSignal) => {
 			const commitSubmissionResponse = await commitSubmission(ID, { signal });
-			if (commitSubmissionResponse.status === UploadStatus.PROCESSING) {
-				setSubmissionOverview((prev) => (prev ? { ...prev, status: SubmissionStatus.COMMITTING } : prev));
-				setPendingUploadManifests([]);
+			if (
+				commitSubmissionResponse.status === UploadStatus.PROCESSING &&
+				submissionSummaryStreamRef.current?.readyState === EventSource.CLOSED
+			) {
+				// Re-open the event stream if it's closed to listen for new updates after commit
+				getSubmissionOverview();
 			}
 		},
 		[commitSubmission, ID],
 	);
 
+	/**
+	 * Fetch the submission records using pagination.
+	 */
 	const loadSubmissionRecords = useCallback(
 		async (signal?: AbortSignal) => {
 			try {
@@ -144,7 +151,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					uploads: formattedData,
 				});
 				// Track update status
-				setDataIsPending(formattedData.some(({ status }: UploadData) => status === UploadStatus.PROCESSING));
+				const hasProcessingRecords = formattedData.some(({ status }) => status === UploadStatus.PROCESSING);
+				const hasSubmissionFiles = submissionOverview?.submissionFiles?.length ? true : false;
+				setDataIsPending(hasProcessingRecords || hasSubmissionFiles);
 			} catch (error) {
 				if (signal && !signal.aborted) {
 					// optional: dispatch error state or log
@@ -155,6 +164,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		[fetchSubmissionRecords, formatUploadData, ID, page, submissionOverview],
 	);
 
+	/**
+	 * Fetch System IDs for the records that have been Submitted.
+	 */
 	const trackPendingData = useCallback(
 		async ({ tries = 1, delay = 1000, signal }: { tries?: number; delay?: number; signal?: AbortSignal }) => {
 			const failedGetSystemId: UploadData[] = [];
@@ -221,38 +233,44 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		[submissionRecords, getAnalysisIds, submissionRecordsDispatch, setDataIsPending, completeAllProcessingRecords],
 	);
 
+	/**
+	 * Fetch the Submission general information such as status, organization, total records, and files.
+	 */
+	const getSubmissionOverview = useCallback(() => {
+		submissionSummaryStreamRef.current = fetchSubmissionSummaryById(ID, (messageData: SubmissionSummary) => {
+			const { organization, createdAt, id, status, files, data } = messageData;
+			const totalRecordsCount = data.total;
+
+			// Data to display in Overview table
+			setSubmissionOverview({
+				createdAt,
+				submissionFiles: files || [],
+				submissionId: id.toString(),
+				totalRecords: totalRecordsCount,
+				organization,
+				status,
+			});
+
+			const filesNotUploaded = getPendingUploadFileManifests(files);
+
+			setPendingUploadManifests(filesNotUploaded);
+
+			// Total amount of records uploading
+			const totalPages = Math.ceil(totalRecordsCount / pageSize);
+			setLastPage(totalPages);
+		});
+	}, [fetchSubmissionSummaryById, ID]);
+
 	// gets the initial status for all the uploads
 	useEffect(() => {
-		let eStream: EventSource | null;
-		async function getDetailsSubmission() {
-			eStream = fetchSubmissionSummaryById(ID, (messageData: SubmissionSummary) => {
-				const { organization, createdAt, id, status, files, data } = messageData;
-				const totalRecordsCount = data.total;
-
-				// Data to display in Overview table
-				setSubmissionOverview({
-					createdAt,
-					submissionFiles: files || [],
-					submissionId: id.toString(),
-					totalRecords: totalRecordsCount,
-					organization,
-					status,
-				});
-
-				const filesNotUploaded = getPendingUploadFileManifests(files);
-
-				setPendingUploadManifests(filesNotUploaded);
-
-				// Total amount of records uploading
-				const totalPages = Math.ceil(totalRecordsCount / pageSize);
-				setLastPage(totalPages);
-			});
-		}
 		if (token && !submissionOverview) {
-			getDetailsSubmission();
+			getSubmissionOverview();
 		}
 		// close any pending streams
-		return () => eStream?.close?.();
+		return () => {
+			submissionSummaryStreamRef.current?.close?.();
+			submissionSummaryStreamRef.current = null;
+		};
 	}, [token, ID]);
 
 	// Handle Submission status updates
@@ -269,15 +287,18 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			return;
 		}
 
+		if (submissionOverview.status === SubmissionStatus.VALID) {
+			// Trigger submission commit when the current status is 'VALID'
+			commit(controller.signal);
+			return;
+		}
+
 		if (!dataIsPending) {
+			// No pending data to track, exiting.
 			return;
 		}
 
 		switch (submissionOverview.status) {
-			case SubmissionStatus.VALID:
-				// Trigger submission commit when the current status is 'VALID'
-				commit(controller.signal);
-				break;
 			case SubmissionStatus.INVALID:
 				loadSubmissionRecords(controller.signal);
 				break;
