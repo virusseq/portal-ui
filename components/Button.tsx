@@ -94,7 +94,7 @@ const Button = React.forwardRef<
 			isLoading: controlledLoadingState,
 			title,
 		},
-		ref = React.createRef(),
+		ref,
 	) => {
 		const [isLoading, setLoading] = React.useState(false);
 
