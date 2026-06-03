@@ -213,7 +213,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 					trackPendingData({ tries: triesLeft, delay });
 				} else if (remainingToProcess.length) {
 					// There are still records to process
-					trackPendingData({ tries, delay });
+					const triesLeft = tries - 1;
+					await wait(delay);
+					trackPendingData({ tries: triesLeft, delay });
 				} else {
 					// Set all records as complete
 					completeAllProcessingRecords();

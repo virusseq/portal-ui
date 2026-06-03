@@ -309,13 +309,13 @@ const useEnvironmentalData = (origin: string) => {
 						JSON.stringify({ new: item.value.new }),
 					];
 
-					const status = resolveUploadStatus(errorDetails, submissionStatus, false);
+					const status = resolveUploadStatus(errorDetails, submissionStatus, false, true);
 
 					return {
 						submitterSampleId: '',
 						submissionId,
 						eventType: EventType.UPDATE,
-						details: status === UploadStatus.PROCESSING ? updateDetails : errorDetails,
+						details: updateDetails.length ? updateDetails : errorDetails,
 						organization,
 						originalFilePair: [''],
 						status,
