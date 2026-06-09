@@ -63,7 +63,7 @@ const DropZone = ({
 		accept: acceptedExtensionsString,
 		onDropRejected(fileRejections, event) {
 			setUploadError({
-				status: 'Invalid File',
+				status: 'Unsupported  file type',
 				batchErrors: [
 					{
 						batchName: '',
