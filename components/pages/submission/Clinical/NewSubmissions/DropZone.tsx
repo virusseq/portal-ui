@@ -20,23 +20,25 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { Dispatch, ReactElement, useCallback } from 'react';
+import { Dispatch, ReactElement, useCallback, type SetStateAction } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { ButtonElement as Button } from '#components/Button';
 import DragAndDrop from '#components/theme/icons/DragAndDrop';
 
-import { ValidationActionType, ValidationParametersType } from './types';
+import type { ValidationActionType, ValidationParametersType, NoUploadErrorType } from './types';
 import { validator } from './validationHelpers';
 
 const DropZone = ({
 	disabled,
 	validationState,
 	validationDispatch,
+	setUploadError,
 }: {
 	disabled: boolean;
 	validationState: ValidationParametersType;
 	validationDispatch: Dispatch<ValidationActionType>;
+	setUploadError: Dispatch<SetStateAction<NoUploadErrorType>>;
 }): ReactElement => {
 	const theme = useTheme();
 
@@ -48,9 +50,18 @@ const DropZone = ({
 		// isFileTooLarge,
 	} = useDropzone({
 		accept: '.fa,.gz,.fasta,.tsv,text/tab-separated-values',
+		onDropRejected(fileRejections, event) {
+			setUploadError({
+				status: 'Unsupported  file type',
+				message: `We do not accept this type of file: ${fileRejections.map(({ file }) => file.name).join(', ')}`,
+			});
+		},
 		disabled,
 		onDrop: useCallback(
-			(acceptedFiles: File[]) => acceptedFiles.forEach(validator(validationState, validationDispatch)),
+			(acceptedFiles: File[]) => {
+				setUploadError({}); // clear any previous error
+				acceptedFiles.forEach(validator(validationState, validationDispatch, setUploadError))
+			},
 			[validationDispatch, validationState],
 		),
 	});

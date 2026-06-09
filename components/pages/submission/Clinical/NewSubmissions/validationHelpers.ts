@@ -19,9 +19,9 @@
  *
  */
 
-import { Dispatch } from 'react';
+import { Dispatch, type SetStateAction } from 'react';
 
-import { ReaderCallbackType, ValidationActionType, ValidationParametersType } from './types';
+import { ReaderCallbackType, ValidationActionType, ValidationParametersType, type NoUploadErrorType } from './types';
 
 export const validationParameters = {
 	oneTSV: [], // will use only the first one, but display any added
@@ -108,7 +108,7 @@ export const minFiles = ({ oneTSV, oneOrMoreFasta }: ValidationParametersType): 
 	!!oneTSV && oneOrMoreFasta.length > 0;
 
 export const validator =
-	(state: ValidationParametersType, dispatch: Dispatch<ValidationActionType>) =>
+	(state: ValidationParametersType, dispatch: Dispatch<ValidationActionType>, setUploadError: Dispatch<SetStateAction<NoUploadErrorType>>) =>
 	(file: File): void => {
 		// TODO: create dev mode
 		// console.log('validating file', file)
@@ -130,7 +130,11 @@ export const validator =
 			}
 
 			default: {
-				return console.log(`We do not accept this type of file: ${file.name}`);
+				setUploadError({
+					status: 'Unsupported file type',
+					message: `We do not accept this type of file: ${file.name}`,
+				});
+				return ;
 			}
 		}
 	};
