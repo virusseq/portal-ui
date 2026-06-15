@@ -31,6 +31,7 @@ import { LoaderWrapper } from '#components/Loader';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useMuseData from '#global/hooks/useMuseData';
 import getInternalLink from '#global/utils/getInternalLink';
+import ConfirmSubmissionModal from '#components/pages/submission/ConfirmSubmissionModal';
 
 import DropZone from './DropZone';
 import ErrorMessage from './ErrorMessage';
@@ -44,6 +45,7 @@ const NewSubmissions = (): ReactElement => {
 	const { token, userHasClinicalAccess } = useAuthContext();
 	const theme = useTheme();
 	const [thereAreFiles, setThereAreFiles] = useState(false);
+	const [confirmSubmissionModalOpen, setConfirmSubmissionModalOpen] = useState(false);
 	const [uploadError, setUploadError] = useState(noUploadError);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
 	const { oneTSV, oneOrMoreFasta, readyToUpload } = validationState;
@@ -93,6 +95,7 @@ const NewSubmissions = (): ReactElement => {
 		}
 
 		console.error(`no ${token ? 'token' : userHasClinicalAccess ? 'scopes' : 'files'} to submit`);
+		return Promise.resolve();
 	};
 
 	useEffect(() => {
@@ -368,7 +371,7 @@ const NewSubmissions = (): ReactElement => {
 										padding: 0 15px;
 									`}
 									disabled={!(readyToUpload && !uploadError.message)}
-									onClick={handleSubmit}
+									onClick={() => setConfirmSubmissionModalOpen(true)}
 								>
 									Submit Data
 								</Button>
@@ -387,6 +390,12 @@ const NewSubmissions = (): ReactElement => {
 						</tr>
 					</tfoot>
 				</table>
+				{confirmSubmissionModalOpen && (
+					<ConfirmSubmissionModal
+						onClose={() => setConfirmSubmissionModalOpen(false)}
+						onSubmit={handleSubmit}
+					/>
+				)}
 			</LoaderWrapper>
 		</article>
 	);

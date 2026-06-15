@@ -32,6 +32,7 @@ import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData from '#global/hooks/useEnvironmentalData';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
 import getInternalLink from '#global/utils/getInternalLink';
+import ConfirmSubmissionModal from '#components/pages/submission/ConfirmSubmissionModal';
 
 import DropZone from './DropZone';
 import ErrorMessage from './ErrorMessage';
@@ -92,6 +93,7 @@ const NewSubmissions = (): ReactElement => {
 	const { token, userHasEnvironmentalAccess, userIsEnvironmentalAdmin, userEnvironmentalWriteScopes } =
 		useAuthContext();
 	const theme = useTheme();
+	const [confirmSubmissionModalOpen, setConfirmSubmissionModalOpen] = useState(false);
 	const [filesSubmissionInstructions, setFilesSubmissionInstructions] = useState<SubmissionManifest[]>([]);
 	const [submissionId, setSubmissionId] = useState<string>('');
 	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
@@ -468,7 +470,7 @@ const NewSubmissions = (): ReactElement => {
 										!(readyToUpload && !uploadError.description) ||
 										filesSubmissionInstructions.length > 0
 									}
-									onClick={handleSubmit}
+									onClick={() => setConfirmSubmissionModalOpen(true)}
 								>
 									Submit Data
 								</Button>
@@ -502,6 +504,12 @@ const NewSubmissions = (): ReactElement => {
 								}),
 							);
 						}}
+					/>
+				)}
+				{confirmSubmissionModalOpen && (
+					<ConfirmSubmissionModal
+						onClose={() => setConfirmSubmissionModalOpen(false)}
+						onSubmit={handleSubmit}
 					/>
 				)}
 			</LoaderWrapper>
