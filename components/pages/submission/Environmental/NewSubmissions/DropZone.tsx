@@ -20,14 +20,20 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { Dispatch, ReactElement, useCallback } from 'react';
+import { Dispatch, ReactElement, useCallback, type SetStateAction } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { ButtonElement as Button } from '#components/Button';
 import DragAndDrop from '#components/theme/icons/DragAndDrop';
 
 import { computeMd5 } from './fileUtils';
-import { acceptedFileExtensions, SubmissionFile, ValidationAction, ValidationParameters } from './types';
+import {
+	acceptedFileExtensions,
+	type SubmissionFile,
+	type ValidationAction,
+	type ValidationParameters,
+	type NoUploadError,
+} from './types';
 import { getFileExtension, validator } from './validationHelpers';
 
 const acceptedExtensionsString = Object.values(acceptedFileExtensions)
@@ -38,10 +44,12 @@ const DropZone = ({
 	disabled,
 	validationState,
 	validationDispatch,
+	setUploadError,
 }: {
 	disabled: boolean;
 	validationState: ValidationParameters;
 	validationDispatch: Dispatch<ValidationAction>;
+	setUploadError: Dispatch<SetStateAction<NoUploadError>>;
 }): ReactElement => {
 	const theme = useTheme();
 
@@ -53,10 +61,23 @@ const DropZone = ({
 		// isFileTooLarge,
 	} = useDropzone({
 		accept: acceptedExtensionsString,
+		onDropRejected(fileRejections, event) {
+			setUploadError({
+				status: 'Unsupported  file type',
+				batchErrors: [
+					{
+						batchName: '',
+						type: 'INVALID_FILE_EXTENSION',
+						message: fileRejections.map(({ file }) => file.name).join(', '),
+					},
+				],
+			});
+		},
 		disabled,
 		onDrop: useCallback(
 			(acceptedFiles: SubmissionFile[]) => {
 				// Compute md5 for tar.xz files and validate each files
+				setUploadError({ description: '', status: '', batchErrors: [] });
 				Promise.all(
 					acceptedFiles.map((file) =>
 						getFileExtension(file.name) === acceptedFileExtensions.TAR_XZ

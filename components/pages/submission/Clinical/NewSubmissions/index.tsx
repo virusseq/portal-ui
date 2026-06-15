@@ -96,7 +96,6 @@ const NewSubmissions = (): ReactElement => {
 	};
 
 	useEffect(() => {
-		setUploadError(noUploadError);
 		setThereAreFiles(validationState.oneTSV.length > 0 || validationState.oneOrMoreFasta.length > 0);
 	}, [validationState]);
 
@@ -201,9 +200,10 @@ const NewSubmissions = (): ReactElement => {
 				disabled={!userHasClinicalAccess}
 				validationState={validationState}
 				validationDispatch={validationDispatch}
+				setUploadError={setUploadError}
 			/>
 
-			{uploadError.message && (
+			{uploadError.status && (
 				<ErrorNotification
 					size="md"
 					title={uploadError.status}

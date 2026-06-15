@@ -21,7 +21,7 @@
 
 import { css, useTheme } from '@emotion/react';
 import Router from 'next/router';
-import { ReactElement, useEffect, useReducer, useState } from 'react';
+import { ReactElement, useReducer, useState } from 'react';
 import urlJoin from 'url-join';
 
 import { ButtonElement as Button } from '#components/Button';
@@ -92,12 +92,12 @@ const NewSubmissions = (): ReactElement => {
 	const { token, userHasEnvironmentalAccess, userIsEnvironmentalAdmin, userEnvironmentalWriteScopes } =
 		useAuthContext();
 	const theme = useTheme();
-	const [thereAreFiles, setThereAreFiles] = useState(false);
 	const [filesSubmissionInstructions, setFilesSubmissionInstructions] = useState<SubmissionManifest[]>([]);
 	const [submissionId, setSubmissionId] = useState<string>('');
 	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
 	const { oneCsv, oneOrMoreTar, readyToUpload } = validationState;
+	const thereAreFiles = minFiles(validationState);
 	const [openGuideModal, setOpenGuideModal] = useState(false);
 
 	const { awaitingResponse, submitData, downloadMetadataTemplateUrl } = useEnvironmentalData('NewSubmissions');
@@ -188,11 +188,6 @@ const NewSubmissions = (): ReactElement => {
 			setSubmitError('An unexpected error occurred. Please try again later.');
 		}
 	};
-
-	useEffect(() => {
-		setUploadError(noUploadError);
-		setThereAreFiles(minFiles(validationState));
-	}, [validationState]);
 
 	const handleClearAll = () => {
 		setUploadError(noUploadError);
@@ -305,9 +300,10 @@ const NewSubmissions = (): ReactElement => {
 				disabled={!userHasEnvironmentalAccess}
 				validationState={validationState}
 				validationDispatch={validationDispatch}
+				setUploadError={setUploadError}
 			/>
 
-			{uploadError.description && (
+			{uploadError.status && (
 				<ErrorNotification
 					size="md"
 					title={uploadError.status}
