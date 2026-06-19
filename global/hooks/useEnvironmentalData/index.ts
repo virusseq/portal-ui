@@ -33,6 +33,7 @@ import {
 	SubmissionStatus,
 	type CommitSubmissionResult,
 	type ErrorDetails,
+	type RecordValidationErrorDetails,
 	type SubmissionFile,
 	type SubmissionRecordsResponse,
 	type SubmissionSummary,
@@ -242,7 +243,7 @@ const useEnvironmentalData = (origin: string) => {
 	};
 
 	const resolveUploadStatus = (
-		errorDetails: string[],
+		errorDetails: RecordValidationErrorDetails[],
 		status: SubmissionStatus,
 		isUploadPending: boolean,
 		finalOnCommitted = false,
@@ -304,10 +305,7 @@ const useEnvironmentalData = (origin: string) => {
 				}
 
 				case 'UPDATES': {
-					const updateDetails = [
-						JSON.stringify({ old: item.value.old }),
-						JSON.stringify({ new: item.value.new }),
-					];
+					const updateDetails = [{ old: item.value.old, new: item.value.new }];
 
 					const status = resolveUploadStatus(errorDetails, submissionStatus, false, true);
 
@@ -453,16 +451,23 @@ const useEnvironmentalData = (origin: string) => {
 	 * Retrieves formatted error message for a specific index from a list of errors
 	 * @param errors
 	 * @param index
-	 * @returns An array of formatted error messages
+	 * @returns An array of structured error details
 	 */
-	const getErrorDetailsMessage = (errors: ErrorDetails[], index: number): string[] => {
+	const getErrorDetailsMessage = (errors: ErrorDetails[], index: number): RecordValidationErrorDetails[] => {
 		const errorDetails = errors.filter((error) => error.index === index);
 
 		const message = errorDetails.map((err) => {
-			const valuePart = err.fieldValue ? `- Value: '${err.fieldValue}'` : '';
-			const errorsPart = err.errors ? `- Details: '${err.errors[0].message.replace(/\.+$/, '')}'` : '';
+			let errorsPart = err.errors ? `${err.errors[0].message.replace(/\.+$/, '')}` : '';
 
-			return `${err.reason} - Field: '${err.fieldName}' ${valuePart} ${errorsPart}`;
+			if (err.reason === 'UNRECOGNIZED_FIELD' && !errorsPart) {
+				errorsPart = 'This field is not recognized in the schema';
+			}
+
+			return {
+				field: err.fieldName,
+				issue: errorsPart || 'Unknown validation issue',
+				value: err.fieldValue,
+			};
 		});
 
 		return message;
