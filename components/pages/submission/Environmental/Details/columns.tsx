@@ -130,7 +130,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 										{error.value ? (
 											<>
 												<br />
-												<strong>Value:</strong> '{error.value}'
+												<strong>Value:</strong> {error.value}
 											</>
 										) : null}
 									</li>
