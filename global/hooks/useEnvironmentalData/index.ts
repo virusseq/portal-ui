@@ -49,6 +49,13 @@ const useEnvironmentalData = (origin: string) => {
 	const { fetchWithAuth, user } = useAuthContext();
 	const [awaitingResponse, setAwaitingResponse] = useState(false);
 
+	const ERROR_REASON_MESSAGES: Record<string, string> = {
+		INVALID_BY_UNIQUE: 'This value must be unique',
+		INVALID_BY_UNIQUE_KEY: 'This violates the uniqueKey constraint',
+		INVALID_VALUE_TYPE: 'This value is not of the expected type',
+		UNRECOGNIZED_FIELD: 'This field is not recognized in the schema',
+	};
+
 	// For reference: https://submission-service.dev.virusseq-dataportal.ca/api-docs/
 	const handleRequest = async ({
 		url,
@@ -459,8 +466,8 @@ const useEnvironmentalData = (origin: string) => {
 		const message = errorDetails.map((err) => {
 			let errorsPart = err.errors ? `${err.errors[0].message.replace(/\.+$/, '')}` : '';
 
-			if (err.reason === 'UNRECOGNIZED_FIELD' && !errorsPart) {
-				errorsPart = 'This field is not recognized in the schema';
+			if (!errorsPart && err.reason in ERROR_REASON_MESSAGES) {
+				errorsPart = ERROR_REASON_MESSAGES[err.reason];
 			}
 
 			return {
