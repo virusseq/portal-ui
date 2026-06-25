@@ -52,11 +52,19 @@ const StatusIcon = ({ status }: { status: UploadStatus }) => {
 	}
 };
 
-const isRecordValidationErrorDetails = (detail: UploadData['details'][number]): detail is RecordValidationErrorDetails => {
+/**
+ * Type guard to check if a detail is of type RecordValidationErrorDetails
+ */
+const isRecordValidationErrorDetails = (
+	detail: RecordValidationErrorDetails | UpdateDetails,
+): detail is RecordValidationErrorDetails => {
 	return typeof detail === 'object' && detail !== null && 'field' in detail && 'issue' in detail;
 };
 
-const isUpdateDetails = (detail: UploadData['details'][number]): detail is UpdateDetails => {
+/**
+ * Type guard to check if a detail is of type UpdateDetails
+ */
+const isUpdateDetails = (detail: RecordValidationErrorDetails | UpdateDetails): detail is UpdateDetails => {
 	return typeof detail === 'object' && detail !== null && 'old' in detail && 'new' in detail;
 };
 
