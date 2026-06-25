@@ -53,6 +53,7 @@ const NewSubmissions = (): ReactElement => {
 	const { awaitingResponse, fetchMuseData } = useMuseData('NewSubmissions');
 
 	const handleSubmit = () => {
+		setConfirmSubmissionModalOpen(false);
 		if (thereAreFiles && token && userHasClinicalAccess) {
 			const formData = new FormData();
 
