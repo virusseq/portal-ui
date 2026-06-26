@@ -53,50 +53,56 @@ const NewSubmissions = (): ReactElement => {
 	const { awaitingResponse, fetchMuseData } = useMuseData('NewSubmissions');
 
 	const handleSubmit = () => {
-		setConfirmSubmissionModalOpen(false);
-		if (thereAreFiles && token && userHasClinicalAccess) {
-			const formData = new FormData();
-
-			// if many TSV are available, submit only the first one along with all fastas
-			const selectedTSV = oneTSV.slice(-1)[0];
-			formData.append('files', selectedTSV, selectedTSV.name);
-			oneOrMoreFasta.forEach((fasta) => formData.append('files', fasta, fasta.name));
-
-			return fetchMuseData('submissions', { body: formData, method: 'POST' }).then((response) => {
-				switch (response.status) {
-					case 'BAD_REQUEST': {
-						setUploadError({
-							...response,
-							status: 'Your submission has errors and cannot be processed.',
-						});
-						return Promise.resolve();
-					}
-
-					case 'INTERNAL_SERVER_ERROR': {
-						console.error(response);
-						setUploadError({
-							status: 'Internal server error',
-							message: 'Your upload request has failed. Please try again later.',
-						});
-						return Promise.resolve();
-					}
-
-					default: {
-						response.submissionId
-							? Router.push(
-									getInternalLink({
-										path: urlJoin('submission', 'clinical', response.submissionId),
-									}),
-								)
-							: console.log('Unhandled response:', response);
-						return Promise.resolve();
-					}
-				}
+		if (!thereAreFiles || !token || !userHasClinicalAccess) {
+			setConfirmSubmissionModalOpen(false);
+			const errorMessage = `No ${token ? 'token' : userHasClinicalAccess ? 'scopes' : 'files'} to submit`;
+			setUploadError({
+				status: 'Submission could not be processed',
+				message: errorMessage,
 			});
+			return Promise.resolve();
 		}
 
-		console.error(`no ${token ? 'token' : userHasClinicalAccess ? 'scopes' : 'files'} to submit`);
-		return Promise.resolve();
+		
+		const formData = new FormData();
+
+		// if many TSV are available, submit only the first one along with all fastas
+		const selectedTSV = oneTSV.slice(-1)[0];
+		formData.append('files', selectedTSV, selectedTSV.name);
+		oneOrMoreFasta.forEach((fasta) => formData.append('files', fasta, fasta.name));
+
+		return fetchMuseData('submissions', { body: formData, method: 'POST' }).then((response) => {
+			setConfirmSubmissionModalOpen(false);
+			switch (response.status) {
+				case 'BAD_REQUEST': {
+					setUploadError({
+						...response,
+						status: 'Your submission has errors and cannot be processed.',
+					});
+					return Promise.resolve();
+				}
+
+				case 'INTERNAL_SERVER_ERROR': {
+					console.error(response);
+					setUploadError({
+						status: 'Internal server error',
+						message: 'Your upload request has failed. Please try again later.',
+					});
+					return Promise.resolve();
+				}
+
+				default: {
+					response.submissionId
+						? Router.push(
+								getInternalLink({
+									path: urlJoin('submission', 'clinical', response.submissionId),
+								}),
+							)
+						: console.log('Unhandled response:', response);
+					return Promise.resolve();
+				}
+			}
+		}).catch(() => setConfirmSubmissionModalOpen(false));
 	};
 
 	useEffect(() => {

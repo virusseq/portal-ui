@@ -106,9 +106,9 @@ const NewSubmissions = (): ReactElement => {
 	const { awaitingResponse, submitData, downloadMetadataTemplateUrl } = useEnvironmentalData('NewSubmissions');
 
 	const handleSubmit = async () => {
-		setConfirmSubmissionModalOpen(false);
 		if (!thereAreFiles || !token || !userHasEnvironmentalAccess) {
 			const errorMessage = `no ${token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'} to submit`;
+			setConfirmSubmissionModalOpen(false);
 			setUploadError([{ batchName: '', message: errorMessage, type: 'FILE_READ_ERROR' }]);
 			return;
 		}
@@ -120,6 +120,7 @@ const NewSubmissions = (): ReactElement => {
 		const hasWriteAccessToOrganization =
 			userIsEnvironmentalAdmin || userEnvironmentalWriteScopes.includes(organizationName);
 		if (!hasWriteAccessToOrganization) {
+			setConfirmSubmissionModalOpen(false);
 			setUploadError([
 				{
 					batchName: '',
@@ -135,6 +136,7 @@ const NewSubmissions = (): ReactElement => {
 		// Submit data
 		try {
 			const response = await submitData({ body: formData });
+			setConfirmSubmissionModalOpen(false);
 
 			switch (response.status) {
 				case CreateSubmissionStatus.PARTIAL_SUBMISSION:
@@ -182,6 +184,7 @@ const NewSubmissions = (): ReactElement => {
 				}
 			}
 		} catch (error) {
+			setConfirmSubmissionModalOpen(false);
 			console.error(error);
 			setUploadError([
 				{
