@@ -464,7 +464,7 @@ const useEnvironmentalData = (origin: string) => {
 		const errorDetails = errors.filter((error) => error.index === index);
 
 		const message = errorDetails.map((err) => {
-			let errorsPart = err.errors ? `${err.errors[0].message.replace(/\.+$/, '')}` : '';
+			let errorsPart = err.errors?.[0]?.message?.replace(/\.+$/, '') || '';
 
 			if (!errorsPart && err.reason in ERROR_REASON_MESSAGES) {
 				errorsPart = ERROR_REASON_MESSAGES[err.reason];

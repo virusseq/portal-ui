@@ -125,9 +125,9 @@ const columnData: Column<Record<string, unknown>>[] = [
 									color: ${theme.colors.error_dark};
 								`}
 							>
-								{errorDetails.map((error, i) => (
+								{errorDetails.map((error, index) => (
 									<li
-										key={`error-${i}-${systemId}`}
+										key={`error-${index}-${systemId}`}
 										css={css`
 											margin-bottom: 10px;
 										`}
