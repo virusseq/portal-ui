@@ -149,7 +149,7 @@ const columnData: Column<Record<string, unknown>>[] = [
 						<Details
 							summary={`Found ${updateDetails.length} detail${updateDetails.length > 1 ? 's' : ''}`}
 							style={css`
-								margin-left: 130px;
+								margin-left: 140px;
 								color: ${theme.colors.success_dark};
 							`}
 						>

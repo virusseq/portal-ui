@@ -320,7 +320,7 @@ const useEnvironmentalData = (origin: string) => {
 						submitterSampleId: '',
 						submissionId,
 						eventType: EventType.UPDATE,
-						details: updateDetails.length ? updateDetails : errorDetails,
+						details: errorDetails.length ? errorDetails : updateDetails,
 						organization,
 						originalFilePair: [''],
 						status,
