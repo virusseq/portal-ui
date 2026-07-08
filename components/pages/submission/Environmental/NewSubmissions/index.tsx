@@ -107,7 +107,7 @@ const NewSubmissions = (): ReactElement => {
 
 	const handleSubmit = async () => {
 		if (!thereAreFiles || !token || !userHasEnvironmentalAccess) {
-			const errorMessage = `no ${token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'} to submit`;
+			const errorMessage = `No ${token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'} to submit`;
 			setConfirmSubmissionModalOpen(false);
 			setUploadError([{ batchName: '', message: errorMessage, type: 'FILE_READ_ERROR' }]);
 			return;

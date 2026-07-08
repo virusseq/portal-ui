@@ -63,7 +63,6 @@ const NewSubmissions = (): ReactElement => {
 			return Promise.resolve();
 		}
 
-		
 		const formData = new FormData();
 
 		// if many TSV are available, submit only the first one along with all fastas
@@ -102,7 +101,14 @@ const NewSubmissions = (): ReactElement => {
 					return Promise.resolve();
 				}
 			}
-		}).catch(() => setConfirmSubmissionModalOpen(false));
+		}).catch((error) => {
+			console.error(error);
+			setUploadError({
+				status: 'Submission could not be processed',
+				message: 'An unexpected error occurred. Please try again later.',
+			});
+			setConfirmSubmissionModalOpen(false);
+		});
 	};
 
 	useEffect(() => {

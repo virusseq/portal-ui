@@ -58,7 +58,7 @@ const DropZone = ({
 		onDropRejected(fileRejections, event) {
 			setUploadError(
 				fileRejections.map(({ file }) => ({
-					type: 'INCORRECT_SECTION',
+					type: 'INVALID_FILE_EXTENSION',
 					message: `This file couldn't be uploaded because its file type is not supported: ${file.name}`,
 					batchName: file.name,
 				})),
