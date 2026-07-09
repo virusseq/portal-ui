@@ -38,19 +38,8 @@ import DropZone from './DropZone';
 import ErrorMessage from './ErrorMessage';
 import FileRow from './FileRow';
 import FileUploadInstructionsModal from './FileUploadInstructionsModal';
-import {
-	acceptedFileExtensions,
-	CreateSubmissionStatus,
-	NoUploadError,
-	ValidationAction,
-	type BatchError,
-	type SubmissionFile,
-} from './types';
+import { CreateSubmissionStatus, ValidationAction, type BatchError, type SubmissionFile } from './types';
 import { getFileExtension, minFiles, validationParameters, validationReducer } from './validationHelpers';
-
-const noUploadError: NoUploadError = {
-	status: '',
-};
 
 // Constants for submit parms
 export const SubmitParams = {
@@ -89,6 +78,18 @@ const buildFormData = (organizationName: string, selectedCsv: SubmissionFile, on
 	return formData;
 };
 
+const SUBMISSION_ERROR_MESSAGE_RULES = [
+	{
+		pattern: /The studyId '%s' does not exist/,
+		getMessage: (organizationName: string) => `Study ID "${organizationName}" does not exist in the system.`,
+	},
+] as const;
+
+const mapBatchErrorMessage = (rawMessage: string, organizationName: string) => {
+	const matchedRule = SUBMISSION_ERROR_MESSAGE_RULES.find((rule) => rule.pattern.test(rawMessage));
+	return matchedRule ? matchedRule.getMessage(organizationName) : rawMessage;
+};
+
 const NewSubmissions = (): ReactElement => {
 	const { token, userHasEnvironmentalAccess, userIsEnvironmentalAdmin, userEnvironmentalWriteScopes } =
 		useAuthContext();
@@ -96,7 +97,7 @@ const NewSubmissions = (): ReactElement => {
 	const [confirmSubmissionModalOpen, setConfirmSubmissionModalOpen] = useState(false);
 	const [filesSubmissionInstructions, setFilesSubmissionInstructions] = useState<SubmissionManifest[]>([]);
 	const [submissionId, setSubmissionId] = useState<string>('');
-	const [uploadError, setUploadError] = useState<NoUploadError>(noUploadError);
+	const [uploadError, setUploadError] = useState<BatchError[]>([]);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
 	const { oneCsv, oneOrMoreTar, readyToUpload } = validationState;
 	const thereAreFiles = minFiles(validationState);
@@ -104,39 +105,29 @@ const NewSubmissions = (): ReactElement => {
 
 	const { awaitingResponse, submitData, downloadMetadataTemplateUrl } = useEnvironmentalData('NewSubmissions');
 
-	const setSubmitError = (
-		description: string,
-		status = 'Your submission has errors and cannot be processed.',
-		batchErrors?: BatchError[],
-	) => {
-		setUploadError({
-			description,
-			status,
-			batchErrors,
-		});
-	};
-
 	const handleSubmit = async () => {
 		if (!thereAreFiles || !token || !userHasEnvironmentalAccess) {
-			const errorMessage = `no ${token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'} to submit`;
-			setSubmitError(errorMessage);
-			return;
-		}
-
-		// Validate uploaded file
-		const selectedCsv = oneCsv[0];
-		if (!selectedCsv || getFileExtension(selectedCsv.name) !== acceptedFileExtensions.CSV) {
-			setSubmitError(`Please upload a .csv file.`);
+			const errorMessage = `No ${token ? 'token' : userHasEnvironmentalAccess ? 'scopes' : 'files'} to submit`;
+			setConfirmSubmissionModalOpen(false);
+			setUploadError([{ batchName: '', message: errorMessage, type: 'FILE_READ_ERROR' }]);
 			return;
 		}
 
 		// Extract organization name from the CSV file
+		const selectedCsv = oneCsv[0];
 		const organizationName = selectedCsv.name.split('.')[0].toUpperCase();
 
 		const hasWriteAccessToOrganization =
 			userIsEnvironmentalAdmin || userEnvironmentalWriteScopes.includes(organizationName);
 		if (!hasWriteAccessToOrganization) {
-			setSubmitError(`User does not have permission to upload data for organization ${organizationName}`);
+			setConfirmSubmissionModalOpen(false);
+			setUploadError([
+				{
+					batchName: '',
+					message: `User does not have permission to upload data for organization "${organizationName}"`,
+					type: 'FILE_READ_ERROR',
+				},
+			]);
 			return;
 		}
 
@@ -145,15 +136,16 @@ const NewSubmissions = (): ReactElement => {
 		// Submit data
 		try {
 			const response = await submitData({ body: formData });
+			setConfirmSubmissionModalOpen(false);
 
 			switch (response.status) {
 				case CreateSubmissionStatus.PARTIAL_SUBMISSION:
 				case CreateSubmissionStatus.INVALID_SUBMISSION: {
-					console.error(`invalid submission: ${response}`);
-					setSubmitError(
-						response.description || response.batchErrors.map((e) => e.message).join(','),
-						undefined,
-						response.batchErrors,
+					setUploadError(
+						response.batchErrors.map((error) => ({
+							...error,
+							message: mapBatchErrorMessage(error.message, organizationName),
+						})),
 					);
 					break;
 				}
@@ -181,25 +173,38 @@ const NewSubmissions = (): ReactElement => {
 
 				default: {
 					console.error(response);
-					setSubmitError('Your upload request has failed. Please try again later.', 'Internal Server Error');
+					setUploadError([
+						{
+							batchName: '',
+							message: 'Your upload request has failed. Please try again later.',
+							type: 'FILE_READ_ERROR',
+						},
+					]);
 					break;
 				}
 			}
 		} catch (error) {
+			setConfirmSubmissionModalOpen(false);
 			console.error(error);
-			setSubmitError('An unexpected error occurred. Please try again later.');
+			setUploadError([
+				{
+					batchName: '',
+					message: 'An unexpected error occurred. Please try again later.',
+					type: 'FILE_READ_ERROR',
+				},
+			]);
 		}
 	};
 
 	const handleClearAll = () => {
-		setUploadError(noUploadError);
+		setUploadError([]);
 		validationDispatch({ type: 'clear all' });
 	};
 
 	const handleRemoveThis =
 		({ name }: SubmissionFile) =>
 		() => {
-			setUploadError(noUploadError);
+			setUploadError([]);
 			validationDispatch({
 				type: `remove ${getFileExtension(name)}`,
 				file: name,
@@ -305,10 +310,10 @@ const NewSubmissions = (): ReactElement => {
 				setUploadError={setUploadError}
 			/>
 
-			{uploadError.status && (
+			{uploadError.length > 0 && (
 				<ErrorNotification
 					size="md"
-					title={uploadError.status}
+					title="Submission could not be processed"
 					styles={`
             align-items: center;
             box-sizing: border-box;
@@ -319,36 +324,32 @@ const NewSubmissions = (): ReactElement => {
             width: 100%;
           `}
 				>
-					{uploadError.description}
+					<ul
+						css={css`
+							margin: 10px 0 0;
+							padding-left: 0;
 
-					{uploadError?.batchErrors && (
-						<ul
-							css={css`
-								margin: 10px 0 0;
-								padding-left: 0;
+							p {
+								margin-bottom: 0.5rem;
+							}
 
-								p {
-									margin-bottom: 0.5rem;
-								}
+							li:first-of-type p {
+								margin-top: 0;
+							}
 
-								li:first-of-type p {
-									margin-top: 0;
-								}
-
-								span {
-									display: block;
-									font-size: 13px;
-								}
-							`}
-						>
-							{uploadError?.batchErrors.map(({ message, type }) => (
-								<ErrorMessage
-									type={type}
-									values={message}
-								/>
-							))}
-						</ul>
-					)}
+							span {
+								display: block;
+								font-size: 13px;
+							}
+						`}
+					>
+						{uploadError.map(({ message }, index) => (
+							<ErrorMessage
+								key={`upload-error-${index}`}
+								values={message}
+							/>
+						))}
+					</ul>
 				</ErrorNotification>
 			)}
 
@@ -467,7 +468,7 @@ const NewSubmissions = (): ReactElement => {
 										padding: 0 15px;
 									`}
 									disabled={
-										!(readyToUpload && !uploadError.description) ||
+										!(readyToUpload && uploadError.length === 0) ||
 										filesSubmissionInstructions.length > 0
 									}
 									onClick={() => setConfirmSubmissionModalOpen(true)}

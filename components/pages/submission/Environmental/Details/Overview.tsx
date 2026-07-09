@@ -137,7 +137,7 @@ const Overview = ({
 						</p>
 					)}
 					{status && status === SubmissionStatus.OPEN && (
-						<p>
+						<span>
 							<LoaderMessage
 								inline
 								message="Status: Validation has not started"
@@ -146,10 +146,10 @@ const Overview = ({
 							{missingUploadFiles &&
 								missingUploadFiles?.length > 0 &&
 								'. Required files have not been uploaded'}
-						</p>
+						</span>
 					)}
 					{status && status === SubmissionStatus.VALIDATING && (
-						<p>
+						<span>
 							<LoaderMessage
 								inline
 								message="Status: Validation in progress"
@@ -158,7 +158,7 @@ const Overview = ({
 							{missingUploadFiles &&
 								missingUploadFiles?.length > 0 &&
 								'. Required files have not been uploaded'}
-						</p>
+						</span>
 					)}
 					{status && status === SubmissionStatus.VALID && (
 						<p>

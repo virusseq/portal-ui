@@ -21,15 +21,10 @@
 
 import { ReactElement } from 'react';
 
-import { BatchErrorType } from './types';
-
-const ErrorMessage = ({ type, values }: { type: BatchErrorType; values: string }): ReactElement => (
-	<>
-		<li key={type}>
-			<p>{type}:</p>
-			<span>{values}</span>
-		</li>
-	</>
+const ErrorMessage = ({ values }: { values: string }): ReactElement => (
+	<li>
+		<span>{values}</span>
+	</li>
 );
 
 export default ErrorMessage;

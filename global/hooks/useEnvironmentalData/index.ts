@@ -33,6 +33,7 @@ import {
 	SubmissionStatus,
 	type CommitSubmissionResult,
 	type ErrorDetails,
+	type RecordValidationErrorDetails,
 	type SubmissionFile,
 	type SubmissionRecordsResponse,
 	type SubmissionSummary,
@@ -47,6 +48,13 @@ const useEnvironmentalData = (origin: string) => {
 	} = getConfig();
 	const { fetchWithAuth, user } = useAuthContext();
 	const [awaitingResponse, setAwaitingResponse] = useState(false);
+
+	const ERROR_REASON_MESSAGES: Record<string, string> = {
+		INVALID_BY_UNIQUE: 'This value must be unique',
+		INVALID_BY_UNIQUE_KEY: 'This violates the uniqueKey constraint',
+		INVALID_VALUE_TYPE: 'This value is not of the expected type',
+		UNRECOGNIZED_FIELD: 'This field is not recognized in the schema',
+	};
 
 	// For reference: https://submission-service.dev.virusseq-dataportal.ca/api-docs/
 	const handleRequest = async ({
@@ -242,7 +250,7 @@ const useEnvironmentalData = (origin: string) => {
 	};
 
 	const resolveUploadStatus = (
-		errorDetails: string[],
+		errorDetails: RecordValidationErrorDetails[],
 		status: SubmissionStatus,
 		isUploadPending: boolean,
 		finalOnCommitted = false,
@@ -304,10 +312,7 @@ const useEnvironmentalData = (origin: string) => {
 				}
 
 				case 'UPDATES': {
-					const updateDetails = [
-						JSON.stringify({ old: item.value.old }),
-						JSON.stringify({ new: item.value.new }),
-					];
+					const updateDetails = [{ old: item.value.old, new: item.value.new }];
 
 					const status = resolveUploadStatus(errorDetails, submissionStatus, false, true);
 
@@ -315,7 +320,7 @@ const useEnvironmentalData = (origin: string) => {
 						submitterSampleId: '',
 						submissionId,
 						eventType: EventType.UPDATE,
-						details: updateDetails.length ? updateDetails : errorDetails,
+						details: errorDetails.length ? errorDetails : updateDetails,
 						organization,
 						originalFilePair: [''],
 						status,
@@ -453,16 +458,23 @@ const useEnvironmentalData = (origin: string) => {
 	 * Retrieves formatted error message for a specific index from a list of errors
 	 * @param errors
 	 * @param index
-	 * @returns An array of formatted error messages
+	 * @returns An array of structured error details
 	 */
-	const getErrorDetailsMessage = (errors: ErrorDetails[], index: number): string[] => {
+	const getErrorDetailsMessage = (errors: ErrorDetails[], index: number): RecordValidationErrorDetails[] => {
 		const errorDetails = errors.filter((error) => error.index === index);
 
 		const message = errorDetails.map((err) => {
-			const valuePart = err.fieldValue ? `- Value: '${err.fieldValue}'` : '';
-			const errorsPart = err.errors ? `- Details: '${err.errors[0].message.replace(/\.+$/, '')}'` : '';
+			let errorsPart = err.errors?.[0]?.message?.replace(/\.+$/, '') || '';
 
-			return `${err.reason} - Field: '${err.fieldName}' ${valuePart} ${errorsPart}`;
+			if (!errorsPart && err.reason in ERROR_REASON_MESSAGES) {
+				errorsPart = ERROR_REASON_MESSAGES[err.reason];
+			}
+
+			return {
+				field: err.fieldName,
+				issue: errorsPart || 'Unknown validation issue',
+				value: err.fieldValue,
+			};
 		});
 
 		return message;

@@ -27,7 +27,7 @@ import Details from '#components/Details';
 import { uuidSort } from '#components/GenericTable/helpers';
 import theme from '#components/theme';
 import { Checkmark, Ellipsis, Warning } from '#components/theme/icons';
-import { UploadData } from '#global/hooks/useEnvironmentalData';
+import { RecordValidationErrorDetails, UpdateDetails, UploadData } from '#global/hooks/useEnvironmentalData';
 
 import { UploadStatus } from './types';
 
@@ -50,6 +50,22 @@ const StatusIcon = ({ status }: { status: UploadStatus }) => {
 		default:
 			return <Ellipsis size={12} />;
 	}
+};
+
+/**
+ * Type guard to check if a detail is of type RecordValidationErrorDetails
+ */
+const isRecordValidationErrorDetails = (
+	detail: RecordValidationErrorDetails | UpdateDetails,
+): detail is RecordValidationErrorDetails => {
+	return typeof detail === 'object' && detail !== null && 'field' in detail && 'issue' in detail;
+};
+
+/**
+ * Type guard to check if a detail is of type UpdateDetails
+ */
+const isUpdateDetails = (detail: RecordValidationErrorDetails | UpdateDetails): detail is UpdateDetails => {
+	return typeof detail === 'object' && detail !== null && 'old' in detail && 'new' in detail;
 };
 
 const columnData: Column<Record<string, unknown>>[] = [
@@ -77,6 +93,8 @@ const columnData: Column<Record<string, unknown>>[] = [
 		accessor: 'status',
 		Cell: ({ row, value }: { row: Row<UploadData>; value: UploadStatus }): ReactElement => {
 			const { details, systemId, eventType } = row.original;
+			const errorDetails = details.filter(isRecordValidationErrorDetails);
+			const updateDetails = details.filter(isUpdateDetails);
 
 			return (
 				<>
@@ -92,20 +110,9 @@ const columnData: Column<Record<string, unknown>>[] = [
 						{`${eventType} ${value}${details.length ? ': ' : ''}`}
 					</span>
 
-					{value === UploadStatus.ERROR && details.length === 1 ? (
-						<span
-							css={css`
-								display: inline-block;
-								margin-left: 105px;
-								white-space: normal;
-								color: ${theme.colors.error_dark};
-							`}
-						>
-							{details[0]}
-						</span>
-					) : value === UploadStatus.ERROR && details.length > 1 ? (
+					{value === UploadStatus.ERROR && errorDetails.length > 0 ? (
 						<Details
-							summary={`Found ${details.length} details`}
+							summary={`Found ${errorDetails.length} issue${errorDetails.length > 1 ? 's' : ''}`}
 							style={css`
 								margin-left: 105px;
 								color: ${theme.colors.error_dark};
@@ -118,16 +125,31 @@ const columnData: Column<Record<string, unknown>>[] = [
 									color: ${theme.colors.error_dark};
 								`}
 							>
-								{details.map((e, i) => (
-									<li key={`error-${i}-${systemId}`}>{e}</li>
+								{errorDetails.map((error, index) => (
+									<li
+										key={`error-${index}-${systemId}`}
+										css={css`
+											margin-bottom: 10px;
+										`}
+									>
+										<strong>Field:</strong> {error.field}
+										<br />
+										<strong>Issue:</strong> {error.issue}
+										{error.value ? (
+											<>
+												<br />
+												<strong>Value:</strong> {error.value}
+											</>
+										) : null}
+									</li>
 								))}
 							</ol>
 						</Details>
-					) : value !== UploadStatus.ERROR && details.length > 1 ? (
+					) : value !== UploadStatus.ERROR && updateDetails.length > 0 ? (
 						<Details
-							summary={`Found ${details.length} details`}
+							summary={`Found ${updateDetails.length} detail${updateDetails.length > 1 ? 's' : ''}`}
 							style={css`
-								margin-left: 130px;
+								margin-left: 140px;
 								color: ${theme.colors.success_dark};
 							`}
 						>
@@ -138,8 +160,12 @@ const columnData: Column<Record<string, unknown>>[] = [
 									color: ${theme.colors.success_dark};
 								`}
 							>
-								{details.map((e, i) => (
-									<li key={`details-${i}-${systemId}`}>{e}</li>
+								{updateDetails.map((detail, i) => (
+									<li key={`details-${i}-${systemId}`}>
+										<strong>Old:</strong> {JSON.stringify(detail.old)}
+										<br />
+										<strong>New:</strong> {JSON.stringify(detail.new)}
+									</li>
 								))}
 							</ol>
 						</Details>

@@ -29,10 +29,10 @@ import DragAndDrop from '#components/theme/icons/DragAndDrop';
 import { computeMd5 } from './fileUtils';
 import {
 	acceptedFileExtensions,
+	type BatchError,
 	type SubmissionFile,
 	type ValidationAction,
 	type ValidationParameters,
-	type NoUploadError,
 } from './types';
 import { getFileExtension, validator } from './validationHelpers';
 
@@ -49,35 +49,26 @@ const DropZone = ({
 	disabled: boolean;
 	validationState: ValidationParameters;
 	validationDispatch: Dispatch<ValidationAction>;
-	setUploadError: Dispatch<SetStateAction<NoUploadError>>;
+	setUploadError: Dispatch<SetStateAction<BatchError[]>>;
 }): ReactElement => {
 	const theme = useTheme();
 
-	const {
-		getRootProps,
-		getInputProps,
-		// isDragAccept,
-		isDragActive,
-		// isFileTooLarge,
-	} = useDropzone({
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		accept: acceptedExtensionsString,
 		onDropRejected(fileRejections, event) {
-			setUploadError({
-				status: 'Unsupported  file type',
-				batchErrors: [
-					{
-						batchName: '',
-						type: 'INVALID_FILE_EXTENSION',
-						message: fileRejections.map(({ file }) => file.name).join(', '),
-					},
-				],
-			});
+			setUploadError(
+				fileRejections.map(({ file }) => ({
+					type: 'INVALID_FILE_EXTENSION',
+					message: `This file couldn't be uploaded because its file type is not supported: ${file.name}`,
+					batchName: file.name,
+				})),
+			);
 		},
 		disabled,
 		onDrop: useCallback(
 			(acceptedFiles: SubmissionFile[]) => {
 				// Compute md5 for tar.xz files and validate each files
-				setUploadError({ description: '', status: '', batchErrors: [] });
+				setUploadError([]);
 				Promise.all(
 					acceptedFiles.map((file) =>
 						getFileExtension(file.name) === acceptedFileExtensions.TAR_XZ

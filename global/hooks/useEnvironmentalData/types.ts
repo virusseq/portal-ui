@@ -30,10 +30,21 @@ export type SubmissionOverview = {
 	status: SubmissionStatus;
 };
 
+export type RecordValidationErrorDetails = {
+	field: string;
+	issue: string;
+	value?: string;
+};
+
+export type UpdateDetails = {
+	old: DataRecord;
+	new: DataRecord;
+};
+
 export type UploadData = {
 	systemId: string | null;
 	eventType: EventType;
-	details: string[];
+	details: RecordValidationErrorDetails[] | UpdateDetails[];
 	originalFilePair: string[];
 	status: UploadStatus;
 	organization: string;

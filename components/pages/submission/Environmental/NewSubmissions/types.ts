@@ -51,19 +51,9 @@ export type BatchError = {
 	type: BatchErrorType;
 };
 
-/**
- * Error Response from the submission service
- */
-export type NoUploadError = {
-	batchErrors?: BatchError[];
-	description?: string;
-	status: string;
-};
-
 export type CreateSubmissionResult = {
 	submissionId?: number;
 	status: CreateSubmissionStatus;
-	description: string;
 	submissionManifest: SubmissionManifest[];
 	inProcessEntities: string[];
 	batchErrors: BatchError[];
