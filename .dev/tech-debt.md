@@ -1,13 +1,6 @@
 # Tech debt
 
-Known issues, scope-adjacent problems, and deferred work. Format per `AGENTS.md` § Tech-debt entry format:
-
-```
-[short description of the issue]
-fix: [what the fix actually is, in one sentence]
-standalone: yes | no
-context: [roadmap item reference or brief note: required when standalone: no]
-```
+Known issues, scope-adjacent problems, and deferred work. Format per `conventions/session-discipline.md` § Tech-debt entry format.
 
 ---
 

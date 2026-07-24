@@ -12,11 +12,13 @@
 
 - Node.js and npm (see `package.json` for dependency versions; no `.nvmrc`/`engines` field is pinned yet)
 - [`mkcert`](https://github.com/FiloSottile/mkcert) if working on auth-reliant features (see § Auth setup below)
+- GitHub CLI (`gh`), authenticated: any agent working in this repo uses `gh` for PRs and issues on your behalf; without it, your first GitHub-related request will stall on an auth prompt instead of just working
 
 ## Setup
 
 1. `npm install`
 2. Copy `.env.schema` to `.env` and fill in the required values (Arranger API URLs, feature flags, etc.)
+3. If `gh auth status` doesn't already show you logged in, run `gh auth login` once per machine
 
 ## Running the project
 
