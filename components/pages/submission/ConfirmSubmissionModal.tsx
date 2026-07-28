@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { ReactNode } from 'react';
 
 import { Modal } from '#components/Modal';
 import defaultTheme from '#components/theme/index';
@@ -6,9 +7,10 @@ import defaultTheme from '#components/theme/index';
 type ConfirmSubmissionModalProps = {
 	onClose: () => void;
 	onSubmit: () => Promise<void>;
+	children?: ReactNode;
 };
 
-const ConfirmSubmissionModal = ({ onClose, onSubmit }: ConfirmSubmissionModalProps) => {
+const ConfirmSubmissionModal = ({ onClose, onSubmit, children }: ConfirmSubmissionModalProps) => {
 	return (
 		<Modal
 			showActionButton={true}
@@ -26,7 +28,7 @@ const ConfirmSubmissionModal = ({ onClose, onSubmit }: ConfirmSubmissionModalPro
 					${defaultTheme.typography.baseFont}
 				`}
 			>
-				Please confirm that your selection is complete and ready for submission.
+				{children ?? 'Please confirm that your selection is complete and ready for submission.'}
 			</p>
 		</Modal>
 	);
