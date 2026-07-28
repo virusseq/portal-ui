@@ -340,9 +340,11 @@ const NewSubmissions = (): ReactElement => {
 						margin: 10px 10px;
 					`}
 				>
-					You have a pending valid submission <strong>#{previousSubmission.id}</strong> for organization{' '}
-					<strong>{previousSubmission.organization}</strong>. <br />
-					1. Go to the{' '}
+					You have a pending valid submission <strong>#{previousSubmission.id}</strong> for study{' '}
+					<strong>{previousSubmission.organization}</strong>. You have three options: <br />
+					1. <strong>Add sequencing files</strong> - Upload only <span className="code">.tar.xz</span> files
+					in the area above to add sequence file(s) to this existing submission. <br />
+					2. <strong>Review your submission</strong> - Go to the{' '}
 					<StyledLink
 						href={getInternalLink({
 							path: urlJoin('submission', 'environmental', previousSubmission.id.toString()),
@@ -350,14 +352,9 @@ const NewSubmissions = (): ReactElement => {
 					>
 						<strong>submission #{previousSubmission.id}</strong>
 					</StyledLink>{' '}
-					details page to review and continue further instructions for the submission.
+					details page to review or continue this submission.
 					<br />
-					2. To add more sequencing file(s) to the submission <strong>#{previousSubmission.id}</strong>,
-					select only <span className="code">.tar.xz</span> files in the area above without any{' '}
-					<span className="code">.csv</span> files
-					<br />
-					3. To cancel the pending submission <strong>#{previousSubmission.id}</strong> and start a new one,
-					select a <span className="code">.csv</span> file in the area above.
+					3. <strong>Start over</strong> - Cancel the pending submission and start a new one by uploading a <span className="code">.csv</span> file.
 				</p>
 			)}
 
