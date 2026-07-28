@@ -168,13 +168,13 @@ export const getConfirmSubmissionMessage = (
 		return `Please confirm you want to add ${pluralize(
 			oneOrMoreTar.length,
 			'sequence file',
-		)} to your active submission ID ${previousSubmission.id}.`;
+		)} to your active submission ID ${previousSubmission.id} for study ${previousSubmission.organization}.`;
 	}
 
 	return `Please confirm that your selection (${pluralize(oneCsv.length, '.csv file')} and ${pluralize(
 		oneOrMoreTar.length,
 		'sequence file',
-	)}) is ready for submission.`;
+	)}) is ready for submission${oneCsv[0] ? ` for study ${oneCsv[0].name.split('.')[0].toUpperCase()}` : ''}.`;
 };
 
 export const validator =

@@ -88,30 +88,32 @@ describe('getTarOnlyEligibility', () => {
 describe('getConfirmSubmissionMessage', () => {
 	it('mentions the sequence file count (0) when there are no tar files', () => {
 		const state = { oneCsv: [csvFile], oneOrMoreTar: [], readyToUpload: true };
+		const organizationName = csvFile.name.split('.')[0].toUpperCase();
 		expect(getConfirmSubmissionMessage(state)).toBe(
-			'Please confirm that your selection (1 .csv file and 0 sequence files) is ready for submission.',
+			`Please confirm that your selection (1 .csv file and 0 sequence files) is ready for submission for study ${organizationName}.`,
 		);
 	});
 
 	it('mentions both the CSV and tar file counts for a CSV + tar submission', () => {
 		const state = { oneCsv: [csvFile], oneOrMoreTar: [tarFile, tarFile], readyToUpload: true };
+		const organizationName = csvFile.name.split('.')[0].toUpperCase();
 		expect(getConfirmSubmissionMessage(state)).toBe(
-			'Please confirm that your selection (1 .csv file and 2 sequence files) is ready for submission.',
+			`Please confirm that your selection (1 .csv file and 2 sequence files) is ready for submission for study ${organizationName}.`,
 		);
 	});
 
 	it('falls back to the generic message for tar-only files when there is no previous submission', () => {
 		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
 		expect(getConfirmSubmissionMessage(state)).toBe(
-			'Please confirm that your selection (0 .csv files and 1 sequence file) is ready for submission.',
+			`Please confirm that your selection (0 .csv files and 1 sequence file) is ready for submission.`,
 		);
 	});
 
 	it('falls back to the generic message for tar-only files when the previous submission is not VALID', () => {
 		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
 		const previousSubmission = activeSubmission('ORGA', 'OPEN');
-		expect(getConfirmSubmissionMessage(state, previousSubmission)).toBe(
-			'Please confirm that your selection (0 .csv files and 1 sequence file) is ready for submission.',
+		expect(getConfirmSubmissionMessage(state)).toBe(
+			`Please confirm that your selection (0 .csv files and 1 sequence file) is ready for submission.`,
 		);
 	});
 
@@ -119,7 +121,7 @@ describe('getConfirmSubmissionMessage', () => {
 		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
 		const previousSubmission = activeSubmission('ORGA', 'VALID');
 		expect(getConfirmSubmissionMessage(state, previousSubmission)).toBe(
-			`Please confirm you want to add 1 sequence file to your active submission ID ${previousSubmission.id}.`,
+			`Please confirm you want to add 1 sequence file to your active submission ID ${previousSubmission.id} for study ${previousSubmission.organization}.`,
 		);
 	});
 
@@ -127,7 +129,7 @@ describe('getConfirmSubmissionMessage', () => {
 		const state = { oneCsv: [], oneOrMoreTar: [tarFile, tarFile], readyToUpload: true };
 		const previousSubmission = activeSubmission('ORGA', 'VALID');
 		expect(getConfirmSubmissionMessage(state, previousSubmission)).toBe(
-			`Please confirm you want to add 2 sequence files to your active submission ID ${previousSubmission.id}.`,
+			`Please confirm you want to add 2 sequence files to your active submission ID ${previousSubmission.id} for study ${previousSubmission.organization}.`,
 		);
 	});
 });
