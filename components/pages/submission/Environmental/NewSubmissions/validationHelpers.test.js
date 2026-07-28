@@ -21,7 +21,6 @@
 
 const {
 	buildFormData,
-	getActiveSubmissionStatus,
 	getConfirmSubmissionMessage,
 	getTarOnlyEligibility,
 	validationParameters,
@@ -70,70 +69,19 @@ describe('validationReducer - is ready', () => {
 });
 
 describe('getTarOnlyEligibility', () => {
-	it('is not-applicable when a CSV is present', () => {
-		const state = { oneCsv: [csvFile], oneOrMoreTar: [tarFile], readyToUpload: true };
-		expect(getTarOnlyEligibility(state, { status: 'done', matches: [] }).status).toBe('not-applicable');
-	});
-
-	it('is not-applicable when there are no tar files', () => {
-		const state = { oneCsv: [], oneOrMoreTar: [], readyToUpload: false };
-		expect(getTarOnlyEligibility(state, { status: 'done', matches: [] }).status).toBe('not-applicable');
-	});
-
-	it('is checking while the active-submission lookup is still loading', () => {
-		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
-		expect(getTarOnlyEligibility(state, { status: 'loading', matches: [] }).status).toBe('checking');
-	});
-
-	it('is no-active-submission when the lookup found nothing', () => {
-		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
-		expect(getTarOnlyEligibility(state, { status: 'done', matches: [] }).status).toBe('no-active-submission');
-	});
-
-	it('uses the last match when more than one is found (should not occur in practice)', () => {
-		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
-		const lookup = { status: 'done', matches: [activeSubmission('ORGA'), activeSubmission('ORGB')] };
-		expect(getTarOnlyEligibility(state, lookup)).toEqual({ status: 'ready', organization: 'ORGB' });
+	it('is false when there is no previous submission', () => {
+		expect(getTarOnlyEligibility(undefined)).toBe(false);
 	});
 
 	it.each(['OPEN', 'VALIDATING', 'INVALID', 'CLOSED', 'COMMITTING', 'COMMITTED'])(
-		'is submission-not-valid when the single match has status %s',
+		'is false when the previous submission has status %s',
 		(status) => {
-			const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
-			const lookup = { status: 'done', matches: [activeSubmission('ORGA', status)] };
-			expect(getTarOnlyEligibility(state, lookup).status).toBe('submission-not-valid');
+			expect(getTarOnlyEligibility(activeSubmission('ORGA', status))).toBe(false);
 		},
 	);
 
-	it('is ready with the found organization when exactly one match is found', () => {
-		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
-		const lookup = { status: 'done', matches: [activeSubmission('ORGA')] };
-		expect(getTarOnlyEligibility(state, lookup)).toEqual({ status: 'ready', organization: 'ORGA' });
-	});
-});
-
-describe('getActiveSubmissionStatus', () => {
-	it('is checking while the lookup is still loading', () => {
-		expect(getActiveSubmissionStatus({ status: 'loading', matches: [] }).status).toBe('checking');
-	});
-
-	it('is none when the lookup found nothing', () => {
-		expect(getActiveSubmissionStatus({ status: 'done', matches: [] }).status).toBe('none');
-	});
-
-	it('is not-valid when the found submission is not VALID', () => {
-		const lookup = { status: 'done', matches: [activeSubmission('ORGA', 'OPEN')] };
-		expect(getActiveSubmissionStatus(lookup).status).toBe('not-valid');
-	});
-
-	it('is valid with the organization and submissionId when the found submission is VALID', () => {
-		const lookup = { status: 'done', matches: [activeSubmission('ORGA')] };
-		expect(getActiveSubmissionStatus(lookup)).toEqual({ status: 'valid', organization: 'ORGA', submissionId: 1 });
-	});
-
-	it('uses the last match when more than one is found (should not occur in practice)', () => {
-		const lookup = { status: 'done', matches: [activeSubmission('ORGA'), activeSubmission('ORGB')] };
-		expect(getActiveSubmissionStatus(lookup)).toEqual({ status: 'valid', organization: 'ORGB', submissionId: 1 });
+	it('is true when the previous submission has status VALID', () => {
+		expect(getTarOnlyEligibility(activeSubmission('ORGA', 'VALID'))).toBe(true);
 	});
 });
 
@@ -145,24 +93,41 @@ describe('getConfirmSubmissionMessage', () => {
 		);
 	});
 
-	it('mentions the tar file count when adding tar files to an active submission (no CSV)', () => {
-		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
-		expect(getConfirmSubmissionMessage(state)).toBe(
-			'Please confirm you want to add 1 sequence file to your active submission.',
-		);
-	});
-
-	it('pluralizes the tar file count when adding more than one tar file (no CSV)', () => {
-		const state = { oneCsv: [], oneOrMoreTar: [tarFile, tarFile], readyToUpload: true };
-		expect(getConfirmSubmissionMessage(state)).toBe(
-			'Please confirm you want to add 2 sequence files to your active submission.',
-		);
-	});
-
 	it('mentions both the CSV and tar file counts for a CSV + tar submission', () => {
 		const state = { oneCsv: [csvFile], oneOrMoreTar: [tarFile, tarFile], readyToUpload: true };
 		expect(getConfirmSubmissionMessage(state)).toBe(
 			'Please confirm that your selection (1 .csv file and 2 sequence files) is ready for submission.',
+		);
+	});
+
+	it('falls back to the generic message for tar-only files when there is no previous submission', () => {
+		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
+		expect(getConfirmSubmissionMessage(state)).toBe(
+			'Please confirm that your selection (0 .csv files and 1 sequence file) is ready for submission.',
+		);
+	});
+
+	it('falls back to the generic message for tar-only files when the previous submission is not VALID', () => {
+		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
+		const previousSubmission = activeSubmission('ORGA', 'OPEN');
+		expect(getConfirmSubmissionMessage(state, previousSubmission)).toBe(
+			'Please confirm that your selection (0 .csv files and 1 sequence file) is ready for submission.',
+		);
+	});
+
+	it('mentions the active submission id when adding tar files to a VALID previous submission (no CSV)', () => {
+		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
+		const previousSubmission = activeSubmission('ORGA', 'VALID');
+		expect(getConfirmSubmissionMessage(state, previousSubmission)).toBe(
+			`Please confirm you want to add 1 sequence file to your active submission ID ${previousSubmission.id}.`,
+		);
+	});
+
+	it('pluralizes the tar file count when adding more than one tar file to a VALID previous submission', () => {
+		const state = { oneCsv: [], oneOrMoreTar: [tarFile, tarFile], readyToUpload: true };
+		const previousSubmission = activeSubmission('ORGA', 'VALID');
+		expect(getConfirmSubmissionMessage(state, previousSubmission)).toBe(
+			`Please confirm you want to add 2 sequence files to your active submission ID ${previousSubmission.id}.`,
 		);
 	});
 });
