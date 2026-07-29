@@ -146,8 +146,8 @@ export const getFileExtension = (file: SubmissionFile | string = ''): string => 
 export const minFiles = ({ oneCsv, oneOrMoreTar }: ValidationParameters): boolean =>
 	oneCsv.length > 0 || oneOrMoreTar.length > 0;
 
-export const getTarOnlyEligibility = (previouseSubmission: SubmissionSummary | undefined) => {
-	if (previouseSubmission?.status === 'VALID') {
+export const getTarOnlyEligibility = (previousSubmission: SubmissionSummary | undefined) => {
+	if (previousSubmission?.status === 'VALID') {
 		return true;
 	}
 
