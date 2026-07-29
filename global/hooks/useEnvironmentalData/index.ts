@@ -240,12 +240,12 @@ const useEnvironmentalData = (origin: string) => {
 
 		return {
 			data: response.records,
-			first: response.pagination.currentPage === 1,
-			last: response.pagination.currentPage === response.pagination.totalPages,
-			page: response.pagination.currentPage,
-			size: response.records.length,
-			totalPages: response.pagination.totalPages,
-			totalRecords: response.pagination.totalRecords,
+			first: response.pagination?.currentPage === 1,
+			last: response.pagination?.currentPage === response.pagination?.totalPages,
+			page: response.pagination?.currentPage ?? 1,
+			size: response.records?.length ?? 0,
+			totalPages: response.pagination?.totalPages ?? 1,
+			totalRecords: response.pagination?.totalRecords ?? 0,
 		};
 	};
 

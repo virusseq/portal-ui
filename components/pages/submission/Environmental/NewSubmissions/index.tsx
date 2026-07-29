@@ -95,8 +95,8 @@ const NewSubmissions = (): ReactElement => {
 			if (controller.signal.aborted) {
 				return;
 			}
-			const submission = previousSubmission.data[0];
-			setPreviousSubmission(submission);
+
+			setPreviousSubmission(previousSubmission?.data?.[0]);
 		});
 
 		return () => controller.abort();
@@ -354,7 +354,8 @@ const NewSubmissions = (): ReactElement => {
 					</StyledLink>{' '}
 					details page to review or continue this submission.
 					<br />
-					3. <strong>Start over</strong> - Cancel the pending submission and start a new one by uploading a <span className="code">.csv</span> file.
+					3. <strong>Start over</strong> - Cancel the pending submission and start a new one by uploading a{' '}
+					<span className="code">.csv</span> file.
 				</p>
 			)}
 
