@@ -329,15 +329,13 @@ const NewSubmissions = (): ReactElement => {
 			{previousSubmission?.status === 'VALID' && (
 				<p
 					css={css`
-						padding: 20px;
-						margin: 0px;
 						${theme.typography.regular}
 						background-color: ${theme.colors.warning_dark};
+						border: 1px solid ${theme.colors.grey_3};
 						border-radius: 8px;
 						box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-						padding: 10px;
-						border: 1px solid ${theme.colors.grey_3};
 						margin: 10px 10px;
+						padding: 10px;
 					`}
 				>
 					You have a pending valid submission <strong>#{previousSubmission.id}</strong> for study{' '}
