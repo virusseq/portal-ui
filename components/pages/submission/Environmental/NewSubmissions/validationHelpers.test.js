@@ -159,7 +159,6 @@ describe('getConfirmSubmissionMessage', () => {
 
 	it('falls back to the generic message for tar-only files when the previous submission is not VALID', () => {
 		const state = { oneCsv: [], oneOrMoreTar: [tarFile], readyToUpload: true };
-		const previousSubmission = activeSubmission('ORGA', 'OPEN');
 		expect(getConfirmSubmissionMessage(state)).toBe(
 			`Please confirm that your selection (0 .csv files and 1 sequence file) is ready for submission.`,
 		);
