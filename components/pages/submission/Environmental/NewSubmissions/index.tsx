@@ -21,7 +21,7 @@
 
 import { css, useTheme } from '@emotion/react';
 import Router from 'next/router';
-import { ReactElement, useEffect, useReducer, useState } from 'react';
+import { ReactElement, useEffect, useReducer, useRef, useState } from 'react';
 import urlJoin from 'url-join';
 
 import { ButtonElement as Button } from '#components/Button';
@@ -81,6 +81,11 @@ const NewSubmissions = (): ReactElement => {
 
 	const { awaitingResponse, submitData, downloadMetadataTemplateUrl, fetchPreviousSubmissions } =
 		useEnvironmentalData('NewSubmissions');
+	const fetchPreviousSubmissionsRef = useRef(fetchPreviousSubmissions);
+
+	useEffect(() => {
+		fetchPreviousSubmissionsRef.current = fetchPreviousSubmissions;
+	}, [fetchPreviousSubmissions]);
 
 	useEffect(() => {
 		if (!token || !userHasEnvironmentalAccess) {
@@ -90,18 +95,20 @@ const NewSubmissions = (): ReactElement => {
 
 		const controller = new AbortController();
 
-		fetchPreviousSubmissions({
-			username: user?.email,
-			signal: controller.signal,
-			page: 1,
-			pageSize: 1,
-		}).then((previousSubmission) => {
-			if (controller.signal.aborted) {
-				return;
-			}
+		fetchPreviousSubmissionsRef
+			.current({
+				username: user?.email,
+				signal: controller.signal,
+				page: 1,
+				pageSize: 1,
+			})
+			.then((previousSubmission) => {
+				if (controller.signal.aborted) {
+					return;
+				}
 
-			setPreviousSubmission(previousSubmission?.data?.[0]);
-		});
+				setPreviousSubmission(previousSubmission?.data?.[0]);
+			});
 
 		return () => controller.abort();
 	}, [token, user?.email, userHasEnvironmentalAccess]);
