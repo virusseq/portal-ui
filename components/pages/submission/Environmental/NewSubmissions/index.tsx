@@ -42,9 +42,13 @@ import { CreateSubmissionStatus, ValidationAction, type BatchError, type Submiss
 import {
 	buildFormData,
 	getConfirmSubmissionMessage,
+	isCsvRequiredButMissing,
 	getFileExtension,
-	getTarOnlyEligibility,
-	minFiles,
+	isSubmissionReadyForUpload,
+	isTarOnlySubmissionEligible,
+	hasSubmissionBlockingIssues,
+	hasFiles,
+	shouldEnableSubmitButton,
 	validationParameters,
 	validationReducer,
 } from './validationHelpers';
@@ -70,8 +74,8 @@ const NewSubmissions = (): ReactElement => {
 	const [submissionId, setSubmissionId] = useState<string>('');
 	const [uploadError, setUploadError] = useState<BatchError[]>([]);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
-	const { oneCsv, oneOrMoreTar, readyToUpload } = validationState;
-	const thereAreFiles = minFiles(validationState);
+	const { oneCsv, oneOrMoreTar } = validationState;
+	const thereAreFiles = hasFiles(validationState);
 	const [openGuideModal, setOpenGuideModal] = useState(false);
 	const [previousSubmission, setPreviousSubmission] = useState<SubmissionSummary | undefined>(undefined);
 
@@ -100,9 +104,27 @@ const NewSubmissions = (): ReactElement => {
 		});
 
 		return () => controller.abort();
-	}, [token, userHasEnvironmentalAccess]);
+	}, [token, user?.email, userHasEnvironmentalAccess]);
 
-	const tarOnlyEligibility = getTarOnlyEligibility(previousSubmission);
+	const isTarOnlyEligible = isTarOnlySubmissionEligible(previousSubmission);
+	const isCsvRequiredButMissingForSubmission = isCsvRequiredButMissing({
+		oneCsv,
+		isTarOnlySubmissionEligible: isTarOnlyEligible,
+	});
+	const isSubmissionReady = isSubmissionReadyForUpload({
+		oneCsv,
+		oneOrMoreTar,
+		isTarOnlySubmissionEligible: isTarOnlyEligible,
+	});
+	const hasBlockingIssues = hasSubmissionBlockingIssues({
+		uploadError,
+		filesSubmissionInstructions,
+		isCsvRequiredButMissing: isCsvRequiredButMissingForSubmission,
+	});
+	const enableSubmitButton = shouldEnableSubmitButton({
+		isSubmissionReadyForUpload: isSubmissionReady,
+		hasSubmissionBlockingIssues: hasBlockingIssues,
+	});
 
 	const handleSubmit = async () => {
 		if (!thereAreFiles || !token || !userHasEnvironmentalAccess) {
@@ -119,7 +141,7 @@ const NewSubmissions = (): ReactElement => {
 
 		if (selectedCsv) {
 			organizationName = selectedCsv.name.split('.')[0].toUpperCase();
-		} else if (tarOnlyEligibility && previousSubmission?.organization) {
+		} else if (isTarOnlyEligible && previousSubmission) {
 			organizationName = previousSubmission.organization || '';
 		} else {
 			setConfirmSubmissionModalOpen(false);
@@ -326,7 +348,7 @@ const NewSubmissions = (): ReactElement => {
 				setUploadError={setUploadError}
 			/>
 
-			{previousSubmission?.status === 'VALID' && (
+			{previousSubmission && isTarOnlyEligible && (
 				<p
 					css={css`
 						${theme.typography.regular}
@@ -514,16 +536,12 @@ const NewSubmissions = (): ReactElement => {
 										height: 34px;
 										padding: 0 15px;
 									`}
-									disabled={
-										!(readyToUpload && uploadError.length === 0) ||
-										filesSubmissionInstructions.length > 0 ||
-										(!tarOnlyEligibility && validationState.oneCsv.length !== 1)
-									}
+									disabled={!enableSubmitButton}
 									onClick={() => setConfirmSubmissionModalOpen(true)}
 								>
 									Submit Data
 								</Button>
-								{thereAreFiles && validationState.oneCsv.length !== 1 && !tarOnlyEligibility && (
+								{thereAreFiles && isCsvRequiredButMissingForSubmission && (
 									<p
 										css={css`
 											color: ${theme.colors.error_dark};

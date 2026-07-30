@@ -22,7 +22,8 @@
 const {
 	buildFormData,
 	getConfirmSubmissionMessage,
-	getTarOnlyEligibility,
+	isSubmissionReadyForUpload,
+	isTarOnlySubmissionEligible,
 	validationParameters,
 	validationReducer,
 } = require('./validationHelpers');
@@ -68,20 +69,52 @@ describe('validationReducer - is ready', () => {
 	});
 });
 
-describe('getTarOnlyEligibility', () => {
+describe('isTarOnlySubmissionEligible', () => {
 	it('is false when there is no previous submission', () => {
-		expect(getTarOnlyEligibility(undefined)).toBe(false);
+		expect(isTarOnlySubmissionEligible(undefined)).toBe(false);
 	});
 
 	it.each(['OPEN', 'VALIDATING', 'INVALID', 'CLOSED', 'COMMITTING', 'COMMITTED'])(
 		'is false when the previous submission has status %s',
 		(status) => {
-			expect(getTarOnlyEligibility(activeSubmission('ORGA', status))).toBe(false);
+			expect(isTarOnlySubmissionEligible(activeSubmission('ORGA', status))).toBe(false);
 		},
 	);
 
 	it('is true when the previous submission has status VALID', () => {
-		expect(getTarOnlyEligibility(activeSubmission('ORGA', 'VALID'))).toBe(true);
+		expect(isTarOnlySubmissionEligible(activeSubmission('ORGA', 'VALID'))).toBe(true);
+	});
+});
+
+describe('isSubmissionReadyForUpload', () => {
+	it('is true when there is exactly one CSV file', () => {
+		expect(
+			isSubmissionReadyForUpload({
+				oneCsv: [csvFile],
+				oneOrMoreTar: [],
+				isTarOnlySubmissionEligible: false,
+			}),
+		).toBe(true);
+	});
+
+	it('is true for tar-only uploads when eligible', () => {
+		expect(
+			isSubmissionReadyForUpload({
+				oneCsv: [],
+				oneOrMoreTar: [tarFile],
+				isTarOnlySubmissionEligible: true,
+			}),
+		).toBe(true);
+	});
+
+	it('is false for tar-only uploads when not eligible', () => {
+		expect(
+			isSubmissionReadyForUpload({
+				oneCsv: [],
+				oneOrMoreTar: [tarFile],
+				isTarOnlySubmissionEligible: false,
+			}),
+		).toBe(false);
 	});
 });
 

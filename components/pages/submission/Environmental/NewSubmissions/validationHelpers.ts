@@ -22,8 +22,15 @@
 import { Dispatch } from 'react';
 
 import type { SubmissionSummary } from '#global/hooks/useEnvironmentalData';
+import type { SubmissionManifest } from '#global/utils/fileManifest';
 
-import { acceptedFileExtensions, ValidationAction, ValidationParameters, type SubmissionFile } from './types';
+import {
+	acceptedFileExtensions,
+	type BatchError,
+	ValidationAction,
+	ValidationParameters,
+	type SubmissionFile,
+} from './types';
 
 export const validationParameters = {
 	oneCsv: [],
@@ -75,8 +82,18 @@ export const buildFormData = (
 	return formData;
 };
 
-const overwiteIfExists = (existingFiles: SubmissionFile[], file: SubmissionFile) =>
+const overwriteIfExists = (existingFiles: SubmissionFile[], file: SubmissionFile) =>
 	existingFiles.filter((old) => old.name !== file.name).concat(file);
+
+export const isSubmissionReadyForUpload = ({
+	oneCsv,
+	oneOrMoreTar,
+	isTarOnlySubmissionEligible,
+}: {
+	oneCsv: SubmissionFile[];
+	oneOrMoreTar: SubmissionFile[];
+	isTarOnlySubmissionEligible: boolean;
+}): boolean => oneCsv.length === 1 || (oneOrMoreTar.length > 0 && isTarOnlySubmissionEligible);
 
 export const validationReducer = (state: ValidationParameters, action: ValidationAction): ValidationParameters => {
 	switch (action.type) {
@@ -99,7 +116,7 @@ export const validationReducer = (state: ValidationParameters, action: Validatio
 		}
 
 		case 'add tar.xz': {
-			const oneOrMoreTar = overwiteIfExists(state.oneOrMoreTar, action.file);
+			const oneOrMoreTar = overwriteIfExists(state.oneOrMoreTar, action.file);
 			return {
 				...state,
 				oneOrMoreTar,
@@ -143,15 +160,49 @@ export const getFileExtension = (file: SubmissionFile | string = ''): string => 
 		.join('.');
 };
 
-export const minFiles = ({ oneCsv, oneOrMoreTar }: ValidationParameters): boolean =>
+// Returns true if any files are present
+export const hasFiles = ({ oneCsv, oneOrMoreTar }: ValidationParameters): boolean =>
 	oneCsv.length > 0 || oneOrMoreTar.length > 0;
 
-export const getTarOnlyEligibility = (previousSubmission: SubmissionSummary | undefined) => {
-	if (previousSubmission?.status === 'VALID') {
-		return true;
-	}
+// Returns true if csv-less submisison is eligible
+export const isTarOnlySubmissionEligible = (previousSubmission: SubmissionSummary | undefined): boolean => {
+	return !!(previousSubmission && previousSubmission.status === 'VALID');
+};
 
-	return false;
+// Returns true if a CSV is required and is missing.
+// Checks the previousSubmission to see if the submission is eligible for a tar-only submission.
+// If it is, then a CSV is not required.
+export const isCsvRequiredButMissing = ({
+	oneCsv,
+	isTarOnlySubmissionEligible,
+}: {
+	oneCsv: SubmissionFile[];
+	isTarOnlySubmissionEligible: boolean;
+}): boolean => !isTarOnlySubmissionEligible && oneCsv.length !== 1;
+
+// Returns true if there are submission blocking issues
+export const hasSubmissionBlockingIssues = ({
+	uploadError,
+	filesSubmissionInstructions,
+	isCsvRequiredButMissing,
+}: {
+	uploadError: BatchError[];
+	filesSubmissionInstructions: SubmissionManifest[];
+	isCsvRequiredButMissing: boolean;
+}) => {
+	return uploadError.length > 0 || filesSubmissionInstructions.length > 0 || isCsvRequiredButMissing;
+};
+
+// This function returns true when the "Submit" button should be enabled.
+// It makes sure the button is enabled only when the submission is ready to upload.
+export const shouldEnableSubmitButton = ({
+	isSubmissionReadyForUpload,
+	hasSubmissionBlockingIssues,
+}: {
+	isSubmissionReadyForUpload: boolean;
+	hasSubmissionBlockingIssues: boolean;
+}): boolean => {
+	return isSubmissionReadyForUpload && !hasSubmissionBlockingIssues;
 };
 
 const pluralize = (count: number, noun: string): string => `${count} ${noun}${count === 1 ? '' : 's'}`;
