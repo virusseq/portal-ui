@@ -22,6 +22,7 @@
 const {
 	buildFormData,
 	getConfirmSubmissionMessage,
+	isFileSelectionReadyForUpload,
 	isSubmissionReadyForUpload,
 	isTarOnlySubmissionEligible,
 	validationParameters,
@@ -115,6 +116,20 @@ describe('isSubmissionReadyForUpload', () => {
 				isTarOnlySubmissionEligible: false,
 			}),
 		).toBe(false);
+	});
+});
+
+describe('isFileSelectionReadyForUpload', () => {
+	it('is true when there is exactly one CSV file', () => {
+		expect(isFileSelectionReadyForUpload({ oneCsv: [csvFile], oneOrMoreTar: [] })).toBe(true);
+	});
+
+	it('is true when there is at least one tar file', () => {
+		expect(isFileSelectionReadyForUpload({ oneCsv: [], oneOrMoreTar: [tarFile] })).toBe(true);
+	});
+
+	it('is false when there are no files', () => {
+		expect(isFileSelectionReadyForUpload({ oneCsv: [], oneOrMoreTar: [] })).toBe(false);
 	});
 });
 

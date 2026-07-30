@@ -95,6 +95,12 @@ export const isSubmissionReadyForUpload = ({
 	isTarOnlySubmissionEligible: boolean;
 }): boolean => oneCsv.length === 1 || (oneOrMoreTar.length > 0 && isTarOnlySubmissionEligible);
 
+// Local readiness check used inside reducer before previous-submission context is available.
+export const isFileSelectionReadyForUpload = ({
+	oneCsv,
+	oneOrMoreTar,
+}: Pick<ValidationParameters, 'oneCsv' | 'oneOrMoreTar'>): boolean => oneCsv.length === 1 || oneOrMoreTar.length > 0;
+
 export const validationReducer = (state: ValidationParameters, action: ValidationAction): ValidationParameters => {
 	switch (action.type) {
 		case 'add csv': {
@@ -136,7 +142,7 @@ export const validationReducer = (state: ValidationParameters, action: Validatio
 		case 'is ready': {
 			return {
 				...state,
-				readyToUpload: state.oneCsv.length === 1 || state.oneOrMoreTar.length > 0,
+				readyToUpload: isFileSelectionReadyForUpload(state),
 			};
 		}
 
