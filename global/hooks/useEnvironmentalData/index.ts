@@ -240,12 +240,12 @@ const useEnvironmentalData = (origin: string) => {
 
 		return {
 			data: response.records,
-			first: response.pagination.currentPage === 1,
-			last: response.pagination.currentPage === response.pagination.totalPages,
-			page: response.pagination.currentPage,
-			size: response.records.length,
-			totalPages: response.pagination.totalPages,
-			totalRecords: response.pagination.totalRecords,
+			first: response.pagination?.currentPage === 1,
+			last: response.pagination?.currentPage === response.pagination?.totalPages,
+			page: response.pagination?.currentPage ?? 1,
+			size: response.records?.length ?? 0,
+			totalPages: response.pagination?.totalPages ?? 1,
+			totalRecords: response.pagination?.totalRecords ?? 0,
 		};
 	};
 
@@ -355,7 +355,8 @@ const useEnvironmentalData = (origin: string) => {
 	const getActiveSubmission = async (
 		organization: string,
 		username?: string,
-	): Promise<Promise<SubmissionSummary | undefined>> => {
+		signal?: AbortSignal,
+	): Promise<SubmissionSummary | undefined> => {
 		const queryParams = new URLSearchParams({
 			organization,
 			pageSize: '1',
@@ -375,6 +376,7 @@ const useEnvironmentalData = (origin: string) => {
 				`?${queryParams.toString()}`,
 			),
 			method: 'GET',
+			signal,
 		});
 
 		if (responseActiveSubmission.records) {
@@ -482,7 +484,9 @@ const useEnvironmentalData = (origin: string) => {
 
 	/**
 	 * Submit files for processing as part of a Submission
-	 * If an Active Submission already exists it will be closed
+	 * If a CSV is included and an Active Submission already exists, it will be closed first.
+	 * If no CSV is included (sequencing files only), the Active Submission is left as-is so the
+	 * files are added to it instead of being replaced.
 	 * @param param0
 	 * @returns
 	 */
@@ -490,19 +494,22 @@ const useEnvironmentalData = (origin: string) => {
 		const organization = body.get('organization')?.toString();
 		if (!organization) throw new Error('Organization is required field');
 
-		const activeSubmission = await getActiveSubmission(organization, user?.email);
+		if (body.has('submissionFile')) {
+			// .csv file is included, so we need to check for an existing active Submission and close it first
+			const activeSubmission = await getActiveSubmission(organization, user?.email);
 
-		if (activeSubmission) {
-			// need to delete previous active Submission
-			await handleRequest({
-				url: urlJoin(
-					NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
-					'submission',
-					activeSubmission.id.toString(),
-				),
-				method: 'DELETE',
-				body: body,
-			});
+			if (activeSubmission) {
+				// need to delete previous active Submission
+				await handleRequest({
+					url: urlJoin(
+						NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,
+						'submission',
+						activeSubmission.id.toString(),
+					),
+					method: 'DELETE',
+					body: body,
+				});
+			}
 		}
 
 		return handleRequest({

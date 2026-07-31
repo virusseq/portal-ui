@@ -21,7 +21,7 @@
 
 import { css, useTheme } from '@emotion/react';
 import Router from 'next/router';
-import { ReactElement, useReducer, useState } from 'react';
+import { ReactElement, useEffect, useReducer, useRef, useState } from 'react';
 import urlJoin from 'url-join';
 
 import { ButtonElement as Button } from '#components/Button';
@@ -29,7 +29,7 @@ import ErrorNotification from '#components/ErrorNotification';
 import StyledLink from '#components/Link';
 import { LoaderWrapper } from '#components/Loader';
 import useAuthContext from '#global/hooks/useAuthContext';
-import useEnvironmentalData from '#global/hooks/useEnvironmentalData';
+import useEnvironmentalData, { type SubmissionSummary } from '#global/hooks/useEnvironmentalData';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
 import getInternalLink from '#global/utils/getInternalLink';
 import ConfirmSubmissionModal from '#components/pages/submission/ConfirmSubmissionModal';
@@ -39,44 +39,19 @@ import ErrorMessage from './ErrorMessage';
 import FileRow from './FileRow';
 import FileUploadInstructionsModal from './FileUploadInstructionsModal';
 import { CreateSubmissionStatus, ValidationAction, type BatchError, type SubmissionFile } from './types';
-import { getFileExtension, minFiles, validationParameters, validationReducer } from './validationHelpers';
-
-// Constants for submit parms
-export const SubmitParams = {
-	ORGANIZATION: 'organization' as const,
-	ENTITY_NAME: 'entityName' as const,
-	SUBMISSION_FILE: 'submissionFile' as const,
-	SEQUENCING_METADATA: 'sequencingMetadata' as const,
-};
-
-// Constants for file metadata
-export const SequencingMetadataDefaults = {
-	FILE_ACCESS: 'open' as const,
-	FILE_TYPE: 'TAR' as const,
-};
-
-const buildFormData = (organizationName: string, selectedCsv: SubmissionFile, oneOrMoreTar: SubmissionFile[]) => {
-	const formData = new FormData();
-	formData.append(SubmitParams.ORGANIZATION, organizationName);
-	formData.append(SubmitParams.ENTITY_NAME, 'sample');
-	formData.append(SubmitParams.SUBMISSION_FILE, selectedCsv);
-
-	if (oneOrMoreTar.length > 0) {
-		formData.append(
-			SubmitParams.SEQUENCING_METADATA,
-			JSON.stringify(
-				oneOrMoreTar.map((tarFile: SubmissionFile) => ({
-					fileName: tarFile.name,
-					fileSize: tarFile.size,
-					fileMd5sum: tarFile.md5,
-					fileAccess: SequencingMetadataDefaults.FILE_ACCESS,
-					fileType: SequencingMetadataDefaults.FILE_TYPE,
-				})),
-			),
-		);
-	}
-	return formData;
-};
+import {
+	buildFormData,
+	getConfirmSubmissionMessage,
+	isCsvRequiredButMissing,
+	getFileExtension,
+	isSubmissionReadyForUpload,
+	isTarOnlySubmissionEligible,
+	hasSubmissionBlockingIssues,
+	hasFiles,
+	shouldEnableSubmitButton,
+	validationParameters,
+	validationReducer,
+} from './validationHelpers';
 
 const SUBMISSION_ERROR_MESSAGE_RULES = [
 	{
@@ -91,7 +66,7 @@ const mapBatchErrorMessage = (rawMessage: string, organizationName: string) => {
 };
 
 const NewSubmissions = (): ReactElement => {
-	const { token, userHasEnvironmentalAccess, userIsEnvironmentalAdmin, userEnvironmentalWriteScopes } =
+	const { token, user, userHasEnvironmentalAccess, userIsEnvironmentalAdmin, userEnvironmentalWriteScopes } =
 		useAuthContext();
 	const theme = useTheme();
 	const [confirmSubmissionModalOpen, setConfirmSubmissionModalOpen] = useState(false);
@@ -99,11 +74,64 @@ const NewSubmissions = (): ReactElement => {
 	const [submissionId, setSubmissionId] = useState<string>('');
 	const [uploadError, setUploadError] = useState<BatchError[]>([]);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
-	const { oneCsv, oneOrMoreTar, readyToUpload } = validationState;
-	const thereAreFiles = minFiles(validationState);
+	const { oneCsv, oneOrMoreTar } = validationState;
+	const thereAreFiles = hasFiles(validationState);
 	const [openGuideModal, setOpenGuideModal] = useState(false);
+	const [previousSubmission, setPreviousSubmission] = useState<SubmissionSummary | undefined>(undefined);
 
-	const { awaitingResponse, submitData, downloadMetadataTemplateUrl } = useEnvironmentalData('NewSubmissions');
+	const { awaitingResponse, submitData, downloadMetadataTemplateUrl, fetchPreviousSubmissions } =
+		useEnvironmentalData('NewSubmissions');
+	const fetchPreviousSubmissionsRef = useRef(fetchPreviousSubmissions);
+
+	useEffect(() => {
+		fetchPreviousSubmissionsRef.current = fetchPreviousSubmissions;
+	}, [fetchPreviousSubmissions]);
+
+	useEffect(() => {
+		if (!token || !userHasEnvironmentalAccess) {
+			setPreviousSubmission(undefined);
+			return;
+		}
+
+		const controller = new AbortController();
+
+		fetchPreviousSubmissionsRef
+			.current({
+				username: user?.email,
+				signal: controller.signal,
+				page: 1,
+				pageSize: 1,
+			})
+			.then((previousSubmission) => {
+				if (controller.signal.aborted) {
+					return;
+				}
+
+				setPreviousSubmission(previousSubmission?.data?.[0]);
+			});
+
+		return () => controller.abort();
+	}, [token, user?.email, userHasEnvironmentalAccess]);
+
+	const isTarOnlyEligible = isTarOnlySubmissionEligible(previousSubmission);
+	const isCsvRequiredButMissingForSubmission = isCsvRequiredButMissing({
+		oneCsv,
+		isTarOnlySubmissionEligible: isTarOnlyEligible,
+	});
+	const isSubmissionReady = isSubmissionReadyForUpload({
+		oneCsv,
+		oneOrMoreTar,
+		isTarOnlySubmissionEligible: isTarOnlyEligible,
+	});
+	const hasBlockingIssues = hasSubmissionBlockingIssues({
+		uploadError,
+		filesSubmissionInstructions,
+		isCsvRequiredButMissing: isCsvRequiredButMissingForSubmission,
+	});
+	const enableSubmitButton = shouldEnableSubmitButton({
+		isSubmissionReadyForUpload: isSubmissionReady,
+		hasSubmissionBlockingIssues: hasBlockingIssues,
+	});
 
 	const handleSubmit = async () => {
 		if (!thereAreFiles || !token || !userHasEnvironmentalAccess) {
@@ -113,9 +141,26 @@ const NewSubmissions = (): ReactElement => {
 			return;
 		}
 
-		// Extract organization name from the CSV file
+		// Extract organization name from the CSV file, or from the previous submission
+		// when this is a CSV-less (sequencing-files-only) submission
 		const selectedCsv = oneCsv[0];
-		const organizationName = selectedCsv.name.split('.')[0].toUpperCase();
+		let organizationName: string;
+
+		if (selectedCsv) {
+			organizationName = selectedCsv.name.split('.')[0].toUpperCase();
+		} else if (isTarOnlyEligible && previousSubmission) {
+			organizationName = previousSubmission.organization || '';
+		} else {
+			setConfirmSubmissionModalOpen(false);
+			setUploadError([
+				{
+					batchName: '',
+					message: 'Unable to determine organization name from CSV file or previous submission',
+					type: 'INCORRECT_SECTION',
+				},
+			]);
+			return;
+		}
 
 		const hasWriteAccessToOrganization =
 			userIsEnvironmentalAdmin || userEnvironmentalWriteScopes.includes(organizationName);
@@ -310,6 +355,37 @@ const NewSubmissions = (): ReactElement => {
 				setUploadError={setUploadError}
 			/>
 
+			{previousSubmission && isTarOnlyEligible && (
+				<p
+					css={css`
+						${theme.typography.regular}
+						background-color: ${theme.colors.warning_dark};
+						border: 1px solid ${theme.colors.grey_3};
+						border-radius: 8px;
+						box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+						margin: 10px 10px;
+						padding: 10px;
+					`}
+				>
+					You have a pending valid submission <strong>#{previousSubmission.id}</strong> for study{' '}
+					<strong>{previousSubmission.organization}</strong>. You have three options: <br />
+					1. <strong>Add sequencing files</strong> - Upload only <span className="code">.tar.xz</span> files
+					in the area above to add sequence file(s) to this existing submission. <br />
+					2. <strong>Review your submission</strong> - Go to the{' '}
+					<StyledLink
+						href={getInternalLink({
+							path: urlJoin('submission', 'environmental', previousSubmission.id.toString()),
+						})}
+					>
+						<strong>submission #{previousSubmission.id}</strong>
+					</StyledLink>{' '}
+					details page to review or continue this submission.
+					<br />
+					3. <strong>Start over</strong> - Cancel the pending submission and start a new one by uploading a{' '}
+					<span className="code">.csv</span> file.
+				</p>
+			)}
+
 			{uploadError.length > 0 && (
 				<ErrorNotification
 					size="md"
@@ -467,15 +543,12 @@ const NewSubmissions = (): ReactElement => {
 										height: 34px;
 										padding: 0 15px;
 									`}
-									disabled={
-										!(readyToUpload && uploadError.length === 0) ||
-										filesSubmissionInstructions.length > 0
-									}
+									disabled={!enableSubmitButton}
 									onClick={() => setConfirmSubmissionModalOpen(true)}
 								>
 									Submit Data
 								</Button>
-								{thereAreFiles && validationState.oneCsv.length !== 1 && (
+								{thereAreFiles && isCsvRequiredButMissingForSubmission && (
 									<p
 										css={css`
 											color: ${theme.colors.error_dark};
@@ -511,7 +584,9 @@ const NewSubmissions = (): ReactElement => {
 					<ConfirmSubmissionModal
 						onClose={() => setConfirmSubmissionModalOpen(false)}
 						onSubmit={handleSubmit}
-					/>
+					>
+						{getConfirmSubmissionMessage(validationState, previousSubmission)}
+					</ConfirmSubmissionModal>
 				)}
 			</LoaderWrapper>
 		</article>

@@ -21,26 +21,87 @@
 
 import { Dispatch } from 'react';
 
-import { 
-	acceptedFileExtensions, 
-	ValidationAction, 
-	ValidationParameters, 
+import type { SubmissionSummary } from '#global/hooks/useEnvironmentalData';
+import type { SubmissionManifest } from '#global/utils/fileManifest';
+
+import {
+	acceptedFileExtensions,
+	type BatchError,
+	ValidationAction,
+	ValidationParameters,
 	type SubmissionFile,
 } from './types';
 
 export const validationParameters = {
 	oneCsv: [],
 	oneOrMoreTar: [],
-	readyToUpload: false, // there's at least one CSV
+	readyToUpload: false, // true when: exactly one CSV is present, or zero CSV + at least one tar.xz is present
 };
 
-const overwiteIfExists = (existingFiles: SubmissionFile[], file: SubmissionFile) =>
+// Constants for submit parms
+export const SubmitParams = {
+	ORGANIZATION: 'organization' as const,
+	ENTITY_NAME: 'entityName' as const,
+	SUBMISSION_FILE: 'submissionFile' as const,
+	SEQUENCING_METADATA: 'sequencingMetadata' as const,
+};
+
+// Constants for file metadata
+export const SequencingMetadataDefaults = {
+	FILE_ACCESS: 'open' as const,
+	FILE_TYPE: 'TAR' as const,
+};
+
+export const buildFormData = (
+	organizationName: string,
+	selectedCsv: SubmissionFile | undefined,
+	oneOrMoreTar: SubmissionFile[],
+) => {
+	const formData = new FormData();
+	formData.append(SubmitParams.ORGANIZATION, organizationName);
+	formData.append(SubmitParams.ENTITY_NAME, 'sample');
+
+	if (selectedCsv) {
+		formData.append(SubmitParams.SUBMISSION_FILE, selectedCsv);
+	}
+
+	if (oneOrMoreTar.length > 0) {
+		formData.append(
+			SubmitParams.SEQUENCING_METADATA,
+			JSON.stringify(
+				oneOrMoreTar.map((tarFile: SubmissionFile) => ({
+					fileName: tarFile.name,
+					fileSize: tarFile.size,
+					fileMd5sum: tarFile.md5,
+					fileAccess: SequencingMetadataDefaults.FILE_ACCESS,
+					fileType: SequencingMetadataDefaults.FILE_TYPE,
+				})),
+			),
+		);
+	}
+	return formData;
+};
+
+const overwriteIfExists = (existingFiles: SubmissionFile[], file: SubmissionFile) =>
 	existingFiles.filter((old) => old.name !== file.name).concat(file);
 
-export const validationReducer = (
-	state: ValidationParameters, 
-	action: ValidationAction,
-): ValidationParameters => {
+export const isSubmissionReadyForUpload = ({
+	oneCsv,
+	oneOrMoreTar,
+	isTarOnlySubmissionEligible,
+}: {
+	oneCsv: SubmissionFile[];
+	oneOrMoreTar: SubmissionFile[];
+	isTarOnlySubmissionEligible: boolean;
+}): boolean => oneCsv.length === 1 || (oneOrMoreTar.length > 0 && isTarOnlySubmissionEligible);
+
+// Local readiness check used inside reducer before previous-submission context is available.
+export const isFileSelectionReadyForUpload = ({
+	oneCsv,
+	oneOrMoreTar,
+}: Pick<ValidationParameters, 'oneCsv' | 'oneOrMoreTar'>): boolean => oneCsv.length === 1 || oneOrMoreTar.length > 0;
+
+export const validationReducer = (state: ValidationParameters, action: ValidationAction): ValidationParameters => {
 	switch (action.type) {
 		case 'add csv': {
 			const oneCsv = [action.file];
@@ -61,7 +122,7 @@ export const validationReducer = (
 		}
 
 		case 'add tar.xz': {
-			const oneOrMoreTar = overwiteIfExists(state.oneOrMoreTar, action.file);
+			const oneOrMoreTar = overwriteIfExists(state.oneOrMoreTar, action.file);
 			return {
 				...state,
 				oneOrMoreTar,
@@ -70,9 +131,7 @@ export const validationReducer = (
 		}
 
 		case 'remove tar.xz': {
-			const oneOrMoreTar = state.oneOrMoreTar.filter(
-				(tarFile: SubmissionFile) => tarFile.name !== action.file,
-			);
+			const oneOrMoreTar = state.oneOrMoreTar.filter((tarFile: SubmissionFile) => tarFile.name !== action.file);
 			return {
 				...state,
 				oneOrMoreTar,
@@ -83,7 +142,7 @@ export const validationReducer = (
 		case 'is ready': {
 			return {
 				...state,
-				readyToUpload: state.oneCsv.length === 1 && state.oneOrMoreTar.length >= 0,
+				readyToUpload: isFileSelectionReadyForUpload(state),
 			};
 		}
 
@@ -102,16 +161,78 @@ export const getFileExtension = (file: SubmissionFile | string = ''): string => 
 	// get the compound extension (e.g., tar.xz) or a single part extension (e.g., csv)
 	return parsedFileName
 		.slice(
-			-(parsedFileName?.[parsedFileName.length - 1] === 
-			acceptedFileExtensions.TAR_XZ.split('.').pop()
-				? 2 
-				: 1),
+			-(parsedFileName?.[parsedFileName.length - 1] === acceptedFileExtensions.TAR_XZ.split('.').pop() ? 2 : 1),
 		)
 		.join('.');
 };
 
-export const minFiles = ({ oneCsv, oneOrMoreTar }: ValidationParameters): boolean =>
+// Returns true if any files are present
+export const hasFiles = ({ oneCsv, oneOrMoreTar }: ValidationParameters): boolean =>
 	oneCsv.length > 0 || oneOrMoreTar.length > 0;
+
+// Returns true if csv-less submisison is eligible
+export const isTarOnlySubmissionEligible = (previousSubmission: SubmissionSummary | undefined): boolean => {
+	return !!(previousSubmission && previousSubmission.status === 'VALID');
+};
+
+// Returns true if a CSV is required and is missing.
+// Checks the previousSubmission to see if the submission is eligible for a tar-only submission.
+// If it is, then a CSV is not required.
+export const isCsvRequiredButMissing = ({
+	oneCsv,
+	isTarOnlySubmissionEligible,
+}: {
+	oneCsv: SubmissionFile[];
+	isTarOnlySubmissionEligible: boolean;
+}): boolean => !isTarOnlySubmissionEligible && oneCsv.length !== 1;
+
+// Returns true if there are submission blocking issues
+export const hasSubmissionBlockingIssues = ({
+	uploadError,
+	filesSubmissionInstructions,
+	isCsvRequiredButMissing,
+}: {
+	uploadError: BatchError[];
+	filesSubmissionInstructions: SubmissionManifest[];
+	isCsvRequiredButMissing: boolean;
+}) => {
+	return uploadError.length > 0 || filesSubmissionInstructions.length > 0 || isCsvRequiredButMissing;
+};
+
+// This function returns true when the "Submit" button should be enabled.
+// It makes sure the button is enabled only when the submission is ready to upload.
+export const shouldEnableSubmitButton = ({
+	isSubmissionReadyForUpload,
+	hasSubmissionBlockingIssues,
+}: {
+	isSubmissionReadyForUpload: boolean;
+	hasSubmissionBlockingIssues: boolean;
+}): boolean => {
+	return isSubmissionReadyForUpload && !hasSubmissionBlockingIssues;
+};
+
+const pluralize = (count: number, noun: string): string => `${count} ${noun}${count === 1 ? '' : 's'}`;
+
+/**
+ * Builds the confirmation message shown before submitting, naming how many files of each
+ * type are about to be submitted so the user can double-check their selection.
+ */
+export const getConfirmSubmissionMessage = (
+	{ oneCsv, oneOrMoreTar }: ValidationParameters,
+	previousSubmission?: SubmissionSummary,
+): string => {
+	if (oneCsv.length === 0 && oneOrMoreTar.length > 0 && previousSubmission?.status === 'VALID') {
+		return `Please confirm you want to add ${pluralize(
+			oneOrMoreTar.length,
+			'sequence file',
+		)} to your active submission ID ${previousSubmission.id} for study ${previousSubmission.organization}.`;
+	}
+
+	return `Please confirm that your selection (${pluralize(oneCsv.length, '.csv file')} and ${pluralize(
+		oneOrMoreTar.length,
+		'sequence file',
+	)}) is ready for submission${oneCsv[0] ? ` for study ${oneCsv[0].name.split('.')[0].toUpperCase()}` : ''}.`;
+};
 
 export const validator =
 	(state: ValidationParameters, dispatch: Dispatch<ValidationAction>) =>

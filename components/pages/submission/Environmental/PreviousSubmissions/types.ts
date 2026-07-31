@@ -19,10 +19,10 @@
  *
  */
 
-import { DataRecord } from '#global/hooks/useEnvironmentalData';
+import { type SubmissionSummary } from '#global/hooks/useEnvironmentalData';
 
 export type SubmissionPaginatedResponse = {
-	data: DataRecord[];
+	data: SubmissionSummary[];
 	first: boolean;
 	last: boolean;
 	page: number;
