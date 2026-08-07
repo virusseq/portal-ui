@@ -35,6 +35,7 @@ import useEnvironmentalData, {
 } from '#global/hooks/useEnvironmentalData';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
 
+import Button from '../../../../Button';
 import FileUploadInstructionsModal from '../NewSubmissions/FileUploadInstructionsModal';
 
 import columns from './columns';
@@ -110,14 +111,9 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	 */
 	const commit = useCallback(
 		async (signal?: AbortSignal) => {
-			const commitSubmissionResponse = await commitSubmission(ID, { signal });
-			if (
-				commitSubmissionResponse.status === UploadStatus.PROCESSING &&
-				submissionSummaryStreamRef.current?.readyState === EventSource.CLOSED
-			) {
-				// Re-open the event stream if it's closed to listen for new updates after commit
-				getSubmissionOverview();
-			}
+			await commitSubmission(ID, { signal });
+			// 	Re-open the event stream if it's closed to listen for new updates after commit
+			getSubmissionOverview();
 		},
 		[commitSubmission, ID],
 	);
@@ -290,8 +286,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		}
 
 		if (submissionOverview.status === SubmissionStatus.VALID) {
-			// Trigger submission commit when the current status is 'VALID'
-			commit(controller.signal);
+			// If the submission is valid, we can stop tracking pending data
 			return;
 		}
 
@@ -351,15 +346,42 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			>
 				{submissionOverview && submissionOverview.totalRecords > 0 && (
 					<>
-						<p
+						<div
 							css={css`
-								display: block;
-								font-size: 13px;
+								display: flex;
+								align-items: center;
+								justify-content: space-between;
 								margin: 10px 0;
+								width: 100%;
+								gap: 10px;
 							`}
 						>
-							{firstRecord} - {lastRecord} of {submissionOverview.totalRecords} Viral Genomes
-						</p>
+							<p
+								css={css`
+									display: block;
+									font-size: 13px;
+									margin: 0;
+								`}
+							>
+								{firstRecord} - {lastRecord} of {submissionOverview.totalRecords} Viral Genomes
+							</p>
+							{submissionOverview.status === SubmissionStatus.VALID &&
+								pendingUploadManifests.length === 0 && (
+									<Button
+										css={css`
+											background-color: ${theme.colors.success_dark};
+											padding-top: 0px;
+											padding-bottom: 0px;
+											padding-left: 10px;
+											padding-right: 10px;
+											margin: 0;
+										`}
+										onClick={() => commit()}
+									>
+										Confirm Submission
+									</Button>
+								)}
+						</div>
 						<GenericTable
 							columns={columns}
 							data={Object.values(submissionRecords).flat()}
@@ -424,10 +446,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 						submissionManifest={pendingUploadManifests}
 						submissionId={ID}
 						onClose={() => {
+							// Close the modal
 							setOpenGuideModal(false);
-							// Closing the modal will trigger submission commit to verify if
-							// files have been uploaded.
-							commit();
+							// Clean the pending upload banner since the user has seen the instructions
+							setPendingUploadManifests([]);
 						}}
 					/>
 				)}
