@@ -30,8 +30,8 @@ import useAuthContext from '#global/hooks/useAuthContext';
 import processStream from '#global/utils/processStream';
 
 import {
+	type CommitSubmissionResponse,
 	SubmissionStatus,
-	type CommitSubmissionResult,
 	type ErrorDetails,
 	type RecordValidationErrorDetails,
 	type SubmissionFile,
@@ -108,7 +108,7 @@ const useEnvironmentalData = (origin: string) => {
 	const commitSubmission = async (
 		id: string,
 		{ signal }: { signal?: AbortSignal } = {},
-	): Promise<CommitSubmissionResult> => {
+	): Promise<CommitSubmissionResponse> => {
 		return handleRequest({
 			url: urlJoin(
 				NEXT_PUBLIC_ENVIRONMENTAL_SUBMISSION_API_URL,

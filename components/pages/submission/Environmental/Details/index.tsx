@@ -111,10 +111,15 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	 */
 	const commit = useCallback(
 		async (signal?: AbortSignal) => {
-			await commitSubmission(ID, { signal });
+			const commitSubmissionResponse = await commitSubmission(ID, { signal });
+			const isCommitErrorResponse =
+				'error' in commitSubmissionResponse && typeof commitSubmissionResponse.error === 'string';
 			if (submissionSummaryStreamRef.current?.readyState === EventSource.CLOSED) {
 				// Re-open the event stream if it's closed to listen for new updates after commit
 				getSubmissionOverview();
+			} else if (isCommitErrorResponse && commitSubmissionResponse.error === 'Conflict') {
+				// Displays the banner for missing files if the commit fails due to missing files
+				setPendingUploadManifests(getPendingUploadFileManifests(submissionOverview?.submissionFiles));
 			}
 		},
 		[commitSubmission, ID],
