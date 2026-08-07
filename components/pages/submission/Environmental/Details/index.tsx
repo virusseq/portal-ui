@@ -112,8 +112,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const commit = useCallback(
 		async (signal?: AbortSignal) => {
 			await commitSubmission(ID, { signal });
-			// Re-open the event stream if it's closed to listen for new updates after commit
-			getSubmissionOverview();
+			if (submissionSummaryStreamRef.current?.readyState === EventSource.CLOSED) {
+				// Re-open the event stream if it's closed to listen for new updates after commit
+				getSubmissionOverview();
+			}
 		},
 		[commitSubmission, ID],
 	);
