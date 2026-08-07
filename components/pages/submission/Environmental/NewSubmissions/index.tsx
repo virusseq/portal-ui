@@ -30,14 +30,12 @@ import StyledLink from '#components/Link';
 import { LoaderWrapper } from '#components/Loader';
 import useAuthContext from '#global/hooks/useAuthContext';
 import useEnvironmentalData, { type SubmissionSummary } from '#global/hooks/useEnvironmentalData';
-import type { SubmissionManifest } from '#global/utils/fileManifest';
 import getInternalLink from '#global/utils/getInternalLink';
 import ConfirmSubmissionModal from '#components/pages/submission/ConfirmSubmissionModal';
 
 import DropZone from './DropZone';
 import ErrorMessage from './ErrorMessage';
 import FileRow from './FileRow';
-import FileUploadInstructionsModal from './FileUploadInstructionsModal';
 import { CreateSubmissionStatus, ValidationAction, type BatchError, type SubmissionFile } from './types';
 import {
 	buildFormData,
@@ -70,13 +68,10 @@ const NewSubmissions = (): ReactElement => {
 		useAuthContext();
 	const theme = useTheme();
 	const [confirmSubmissionModalOpen, setConfirmSubmissionModalOpen] = useState(false);
-	const [filesSubmissionInstructions, setFilesSubmissionInstructions] = useState<SubmissionManifest[]>([]);
-	const [submissionId, setSubmissionId] = useState<string>('');
 	const [uploadError, setUploadError] = useState<BatchError[]>([]);
 	const [validationState, validationDispatch] = useReducer(validationReducer, validationParameters);
 	const { oneCsv, oneOrMoreTar } = validationState;
 	const thereAreFiles = hasFiles(validationState);
-	const [openGuideModal, setOpenGuideModal] = useState(false);
 	const [previousSubmission, setPreviousSubmission] = useState<SubmissionSummary | undefined>(undefined);
 
 	const { awaitingResponse, submitData, downloadMetadataTemplateUrl, fetchPreviousSubmissions } =
@@ -125,7 +120,6 @@ const NewSubmissions = (): ReactElement => {
 	});
 	const hasBlockingIssues = hasSubmissionBlockingIssues({
 		uploadError,
-		filesSubmissionInstructions,
 		isCsvRequiredButMissing: isCsvRequiredButMissingForSubmission,
 	});
 	const enableSubmitButton = shouldEnableSubmitButton({
@@ -196,19 +190,11 @@ const NewSubmissions = (): ReactElement => {
 				}
 
 				case CreateSubmissionStatus.PROCESSING: {
-					if (response.submissionId && oneOrMoreTar.length === 0) {
+					if (response.submissionId) {
 						Router.push(
 							getInternalLink({
 								path: urlJoin('submission', 'environmental', response.submissionId.toString()),
 							}),
-						);
-					} else if (response.submissionId && oneOrMoreTar.length > 0) {
-						setFilesSubmissionInstructions(response.submissionManifest);
-						setSubmissionId(response.submissionId.toString());
-						setOpenGuideModal(
-							response.submissionManifest &&
-								response.submissionManifest.length > 0 &&
-								response.submissionId != null,
 						);
 					} else {
 						console.log('Unhandled response:', response);
@@ -563,23 +549,6 @@ const NewSubmissions = (): ReactElement => {
 						</tr>
 					</tfoot>
 				</table>
-				{openGuideModal && (
-					<FileUploadInstructionsModal
-						submissionManifest={filesSubmissionInstructions}
-						submissionId={submissionId}
-						onClose={() => {
-							setOpenGuideModal(false);
-							setFilesSubmissionInstructions([]);
-							setSubmissionId('');
-							validationDispatch({ type: 'clear all' });
-							Router.push(
-								getInternalLink({
-									path: urlJoin('submission', 'environmental', submissionId),
-								}),
-							);
-						}}
-					/>
-				)}
 				{confirmSubmissionModalOpen && (
 					<ConfirmSubmissionModal
 						onClose={() => setConfirmSubmissionModalOpen(false)}
