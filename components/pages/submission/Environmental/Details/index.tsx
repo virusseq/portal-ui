@@ -34,8 +34,8 @@ import useEnvironmentalData, {
 	type SubmissionSummary,
 } from '#global/hooks/useEnvironmentalData';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
+import Button from '#components/Button';
 
-import Button from '../../../../Button';
 import FileUploadInstructionsModal from '../NewSubmissions/FileUploadInstructionsModal';
 
 import columns from './columns';
@@ -112,7 +112,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const commit = useCallback(
 		async (signal?: AbortSignal) => {
 			await commitSubmission(ID, { signal });
-			// 	Re-open the event stream if it's closed to listen for new updates after commit
+			// Re-open the event stream if it's closed to listen for new updates after commit
 			getSubmissionOverview();
 		},
 		[commitSubmission, ID],

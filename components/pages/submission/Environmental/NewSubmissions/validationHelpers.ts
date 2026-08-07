@@ -22,7 +22,6 @@
 import { Dispatch } from 'react';
 
 import type { SubmissionSummary } from '#global/hooks/useEnvironmentalData';
-import type { SubmissionManifest } from '#global/utils/fileManifest';
 
 import {
 	acceptedFileExtensions,
