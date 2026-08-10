@@ -105,6 +105,34 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	}, [submissionRecords, submissionRecordsDispatch]);
 
 	/**
+	 * Fetch the Submission general information such as status, organization, total records, and files.
+	 */
+	const getSubmissionOverview = useCallback(() => {
+		submissionSummaryStreamRef.current = fetchSubmissionSummaryById(ID, (messageData: SubmissionSummary) => {
+			const { organization, createdAt, id, status, files, data } = messageData;
+			const totalRecordsCount = data.total;
+
+			// Data to display in Overview table
+			setSubmissionOverview({
+				createdAt,
+				submissionFiles: files || [],
+				submissionId: id.toString(),
+				totalRecords: totalRecordsCount,
+				organization,
+				status,
+			});
+
+			const filesNotUploaded = getPendingUploadFileManifests(files);
+
+			setPendingUploadManifests(filesNotUploaded);
+
+			// Total amount of records uploading
+			const totalPages = Math.ceil(totalRecordsCount / pageSize);
+			setLastPage(totalPages);
+		});
+	}, [fetchSubmissionSummaryById, ID]);
+
+	/**
 	 * Commit submission to Submission Service.
 	 * If the Submission is successfully commited (i.e. 'PROCESSING' status)
 	 * and the stream connection is closed, it will re-open the stream to listen for further updates after commit.
@@ -125,7 +153,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 				setPendingUploadManifests(getPendingUploadFileManifests(submissionOverview?.submissionFiles));
 			}
 		},
-		[commitSubmission, ID],
+		[commitSubmission, submissionOverview, getSubmissionOverview, ID],
 	);
 
 	/**
@@ -240,34 +268,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		},
 		[submissionRecords, getAnalysisIds, submissionRecordsDispatch, setDataIsPending, completeAllProcessingRecords],
 	);
-
-	/**
-	 * Fetch the Submission general information such as status, organization, total records, and files.
-	 */
-	const getSubmissionOverview = useCallback(() => {
-		submissionSummaryStreamRef.current = fetchSubmissionSummaryById(ID, (messageData: SubmissionSummary) => {
-			const { organization, createdAt, id, status, files, data } = messageData;
-			const totalRecordsCount = data.total;
-
-			// Data to display in Overview table
-			setSubmissionOverview({
-				createdAt,
-				submissionFiles: files || [],
-				submissionId: id.toString(),
-				totalRecords: totalRecordsCount,
-				organization,
-				status,
-			});
-
-			const filesNotUploaded = getPendingUploadFileManifests(files);
-
-			setPendingUploadManifests(filesNotUploaded);
-
-			// Total amount of records uploading
-			const totalPages = Math.ceil(totalRecordsCount / pageSize);
-			setLastPage(totalPages);
-		});
-	}, [fetchSubmissionSummaryById, ID]);
 
 	// gets the initial status for all the uploads
 	useEffect(() => {
