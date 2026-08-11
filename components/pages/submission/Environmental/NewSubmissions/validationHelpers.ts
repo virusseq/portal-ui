@@ -22,7 +22,6 @@
 import { Dispatch } from 'react';
 
 import type { SubmissionSummary } from '#global/hooks/useEnvironmentalData';
-import type { SubmissionManifest } from '#global/utils/fileManifest';
 
 import {
 	acceptedFileExtensions,
@@ -189,14 +188,12 @@ export const isCsvRequiredButMissing = ({
 // Returns true if there are submission blocking issues
 export const hasSubmissionBlockingIssues = ({
 	uploadError,
-	filesSubmissionInstructions,
 	isCsvRequiredButMissing,
 }: {
 	uploadError: BatchError[];
-	filesSubmissionInstructions: SubmissionManifest[];
 	isCsvRequiredButMissing: boolean;
 }) => {
-	return uploadError.length > 0 || filesSubmissionInstructions.length > 0 || isCsvRequiredButMissing;
+	return uploadError.length > 0 || isCsvRequiredButMissing;
 };
 
 // This function returns true when the "Submit" button should be enabled.

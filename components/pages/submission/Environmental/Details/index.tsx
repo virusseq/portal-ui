@@ -34,6 +34,7 @@ import useEnvironmentalData, {
 	type SubmissionSummary,
 } from '#global/hooks/useEnvironmentalData';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
+import Button from '#components/Button';
 
 import FileUploadInstructionsModal from '../NewSubmissions/FileUploadInstructionsModal';
 
@@ -104,6 +105,34 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	}, [submissionRecords, submissionRecordsDispatch]);
 
 	/**
+	 * Fetch the Submission general information such as status, organization, total records, and files.
+	 */
+	const getSubmissionOverview = useCallback(() => {
+		submissionSummaryStreamRef.current = fetchSubmissionSummaryById(ID, (messageData: SubmissionSummary) => {
+			const { organization, createdAt, id, status, files, data } = messageData;
+			const totalRecordsCount = data.total;
+
+			// Data to display in Overview table
+			setSubmissionOverview({
+				createdAt,
+				submissionFiles: files || [],
+				submissionId: id.toString(),
+				totalRecords: totalRecordsCount,
+				organization,
+				status,
+			});
+
+			const filesNotUploaded = getPendingUploadFileManifests(files);
+
+			setPendingUploadManifests(filesNotUploaded);
+
+			// Total amount of records uploading
+			const totalPages = Math.ceil(totalRecordsCount / pageSize);
+			setLastPage(totalPages);
+		});
+	}, [fetchSubmissionSummaryById, ID]);
+
+	/**
 	 * Commit submission to Submission Service.
 	 * If the Submission is successfully commited (i.e. 'PROCESSING' status)
 	 * and the stream connection is closed, it will re-open the stream to listen for further updates after commit.
@@ -111,15 +140,20 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 	const commit = useCallback(
 		async (signal?: AbortSignal) => {
 			const commitSubmissionResponse = await commitSubmission(ID, { signal });
-			if (
-				commitSubmissionResponse.status === UploadStatus.PROCESSING &&
-				submissionSummaryStreamRef.current?.readyState === EventSource.CLOSED
-			) {
+			const isCommitErrorResponse =
+				'error' in commitSubmissionResponse && typeof commitSubmissionResponse.error === 'string';
+
+			if (submissionSummaryStreamRef.current?.readyState === EventSource.CLOSED) {
 				// Re-open the event stream if it's closed to listen for new updates after commit
 				getSubmissionOverview();
 			}
+
+			if (isCommitErrorResponse && commitSubmissionResponse.error === 'Conflict') {
+				// Displays the banner for missing files if the commit fails due to missing files
+				setPendingUploadManifests(getPendingUploadFileManifests(submissionOverview?.submissionFiles));
+			}
 		},
-		[commitSubmission, ID],
+		[commitSubmission, submissionOverview, getSubmissionOverview, ID],
 	);
 
 	/**
@@ -235,34 +269,6 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		[submissionRecords, getAnalysisIds, submissionRecordsDispatch, setDataIsPending, completeAllProcessingRecords],
 	);
 
-	/**
-	 * Fetch the Submission general information such as status, organization, total records, and files.
-	 */
-	const getSubmissionOverview = useCallback(() => {
-		submissionSummaryStreamRef.current = fetchSubmissionSummaryById(ID, (messageData: SubmissionSummary) => {
-			const { organization, createdAt, id, status, files, data } = messageData;
-			const totalRecordsCount = data.total;
-
-			// Data to display in Overview table
-			setSubmissionOverview({
-				createdAt,
-				submissionFiles: files || [],
-				submissionId: id.toString(),
-				totalRecords: totalRecordsCount,
-				organization,
-				status,
-			});
-
-			const filesNotUploaded = getPendingUploadFileManifests(files);
-
-			setPendingUploadManifests(filesNotUploaded);
-
-			// Total amount of records uploading
-			const totalPages = Math.ceil(totalRecordsCount / pageSize);
-			setLastPage(totalPages);
-		});
-	}, [fetchSubmissionSummaryById, ID]);
-
 	// gets the initial status for all the uploads
 	useEffect(() => {
 		if (token && !submissionOverview) {
@@ -290,8 +296,7 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 		}
 
 		if (submissionOverview.status === SubmissionStatus.VALID) {
-			// Trigger submission commit when the current status is 'VALID'
-			commit(controller.signal);
+			// If the submission is valid, we can stop tracking pending data
 			return;
 		}
 
@@ -351,15 +356,42 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 			>
 				{submissionOverview && submissionOverview.totalRecords > 0 && (
 					<>
-						<p
+						<div
 							css={css`
-								display: block;
-								font-size: 13px;
+								display: flex;
+								align-items: center;
+								justify-content: space-between;
 								margin: 10px 0;
+								width: 100%;
+								gap: 10px;
 							`}
 						>
-							{firstRecord} - {lastRecord} of {submissionOverview.totalRecords} Viral Genomes
-						</p>
+							<p
+								css={css`
+									display: block;
+									font-size: 13px;
+									margin: 0;
+								`}
+							>
+								{firstRecord} - {lastRecord} of {submissionOverview.totalRecords} Viral Genomes
+							</p>
+							{submissionOverview.status === SubmissionStatus.VALID &&
+								pendingUploadManifests.length === 0 && (
+									<Button
+										css={css`
+											background-color: ${theme.colors.success_dark};
+											padding-top: 0px;
+											padding-bottom: 0px;
+											padding-left: 10px;
+											padding-right: 10px;
+											margin: 0;
+										`}
+										onClick={() => commit()}
+									>
+										Confirm Submission
+									</Button>
+								)}
+						</div>
 						<GenericTable
 							columns={columns}
 							data={Object.values(submissionRecords).flat()}
@@ -424,10 +456,10 @@ const SubmissionDetails = ({ ID }: SubmissionDetailsProps): ReactElement => {
 						submissionManifest={pendingUploadManifests}
 						submissionId={ID}
 						onClose={() => {
+							// Close the modal
 							setOpenGuideModal(false);
-							// Closing the modal will trigger submission commit to verify if
-							// files have been uploaded.
-							commit();
+							// Clean the pending upload banner since the user has seen the instructions
+							setPendingUploadManifests([]);
 						}}
 					/>
 				)}
