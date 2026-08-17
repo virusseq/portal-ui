@@ -41,7 +41,7 @@ import {
 import { addInSQON, toggleSQON, currentFieldValue } from '@overture-stack/arranger-components/dist/SQONViewer/utils';
 import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/ThemeContext/types';
 import type { RecursivePartial } from '@overture-stack/arranger-components/dist/utils/types.js';
-import type { SQON } from '@overture-stack/sqon-builder';
+import type { SqonNode } from '@overture-stack/sqon';
 import {
 	ReactElement,
 	useEffect,
@@ -59,7 +59,10 @@ import { ThemeInterface } from '#components/theme';
 import { Download } from '#components/theme/icons';
 import validateStringAsUrl from '#components/utils/urlValidation';
 import { getConfig } from '#global/config';
+import useTrackingContext from '#global/hooks/useTrackingContext';
+import { countActiveFilters, trackFileDownload } from '#global/hooks/useTrackingContext/events';
 import type { SubmissionManifest } from '#global/utils/fileManifest';
+import { createTrackedMetadataOnlyExporter } from '#global/utils/arrangerExport';
 
 import { excludeRecordsWithoutFiles, getManifestDataAsync, getMetadataBlobAsync } from './helper';
 
@@ -273,6 +276,7 @@ const RepoTable = (): ReactElement => {
 	const [fileMetadata, setFileMetadata] = useState<Blob | null>(null);
 	const [selectedRows, setSelectedRows] = useState<string[]>([]);
 	const { sqon, setSQON } = useArrangerData({ callerName: 'Environmental-RepoTable' });
+	const { trackEvent } = useTrackingContext();
 	const [isLoadingManifest, setIsLoadingManifest] = useState(false);
 	const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
 	const [isWastewaterFilterActive, setIsWastewaterFilterActive] = useState(false);
@@ -311,12 +315,19 @@ const RepoTable = (): ReactElement => {
 		selectedRows,
 		files,
 	}: {
-		sqon: SQON | null;
+		sqon: SqonNode | null;
 		url: string;
 		selectedRows: string[];
 		files?: ExporterFileInterface[];
 	}) => {
 		const filteredSqonWithFiles = excludeRecordsWithoutFiles(sqon);
+
+		trackFileDownload(trackEvent, {
+			downloadType: 'metadata_and_files',
+			resultCount: selectedRows.length,
+			selectedRows: selectedRows.length,
+			activeFilterCount: countActiveFilters(sqon),
+		});
 
 		setShowDownloadInfoModal(true);
 		setIsLoadingManifest(true);
@@ -353,7 +364,7 @@ const RepoTable = (): ReactElement => {
 				{
 					columns: tsvExportColumns,
 					fileName: `wastewater-metadata-export-${today}.tsv`,
-					function: 'saveTSV',
+					function: createTrackedMetadataOnlyExporter(trackEvent),
 					label: 'Metadata only',
 					valueWhenEmpty: '',
 				},

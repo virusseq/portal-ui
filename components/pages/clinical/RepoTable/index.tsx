@@ -33,7 +33,7 @@ import {
 	ExporterFunction,
 } from '@overture-stack/arranger-components/dist/Table/DownloadButton/types';
 import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/ThemeContext/types';
-import SQONBuilder, { type SQON } from '@overture-stack/sqon-builder';
+import { type SqonNode } from '@overture-stack/sqon';
 import { isEmpty } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import urlJoin from 'url-join';
@@ -44,6 +44,8 @@ import sleep from '#components/utils/sleep';
 import { getConfig } from '#global/config';
 import useSingularityData, { Archive } from '#global/hooks/useSingularityData';
 import useTrackingContext from '#global/hooks/useTrackingContext';
+import { countActiveFilters, trackFileDownload } from '#global/hooks/useTrackingContext/events';
+import { createTrackedMetadataOnlyExporter } from '#global/utils/arrangerExport';
 
 import DownloadInfoModal from './DownloadInfoModal';
 import { buildSqonWithObjectIds, saveSet } from './helper';
@@ -179,7 +181,7 @@ const RepoTable = (): ReactElement => {
 	const { fetchLatestArchiveAllInfo, findArchiveById, startArchiveBuildBySetId } = useSingularityData();
 
 	const theme = useTheme();
-	const { logEvent } = useTrackingContext();
+	const { logEvent, trackEvent } = useTrackingContext();
 	const {
 		NEXT_PUBLIC_ARRANGER_CLINICAL_API,
 		NEXT_PUBLIC_ARRANGER_CLINICAL_MANIFEST_COLUMNS,
@@ -199,7 +201,7 @@ const RepoTable = (): ReactElement => {
 		setArchive(undefined);
 	};
 
-	const saveSetThenBuildArchive = async (sqon: SQON): Promise<Archive> => {
+	const saveSetThenBuildArchive = async (sqon: SqonNode): Promise<Archive> => {
 		const setId = await saveSet(sqon);
 		logEvent({
 			category: 'Downloads',
@@ -234,9 +236,16 @@ const RepoTable = (): ReactElement => {
 		sqon,
 	}: {
 		selectedRows: string[];
-		sqon: SQON;
+		sqon: SqonNode;
 	}) => {
 		showModal();
+
+		trackFileDownload(trackEvent, {
+			downloadType: 'metadata_and_files',
+			resultCount: selectedRows.length,
+			selectedRows: selectedRows.length,
+			activeFilterCount: countActiveFilters(sqon),
+		});
 
 		const sqonToUse = buildSqonWithObjectIds(sqon, selectedRows);
 
@@ -278,7 +287,7 @@ const RepoTable = (): ReactElement => {
 				{
 					columns: tsvExportColumns,
 					fileName: `virusseq-metadata-export-${today}.tsv`,
-					function: 'saveTSV',
+					function: createTrackedMetadataOnlyExporter(trackEvent),
 					label: 'Metadata only',
 					valueWhenEmpty: '',
 				},

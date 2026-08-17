@@ -19,18 +19,31 @@
  *
  */
 
-import { event } from 'react-ga';
+/**
+ * `react-ga4`'s own `event()` accepts `UaEventOptions | string`, but that `UaEventOptions` type
+ * isn't actually exported from the package (declared internally, not in its public `export`
+ * statement), and this app only ever calls it with the object form. Defined locally to match that.
+ */
+export type LogEventFunctionType = (options: {
+	category: string;
+	action: string;
+	label?: string;
+	value?: number;
+}) => void;
 
-export type LogEventFunctionType = typeof event;
+/**
+ * GA4-native named event with structured parameters, the shape new events should use going
+ * forward (see `./events.ts`), as opposed to `LogEventFunctionType`'s older category/action shape.
+ */
+export type TrackEventParams = Record<string, string | number | boolean>;
+export type TrackEventFunctionType = (name: string, params?: TrackEventParams) => void;
 
 export type TrackingContextType = {
-  addTracker: (trackerId: string, trackerName: string) => void;
-  logEvent: LogEventFunctionType;
-  removeTracker: (trackerName: string) => void;
+	logEvent: LogEventFunctionType;
+	trackEvent: TrackEventFunctionType;
 };
 
 export type TrackingStateType = {
-  isInitialized: boolean;
-  hasUser: boolean;
-  trackers: string[];
+	isInitialized: boolean;
+	hasUser: boolean;
 };

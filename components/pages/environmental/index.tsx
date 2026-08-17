@@ -29,6 +29,8 @@ import Loader from '#components/Loader';
 import PageLayout from '#components/PageLayout';
 import sleep from '#components/utils/sleep';
 import { getConfig } from '#global/config';
+import useTrackingContext from '#global/hooks/useTrackingContext';
+import { trackExplorerView } from '#global/hooks/useTrackingContext/events';
 import { RepoFiltersType } from '#global/types/sqon';
 
 import getConfigError from './getConfigError';
@@ -71,6 +73,11 @@ const EnvironmentalDataRepositoryPage = (): ReactElement => {
 	const theme = useTheme();
 	const [arrangerHasConfig, setArrangerHasConfig] = useState<boolean>(false);
 	const [loadingArrangerConfig, setLoadingArrangerConfig] = useState<boolean>(true);
+	const { trackEvent } = useTrackingContext();
+
+	useEffect(() => {
+		trackExplorerView(trackEvent, { explorerName: 'environmental' });
+	}, [trackEvent]);
 
 	useEffect(() => {
 		arrangerFetcher({

@@ -19,19 +19,19 @@
  *
  */
 
+import ReactGA from 'react-ga4';
+
 import { useRouter } from 'next/router';
 import { createContext, ReactElement, useCallback, useContext, useEffect, useState } from 'react';
-import ReactGA from 'react-ga';
 
 import { getConfig } from '#global/config';
 import useAuthContext from '#global/hooks/useAuthContext';
 
-import { LogEventFunctionType, TrackingContextType, TrackingStateType } from './types';
+import { LogEventFunctionType, TrackEventFunctionType, TrackingContextType, TrackingStateType } from './types';
 
 const TrackingContext = createContext<TrackingContextType>({
-	addTracker: () => null,
 	logEvent: () => null,
-	removeTracker: () => null,
+	trackEvent: () => null,
 });
 
 export const TrackingProvider = (props: { children: ReactElement }): ReactElement => {
@@ -42,66 +42,47 @@ export const TrackingProvider = (props: { children: ReactElement }): ReactElemen
 	const [analytics, setAnalytics] = useState<TrackingStateType>({
 		isInitialized: false,
 		hasUser: false,
-		trackers: [],
 	});
 
 	const logEvent: LogEventFunctionType = useCallback(({ category, action, label, value }) => {
 		setAnalytics((prev) => {
 			if (prev.isInitialized) {
-				ReactGA.event(
-					{
-						category,
-						action,
-						...(label && { label }),
-						...(value && { value }),
-					},
-					prev.trackers,
-				);
+				ReactGA.event({
+					category,
+					action,
+					...(label && { label }),
+					...(value && { value }),
+				});
 			}
 			return prev;
 		});
 	}, []);
 
-	const addTracker = (trackerId: string, trackerName: string) => {
-		if (analytics.isInitialized) {
-			ReactGA.addTrackers([
-				{
-					trackingId: trackerId,
-					gaOptions: {
-						name: trackerName,
-					},
-				},
-			]);
-
-			setAnalytics((prev) => ({
-				...prev,
-				trackers: [...prev.trackers, trackerName],
-			}));
-		}
-	};
-
-	const removeTracker = (trackerName: string) => {
-		if (analytics.isInitialized) {
-			setAnalytics((prev) => ({
-				...prev,
-				trackers: prev.trackers.filter((tracker) => tracker !== trackerName),
-			}));
-		}
-	};
+	const trackEvent: TrackEventFunctionType = useCallback((name, params) => {
+		setAnalytics((prev) => {
+			if (prev.isInitialized) {
+				ReactGA.event(name, params);
+			}
+			return prev;
+		});
+	}, []);
 
 	useEffect(() => {
-		const { isInitialized, hasUser, trackers } = analytics;
+		if (!NEXT_PUBLIC_GOOGLE_ANALYTICS_ID) {
+			return;
+		}
+
+		const { isInitialized, hasUser } = analytics;
 
 		const handleRouteChange = (url: string) => {
-			ReactGA.set({ page: url }, trackers);
-			ReactGA.pageview(url, trackers);
+			ReactGA.set({ page: url });
+			ReactGA.send({ hitType: 'pageview', page: url });
 		};
 
 		if (!isInitialized) {
 			NEXT_PUBLIC_DEBUG && console.log('Initializing Google Analytics');
 
 			ReactGA.initialize(NEXT_PUBLIC_GOOGLE_ANALYTICS_ID, {
-				debug: NEXT_PUBLIC_DEBUG,
 				gaOptions: {
 					...(user?.id && { userId: user?.id }),
 				},
@@ -117,7 +98,7 @@ export const TrackingProvider = (props: { children: ReactElement }): ReactElemen
 				hasUser: Boolean(user),
 			}));
 		} else if (isInitialized && !hasUser && user) {
-			ReactGA.set({ userId: user.id }, trackers);
+			ReactGA.set({ userId: user.id });
 
 			setAnalytics((prev) => ({
 				...prev,
@@ -128,7 +109,12 @@ export const TrackingProvider = (props: { children: ReactElement }): ReactElemen
 		return () => router.events.off('routeChangeComplete', handleRouteChange);
 	}, [NEXT_PUBLIC_DEBUG, NEXT_PUBLIC_GOOGLE_ANALYTICS_ID, analytics, router.events, user]);
 
-	return <TrackingContext.Provider value={{ addTracker, logEvent, removeTracker }} {...props} />;
+	return (
+		<TrackingContext.Provider
+			value={{ logEvent, trackEvent }}
+			{...props}
+		/>
+	);
 };
 
 const useTrackingContext = (): TrackingContextType => useContext(TrackingContext);

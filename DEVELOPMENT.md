@@ -23,7 +23,7 @@
 ## Running the project
 
 - `npm run dev`: starts the dev server at `http://localhost:3000`
-- `npm run dev:submission`: dev server plus a local SSL proxy, required for auth-reliant features (e.g. the submissions dashboard) — see § Auth setup below before using this
+- `npm run dev:submission`: dev server plus a local SSL proxy, required for auth-reliant features (e.g. the submissions dashboard); see § Auth setup below before using this
 
 ### Auth setup (submission dashboard and other auth-reliant features)
 
@@ -53,5 +53,6 @@ The `.dev/` directory contains living documents maintained alongside the codebas
 - `.dev/roadmap.md`: planned features and architectural direction; read at session start
 - `.dev/tech-debt.md`: known issues, scope-adjacent problems, and deferred work
 - `.dev/sessions/`: one file per contributor per day (`YYYY-MM-DDTHHMMSS.md`), brief log of what changed and why
+- `.dev/docs/atlas/`: agent-generated reference material (lessons learned, a roadmap entry's deeper reasoning); indexed at `.dev/docs/atlas/index.md`
 
 Read the `.dev/` files at the start of each session before beginning work. Update these at the end of any session that produces meaningful output.

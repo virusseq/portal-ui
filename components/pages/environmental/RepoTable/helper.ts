@@ -20,7 +20,7 @@
  */
 
 import type { CustomColumnMappingInterface } from '@overture-stack/arranger-components';
-import { type CombinationKey, type FilterKey, type SQON } from '@overture-stack/sqon-builder';
+import { type SqonNode } from '@overture-stack/sqon';
 import JSZip from 'jszip';
 
 import createArrangerFetcher from '#components/utils/arrangerFetcher';
@@ -43,25 +43,7 @@ export const createZipFile = async (
 	return await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
 };
 
-type ExtendedFilterKey = FilterKey | 'not-in';
-
-type ExtendedFilterOperator = {
-	op: ExtendedFilterKey;
-	content: {
-		fieldName: string;
-		value: string[];
-	};
-};
-
-export type ExtendedCombinationOperator = {
-	op: CombinationKey;
-	content: ExtendedSQON[];
-	pivot?: string;
-};
-
-export type ExtendedSQON = ExtendedFilterOperator | ExtendedCombinationOperator | SQON;
-
-export const excludeRecordsWithoutFiles = (sqon: SQON | null): ExtendedSQON => {
+export const excludeRecordsWithoutFiles = (sqon: SqonNode | null): SqonNode => {
 	return {
 		op: 'and',
 		content: [
@@ -120,7 +102,7 @@ const getFilesQuery = `query ($sqon: JSON!)  {
 	}
 }`;
 
-export const getManifestDataAsync = async (sqon: ExtendedSQON): Promise<SubmissionManifest[]> => {
+export const getManifestDataAsync = async (sqon: SqonNode): Promise<SubmissionManifest[]> => {
 	const result = await arrangerFetcher({
 		body: {
 			query: getFilesQuery,
@@ -142,7 +124,7 @@ export const getMetadataBlobAsync = async ({
 	documentType: string;
 	fileType: 'tsv' | string;
 	maxRows: number;
-	sqon: SQON | null;
+	sqon: SqonNode | null;
 	url: string;
 }): Promise<Blob> => {
 	// Arranger Request in url form params

@@ -20,12 +20,14 @@
  */
 
 import { css, useTheme } from '@emotion/react';
-import { Aggregations, QuickSearch, useArrangerTheme } from '@overture-stack/arranger-components';
+import { Aggregations, QuickSearch, useArrangerData, useArrangerTheme } from '@overture-stack/arranger-components';
 import { UseThemeContextProps } from '@overture-stack/arranger-components/dist/types';
-import { ReactElement } from 'react';
+import { ReactElement, useCallback } from 'react';
 
 import { ThemeInterface } from '#components/theme';
 import { getConfig } from '#global/config';
+import useTrackingContext from '#global/hooks/useTrackingContext';
+import { getFacetActionType, trackFacetFilter } from '#global/hooks/useTrackingContext/events';
 
 const getAggregationsStyles = (theme: ThemeInterface): UseThemeContextProps => ({
 	callerName: 'Environmental-Facets',
@@ -230,6 +232,28 @@ const Facets = (): ReactElement => {
 	const { NEXT_PUBLIC_ENABLE_ENVIRONMENTAL_QUICKSEARCH } = getConfig();
 	const theme = useTheme();
 	useArrangerTheme(getAggregationsStyles(theme));
+	const { sqon } = useArrangerData({ callerName: 'Environmental-Facets' });
+	const { trackEvent } = useTrackingContext();
+
+	// `onValueChange` isn't in Aggregations' public types (plain JS component, no props
+	// interface), traced directly against the source; see the tracking tech-debt entry.
+	const handleValueChange = useCallback(
+		({
+			fieldName,
+			value,
+		}: {
+			fieldName: string;
+			isActive: boolean;
+			value: { name: string; doc_count: number };
+		}) => {
+			trackFacetFilter(trackEvent, {
+				field: fieldName,
+				action: getFacetActionType(sqon, fieldName, value.name),
+				resultCount: value.doc_count,
+			});
+		},
+		[sqon, trackEvent],
+	);
 
 	return (
 		<article
@@ -252,7 +276,7 @@ const Facets = (): ReactElement => {
 
 			{NEXT_PUBLIC_ENABLE_ENVIRONMENTAL_QUICKSEARCH && <QuickSearch />}
 
-			<Aggregations />
+			<Aggregations onValueChange={handleValueChange} />
 		</article>
 	);
 };
